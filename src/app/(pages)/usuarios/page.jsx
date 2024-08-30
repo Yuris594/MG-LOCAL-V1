@@ -162,7 +162,7 @@ function Usuarios() {
 
               <Modal open={openA} onClose={handleCloseA} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <Box sx={styles}>
-                  <UsuarioActualizar usuario={usuarios} />
+                  <UsuarioActualizar usuario={usuario} />
                 </Box>
               </Modal>
 
