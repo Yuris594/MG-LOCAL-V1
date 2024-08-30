@@ -15,13 +15,13 @@ const bull = (
 );
 
   const ReciboCaja = () => {
-    const { caja, auth } = useAuth();
-    const valores = Object.values(caja);
-    const valores2 = Object.values(caja.tipoPago);
-    const { generarPDF } = useGenerarPDF(valores, valores2, auth, caja, );
+    //const { caja, auth } = useAuth();
+    //const valores = Object.values(caja);
+    //const valores2 = Object.values(caja.tipoPago);
+    //const { generarPDF } = useGenerarPDF(valores, valores2, auth, caja, );
 
 
-    console.log(caja.cliente.E_MAIL);
+    //console.log(caja.cliente.E_MAIL);
 
   const cerrarP = () => {
     localStorage.removeItem('caja');
@@ -33,7 +33,7 @@ const bull = (
     return (
         <Paper className="container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', overflow: "auto"}}>
             <Typography sx={{ fontSize: 50, marginBottom: "15px" }} color="text.secondary" gutterBottom>
-                Valor a Cancelar: ${caja.Total}
+                Valor a Cancelar: ${ /*caja.Total*/}
             </Typography>
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
@@ -45,7 +45,7 @@ const bull = (
                                 ¿Como le gustaria recibir su recibo?
                             </Typography>
                             
-                                <Button variant="outlined" sx={{ width: 550, marginBottom: 5, backgroundColor: "#979797", color: "#3c3c3c"}} onClick={generarPDF}>Imprimir Recibo</Button>
+                                <Button variant="outlined" sx={{ width: 550, marginBottom: 5, backgroundColor: "#979797", color: "#3c3c3c"}} >Imprimir Recibo</Button>
                         
                                     <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 550, height: 100, }}>
                                         
@@ -78,29 +78,29 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio - {auth.PER_Nom} ..
+                                .. Servicio - {/*auth.PER_Nom*/} ..
                             </Typography>
                         </CardContent>
 
                         <CardContent>
-                            {valores.map((row) => (
+                            {/*valores.map((row) => (
                               <Typography component="div"  sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: 0 }}>
                                 <span>{row.DESCRIPCION}</span>
                                 <span>{row.PRECIO}</span>
                               </Typography>
-                            ))}
+                            ))*/}
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Total{bull}{caja.total}
+                                Total{bull}{/*caja.total*/}
                             </Typography>
 
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', paddingTop: 0}}>
-                            {valores2.map((row, index) => (
+                            {/*valores2.map((row, index) => (
                                 <Typography component="div"  sx={{ display: 'flex', flexDirection: 'column' }}>
                                      {Object.entries(row).map(([key, value], idx) => (
                                         value !== 0 ?
@@ -108,13 +108,13 @@ const bull = (
                                           : null
                                      ))}
                                 </Typography>
-                            ))}
+                            ))*/}
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio{bull}{}   {caja.cambio.toLocalesString('es')}
+                                Cambio{bull}{}   {/*caja.cambio.toLocalesString('es')*/}
                             </Typography>
                         </CardContent>
                     </Card>
