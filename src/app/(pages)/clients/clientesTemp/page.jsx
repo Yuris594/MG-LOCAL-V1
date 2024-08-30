@@ -1,0 +1,506 @@
+"use client";
+
+import { Box, Tabs, Tab, Typography, Grid, TextField, Divider, Button, ButtonGroup, Checkbox, FormControlLabel, Paper, LinearProgress, } from "@mui/material/";
+import { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import PropTypes from "prop-types";
+import Link from "next/link";
+
+import useAuth from "@/app/hooks/useAuth";
+import Banner from "@/app/components/banner/banner";
+import Peticion from "@/conexion/peticion";
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}>
+        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+const columnsP = [
+  { field: "FECHA_PEDIDO", headerName: "Fecha", width: 250,
+      valueFormatter: (params) => {
+        const FECHA_PEDIDO = params.value;
+        const fecha = new Date (FECHA_PEDIDO);
+
+        return fecha.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+  },
+  { field: "PEDIDO", headerName: "Pedido", width: 130 },
+  { field: "ESTADO", headerName: "Estado", width: 130 },
+  { field: "AUTORIZADONOM", headerName: "Autorizado", width: 130 },
+  { field: "TOTAL_A_FACTURAR", headerName: "Total a facturar", width: 130, 
+      valueFormatter: (params) => {
+        if (params.value) {
+          return "";
+        }
+        const TOTAL_A_FACTURAR = params.value;
+        const precioRedondeado = Number(TOTAL_A_FACTURAR).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "CreatedBy", headerName: "Creado por", width: 230 },
+  { field: "U_EDITADOPOR", headerName: "Editado por", width: 130 },
+  { field: "OBSERVACIONES", headerName: "Notas ", width: 130 },
+  { field: "COMENTARIO_CXC", headerName: "Comentarios CL", width: 300 },
+];
+
+const columnsF = [
+  { field: "FACTURA", headerName: "Factura", width: 130 },
+  { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190, 
+      valueFormatter: (params) => {
+        const FECHA_PEDIDO = params.value;
+        const fecha = new Date (FECHA_PEDIDO);
+
+        return fecha.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+  },
+  { field: "ANULADA", headerName: "AN", width: 130 },
+  { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130, 
+      valueFormatter: (params) => {
+        const PRECIO_TOTAL = params.value;
+        const precioRedondeado = Number(PRECIO_TOTAL).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "PEDIDO", headerName: "Pedido", width: 130 },
+  { field: "ARTICULO", headerName: "Articulo", width: 130 },
+  { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
+  { field: "CANTIDAD", headerName: "Cant", width: 130, 
+      valueFormatter: (params) => {
+        const CANTIDAD = params.value;
+        const precioRedondeado = Number(CANTIDAD).toFixed(1);
+        return precioRedondeado;
+      },  align: "right",
+  },
+  { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130, 
+      valueFormatter: (params) => {
+        const PRECIO_UNITARIO = params.value;
+        const precioRedondeado = Number(PRECIO_UNITARIO).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "PORCIVA", headerName: "IVA", width: 130, align: "right" },
+  { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
+  { field: "VDESC", headerName: "VDesc", width: 130 },
+  { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130, 
+      valueFormatter: (params) => {
+        const TOTAL_MERCADERIA = params.value;
+        const precioRedondeado = Number(TOTAL_MERCADERIA).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
+  { field: "FECHARUT", headerName: "FechaRut", width: 300 },
+  { field: "IDGUIA", headerName: "IdGuia", width: 130 },
+  { field: "FECHAGUIA", headerName: "FechaGuia", width: 250, 
+      valueFormatter: (params) => {
+        const FECHAGUIA = params.value;
+        const fecha = new Date (FECHAGUIA);
+
+        return fecha.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+  },
+  { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
+  { field: "RUBRO1", headerName: "Docs2", width: 500 },
+];
+
+const columnsC = [
+  { field: "DOC", headerName: "DOC", width: 130 },
+  { field: "FECHADOC", headerName: "FechaDoc", width: 190, 
+      valueFormatter: (params) => {
+        const FECHADOC = params.value;
+        const fecha = new Date (FECHADOC);
+
+        return fecha.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+  },
+  { field: "FECHAVENC", headerName: "FechaVenc", width: 190, 
+      valueFormatter: (params) => {
+        const FECHAVENC = params.value;
+        const fecha = new Date (FECHAVENC);
+
+        return fecha.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      },
+  },
+  { field: "NUMDOC", headerName: "NumDoc", width: 130 },
+  { field: "DIASVENC", headerName: "Venc", width: 130, align: "right" },
+  { field: "MONTO", headerName: "Monto", width: 130, 
+      valueFormatter: (params) => {
+        const MONTO = params.value;
+        const precioRedondeado = Number(MONTO).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "SALDO", headerName: "Saldo", width: 130, 
+      valueFormatter: (params) => {
+        const SALDO = params.value;
+        const precioRedondeado = Number(SALDO).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "SMenorA30", headerName: "Venc < 30", width: 130, 
+      valueFormatter: (params) => {
+        const SMenorA30 = params.value;
+        const precioRedondeado = Number(SMenorA30).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "SMayorA60", headerName: "Venc < 60", width: 130, 
+      valueFormatter: (params) => {
+        const SMayorA60 = params.value;
+        const precioRedondeado = Number(SMayorA60).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "SMenorA60", headerName: "Venc > 60", width: 130, 
+      valueFormatter: (params) => {
+        const SMenorA60 = params.value;
+        const precioRedondeado = Number(SMenorA60).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },  align: "right",
+  },
+  { field: "PLAZO", headerName: "Plazo", width: 130, align: "right" },
+  { field: "VENDEDOR", headerName: "VENDEDOR", width: 130 },
+];
+
+const ClientesTemp = () => {
+  const { cliente } = useAuth();
+  const [selectedRows] = useState([]);
+  const [value, setValue] = useState(3);
+  const [cartera, setCartera] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
+  const [facturas, setFacturas] = useState([]);
+  const [cargando, setCargando] = useState(false);
+  const [clienteT, setClienteT] = useState(cliente[0]);
+  const [sumaSaldoTotal, setSumaSaldoTotal] = useState(0);
+  const [sumaSaldo60Total, setSumaSaldo60Total] = useState(0);
+
+  const handleChange = (e, newValue) => {
+    setValue(newValue);
+  };
+
+  useEffect(() => {
+    setCargando(true);
+  }, [value]);
+
+  useEffect(() => {
+    const sumaSaldo60 = cartera.reduce((total, item) => total + item.SMayorA60, 0);
+    const saldo60Redondeado = Number(sumaSaldo60).toFixed(0);
+      setSumaSaldo60Total(`${parseFloat(saldo60Redondeado).toLocaleString()}`);
+
+    const sumaSaldo = cartera.reduce((total, item) => total + item.SALDO, 0);
+    const precioRedondeado = Number(sumaSaldo).toFixed(0);
+      setSumaSaldoTotal(`${parseFloat(precioRedondeado).toLocaleString()}`);
+  }, [cartera]);
+
+  const cerrar = () => {
+    localStorage.removeItem("clientTemp");
+    setClienteT("");
+  };
+
+  const ConseguirPedidos = async () => {
+    try {
+      const { datos } = await Peticion("/api/clientes/pedidos" + clienteT.CLIENTE , "GET");
+        if (datos) {
+          setPedidos(datos);
+          setCargando(false);
+        } 
+      } catch (error) {
+          console.error("Error al obtener los datos", error);
+          setPedidos([]);
+          setCargando(false);
+      }
+    
+  };
+
+  const ConseguirFacturas = async () => {
+    const { datos } = await Peticion("/api/clientes/facturas" + clienteT.CLIENTE, "GET");
+    if (datos) {
+      setFacturas(datos);
+      setCargando(false);
+    } else {
+      console.log("Error al obtener los datos");
+      setFacturas([]);
+      setCargando(false);
+    }
+  };
+
+  const ConseguirCarteras = async () => {
+    const { datos } = await Peticion("/api/clientes/carteras" + clienteT.CLIENTE, "GET");
+    if (datos) {
+      setCartera(datos);
+      setCargando(false);
+    } else {
+      console.log("Error al obtener los datos");
+      setCartera([]);
+      setCargando(false);
+    }
+  };
+
+  return (
+    <>
+      <Box marginBottom="40px">
+        <Banner />
+      </Box>
+        <Box className="container" sx={{ paddingTop: 1, display: "flex", alignContent: "center", alignItems: "center", }}>
+          <Box style={{ backgroundColor: "#eaeaea", width: "65%", height: "auto", paddingTop: 0, }}>
+            <Paper sx={{ padding: 1 }}>
+              <Box>
+                <Box>
+                  <Link href="./">
+                    <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}>
+                      {" "} Cerrar {" "}
+                    </Button>
+                  </Link>
+                  <Link href=".././pedidos/pedidosG/">
+                    <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#6cff5d" }}>
+                      {" "} Pedido {" "}
+                    </Button>
+                  </Link>
+                </Box>
+
+              <Divider sx={{}} orientation="horizontal" />
+
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", }}>
+                  <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
+                    <Button sx={{ flexDirection: "column" }}>
+                      <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
+                        {sumaSaldoTotal}
+                      </Typography>
+                      <Typography variant="body2" color="text.primary">
+                        Saldo
+                      </Typography>
+                    </Button>
+
+                    <Button sx={{ flexDirection: "column" }}>
+                      <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+                      {sumaSaldo60Total}
+                      </Typography>
+                      <Typography variant="body2" color="text.primary">
+                        Saldo Mayor a 60
+                      </Typography>
+                    </Button>
+                  </ButtonGroup>
+                </Box>
+              </Box>
+
+            <Divider sx={{}} orientation="horizontal" />
+
+              <FormControlLabel label="Individual" control={<Checkbox />} />
+              <FormControlLabel label="Compañia" control={<Checkbox />} />
+
+              <Typography gutterBottom variant="h5" component="div" sx={{ fontSize: 35 }}>
+                {clienteT?.NOMBREALIAS || ''}
+              </Typography>
+
+              <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={2}>
+                  NIT
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.CLIENTE || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Cupo
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {Number(clienteT?.CUPO || '').toFixed(0)}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Debe
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {Number(clienteT?.SALDO || '').toFixed(0)}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Direccion
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.DIRECCION || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Telefono
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.TELEFONO1 || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Celular
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.TELEFONO1 || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={2}>
+                  Ciudad
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.CIUDAD || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={3}>
+                  Departamento
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.DEPARTAMENTO || ''}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={4}>
+                  Email
+                  <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                    {clienteT?.E_MAIL || ''}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+                <TextField
+                  id="filled-multiline-static"
+                  label="Notas"
+                  multiline
+                  rows={4}
+                  defaultValue={clienteT?.NOTAS || ''}
+                  variant="filled"
+                  sx={{ width: "100%" }}
+                />
+
+                  <Paper sx={{ width: "100%" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label="Pedidos" {...a11yProps(0)} onClick={ConseguirPedidos} />
+                        <Tab label="Facturas" {...a11yProps(1)} onClick={ConseguirFacturas} />
+                        <Tab label="Cartera" {...a11yProps(2)} onClick={ConseguirCarteras} />
+                        <Tab label="" {...a11yProps(3)} />
+                      </Tabs>
+                  </Box>
+                <CustomTabPanel value={value} index={0}>
+                  <Box sx={{ width: "100%", height: 450 }}>
+                      {cargando === true ? (
+                        <Box sx={{ width: "100%" }}>
+                          <LinearProgress />
+                        </Box>
+                      ) : pedidos.length <= 0 ? (
+                        <h1>NO HAY PEDIDOS</h1>
+                      ) : (
+                        <DataGrid
+                          density="compact"
+                          rows={pedidos}
+                          columns={columnsP}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { page: 0, pageSize: 10 },
+                            },
+                          }}
+                          pageSizeOptions={[5, 10]}
+                          rowSelectionModel={selectedRows}
+                          getRowId={(row) => row.PEDIDO}
+                        />
+                    )}
+                  </Box>
+                </CustomTabPanel>
+
+                <CustomTabPanel value={value} index={1}>
+                  <Box sx={{ width: "100%", height: 450 }}>
+                      {cargando === true ? (
+                        <Box sx={{ width: "100%" }}>
+                          <LinearProgress />
+                        </Box>
+                      ) : facturas.length <= 0 ? (
+                        <h1>NO HAY FACTURAS</h1>
+                      ) : (
+                        <DataGrid
+                          density="compact"
+                          rows={facturas}
+                          columns={columnsF}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { page: 0, pageSize: 10 },
+                            },
+                          }}
+                          pageSizeOptions={[5, 10]}
+                          rowSelectionModel={selectedRows}
+                          getRowId={(row) => row.ID}
+                        />
+                      )}
+                  </Box>
+                </CustomTabPanel>
+
+                <CustomTabPanel value={value} index={2}>
+                  <Box sx={{ width: "100%", height: 450 }}>
+                      {cargando === true ? (
+                        <Box sx={{ width: "100%" }}>
+                          <LinearProgress />
+                        </Box>
+                      ) : cartera.length === 0 ? (
+                        <h1>NO HAY CARTERA</h1>
+                      ) : (
+                        <DataGrid
+                          density="compact"
+                          rows={cartera}
+                          columns={columnsC}
+                          initialState={{
+                            pagination: {
+                              paginationModel: { page: 0, pageSize: 10 },
+                            },
+                          }}
+                          pageSizeOptions={[5, 10]}
+                          rowSelectionModel={selectedRows}
+                          getRowId={(row) => row.NUMDOC}
+                        />
+                      )}
+                  </Box>
+                </CustomTabPanel>
+            </Paper>
+          </Paper>
+        </Box>
+      </Box>
+    </>
+  );
+};
+
+export default ClientesTemp;
