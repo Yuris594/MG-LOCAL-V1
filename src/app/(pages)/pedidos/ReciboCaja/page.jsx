@@ -15,25 +15,11 @@ const bull = (
 );
 
   const ReciboCaja = () => {
-    //const { caja, auth } = useAuth();
-    //const valores = Object.values(caja);
-    //const valores2 = Object.values(caja.tipoPago);
-    //const { generarPDF } = useGenerarPDF(valores, valores2, auth, caja, );
-
-
-    //console.log(caja.cliente.E_MAIL);
-
-  const cerrarP = () => {
-    localStorage.removeItem('caja');
-    localStorage.removeItem('pedidoTempg');
-    localStorage.removeItem('clientTemp');
-    localStorage.removeItem('pedidoTemp');
-  }
 
     return (
         <Paper className="container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', overflow: "auto"}}>
             <Typography sx={{ fontSize: 50, marginBottom: "15px" }} color="text.secondary" gutterBottom>
-                Valor a Cancelar: ${ /*caja.Total*/}
+                Valor a Cancelar: $
             </Typography>
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
@@ -78,43 +64,30 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio - {/*auth.PER_Nom*/} ..
+                                .. Servicio -  ..
                             </Typography>
                         </CardContent>
 
                         <CardContent>
-                            {/*valores.map((row) => (
-                              <Typography component="div"  sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: 0 }}>
-                                <span>{row.DESCRIPCION}</span>
-                                <span>{row.PRECIO}</span>
-                              </Typography>
-                            ))*/}
+                           
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Total{bull}{/*caja.total*/}
+                                Total{bull}
                             </Typography>
 
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', paddingTop: 0}}>
-                            {/*valores2.map((row, index) => (
-                                <Typography component="div"  sx={{ display: 'flex', flexDirection: 'column' }}>
-                                     {Object.entries(row).map(([key, value], idx) => (
-                                        value !== 0 ?
-                                          <span key={idx}>{key}: {value.toString()}</span>
-                                          : null
-                                     ))}
-                                </Typography>
-                            ))*/}
+                           
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio{bull}{}   {/*caja.cambio.toLocalesString('es')*/}
+                                Cambio{bull}{}   
                             </Typography>
                         </CardContent>
                     </Card>
@@ -122,7 +95,7 @@ const bull = (
             </Box>
 
             <Box sx={{ width: '139vw', padding: 0, margin: 0, paddingTop: 12 }}>
-                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }} onClick={cerrarP}>
+                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }}>
                     Nuevo Pedido
                 </Button>
             </Box>
