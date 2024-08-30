@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 
 
 const generarCodigoBarras = (texto) => {
-    const canvas = document.createElement('canvas');
-    JsBarcode(canvas, texto, { format: "CODE128" });
-    return canvas.toDataURL("image/png"); 
+    //const canvas = document.createElement('canvas');
+    //JsBarcode(canvas, texto, { format: "CODE128" });
+    //return canvas.toDataURL("image/png"); 
   };
 
   const useGenerarPDF = (clienteP, productosP, sumaSaldoTotalDESC = {}) => {
