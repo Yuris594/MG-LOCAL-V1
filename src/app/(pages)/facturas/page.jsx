@@ -25,22 +25,13 @@ const Factura = () => {
   const [productos, setProductos] = useState([]);
   const [fecha] = useState(format(new Date(), "dd/MM/yyyy HH:mm:ss"));
   const [totales, setTotales] = useState({});
-  
-
-  useEffect(() => {
-    if (fac && productos) {
-      generarPDF();
-      setFac();
-      setProductos();
-    }
-  }, [fac, productos]);
 
   const factura = async (e) => {
     e.preventDefault();
     const factura_ = form.factura;
     try {
       const { datos } = await Peticion("/api/clientes/factura_lineas/" + factura_, "GET");
-        if (datos) {
+      if (datos) {
           setFac(datos[0]);
           const clavesDeseadas = [
             "ARTICULO",
@@ -50,6 +41,9 @@ const Factura = () => {
             "PORDESC",
             "PRECIO_UNITARIO",
             "PRECIO_TOTAL",
+            "TOTAL_IMPUESTO1",
+            "DESC_TOT_LINEA",
+            "TOTAL_MERCADERIA"
           ];
         const productosFiltrados = datos.map((objecto) => {
           const objetoFiltrado = Object.fromEntries(
@@ -75,27 +69,30 @@ const Factura = () => {
     }
   };
 
+  useEffect(() => {
+    if (fac && productos > 0) {
+      generarPDF();
+      setFac();
+      setProductos([]);
+    }
+  }, [fac, productos]);
+  
   const generarPDF = () => {
-    
-    productos.forEach(producto => {
-      console.log(producto.TOTAL_MERCADERIA, producto.TOTAL_IMPUESTO1, producto.DESC_TOT_LINEA);
-    })
-
-
-    const sumatotal = productos.reduce((acumulador, producto) => acumulador + producto.TOTAL_MERCADERIA, 0);
-      const descuento = productos.reduce((acumulador, producto) => acumulador + producto.DESC_TOT_LINEA, 0);
-      const impuesto = productos.reduce((acumulador, producto) => acumulador + producto.TOTAL_IMPUESTO1, 0);
+    if (!productos || !fac) return;
+    const sumatotal = productos.reduce((acumulador, producto) => acumulador + producto.PRECIO_TOTAL,  0)
+      const descuento = productos.reduce((acumulador, producto) => acumulador + producto.DESC_TOT_LINEA,  0)
+      const impuesto = productos.reduce((acumulador, producto) => acumulador + producto.TOTAL_IMPUESTO1,  0)
       const totalConImpuesto = sumatotal - descuento + impuesto;
       
       const datosTotal = {
-        ...totales,
         sumatotal: parseInt(sumatotal),
-        impuesto: parseInt(impuesto),
         descuento: parseInt(descuento),
+        impuesto: parseInt(impuesto),
         totalConImpuesto: parseInt(totalConImpuesto),
-      }
-    setTotales(datosTotal);
-    console.log(datosTotal);
+      };
+      
+      setTotales(datosTotal);
+      console.log(datosTotal);
 
 
     const pdf = new jsPDF("portrait", "pt", "letter");
@@ -183,7 +180,7 @@ const Factura = () => {
     function agregarContenido() {
       pdf.setFontSize(10);
       pdf.text(`TOTAL ITEMS:        ${productos.length}`, 350, pdf.autoTable.previous.finalY + 20);
-      pdf.text(`SubTotal:     ${fac.TOTAL_MERCADERIA}`, 470, pdf.autoTable.previous.finalY + 20);
+      pdf.text(`SubTotal:     ${totales.sumatotal}`, 470, pdf.autoTable.previous.finalY + 20);
       pdf.text(`Desc:           ${totales.descuento}`, 470, pdf.autoTable.previous.finalY + 40);
       pdf.text(`IVA:              ${totales.impuesto}`, 470, pdf.autoTable.previous.finalY + 60);
       pdf.text(`TOTAL:        ${totales.totalConImpuesto}`, 470, pdf.autoTable.previous.finalY + 80);
@@ -275,15 +272,3 @@ const Factura = () => {
 export default Factura;
 
 
-/* 
-
- function productos() {
-            for (let i = 0; i < valores.length - 4; i++) {
-                const row = valores[i];
-                pdf.text(`${row.DESCRIPCION}`, 3, currentY);
-                pdf.text(`${row.PRECIO}`, 65, currentY);
-                currentY += 2;
-            }
-        }
-
-*/ 

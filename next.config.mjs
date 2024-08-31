@@ -3,9 +3,9 @@ const nextConfig = {
      //output: 'export',
 };
   
-  export default nextConfig;
+  //export default nextConfig;
   
- /* 
+ 
  export default {
     async rewrites() {
       return [
@@ -16,4 +16,4 @@ const nextConfig = {
       ]
     }
   }
-  */
+  
