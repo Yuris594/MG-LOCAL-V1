@@ -26,6 +26,7 @@ const Factura = () => {
   const [fecha] = useState(format(new Date(), "dd/MM/yyyy HH:mm:ss"));
   const [totales, setTotales] = useState({});
 
+
   const factura = async (e) => {
     e.preventDefault();
     const factura_ = form.factura;
@@ -68,17 +69,18 @@ const Factura = () => {
       noExiste();
     }
   };
-
+  
   useEffect(() => {
-    if (fac && productos > 0) {
-      generarPDF();
-      setFac();
-      setProductos([]);
+    if (fac && productos) {
+        generarPDF();
+        setFac();
+        setProductos([]);
     }
-  }, [fac, productos]);
+}, [fac, productos]);
+
+  
   
   const generarPDF = () => {
-    if (!productos || !fac) return;
     const sumatotal = productos.reduce((acumulador, producto) => acumulador + producto.PRECIO_TOTAL,  0)
       const descuento = productos.reduce((acumulador, producto) => acumulador + producto.DESC_TOT_LINEA,  0)
       const impuesto = productos.reduce((acumulador, producto) => acumulador + producto.TOTAL_IMPUESTO1,  0)
