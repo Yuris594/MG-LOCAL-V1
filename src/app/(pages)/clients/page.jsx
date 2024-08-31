@@ -19,6 +19,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Banner from '@/app/components/banner/banner';
 import BotonExcel from '@/app/hooks/useExportoExcel';
+import { Global } from '@/conexion/conexion';
+import { conexion } from '../usuarios/page';
 
 
 
@@ -59,7 +61,7 @@ const Clientes = () => {
 
   const conseguirClientes = async () => {
     try {
-      const { datos } = await Peticion("/api/clientes/listar", "GET")
+      const { datos } = await Peticion(Global.url + "/clientes/listar", "GET")
         if (datos) {
           setCargando(false)
           setClientes(datos);
@@ -69,7 +71,7 @@ const Clientes = () => {
           setChecked(true)
         }, 100)
     } catch (error) {
-      //conexion()
+      conexion()
       console.log("Error")
     }
   }

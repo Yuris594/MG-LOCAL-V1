@@ -29,6 +29,7 @@ import { useForm } from '@/app/hooks/useForm';
 import useAuth from '@/app/hooks/useAuth';
 import PropTypes from 'prop-types';
 import Peticion from '@/conexion/peticion';
+import { Global } from '@/conexion/conexion';
 
 
 
@@ -138,7 +139,7 @@ function CustomTabPanel(props) {
 
     const conseguirProductos = async () => {
         try {
-          const { datos } = await Peticion("/api/listar_solo_para_mg", "GET")
+          const { datos } = await Peticion(Global.url + "/listar_solo_para_mg", "GET")
             if (datos) {
               setProductos(datos);
               setTablaProducto(datos)

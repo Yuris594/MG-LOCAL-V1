@@ -11,6 +11,7 @@ import Peticion from "@/conexion/peticion";
 import useAuth from "@/app/hooks/useAuth";
 import Link from "next/link";
 import { conexion } from "../usuarios/page";
+import { Global } from "@/conexion/conexion";
 
 const style = {
   position: "absolute",
@@ -90,7 +91,7 @@ const pedidos = () => {
   
   const conseguirArticulos = async () => {
     try {
-      const { datos } = await Peticion("/api/pedidos/listar", "GET");
+      const { datos } = await Peticion(Global.url + "/pedidos/listar", "GET");
         if (datos) {
           setPedidos(datos);
           setTabla(datos);

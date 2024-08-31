@@ -25,6 +25,7 @@ import Image from "next/image";
 import * as React from "react";
 import Link from "next/link";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
@@ -78,7 +79,7 @@ export default function Login() {
       return;
     }
       try {
-        const { datos } = await Peticion(`/api/usuarios/listar/${usuario}/${clave}`,"GET" );
+        const { datos } = await Peticion(Global.url + `/usuarios/listar/${usuario}/${clave}`,"GET" );
           console.log("Usuario recibido: ", datos);
             if (datos) {
               console.log("Usuario existe y las credenciales son correctas");

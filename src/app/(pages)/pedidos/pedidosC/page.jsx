@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import MuiAlert from "@mui/material/Alert";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -129,7 +130,7 @@ export const PedidosC = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", "GET")
+      const { datos } = await Peticion(Global.url + "/productos/listar_solo_para_mg", "GET")
         if (datos) {
           setProductos(datos);
           setTablaProducto(datos);
@@ -142,7 +143,7 @@ export const PedidosC = () => {
 
   const conseguirProductosP = async () => {
     try {
-      const { datos } = await Peticion("/api/pedidos/detalle_lineas/" + clienteP.PEDIDO, "GET");
+      const { datos } = await Peticion(Global.url + "/pedidos/detalle_lineas/" + clienteP.PEDIDO, "GET");
         if (datos) {
           setProductosP(datos);
         }
@@ -153,7 +154,7 @@ export const PedidosC = () => {
 
   const conseguirProductosPendientes = async () => {
     try {
-      const { data } = await Peticion("/api/pedidos/articulos_pendientes/" + clienteP.PEDIDO, "GET");
+      const { data } = await Peticion(Global.url + "/pedidos/articulos_pendientes/" + clienteP.PEDIDO, "GET");
         if (data) {
           setProductosConDIPS0(data);
         }
@@ -170,7 +171,7 @@ export const PedidosC = () => {
         OBSERVACIONES: form.OBSERVACIONES,
       };
       try {
-          const { data } = await Peticion("/api/pedido/crear/", {
+          const { data } = await Peticion(Global.url + "/pedido/crear/", {
             method: "POST",
             body: JSON.stringify(bodyData),
             headers: { "Content-Type": "application/json" },
@@ -194,7 +195,7 @@ export const PedidosC = () => {
       ARTICULOS: productosConDISP0,
     };
     try {
-      const { data } = await fetch("/api/pedido/crear/", {
+      const { data } = await fetch(Global.url + "/pedido/crear/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),

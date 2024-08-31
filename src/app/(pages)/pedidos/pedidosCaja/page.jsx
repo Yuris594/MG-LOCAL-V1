@@ -29,6 +29,7 @@ import useAuth from "@/app/hooks/useAuth";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -145,7 +146,7 @@ const PedidosCaja = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", {
+      const { datos } = await Peticion(Global.url + "/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

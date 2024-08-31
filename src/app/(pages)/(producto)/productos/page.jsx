@@ -18,6 +18,7 @@ import PropTypes from "prop-types";
 import Banner from "../../../components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -204,7 +205,7 @@ function productos() {
     try {
       if (bodegaSeleccionada) {
           setOpen(true);
-        const { datos } = await Peticion("/api/productos/listar/" + bodegaSeleccionada.BODEGA, "GET");
+        const { datos } = await Peticion(Global.url + "/productos/listar/" + bodegaSeleccionada.BODEGA, "GET");
         if (datos) {
           setOpen(false)
           setProductos(datos);
@@ -226,7 +227,7 @@ function productos() {
     setFacturas([]);
     try {
       if (bodegaSeleccionada) {
-        const { datos } = await Peticion("/api/productos/facturas/" + articulo.ARTICULO, "GET")
+        const { datos } = await Peticion(Global.url + "/productos/facturas/" + articulo.ARTICULO, "GET")
         console.log(datos);
         if (datos) {
           setFacturas(datos);
@@ -245,7 +246,7 @@ function productos() {
     setPedidos([]);
     try {
       if (bodegaSeleccionada) {
-        const { datos } = await Peticion("/api/productos/pedidos/" + articulo.ARTICULO, "GET")
+        const { datos } = await Peticion(Global.url + "/productos/pedidos/" + articulo.ARTICULO, "GET")
         if (datos) {
           setPedidos(datos);
           setCargando(false);
@@ -261,7 +262,7 @@ function productos() {
 
   const conseguirBodegas = async () => {
     try {
-      const { datos } = await Peticion("/api/productos/bodegas", )
+      const { datos } = await Peticion(Global.url + "/productos/bodegas", )
         if (datos) {
           setBodegas(datos);
         }

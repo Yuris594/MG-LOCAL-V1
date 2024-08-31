@@ -9,6 +9,7 @@ import Link from "next/link";
 import useAuth from "@/app/hooks/useAuth";
 import Banner from "@/app/components/banner/banner";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -241,7 +242,7 @@ const ClientesTemp = () => {
 
   const ConseguirPedidos = async () => {
     try {
-      const { datos } = await Peticion("/api/clientes/pedidos" + clienteT.CLIENTE , "GET");
+      const { datos } = await Peticion(Global.url + "/clientes/pedidos" + clienteT.CLIENTE , "GET");
         if (datos) {
           setPedidos(datos);
           setCargando(false);

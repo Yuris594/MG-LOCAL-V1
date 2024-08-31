@@ -11,6 +11,7 @@ import Registro from "./registrar/page";
 import Peticion from "@/conexion/peticion";
 import UsuarioActualizar from "./actualizar/page";
 import Swal from "sweetalert2";
+import { Global } from "@/conexion/conexion";
 
 const styles = {
   position: "absolute",
@@ -91,7 +92,7 @@ function Usuarios() {
 
   const fetchUsuarios = async () => {
     try {
-      const { datos } = await Peticion("/api/usuarios/listar", "GET");
+      const { datos } = await Peticion(Global.url + "/usuarios/listar", "GET");
         if (datos) {
           setCargando(false);
           setUsuarios(datos);

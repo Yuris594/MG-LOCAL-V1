@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import Image from "next/image";
 import Link from "next/link";
 import Peticion from "@/conexion/peticion";
+import { Global } from "@/conexion/conexion";
 
 const entrada = () => {
   Swal.fire({
@@ -128,7 +129,7 @@ const Ingresos = () => {
 
     try {
       espera();
-      const { data } = await Peticion("/api/control_entradas/documento/" + cedula, "POST");
+      const { data } = await Peticion(Global.url + "/control_entradas/documento/" + cedula, "POST");
 
       if (online === true) {
         if (res.ok) {

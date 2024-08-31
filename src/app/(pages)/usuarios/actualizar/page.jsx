@@ -3,6 +3,7 @@
 import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography, } from "@mui/material";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react"
+import { Global } from "@/conexion/conexion";
 
 const UsuarioActualizar = ({usuario}) => {
   const [open, setOpen] = useState(false);
@@ -30,7 +31,7 @@ const UsuarioActualizar = ({usuario}) => {
   const actualizar = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/usuarios/actualizar/", {
+      const response = await fetch(Global.url + "/usuarios/actualizar/", {
         method: "POST",
         body: JSON.stringify(form),
         headers: { "Content-Type": "application/json" },

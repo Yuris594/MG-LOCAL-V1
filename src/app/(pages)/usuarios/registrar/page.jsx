@@ -1,5 +1,6 @@
 'use client'
 
+import { Global } from "@/conexion/conexion";
 import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -18,7 +19,7 @@ import { useState } from "react";
         setOpenE(true);
         return;
       }
-      const response =  await fetch("/api/usuarios/nuevo", {
+      const response =  await fetch(Global.url + "/usuarios/nuevo", {
         method: "POST",
         body: JSON.stringify(form), 
         headers: { "Content-Type": "application/json" }
