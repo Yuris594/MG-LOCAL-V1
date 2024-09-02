@@ -1,4 +1,4 @@
 export const Global = {
-    url: "http://172.20.20.3:8001",
+    url: "http://172.20.20.3:8001/",
 
 }
