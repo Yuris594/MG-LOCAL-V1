@@ -8,7 +8,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Next",
+  title: "MG ",
   description: "...",
 };
 
