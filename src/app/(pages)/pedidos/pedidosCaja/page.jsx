@@ -146,7 +146,7 @@ const PedidosCaja = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "productos/listar_solo_para_mg", {
+      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

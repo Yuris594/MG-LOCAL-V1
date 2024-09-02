@@ -222,7 +222,7 @@ const productosMG = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "productos/listar_solo_para_mg", "GET");
+      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", "GET");
       if (datos) {
         setProductos(datos);
         setTablaProducto(datos);
@@ -246,7 +246,7 @@ const productosMG = () => {
     setFacturas([]);
     try {
       const { datos } = await Peticion(
-        Global.url + "productos/facturas/" + articulo.ARTICULO,
+        "/api/productos/facturas/" + articulo.ARTICULO,
         "GET"
       );
       console.log(datos);
@@ -266,7 +266,7 @@ const productosMG = () => {
     setPedidos([]);
     try {
       const { datos } = await Peticion(
-        Global.url + "productos/pedidos/" + articulo.ARTICULO,
+       "/api/productos/pedidos/" + articulo.ARTICULO,
         "GET"
       );
       if (datos) {
