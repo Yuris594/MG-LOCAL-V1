@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  //output: 'export',
+  output: 'export',
 
   async rewrites() {
     return [
@@ -10,12 +10,12 @@ const nextConfig = {
       }
     ]
   }
-};
-  
+}
+
 export default nextConfig;
   
- /*
- export default {
+ 
+ /*export default {
     async rewrites() {
       return [
         {
