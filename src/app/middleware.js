@@ -21,7 +21,7 @@ export const config = {
 
 import { NextResponse } from 'next/server'
  
-const allowedOrigins = ['http://172.20.100.110/', 'http://172.20.20.3:8001/']
+const allowedOrigins = ['http://172.20.20.3:8001/', 'http://172.20.100.110/']
  
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
