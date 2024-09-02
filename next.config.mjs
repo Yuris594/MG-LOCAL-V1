@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
   
-export default nextConfig;
+//export default nextConfig;
   
  
- /*export default {
+ export default {
     async rewrites() {
       return [
         {
@@ -14,4 +14,4 @@ export default nextConfig;
       ]
     }
   }
-  */
+  
