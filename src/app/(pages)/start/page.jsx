@@ -48,7 +48,6 @@ const style = {
       };
 
       const cerrarSesion = () => {
-        logout()
         router.push("/")
       };
 
@@ -89,7 +88,7 @@ const style = {
   return (
       <>
         <Box sx={{ display: { flexGrow: 1 } }}>
-          <AppBar position="static" sx={{ bgcolor: "#262626" }} /* color="primary" */>
+          <AppBar position="static" sx={{ bgcolor: "#262626" }}>
             <Toolbar>
               <Image
                 src="/img/logo2.png"

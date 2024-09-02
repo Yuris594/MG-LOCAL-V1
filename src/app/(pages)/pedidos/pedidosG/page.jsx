@@ -139,7 +139,7 @@ function CustomTabPanel(props) {
 
     const conseguirProductos = async () => {
         try {
-          const { datos } = await Peticion(Global.url + "/listar_solo_para_mg", "GET")
+          const { datos } = await Peticion(Global.url + "listar_solo_para_mg", "GET")
             if (datos) {
               setProductos(datos);
               setTablaProducto(datos)

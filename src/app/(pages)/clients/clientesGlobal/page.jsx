@@ -45,7 +45,7 @@ const ClientesGlobal = ({ setOpen }) => {
 
   const conseguirClientes = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "/clientes/listar", "GET");
+      const { datos } = await Peticion(Global.url + "clientes/listar", "GET");
         if (datos) {
           setClientes(datos);
           setTablaCliente(datos);

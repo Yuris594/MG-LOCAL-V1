@@ -32,7 +32,7 @@ const Factura = () => {
     e.preventDefault();
     const factura_ = form.factura;
     try {
-      const { datos } = await Peticion(Global.url + "/clientes/factura_lineas/" + factura_, "GET");
+      const { datos } = await Peticion(Global.url + "clientes/factura_lineas/" + factura_, "GET");
       if (datos) {
           setFac(datos[0]);
           const clavesDeseadas = [

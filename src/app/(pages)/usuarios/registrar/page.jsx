@@ -19,7 +19,7 @@ import { useState } from "react";
         setOpenE(true);
         return;
       }
-      const response =  await fetch(Global.url + "/usuarios/nuevo", {
+      const response =  await fetch(Global.url + "usuarios/nuevo", {
         method: "POST",
         body: JSON.stringify(form), 
         headers: { "Content-Type": "application/json" }

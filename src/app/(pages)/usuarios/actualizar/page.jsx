@@ -31,7 +31,7 @@ const UsuarioActualizar = ({usuario}) => {
   const actualizar = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(Global.url + "/usuarios/actualizar/", {
+      const response = await fetch(Global.url + "usuarios/actualizar/", {
         method: "POST",
         body: JSON.stringify(form),
         headers: { "Content-Type": "application/json" },

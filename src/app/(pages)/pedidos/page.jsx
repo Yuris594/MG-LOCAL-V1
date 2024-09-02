@@ -91,7 +91,7 @@ const pedidos = () => {
   
   const conseguirArticulos = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "/pedidos/listar", "GET");
+      const { datos } = await Peticion(Global.url + "pedidos/listar", "GET");
         if (datos) {
           setPedidos(datos);
           setTabla(datos);

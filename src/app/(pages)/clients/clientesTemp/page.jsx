@@ -242,7 +242,7 @@ const ClientesTemp = () => {
 
   const ConseguirPedidos = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "/clientes/pedidos" + clienteT.CLIENTE , "GET");
+      const { datos } = await Peticion(Global.url + "clientes/pedidos" + clienteT.CLIENTE , "GET");
         if (datos) {
           setPedidos(datos);
           setCargando(false);
@@ -256,7 +256,7 @@ const ClientesTemp = () => {
   };
 
   const ConseguirFacturas = async () => {
-    const { datos } = await Peticion("/api/clientes/facturas" + clienteT.CLIENTE, "GET");
+    const { datos } = await Peticion(Global.url + "clientes/facturas" + clienteT.CLIENTE, "GET");
     if (datos) {
       setFacturas(datos);
       setCargando(false);
@@ -268,7 +268,7 @@ const ClientesTemp = () => {
   };
 
   const ConseguirCarteras = async () => {
-    const { datos } = await Peticion("/api/clientes/carteras" + clienteT.CLIENTE, "GET");
+    const { datos } = await Peticion(Global.url + "clientes/carteras" + clienteT.CLIENTE, "GET");
     if (datos) {
       setCartera(datos);
       setCargando(false);
