@@ -62,6 +62,8 @@ export default function Login() {
   const { form, changed } = useForm({});
   const [checked, setChecked] = useState(false);
 
+
+
   if (checked == false) {
     setTimeout(() => {
       //Establece un temporizador de milisegundos - Callback
@@ -78,26 +80,26 @@ export default function Login() {
       console.info("Por favor, completa todos los campos");
       return;
     }
-      try {
-        const { datos } = await Peticion(`/api/usuarios/listar/${usuario}/${clave}`,"GET" );
-          console.log("Usuario recibido: ", datos);
-            if (datos) {
-              console.log("Usuario existe y las credenciales son correctas");
-              localStorage.setItem("usuarios", JSON.stringify(datos));
-              setSaved("saved");
-              setOPenE(false);
-              setOpen(true);
+    try {
+      const { datos } = await Peticion(`/api/usuarios/listar/${usuario}/${clave}`,"GET" );
+      console.log("Usuario recibido: ", datos);
+      if (datos) {
+        console.log("Usuario existe y las credenciales son correctas");
+        localStorage.setItem("usuarios", JSON.stringify(datos));
+        setSaved("saved");
+        setOPenE(false);
+        setOpen(true);
 
-              setTimeout(() => {
-                setAuth(datos);
-                window.location.reload();
-              }, 1000);
-                router.push("../../start");
-            } else {
-              setOPenE(true);
-              setSaved("error");
-              console.log("Usuario no existe");
-            }
+        setTimeout(() => {
+          setAuth(datos);
+          window.location.reload();
+        }, 1000);
+        router.push("../../start");
+      } else {
+        setOPenE(true);
+        setSaved("error");
+        console.log("Usuario no existe");
+      }
     } catch (error) {
       console.error("Error en la peticipon: ", error);
     }
