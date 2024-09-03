@@ -92,7 +92,7 @@ function Usuarios() {
 
   const fetchUsuarios = async () => {
     try {
-      const { datos } = await Peticion(Global.url + "/usuarios/listar", "GET");
+      const { datos } = await Peticion(Global.url + "usuarios/listar", "GET");
         if (datos) {
           setCargando(false);
           setUsuarios(datos);
