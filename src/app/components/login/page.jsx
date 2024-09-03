@@ -62,8 +62,6 @@ export default function Login() {
   const { form, changed } = useForm({});
   const [checked, setChecked] = useState(false);
 
-
-
   if (checked == false) {
     setTimeout(() => {
       //Establece un temporizador de milisegundos - Callback
@@ -81,7 +79,10 @@ export default function Login() {
       return;
     }
     try {
-      const { datos } = await Peticion(`/api/usuarios/listar/${usuario}/${clave}`,"GET" );
+      const { datos } = await Peticion(
+        Global.url + `usuarios/listar/${usuario}/${clave}`,
+        "GET"
+      );
       console.log("Usuario recibido: ", datos);
       if (datos) {
         console.log("Usuario existe y las credenciales son correctas");

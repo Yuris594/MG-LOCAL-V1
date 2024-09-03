@@ -1,7 +1,7 @@
 
 import "./globals.css";
 import theme from "./style";
-import { Inter } from "@next/font/google"
+import { Inter } from "next/font/google"
 import { AuthProvider } from "@/context/authContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
