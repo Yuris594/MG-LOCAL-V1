@@ -80,7 +80,7 @@ export default function Login() {
     }
     try {
       const { datos } = await Peticion(
-      `/api/usuarios/listar/${usuario}/${clave}`,
+      Global.url + `/usuarios/listar/${usuario}/${clave}`,
         "GET"
       );
       console.log("Usuario recibido: ", datos);
