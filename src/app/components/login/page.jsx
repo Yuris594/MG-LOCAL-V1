@@ -213,7 +213,7 @@ export default function Login() {
                 >
                   <Image
                     className="logo"
-                    src="/img/logo_miguelgomez.png"
+                    src="/logo_miguelgomez.png"
                     width="230"
                     height="230"
                     alt="Logo"
