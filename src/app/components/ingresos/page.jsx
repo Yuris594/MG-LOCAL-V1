@@ -196,7 +196,7 @@ const Ingresos = () => {
 
                 <Typography variant="h6" noWrap component="div" sx={{ margin: "5px", display: "flex", flexDirection: "column", alignItems: "center", }}>
                   <Image
-                    src="/img/logo_miguelgomez-bglight.png"
+                    src="/logo_miguelgomez-bglight.png"
                     width="120"
                     height="80"
                     alt="imagenmg"

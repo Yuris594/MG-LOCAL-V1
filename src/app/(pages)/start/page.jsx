@@ -91,7 +91,7 @@ const style = {
           <AppBar position="static" sx={{ bgcolor: "#262626" }}>
             <Toolbar>
               <Image
-                src="/img/logo2.png"
+                src="/logo2.png"
                 width="80"
                 height="40"
                 alt="imagenmg"
@@ -132,7 +132,7 @@ const style = {
             
             <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
-                src="/img/logo2.png"
+                src="/logo2.png"
                 width="120"
                 height="100"
                 alt="imagenmg"
@@ -144,7 +144,7 @@ const style = {
               <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                   <Image
-                    src="/img/truperLogo.png"
+                    src="/truperLogo.png"
                     width="100"
                     height="100"
                     alt="imagentru"/>
