@@ -129,17 +129,17 @@ const Ingresos = () => {
 
     try {
       espera();
-      const { data } = await Peticion("/api/control_entradas/documento/" + cedula, "POST");
+      const { datos } = await Peticion(Global.url + "control_entradas/documento/" + cedula, "POST");
 
       if (online === true) {
         if (res.ok) {
-          if (data.respuesta === "0") {
+          if (datos.respuesta === "0") {
             setForm({ CEDULA: "" });
             entrada();
-          } else if (data.respuesta === "1") {
+          } else if (datos.respuesta === "1") {
             setForm({ CEDULA: "" });
             salida();
-          } else if (data.respuesta === "3") {
+          } else if (datos.respuesta === "3") {
             setForm({ CEDULA: "" });
             noExiste();
           }

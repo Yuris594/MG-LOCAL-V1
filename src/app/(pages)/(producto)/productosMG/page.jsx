@@ -69,7 +69,6 @@ const columns = [
   },
 ];
 
-console.log("Datos que se estan pasando al DataGrid", columns)
 
 const columnsP = [
   {
