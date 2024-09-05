@@ -129,7 +129,7 @@ const Ingresos = () => {
 
     try {
       espera();
-      const { datos } = await Peticion(Global.url + "control_entradas/documento/" + cedula, "POST");
+      const { datos } = await Peticion("/api/control_entradas/documento/" + cedula, "POST");
 
       if (online === true) {
         if (res.ok) {
