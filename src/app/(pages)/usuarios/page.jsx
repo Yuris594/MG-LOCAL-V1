@@ -92,7 +92,7 @@ function Usuarios() {
 
   const fetchUsuarios = async () => {
     try {
-      const { datos } = await Peticion("/api/usuarios/listar", "GET");
+      const { datos } = await Peticion("/usuarios/listar", "GET");
         if (datos) {
           setCargando(false);
           setUsuarios(datos);
