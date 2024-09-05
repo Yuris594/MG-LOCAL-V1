@@ -75,10 +75,10 @@ const noExiste = () => {
 const Ingresos = () => {
   const inputRef = useRef(null);
   const [checked, setChecked] = useState(false);
-  const [online, setOnline] = useState(navigator.onLine);
+  //const [online, setOnline] = useState(navigator.onLine);
   const { form, setForm, changed } = useForm({ cedula: "" });
 
-  useEffect(() => {
+ /* useEffect(() => {
     setOnline(navigator.onLine);
 
     const handleOnline = () => setOnline(true);
@@ -90,7 +90,7 @@ const Ingresos = () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, []);*/
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -122,16 +122,16 @@ const Ingresos = () => {
       return;
     }
 
-    if (!online) {
+   /* if (!online) {
       conexion();
       return;
-    }
+    }*/
 
     try {
       espera();
       const { datos } = await Peticion("/api/control_entradas/documento/" + cedula, "POST");
 
-      if (online === true) {
+      if (datos) {
         if (res.ok) {
           if (datos.respuesta === "0") {
             setForm({ CEDULA: "" });
@@ -188,11 +188,11 @@ const Ingresos = () => {
             <Paper className="" component="main">
               <CssBaseline />
               <Box sx={{ padding: 2 }}>
-                {online ? (
+               {/* {online ? (
                   <WifiIcon sx={{ color: "green" }} />
                 ) : (
                   <WifiOffIcon sx={{ color: "red" }} />
-                )}
+                )}*/}
 
                 <Typography variant="h6" noWrap component="div" sx={{ margin: "5px", display: "flex", flexDirection: "column", alignItems: "center", }}>
                   <Image
