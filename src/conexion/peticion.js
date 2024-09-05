@@ -1,4 +1,4 @@
-/*
+
 const Peticion = async (url, metodo, datoGuardar = "", archivos) => {
     
     try {
@@ -54,56 +54,5 @@ const Peticion = async (url, metodo, datoGuardar = "", archivos) => {
         }
     }
 
-export default Peticion;*/
-
-
-const Peticion = async (url, metodo, datoGuardar = "", archivos) => {
-    try {
-        let cargando = true; 
-
-        let opciones = {
-            method: metodo,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer tu_token_aqui', // Ejemplo de cabecera de autorización
-            }
-        }
-
-        if (metodo === "POST" || metodo === "PUT") {
-            if (archivos) {
-                opciones = {
-                    ...opciones,
-                    body: datoGuardar // Para archivos, se espera que datoGuardar sea FormData
-                }
-            } else {
-                opciones.body = JSON.stringify(datoGuardar);
-            }
-        }
-
-        const peticion = await fetch(url, opciones); 
-        if (!peticion.ok) {
-            return {
-                error: 'Error en la solicitud Fetch',
-                status: peticion.status, 
-                cargando: false,
-            };
-        }
-
-        const datos = await peticion.json(); 
-
-        cargando = false; 
-        return {
-            datos, 
-            cargando 
-        };
-
-    } catch (error) {
-        return {
-            error: 'Error en la conexión',
-            datos: null, 
-            cargando: false,
-        };
-    }
-}
-
 export default Peticion;
+

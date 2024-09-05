@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
   const nextConfig = {
-      output: 'export',
+      //output: 'export',
       
       async rewrites() {
         return [
           {
-            source: "/:path*",
+            source: "/api/:path*",
             destination: `http://172.20.20.3:8001/:path*`, 
            
           },
