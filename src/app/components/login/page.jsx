@@ -79,8 +79,8 @@ export default function Login() {
       return;
     }
     try {
-      const { datos } = await Peticion(`/api/usuarios/listar/${usuario}/${clave}`,"GET");
-      console.log("Usuario recibido: ", datos);
+      const { datos } = await Peticion('/api/usuarios/listar/',"GET");
+      console.log(datos);
       if (datos) {
         console.log("Usuario existe y las credenciales son correctas");
         localStorage.setItem("usuarios", JSON.stringify(datos));

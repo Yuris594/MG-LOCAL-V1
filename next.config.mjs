@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
   const nextConfig = {
+      images: {
+        unoptimized: true,
+      },
+      
       //output: 'export',
       
-      async rewrites() {
+      /*async rewrites() {
         return [
           {
             source: "/api/:path*",
@@ -10,7 +14,7 @@
            
           },
         ]
-      },
+      },*/
 
   }
 
