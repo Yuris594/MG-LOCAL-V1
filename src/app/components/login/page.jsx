@@ -79,7 +79,7 @@ export default function Login() {
       return;
     }
     try {
-      const { datos } = await Peticion('/api/usuarios/listar/',"GET");
+      const { datos } = await Peticion(Global.url + 'usuarios/listar/',"GET");
       console.log(datos);
       if (datos) {
         console.log("Usuario existe y las credenciales son correctas");
