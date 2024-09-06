@@ -6,7 +6,7 @@
       
       //output: 'export',
       
-      /*async rewrites() {
+      async rewrites() {
         return [
           {
             source: "/api/:path*",
@@ -14,7 +14,7 @@
            
           },
         ]
-      },*/
+      },
 
   }
 
