@@ -5,11 +5,9 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
 import Link from "next/link";
-
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import Banner from "@/app/components/banner/banner";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -205,6 +203,40 @@ const columnsC = [
   { field: "VENDEDOR", headerName: "VENDEDOR", width: 130 },
 ];
 
+
+
+const ConseguirPedidos = async (clienteT) => {
+  const response = await fetch(`/api/clientes/pedidos/${clienteT.CLIENTE}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json();
+      
+};
+
+const ConseguirFacturas = async (clienteT) => {
+  const response = await fetch(`/api/clientes/facturas/${clienteT.CLIENTE}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json();
+};
+
+const ConseguirCarteras = async (clienteT) => {
+  const response = await fetch(`/api/clientes/cartera/${clienteT.CLIENTE}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json();
+};
+
+
 const ClientesTemp = () => {
   const { cliente } = useAuth();
   const [selectedRows] = useState([]);
@@ -223,40 +255,46 @@ const ClientesTemp = () => {
 
   useEffect(() => {
     setCargando(true);
+    if (clienteT) {
+      obtenerPedidos();
+      obtenerFacturas();
+      obtenerCarteras();
+    }
   }, [value]);
 
   useEffect(() => {
-    const sumaSaldo60 = cartera.reduce((total, item) => total + item.SMayorA60, 0);
-    const saldo60Redondeado = Number(sumaSaldo60).toFixed(0);
-      setSumaSaldo60Total(`${parseFloat(saldo60Redondeado).toLocaleString()}`);
-
-    const sumaSaldo = cartera.reduce((total, item) => total + item.SALDO, 0);
-    const precioRedondeado = Number(sumaSaldo).toFixed(0);
-      setSumaSaldoTotal(`${parseFloat(precioRedondeado).toLocaleString()}`);
-  }, [cartera]);
+    if (Array.isArray(cartera)) {
+      const sumaSaldo60 = cartera.reduce((total, item) => total + item.SMayorA60, 0);
+      const saldo60Redondeado = Number(sumaSaldo60).toFixed(0);
+        setSumaSaldo60Total(`${parseFloat(saldo60Redondeado).toLocaleString()}`);
+  
+      const sumaSaldo = cartera.reduce((total, item) => total + item.SALDO, 0);
+      const precioRedondeado = Number(sumaSaldo).toFixed(0);
+        setSumaSaldoTotal(`${parseFloat(precioRedondeado).toLocaleString()}`);
+    }
+    }, [cartera]);
 
   const cerrar = () => {
     localStorage.removeItem("clientTemp");
     setClienteT("");
   };
 
-  const ConseguirPedidos = async () => {
+  const obtenerPedidos = async () => {
+    const datos = await ConseguirPedidos(clienteT);
     try {
-      const { datos } = await Peticion(Global.url + "clientes/pedidos" + clienteT.CLIENTE , "GET");
-        if (datos) {
-          setPedidos(datos);
-          setCargando(false);
-        } 
-      } catch (error) {
-          console.error("Error al obtener los datos", error);
-          setPedidos([]);
-          setCargando(false);
-      }
-    
-  };
+      if (datos) {
+        setPedidos(datos);
+        setCargando(false);
+      } 
+    } catch (error) {
+        console.error("Error al obtener los datos", error);
+        setPedidos([]);
+        setCargando(false);
+    }
+  }
 
-  const ConseguirFacturas = async () => {
-    const { datos } = await Peticion(Global.url + "clientes/facturas" + clienteT.CLIENTE, "GET");
+  const obtenerFacturas = async () => {
+    const datos = await ConseguirFacturas(clienteT);
     if (datos) {
       setFacturas(datos);
       setCargando(false);
@@ -265,10 +303,10 @@ const ClientesTemp = () => {
       setFacturas([]);
       setCargando(false);
     }
-  };
+  }
 
-  const ConseguirCarteras = async () => {
-    const { datos } = await Peticion(Global.url + "clientes/carteras" + clienteT.CLIENTE, "GET");
+  const obtenerCarteras = async () => {
+    const datos = await ConseguirCarteras(clienteT)
     if (datos) {
       setCartera(datos);
       setCargando(false);
@@ -277,8 +315,9 @@ const ClientesTemp = () => {
       setCartera([]);
       setCargando(false);
     }
-  };
+  }
 
+ 
   return (
     <>
       <Box marginBottom="40px">
@@ -413,9 +452,9 @@ const ClientesTemp = () => {
                   <Paper sx={{ width: "100%" }}>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                        <Tab label="Pedidos" {...a11yProps(0)} onClick={ConseguirPedidos} />
-                        <Tab label="Facturas" {...a11yProps(1)} onClick={ConseguirFacturas} />
-                        <Tab label="Cartera" {...a11yProps(2)} onClick={ConseguirCarteras} />
+                        <Tab label="Pedidos" {...a11yProps(0)} onClick={obtenerPedidos} />
+                        <Tab label="Facturas" {...a11yProps(1)} onClick={obtenerFacturas} />
+                        <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
                         <Tab label="" {...a11yProps(3)} />
                       </Tabs>
                   </Box>

@@ -21,8 +21,7 @@ import { useForm } from "@/app/hooks/useForm";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import Link from "next/link";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
+
 
 const entrada = () => {
   Swal.fire({
@@ -129,7 +128,7 @@ const Ingresos = () => {
 
     try {
       espera();
-      const { datos } = await Peticion("/api/control_entradas/documento/" + cedula, "POST");
+      const { datos } = await fetch("/api/control_entradas/documento/" + cedula, "POST");
 
       if (datos) {
         if (res.ok) {

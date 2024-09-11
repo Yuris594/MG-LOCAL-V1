@@ -3,8 +3,7 @@ import Link from "next/link";
   
   const navbar = ({ page }) => {
     return (
-      <Box sx={{ width: 250 }}>
-        <nav>
+      <Box>
           <List>
             {page.map((link) => (
               <ListItem
@@ -22,7 +21,6 @@ import Link from "next/link";
               </ListItem>
             ))}
           </List>
-        </nav>
       </Box>
     );
   };

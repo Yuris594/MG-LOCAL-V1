@@ -8,8 +8,6 @@ import PropTypes from "prop-types";
 
 import Banner from "../../../components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
 
 
 
@@ -221,7 +219,7 @@ const productosMG = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", "GET");
+      const { datos } = await fetch("/api/productos/listar_solo_para_mg", "GET");
       if (datos) {
         setProductos(datos);
         setTablaProducto(datos);
@@ -244,7 +242,7 @@ const productosMG = () => {
   const conseguirFacturas = async () => {
     setFacturas([]);
     try {
-      const { datos } = await Peticion(
+      const { datos } = await fetch(
         "/api/productos/facturas/" + articulo.ARTICULO,
         "GET"
       );
@@ -264,7 +262,7 @@ const productosMG = () => {
   const conseguirPedidos = async () => {
     setPedidos([]);
     try {
-      const { datos } = await Peticion(
+      const { datos } = await fetch(
        "/api/productos/pedidos/" + articulo.ARTICULO,
         "GET"
       );

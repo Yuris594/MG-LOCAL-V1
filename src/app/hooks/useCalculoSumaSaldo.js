@@ -6,6 +6,10 @@ const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
 
     useEffect(() => {
         const PRDCTO = value === 0 ? productosP : productosConDISP0;
+        if (!Array.isArray(PRDCTO)) {
+            console.error("PRDCTO no es un array", PRDCTO)
+            return;
+        }
         const sumaSaldo = PRDCTO.reduce((sum, producto) => {
             return sum + producto.CPed * producto.PRECIO;
         }, 0);

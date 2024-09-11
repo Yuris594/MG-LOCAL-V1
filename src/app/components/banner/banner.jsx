@@ -8,7 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import { useState } from "react";
 import Navbar from "./navbar";
 import Link from "next/link";
@@ -60,8 +60,6 @@ const Banner = () => {
 
   const cerrarSesion = () => {
     router.push("/")
-
-
   }
 
   const page = [
@@ -103,14 +101,15 @@ const Banner = () => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ bgcolor: "#262626", width: "auto" }}>
           <Toolbar>
-            <IconButton color="inherit" size="large" onClick={handleOpenNavMenu}
+            <IconButton color="inherit" onClick={handleOpenNavMenu}
               sx={{ display: { xs: "flex", md: "none" } }}>
               <MenuIcon />
             </IconButton>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               {page.map((link) => (
-                <Button
+                <Button sx={{ fontWeight: "bold", }}
                   color="inherit"
+                  size="large"
                   key={link.title}
                   LinkComponent={Link}
                   href={link.url}
@@ -125,7 +124,7 @@ const Banner = () => {
             </Button>
             <Button color="inherit">
               <PersonIcon></PersonIcon>
-              {auth.PER_Nom}
+              {auth && auth.PER_Nom}
             </Button>
             <Button color="inherit" onClick={handleOpen}>
               <LogoutIcon></LogoutIcon>
@@ -165,9 +164,13 @@ const Banner = () => {
           </MenuItem>
         </Menu>
 
-        <Drawer open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: "flex", md: "none" } }}>
+        <Menu 
+         id="basic-menu"
+         anchorEl={anchorEl}
+         MenuListProps={{'aria-labelledby': 'basic-button'}}
+         open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: "flex", md: "none" } }}>
           <Navbar page={page} />
-        </Drawer>
+        </Menu>
       </Box>
     </>
   );

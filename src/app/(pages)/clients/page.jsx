@@ -13,13 +13,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import { LinearProgress } from '@mui/material';
 
-import useAuth from '@/app/hooks/useAuth';
-import Peticion from '@/conexion/peticion';
+import { useAuth } from '@/context/authContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Banner from '@/app/components/banner/banner';
 import BotonExcel from '@/app/hooks/useExportoExcel';
-import { Global } from '@/conexion/conexion';
 import { conexion } from '../usuarios/page';
 
 
@@ -43,6 +41,14 @@ const columns = [
   },
 ];
 
+const conseguirClientes = async () => {
+  const response = await fetch("/api/clientes/listar", {
+
+  })
+  const data = await response.json()
+  return data
+}
+
 
 const Clientes = () => {
   const router = useRouter()
@@ -56,12 +62,12 @@ const Clientes = () => {
 
 
   useEffect(() => {
-    conseguirClientes();
+    obtenerClientes();
   }, [])
 
-  const conseguirClientes = async () => {
+  const obtenerClientes = async () => {
+    const datos = await conseguirClientes();
     try {
-      const { datos } = await Peticion("/api/clientes/listar", "GET")
         if (datos) {
           setCargando(false)
           setClientes(datos);
@@ -74,7 +80,7 @@ const Clientes = () => {
       conexion()
       console.log("Error")
     }
-  }
+  } 
 
   const handleChange = e => {
     e.preventDefault()

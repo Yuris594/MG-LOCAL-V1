@@ -1,6 +1,6 @@
 'use client'
 
-import { Global } from "@/conexion/conexion";
+
 import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 

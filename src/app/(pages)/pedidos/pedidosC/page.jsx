@@ -9,12 +9,10 @@ import useGenerarPDF from "@/app/hooks/useGenerarPDF";
 import Banner from "@/app/components/banner/banner";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import PropTypes from "prop-types";
 import React from "react";
 import MuiAlert from "@mui/material/Alert";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -90,6 +88,63 @@ const style = {
 };
 
 
+const conseguirProductos = async () => {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json",
+    }
+  })
+    const data = await response.json()
+    return data
+};
+
+
+const conseguirProductosP = async (pedidoId) => {
+    const response = await fetch(`/api/pedidos/detalle_lineas/${pedidoId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type" : "application/json",
+    }
+  })
+    const data = await response.json()
+    return data
+};
+
+const conseguirProductosPendientes = async (pedidoID) => {
+    const response = await fetch(`/api/pedidos/articulos_pendientes/${pedidoID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type" : "application/json",
+    }
+  })
+    const data = await response.json()
+    return data
+};
+
+const guardarProductos = async (bodyData) => {
+  const response = await fetch("/api/pedido/crear/", {
+    method: "POST",
+    body: JSON.stringify(bodyData),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json()
+  return data
+};
+
+const guardarProductosP = async (bodyData) => {
+  const response = await fetch("/api/pedido/crear/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bodyData),
+  });
+
+  const data = await response.json()
+  return data
+};
+
+
 export const PedidosC = () => {
   const { form, changed } = useForm({});
   const [value, setValue] = useState(0);
@@ -116,90 +171,82 @@ export const PedidosC = () => {
   useEffect(() => {
     const pedido = JSON.parse(localStorage.getItem("pedidoTemp"));
       if (pedido) {
-        setPedido(pedido);
+        setPedido(pedido[0]);
       }
-    conseguirProductos();
-    conseguirProductosP();
-    conseguirProductosPendientes();
+      if (clienteP) {
+        obtenerProductos();
+        obtenerProductosP(clienteP.PEDIDO);
+        obtenerProductosPendientes(clienteP.PEDIDO);
+      }
 
     setTimeout(() => {
       setChecked(true);
     }, 100);
   }, []);
 
-
-  const conseguirProductos = async () => {
+  const obtenerProductos = async () => {
+    const datos = await conseguirProductos();
     try {
-      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", "GET")
-        if (datos) {
-          setProductos(datos);
-          setTablaProducto(datos);
-        }
+      if (datos) {
+        setProductos(datos);
+        setTablaProducto(datos);
+      }
     } catch (error) {
         console.log("Error al obtener los datos", error);
     }
-  };
+  }
 
-
-  const conseguirProductosP = async () => {
+  const obtenerProductosP = async (pedidoId) => {
+    const datos = await conseguirProductosP(pedidoId);
     try {
-      const { datos } = await Peticion("/api/pedidos/detalle_lineas/" + clienteP.PEDIDO, "GET");
-        if (datos) {
-          setProductosP(datos);
-        }
+      if (datos) {
+        setProductosP(datos);
+      }
     } catch (error) {
         console.log("Error al obtener los datosP", error);
     }
-  };
+  }
 
-  const conseguirProductosPendientes = async () => {
+  const obtenerProductosPendientes = async (pedidoID) => {
+    const datos = await conseguirProductosPendientes(pedidoID);
     try {
-      const { data } = await Peticion("/api/pedidos/articulos_pendientes/" + clienteP.PEDIDO, "GET");
-        if (data) {
-          setProductosConDIPS0(data);
-        }
+      if (datos) {
+        setProductosConDIPS0(datos);
+      }
     } catch (error) {
       console.log("Error al obtener los datoscon", error);
     }
-  };
+  }
 
-  const guardarProductos = async (e) => {
+  const productosGuardar = async (e) => {
     e.preventDefault();
-      const bodyData = {
-        ...clienteP,
-        ARTICULOS: productosP,
-        OBSERVACIONES: form.OBSERVACIONES,
-      };
-      try {
-          const { data } = await Peticion("/api/pedido/crear/", {
-            method: "POST",
-            body: JSON.stringify(bodyData),
-            headers: { "Content-Type": "application/json" },
-          });
-            if (data) {
-              console.log("Crear")
-              setOpenS(true);
-            } else {
-              setOpenE(true);
-              console.error("Error de red: ", error);
-            }
-      } catch (error) {
-          setOpenE(true);
-          console.error("Error de red: ", error);
-        }
-  };
+    const bodyData = {
+      ...clienteP,
+      ARTICULOS: productosP,
+      OBSERVACIONES: form.OBSERVACIONES,
+    };
+    const data = await guardarProductos(bodyData);
+    try {
+          if (data) {
+            console.log("Crear")
+            setOpenS(true);
+          } else {
+            setOpenE(true);
+            console.error("Error de red: ", error);
+          }
+    } catch (error) {
+        setOpenE(true);
+        console.error("Error de red: ", error);
+      }
+  }
 
-  const guardarProductosP = async (e) => {
+  const productosguardarP = async () => {
     const bodyData = {
       ...clienteP,
       ARTICULOS: productosConDISP0,
     };
+    const data = await guardarProductosP(bodyData)
     try {
-      const { data } = await fetch(Global.url + "pedido/crear/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
         if (data) {
           setOpenS(true);
         } else {
@@ -209,7 +256,10 @@ export const PedidosC = () => {
       setOpenE(true);
       console.error("Error de reed: ", error);
     }
-  };
+  }
+
+
+  
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -478,7 +528,7 @@ export const PedidosC = () => {
                   ) : (
                     <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled> <PrintIcon /> </Button>
                   )}
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={guardarProductos}> <SaveAsIcon /> </Button>
+                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}> <SaveAsIcon /> </Button>
                     <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }}> <EditIcon /> </Button>
                     <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84d8f4" }}> <NoteAddIcon /> </Button>
                     <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}> <HighlightOffIcon /> </Button>
@@ -714,7 +764,7 @@ export const PedidosC = () => {
                 </Box>
 
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={guardarProductosP}>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
                     <ControlPointIcon />
                   </Button>
                 </Box>

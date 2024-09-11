@@ -8,9 +8,8 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { format, parse } from "date-fns";
 import Swal from "sweetalert2";
-import Peticion from "@/conexion/peticion";
 import { useForm } from "@/app/hooks/useForm";
-import { Global } from "@/conexion/conexion";
+
 
 const noExiste = () => {
   Swal.fire({
@@ -32,7 +31,7 @@ const Factura = () => {
     e.preventDefault();
     const factura_ = form.factura;
     try {
-      const { datos } = await Peticion("/api/clientes/factura_lineas/" + factura_, "GET");
+      const { datos } = await fetch("/api/clientes/factura_lineas/" + factura_, "GET");
       if (datos) {
           setFac(datos[0]);
           const clavesDeseadas = [

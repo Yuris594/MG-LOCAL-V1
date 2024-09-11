@@ -4,8 +4,8 @@ import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront
 import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
+import { useAuth }  from "@/context/authContext";
 import HomeIcon from "@mui/icons-material/Home";
-import { useAuth } from "../../hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
@@ -29,13 +29,12 @@ const style = {
 
   const Inicio = () => {
     const router = useRouter();
-    const { auth } = useAuth();
+    const { auth, logout } = useAuth();
     const handleOpen = () => setOpen(true);
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const [anchor, setAnchor] = useState(null);
     const [productos, setProductos] = useState(false);
-
 
       const handleClick = (event) => {
         setProductos(true);
@@ -103,8 +102,8 @@ const style = {
                 <HomeIcon></HomeIcon>
               </Button>
 
-              <Button color="inherit">
-                <PersonIcon>{auth.PER_Nom}</PersonIcon>
+              <Button variant="h5" color="inherit">
+                <PersonIcon></PersonIcon>{auth && auth.PER_Nom}
               </Button>
 
               <Button color="inherit" onClick={handleOpen}>
@@ -137,9 +136,12 @@ const style = {
                 height="100"
                 alt="imagenmg"
                 priority={true}/>
+
+              <Typography variant="h6" sx={{ fontWeight: "bold", marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
-                <Typography sx={{ mb: 1.5 }} color="white"> {auth.PER_Nom} </Typography>
+            
+            
 
               <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>

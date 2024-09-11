@@ -4,7 +4,7 @@ import DirectionsIcon from '@mui/icons-material/Directions';
 import { useGenerarPDF } from "@/app/hooks/useReciboPDF";
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 
 

@@ -17,10 +17,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-            <AuthProvider> {children} </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider> 
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+              {children} 
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -6,12 +6,10 @@ import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import { DataGrid } from "@mui/x-data-grid";
-import Actualizar from "./actualizar/page";
 import Registro from "./registrar/page";
-import Peticion from "@/conexion/peticion";
 import UsuarioActualizar from "./actualizar/page";
 import Swal from "sweetalert2";
-import { Global } from "@/conexion/conexion";
+
 
 const styles = {
   position: "absolute",
@@ -67,6 +65,19 @@ const columns = [
   },
 ];
 
+
+const PageUsuario = async () => {
+    const response = await fetch('/api/usuarios/listar', {
+      method: "GET",
+      headers: {
+        "Content-Type" : "application/json",
+      }
+    });
+    const data = await response.json();
+    return data;
+};
+
+
 function Usuarios() {
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
@@ -80,27 +91,44 @@ function Usuarios() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaUsuario, setTablaUsuario] = useState([]);
 
-  const handleCloseA = () => {
-    setUsuario([]);
-    setOpenA(false);
-  };
+
+  const fecUsuarios = async (e) => {
+   // e.preventDefault();
+    try {
+      const datos = await PageUsuario();
+        if (datos) {
+            const datosT = datos.map((item) => ({
+              IdPer: item.IdPer,
+              PER_Nom: item.PER_Nom,
+              PER_Usuario: item.PER_Usuario,
+              PER_Clave: item.PER_Clave,
+              IdDiv: item.IdDiv,
+              PERAUTOPED: item.PERAUTOPED,
+              CODVEND: item.CODVEND,
+              PREFIJO: item.PREFIJO,
+              CONSECUTIVOPED: item.CONSECUTIVOPED
+            }))
+          setCargando(false);
+          setUsuarios(datosT);
+          setTablaUsuario(datosT);
+        } else {
+          console.log("Error", datos)
+        }
+    } catch (error) {
+      console.error("Error: No hay datos", error);
+      conexion();
+    }
+  }
 
   useEffect(() => {
-    fetchUsuarios();
+    fecUsuarios();
     setChecked(true);
   }, []);
 
-  const fetchUsuarios = async () => {
-    try {
-      const { datos } = await Peticion("/api/usuarios/listar", "GET");
-        if (datos) {
-          setCargando(false);
-          setUsuarios(datos);
-          setTablaUsuario(datos);
-        }
-    } catch (error) {
-        conexion()
-    }
+
+  const handleCloseA = () => {
+    setUsuario([]);
+    setOpenA(false);
   };
 
   const handleChange = (e) => {
@@ -121,7 +149,7 @@ function Usuarios() {
 
   const limpiarBusqueda = () => {
     setBusqueda();
-    fetchUsuarios();
+    fecUsuarios();
   };
 
   const handleSelection = useCallback(
@@ -148,11 +176,6 @@ function Usuarios() {
       <Box marginBottom="40px">
         {" "} <Banner /> {" "}
       </Box>
-        {cargando === true ? (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-          ) : (
           <Zoom in={checked}>
             <Box style={{ height: "auto", width: "100%" }}>
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -222,7 +245,7 @@ function Usuarios() {
             </Box>
           </Box>
         </Zoom>
-      )}
+    
     </>
   );
 }

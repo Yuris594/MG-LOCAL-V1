@@ -7,11 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
-import Peticion from "@/conexion/peticion";
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 import { conexion } from "../usuarios/page";
-import { Global } from "@/conexion/conexion";
+
 
 const style = {
   position: "absolute",
@@ -72,7 +71,19 @@ const columns = [
   { field: "CIUDAD", headerName: "Ciudad", width: 200 },
 ];
 
-const pedidos = () => {
+const conseguirArticulos = async () => {
+  const response = await fetch("/api/pedidos/listar", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json",
+    }
+  });
+    const data = await response.json()
+    return data
+  
+};
+
+const Pedidos = () => {
   const router = useRouter();
   const { setPedido } = useAuth();
   const [tabla, setTabla] = useState([]);
@@ -86,25 +97,25 @@ const pedidos = () => {
   const pedidosMemo = useMemo(() => pedidos, [pedidos]);
 
   useEffect(() => {
-    conseguirArticulos();
+    Pedidos();
   }, []);
-  
-  const conseguirArticulos = async () => {
+
+  const Pedidos = async () => {
+    const datos = await conseguirArticulos();
     try {
-      const { datos } = await Peticion("/api/pedidos/listar", "GET");
-        if (datos) {
-          setPedidos(datos);
-          setTabla(datos);
-          setCargando(false);
-          
-          setTimeout(() => {
-              setChecked(true);
-          }, 100);
-        }
+      if (datos) {
+        setPedidos(datos);
+        setTabla(datos);
+        
+        setTimeout(() => {
+            setChecked(true);
+        }, 100);
+      }
     } catch (error) {
-          conexion()
+      conexion()
     }
-  };
+  }
+  
   
   const handleChange = (e) => {
     e.preventDefault();
@@ -152,11 +163,7 @@ const pedidos = () => {
       </Box>
 
       <div className="container">
-        {cargando === true ? (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-        ) : (
+       
       <Box>
         <div style={{ height: "auto", width: "100%" }}>
           <Typography
@@ -291,10 +298,10 @@ const pedidos = () => {
             </Box>
           </Modal>
         </Box>
-        )}
+        
       </div>
     </>
   );
 };
 
-export default pedidos;
+export default Pedidos;

@@ -3,7 +3,7 @@
 import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography, } from "@mui/material";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react"
-import { Global } from "@/conexion/conexion";
+
 
 const UsuarioActualizar = ({usuario}) => {
   const [open, setOpen] = useState(false);

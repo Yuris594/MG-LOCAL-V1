@@ -12,9 +12,9 @@ import Zoom from "@mui/material/Zoom";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
+
 
 const columns = [
   { field: "CLIENTE", headerName: "NIT", width: 130,  headerClassName: 'super-app-theme--header',  },
@@ -45,7 +45,7 @@ const ClientesGlobal = ({ setOpen }) => {
 
   const conseguirClientes = async () => {
     try {
-      const { datos } = await Peticion("/api/clientes/listar", "GET");
+      const { datos } = await fetch("/api/clientes/listar", "GET");
         if (datos) {
           setClientes(datos);
           setTablaCliente(datos);

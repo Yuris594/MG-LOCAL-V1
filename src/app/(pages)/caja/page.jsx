@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import ClientesGlobal from "../clients/clientesGlobal/page";
 import Banner from "@/app/components/banner/banner";
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 
 const style = {
   position: "absolute",

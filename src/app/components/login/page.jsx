@@ -1,51 +1,27 @@
-"use client";
+'use client'
 
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  CssBaseline,
-  Slide,
-  Snackbar,
-  TextField,
-  Toolbar,
-  Typography,
-  Zoom,
-} from "@mui/material";
+import { AppBar, Box, Button, Container, CssBaseline, Slide, Snackbar, TextField, Toolbar, Typography, Zoom } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
-import { useForm } from "@/app/hooks/useForm";
 import { useRouter } from "next/navigation";
 import MuiAlert from "@mui/material/Alert";
-import useAuth from "@/app/hooks/useAuth";
 import { useState } from "react";
-import Image from "next/image";
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
+import { useAuth } from "@/context/authContext";
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
-    <MuiAlert
-      elevation={6}
-      ref={ref}
-      variant="filled"
-      {...props}
-    />
+    <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
   );
 });
 
 export function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {"Departamento de Sistemas "}
       {new Date().getFullYear()}
       {"."}
@@ -53,54 +29,59 @@ export function Copyright(props) {
   );
 }
 
+
+const Iniciar = async (usuario, clave) => {
+  try {
+    const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.log("Error en la solicitud");
+    }
+
+    return data
+   
+  } catch (error) {
+    console.error("Error en la petición: ", error);
+    return { error: "Error en la conexión" };
+  }
+};
+
+
 export default function Login() {
   const router = useRouter();
-  const { setAuth } = useAuth();
-  const [open, setOpen] = useState();
-  const [openE, setOPenE] = useState();
+  const { login } = useAuth();
   const [saved, setSaved] = useState();
-  const { form, changed } = useForm({});
-  const [checked, setChecked] = useState(false);
+  const [clave, setClave] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openE, setOpenE] = useState(false);
+  const [error, setError] = useState(false);
+  const [usuario, setUsuario] = useState("");
+  
 
-  if (checked == false) {
-    setTimeout(() => {
-      //Establece un temporizador de milisegundos - Callback
-      setChecked(true);
-    }, 500);
-  }
-
-  const Iniciar = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const usuario = form.PER_Usuario;
-    const clave = form.PER_Clave;
+    const resultado = await Iniciar(usuario, clave);
 
-    if (!form.PER_Usuario || !form.PER_Clave) {
-      console.info("Por favor, completa todos los campos");
-      return;
-    }
-    try {
-      const { datos } = await Peticion('/api/usuarios/listar/',"GET");
-      console.log(datos);
-      if (datos) {
-        console.log("Usuario existe y las credenciales son correctas");
-        localStorage.setItem("usuarios", JSON.stringify(datos));
-        setSaved("saved");
-        setOPenE(false);
+      if (!resultado.error) {
+        localStorage.setItem("usuarios", JSON.stringify(resultado));
+        login(resultado);
         setOpen(true);
+        setSaved(true);
+        console.log(resultado)
 
-        setTimeout(() => {
-          setAuth(datos);
-          window.location.reload();
-        }, 1000);
+    
         router.push("../../start");
       } else {
-        setOPenE(true);
-        setSaved("error");
-        console.log("Usuario no existe");
+        setError(true);
+        setOpenE(true);
+        console.log("Error", resultado.error);
       }
-    } catch (error) {
-      console.error("Error en la peticipon: ", error);
-    }
   };
 
   const handleClose = (reason) => {
@@ -112,76 +93,16 @@ export default function Login() {
 
   return (
     <>
-      {open ? (
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            variant="outlined"
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Usuario identificado.
-          </Alert>
-        </Snackbar>
-      ) : (
-        ""
-      )}
-      {openE ? (
-        <Snackbar
-          open={openE}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            variant="outlined"
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            El usuario o la contraseña son incorrectos.
-          </Alert>
-        </Snackbar>
-      ) : (
-        ""
-      )}
-
       <Box sx={{ height: 180 }}>
-        <Slide
-          direction="down"
-          in={checked}
-          mountOnEnter
-          unmountOnExit
-        >
-          <AppBar
-            position="static"
-            sx={{ bgcolor: "#262626", height: "80px" }}
-          >
-            <Toolbar
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ flexGrow: 1, marginLeft: "10px" }}
-              >
+
+        <Slide direction="down" in={true} mountOnEnter unmountOnExit>
+          <AppBar position="static" sx={{ bgcolor: "#262626", height: "80px" }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
+              <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, marginLeft: "10px" }}>
                 {" "}
               </Typography>
-              <Button
-                component={Link}
-                href="/components/ingresos"
-                sx={{ color: "white" }}
-                title="Control de entredas y salidas de los empleados"
-              >
+              <Button component={Link} href="/components/ingresos" sx={{ color: "white" }}
+                title="Control de entredas y salidas de los empleados">
                 <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
               </Button>
             </Toolbar>
@@ -189,80 +110,49 @@ export default function Login() {
         </Slide>
 
         <Box sx={{ zoom: 1.2 }}>
-          <Zoom in={checked}>
-            <Container
-              className="login"
-              component="main"
-              maxWidth="xs"
-            >
+          <Zoom in={true}>
+            <Container className="login" component="main" maxWidth="xs">
               <CssBaseline />
-              <Box
-                sx={{
-                  marginTop: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  height: "auto",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="div"
-                  sx={{ margin: 2 }}
-                >
-                  <Image
-                    className="logo"
-                    src="/logo_miguelgomez.png"
-                    width="230"
-                    height="230"
-                    alt="Logo"
-                    priority={true}
-                  />
-                </Typography>
-                {saved == "saved" ? (
-                  <HowToRegIcon sx={{ color: "green" }}></HowToRegIcon>
-                ) : (
-                  ""
-                )}
-                {saved == "error" ? (
-                  <HighlightOffIcon sx={{ color: "red" }}></HighlightOffIcon>
-                ) : (
-                  ""
-                )}
+                <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", height: "auto", }}>
 
-                <Zoom
-                  in={checked}
-                  style={{ transitionDelay: checked ? "700ms" : "0ms" }}
-                >
-                  <Box
-                    component="form"
-                    onSubmit={Iniciar}
-                    noValidate
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
+                  <Typography variant="h6" noWrap component="div" sx={{ margin: 2 }} >
+                    <Image
+                      className="logo"
+                      src="/logo_miguelgomez.png"
+                      width="230"
+                      height="230"
+                      alt="Logo"
+                      priority={true}
+                    />
+                  </Typography>
+                    {saved == "saved" ? (
+                      <HowToRegIcon sx={{ color: "green" }}></HowToRegIcon>
+                    ) : (
+                      ""
+                    )}
+                    {saved == "error" ? (
+                      <HighlightOffIcon sx={{ color: "red" }}></HighlightOffIcon>
+                    ) : (
+                      ""
+                    )}
+                
+
+                  <Box component="form" noValidate onSubmit={handleSubmit}
+                    sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
+                    
                     <TextField
-                      error={saved == "error"}
+                      error={error}
                       id="usuario"
                       label="Usuario"
                       margin="normal"
                       fullWidth
                       name="PER_Usuario"
-                      value={form.PER_Usuario || ""}
-                      onChange={changed}
+                      value={usuario}
+                      onChange={(e) => setUsuario(e.target.value)}
                     />
 
-                    <Typography
-                      component="h1"
-                      variant="h6"
-                    ></Typography>
-
                     <TextField
-                      error={saved == "error"}
+                      error={error}
                       margin="normal"
                       required
                       fullWidth
@@ -270,27 +160,33 @@ export default function Login() {
                       name="PER_Clave"
                       id="contraseña"
                       label="Contraseña"
-                      value={form.PER_Clave || ""}
-                      onChange={changed}
+                      value={clave}
+                      onChange={(e) => setClave(e.target.value)}
                     />
 
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="success"
-                      sx={{
-                        marginTop: 2,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        minWidth: 398,
-                      }}
-                    >
+                    <Button type="submit" variant="contained" color="success"
+                        sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 398,}}>
                       Iniciar sesión
                     </Button>
                   </Box>
-                </Zoom>
-              </Box>
+
+                   {/* Snackbar para mostrar mensajes */}
+                    {open ? (
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} variant="outlined" severity="success" sx={{ width: "100%" }}>
+                        Usuario identificado.
+                      </Alert>
+                    </Snackbar>
+                  ) : ( "" )}
+
+                  {openE ? ( <Snackbar open={openE} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} variant="outlined" severity="error" sx={{ width: "100%" }}>
+                        El usuario o la contraseña son incorrectos.
+                      </Alert>
+                    </Snackbar>
+                  ) : ( "" )}
+              
+                </Box>
               <Copyright sx={{ mt: 5, mb: 5 }} />
             </Container>
           </Zoom>

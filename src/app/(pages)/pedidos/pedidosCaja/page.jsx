@@ -25,11 +25,10 @@ import {
 import ClienteGlobal from "../../clients/clientesGlobal/page";
 import useTecladoCaja from "@/app/hooks/useTecladoCaja";
 import Banner from "@/app/components/banner/banner";
-import useAuth from "@/app/hooks/useAuth";
+import { useAuth } from "@/context/authContext";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import Peticion from "@/conexion/peticion";
-import { Global } from "@/conexion/conexion";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -146,7 +145,7 @@ const PedidosCaja = () => {
 
   const conseguirProductos = async () => {
     try {
-      const { datos } = await Peticion("/api/productos/listar_solo_para_mg", {
+      const { datos } = await fetch("/api/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
