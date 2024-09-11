@@ -5,6 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
+import { useAuth } from "@/context/authContext";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -12,8 +13,7 @@ import Zoom from "@mui/material/Zoom";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 
-import { useAuth } from "@/context/authContext";
-import Peticion from "@/conexion/peticion";
+
 
 
 const columns = [
@@ -31,6 +31,17 @@ const columns = [
   },
 ];
 
+
+const obtenerClientes = async () => {
+  const response = await fetch("/api/clientes/listar", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json()
+};
+
 const ClientesGlobal = ({ setOpen }) => {
   const { setCliente } = useAuth();
   const [clientes, setClientes] = useState();
@@ -44,15 +55,15 @@ const ClientesGlobal = ({ setOpen }) => {
   }, []);
 
   const conseguirClientes = async () => {
+    const datos = await obtenerClientes()
     try {
-      const { datos } = await fetch("/api/clientes/listar", "GET");
-        if (datos) {
-          setClientes(datos);
-          setTablaCliente(datos);
-        }
-        setTimeout(() => {
-          setChecked(true);
-        }, 100);
+      if (datos) {
+        setClientes(datos);
+        setTablaCliente(datos);
+      }
+      setTimeout(() => {
+        setChecked(true);
+      }, 100);
 
     } catch (error) {
       console.log("Error al obtener los datos", error);

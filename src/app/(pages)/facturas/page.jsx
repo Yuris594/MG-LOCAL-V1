@@ -19,6 +19,16 @@ const noExiste = () => {
   });
 };
 
+const obtenerFactura = async (factura_) => {
+  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
+    method: "GET", 
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json()
+}
+
 const Factura = () => {
   const { form, changed } = useForm({});
   const [fac, setFac] = useState(null);
@@ -30,8 +40,8 @@ const Factura = () => {
   const factura = async (e) => {
     e.preventDefault();
     const factura_ = form.factura;
+    const datos = await obtenerFactura(factura_)
     try {
-      const { datos } = await fetch("/api/clientes/factura_lineas/" + factura_, "GET");
       if (datos) {
           setFac(datos[0]);
           const clavesDeseadas = [
@@ -182,7 +192,7 @@ const Factura = () => {
     function agregarContenido() {
       pdf.setFontSize(10);
       pdf.text(`TOTAL ITEMS:        ${productos.length}`, 350, pdf.autoTable.previous.finalY + 20);
-      pdf.text(`SubTotal:     ${totales.sumatotal}`, 470, pdf.autoTable.previous.finalY + 20);
+      pdf.text(`SubTotal:     ${fac.TOTAL_MERCADERIA}`, 470, pdf.autoTable.previous.finalY + 20);
       pdf.text(`Desc:           ${totales.descuento}`, 470, pdf.autoTable.previous.finalY + 40);
       pdf.text(`IVA:              ${totales.impuesto}`, 470, pdf.autoTable.previous.finalY + 60);
       pdf.text(`TOTAL:        ${totales.totalConImpuesto}`, 470, pdf.autoTable.previous.finalY + 80);

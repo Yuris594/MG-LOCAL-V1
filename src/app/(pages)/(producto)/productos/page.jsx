@@ -171,6 +171,50 @@ const columnsP = [
   },
 ];
 
+
+const obtenerProductos = async (bodegaSeleccionada) => {
+  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json()
+  
+};
+
+const obtenerFacturas = async (articulo) => {
+  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json()
+};
+
+
+const obtenerPedidos = async (articulo) => {
+  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json() 
+};
+
+const obtenerBodegas = async () => {
+  const response = await fetch("/api/productos/bodegas", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  })
+  return response.json()
+};
+
+
 function productos() {
   const inputRef = useRef();
   const [value, setValue] = useState(0);
@@ -184,7 +228,7 @@ function productos() {
   const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
-  const [bodegaSeleccionada, setBodegaSeleccionada] = useState(null);
+  const [bodegaSeleccionada, setBodegaSeleccionada] = useState();
 
   useLayoutEffect(() => {}, [bodegaSeleccionada]);
 
@@ -202,10 +246,10 @@ function productos() {
   }, [value]);
 
   const conseguirProductos = async () => {
+    if (bodegaSeleccionada) {
+      setOpen(true);
+    const datos = await obtenerProductos(bodegaSeleccionada)
     try {
-      if (bodegaSeleccionada) {
-          setOpen(true);
-        const { datos } = await fetch("/api/productos/listar/" + bodegaSeleccionada.BODEGA, "GET");
         if (datos) {
           setOpen(false)
           setProductos(datos);
@@ -217,18 +261,17 @@ function productos() {
           setProductos([]);
           setCargando(false);
         }
-      }
-    } catch (error) {
+      } catch (error) {
       setOpen(false);
     }
-  };
+  }
+};
 
   const conseguirFacturas = async () => {
+    const datos = await obtenerFacturas(articulo)
     setFacturas([]);
     try {
       if (bodegaSeleccionada) {
-        const { datos } = await fetch("/api/productos/facturas/" + articulo.ARTICULO, "GET")
-        console.log(datos);
         if (datos) {
           setFacturas(datos);
           setCargando(false);
@@ -243,10 +286,10 @@ function productos() {
   };
 
   const conseguirPedidos = async () => {
+    const datos = await obtenerPedidos(articulo)
     setPedidos([]);
     try {
       if (bodegaSeleccionada) {
-        const { datos } = await fetch("/api/productos/pedidos/" + articulo.ARTICULO, "GET")
         if (datos) {
           setPedidos(datos);
           setCargando(false);
@@ -261,8 +304,8 @@ function productos() {
   };
 
   const conseguirBodegas = async () => {
+    const datos = await obtenerBodegas()
     try {
-      const { datos } = await fetch("/api/productos/bodegas", )
         if (datos) {
           setBodegas(datos);
         }
@@ -316,14 +359,12 @@ function productos() {
         {" "}
         <Banner />{" "}
       </Box>
-      <div className="container conatiner-datgrid">
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
-        <div style={{ height: "auto", width: "100%" }}>
           <Box>
             <Typography
               variant="h5"
@@ -546,8 +587,6 @@ function productos() {
               )}
             </CustomTabPanel>
           </Box>
-        </div>
-      </div>
     </>
   );
 }

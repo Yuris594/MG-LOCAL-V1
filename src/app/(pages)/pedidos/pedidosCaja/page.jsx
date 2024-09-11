@@ -76,6 +76,15 @@ const columns = [
   { field: "EXIST_REAL", headerName: "Existreal", width: 90, headerClassName: 'super-app-theme--header', },
 ];
 
+
+const obtenerProductos = async () => {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+  });
+  return response.json()
+};
+
 const PedidosCaja = () => {
   const { setCaja, cliente } = useAuth();
   const [open, setOpen] = useState(false);
@@ -144,11 +153,8 @@ const PedidosCaja = () => {
   }, [selectedRows]);
 
   const conseguirProductos = async () => {
+    const datos = await obtenerProductos();
     try {
-      const { datos } = await fetch("/api/productos/listar_solo_para_mg", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
       setProductos(datos);
       setTablaProducto(datos);
       setCargando(false);

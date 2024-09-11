@@ -1,4 +1,5 @@
 
+
 import { Box, Button, Card, CardContent, Divider, IconButton, InputBase, Paper, Typography } from "@mui/material"
 import DirectionsIcon from '@mui/icons-material/Directions';
 import { useGenerarPDF } from "@/app/hooks/useReciboPDF";
@@ -15,11 +16,25 @@ const bull = (
 );
 
   const ReciboCaja = () => {
+    const { caja, auth } = useAuth(); 
+    const valores = Object.values(caja); 
+    const valores2 = Object.values(caja.tipoPago); 
+    const { generarPDF } = useGenerarPDF(valores, valores2, auth, caja); 
+    console.log(caja.cliente.E_MAIL); 
+
+    const cerrarP = () => {
+        localStorage.removeItem('pago'); 
+        localStorage.removeItem('pedidoTempG'); 
+        localStorage.removeItem('clientTemp'); 
+        localStorage.removeItem('pedidoTemp'); 
+    };
+
+
 
     return (
         <Paper className="container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', overflow: "auto"}}>
             <Typography sx={{ fontSize: 50, marginBottom: "15px" }} color="text.secondary" gutterBottom>
-                Valor a Cancelar: $
+                Valor a Cancelar: ${caja.total}
             </Typography>
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
@@ -31,7 +46,7 @@ const bull = (
                                 ¿Como le gustaria recibir su recibo?
                             </Typography>
                             
-                                <Button variant="outlined" sx={{ width: 550, marginBottom: 5, backgroundColor: "#979797", color: "#3c3c3c"}} >Imprimir Recibo</Button>
+                                <Button variant="outlined" sx={{ width: 550, marginBottom: 5, backgroundColor: "#979797", color: "#3c3c3c"}} onClick={generarPDF}>Imprimir Recibo</Button>
                         
                                     <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 550, height: 100, }}>
                                         
@@ -64,12 +79,17 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio -  ..
+                                .. Servicio -  {auth.PER_Nom}..
                             </Typography>
                         </CardContent>
 
                         <CardContent>
-                           
+                            {valores.map((row) => (
+                                <Typography component="div" key={row.ARTICULO} sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: 0 }}>
+                                    <span>{row.DESCRIPCION}</span>
+                                    <span>{row.PRECIO}</span>
+                                </Typography>
+                            ))}
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
@@ -81,7 +101,15 @@ const bull = (
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', paddingTop: 0}}>
-                           
+                            {valores2.map((row, index) => (
+                                <Typography component="div" key={index} sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    {Object.entries(row).map(([key, value], idx) => (
+                                        value !== 0 ?
+                                            <span key={idx}>{key}: {value.toString()}</span>
+                                            : null
+                                    ))}
+                                </Typography>
+                            ))}
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
@@ -95,7 +123,7 @@ const bull = (
             </Box>
 
             <Box sx={{ width: '139vw', padding: 0, margin: 0, paddingTop: 12 }}>
-                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }}>
+                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }} onClick={cerrarP}>
                     Nuevo Pedido
                 </Button>
             </Box>

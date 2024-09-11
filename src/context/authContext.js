@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         setAuth(null);
     };
 
-    /*useEffect(() => {
+    useEffect(() => {
       const user = localStorage.getItem("datos");
       const cliente = localStorage.getItem("clientTemp");
       const pedido = localStorage.getItem("pedidoTemp");
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       if (pedido)  { setPedido(JSON.parse(pedido))};
       if (caja)  { setCaja(JSON.parse(caja))};
 
-    }, []);*/
+    }, []);
 
 
     return (

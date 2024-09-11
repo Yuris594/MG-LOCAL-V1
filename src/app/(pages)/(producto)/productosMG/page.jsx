@@ -197,6 +197,37 @@ function allyProps(index) {
   };
 }
 
+const obtenerProductos = async () => {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  return response.json()
+    
+};
+
+const obtenerFacturas = async (articulo) => {
+  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`,{
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+   return response.json()
+};
+
+const obtenerPedidos = async (articulo) => {
+  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+   return response.json()
+};
+
 const productosMG = () => {
   const [value, setValue] = useState(0);
   const [pedidos, setPedidos] = useState([]);
@@ -218,8 +249,8 @@ const productosMG = () => {
   }, []);
 
   const conseguirProductos = async () => {
+    const datos = await obtenerProductos()
     try {
-      const { datos } = await fetch("/api/productos/listar_solo_para_mg", "GET");
       if (datos) {
         setProductos(datos);
         setTablaProducto(datos);
@@ -240,13 +271,9 @@ const productosMG = () => {
   }, [memo]);
 
   const conseguirFacturas = async () => {
+    const datos = await obtenerFacturas(articulo)
     setFacturas([]);
     try {
-      const { datos } = await fetch(
-        "/api/productos/facturas/" + articulo.ARTICULO,
-        "GET"
-      );
-      console.log(datos);
       if (datos) {
         setFacturas(datos);
         setCargando(false);
@@ -260,12 +287,9 @@ const productosMG = () => {
   };
 
   const conseguirPedidos = async () => {
+    const datos = await obtenerPedidos(articulo)
     setPedidos([]);
     try {
-      const { datos } = await fetch(
-       "/api/productos/pedidos/" + articulo.ARTICULO,
-        "GET"
-      );
       if (datos) {
         setPedidos(datos);
         setCargando(false);

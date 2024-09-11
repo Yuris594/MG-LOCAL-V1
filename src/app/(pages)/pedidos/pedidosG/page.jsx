@@ -100,6 +100,13 @@ function CustomTabPanel(props) {
       { field: 'EXIST_REAL', headerName: 'Existreal', width: 90 }
     ]
 
+    const conseguirProductos = async () => {
+      const response = await fetch("/api/listar_solo_para_mg", {
+
+      })
+      return response.json()
+    }
+
 
 
   const pedidosG = () => {
@@ -132,20 +139,20 @@ function CustomTabPanel(props) {
 
 
     useEffect(() => {
-        conseguirProductos()
+        obtenerProductos()
     }, [])
 
-    const conseguirProductos = async () => {
-        try {
-          const { datos } = await fetch("/api/listar_solo_para_mg", "GET")
-            if (datos) {
-              setProductos(datos);
-              setTablaProducto(datos)
-            }
-        } catch (error) {
-            console.log(error)
+   const obtenerProductos = async () => {
+    const datos = await conseguirProductos();
+    try {
+        if (datos) {
+          setProductos(datos);
+          setTablaProducto(datos)
         }
+    } catch (error) {
+        console.log(error)
     }
+   }
 
     
 
