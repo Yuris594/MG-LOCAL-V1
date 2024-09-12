@@ -40,8 +40,8 @@ const Iniciar = async (usuario, clave) => {
     });
     const data = await response.json();
 
-    if (!response.ok) {
-      console.log("Error en la solicitud");
+    if (!response.ok || !data || !data.length === 0) {
+      return { error: "Usuario o Clave incorrecta" }
     }
 
     return data
@@ -74,8 +74,6 @@ export default function Login() {
         setOpen(true);
         setSaved(true);
         console.log(resultado)
-
-    
         router.push("../../start");
       } else {
         setError(true);
