@@ -93,8 +93,8 @@ const Factura = () => {
   const generarPDF = () => {
     const sumatotal = productos.reduce((acumulador, producto) => acumulador + producto.PRECIO_TOTAL,  0)
       const descuento = productos.reduce((acumulador, producto) => acumulador + producto.DESC_TOT_LINEA,  0)
-      const impuesto = productos.reduce((acumulador, producto) => acumulador + producto.TOTAL_IMPUESTO1,  0)
-      const totalConImpuesto = sumatotal - descuento + impuesto;
+      const impuesto = sumatotal * 0.19;
+      const totalConImpuesto = sumatotal + impuesto;
       
       const datosTotal = {
         sumatotal: parseInt(sumatotal),

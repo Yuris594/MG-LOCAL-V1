@@ -258,9 +258,6 @@ export const PedidosC = () => {
     }
   }
 
-
-  
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleOpenP = () => setOpenP(true);
