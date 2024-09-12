@@ -206,7 +206,7 @@ const columnsC = [
 
 
 const ConseguirPedidos = async (clienteT) => {
-  const response = await fetch(`http://172.20.20.3:8001/clientes/pedidos/${clienteT.CLIENTE}`, {
+  const response = await fetch(`/api/clientes/pedidos/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -217,7 +217,7 @@ const ConseguirPedidos = async (clienteT) => {
 };
 
 const ConseguirFacturas = async (clienteT) => {
-  const response = await fetch(`http://172.20.20.3:8001/clientes/facturas/${clienteT.CLIENTE}`, {
+  const response = await fetch(`/api/clientes/facturas/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -227,7 +227,7 @@ const ConseguirFacturas = async (clienteT) => {
 };
 
 const ConseguirCarteras = async (clienteT) => {
-  const response = await fetch(`http://172.20.20.3:8001/clientes/cartera/${clienteT.CLIENTE}`, {
+  const response = await fetch(`/api/clientes/cartera/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -256,9 +256,9 @@ const ClientesTemp = () => {
   useEffect(() => {
     setCargando(true);
     if (clienteT) {
-      obtenerPedidos();
-      obtenerFacturas();
-      obtenerCarteras();
+      obtenerPedidos(clienteT.CLIENTE);
+      obtenerFacturas(clienteT.CLIENTE);
+      obtenerCarteras(clienteT.CLIENTE);
     }
   }, [value]);
 
@@ -281,13 +281,11 @@ const ClientesTemp = () => {
 
   const obtenerPedidos = async () => {
     const datos = await ConseguirPedidos(clienteT);
-    try {
       if (datos) {
         setPedidos(datos);
         setCargando(false);
-      } 
-    } catch (error) {
-        console.error("Error al obtener los datos", error);
+    } else {
+        console.log("Error al obtener los datos");
         setPedidos([]);
         setCargando(false);
     }
@@ -457,14 +455,14 @@ const ClientesTemp = () => {
                         <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
                         <Tab label="" {...a11yProps(3)} />
                       </Tabs>
-                  </Box>
+                    </Box>
                 <CustomTabPanel value={value} index={0}>
                   <Box sx={{ width: "100%", height: 450 }}>
                       {cargando === true ? (
                         <Box sx={{ width: "100%" }}>
                           <LinearProgress />
                         </Box>
-                      ) : pedidos.length <= 0 ? (
+                      ) : pedidos.length === 0 ? (
                         <h1>NO HAY PEDIDOS</h1>
                       ) : (
                         <DataGrid
@@ -516,7 +514,7 @@ const ClientesTemp = () => {
                         <Box sx={{ width: "100%" }}>
                           <LinearProgress />
                         </Box>
-                      ) : cartera.length === 0 ? (
+                      ) : cartera.length <= 0 ? (
                         <h1>NO HAY CARTERA</h1>
                       ) : (
                         <DataGrid

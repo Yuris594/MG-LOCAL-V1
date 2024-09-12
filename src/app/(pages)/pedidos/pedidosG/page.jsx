@@ -101,7 +101,7 @@ function CustomTabPanel(props) {
     ]
 
     const conseguirProductos = async () => {
-      const response = await fetch("http://172.20.20.3:8001/listar_solo_para_mg", {
+      const response = await fetch("/api/productos/listar_solo_para_mg", {
         method: "GET",
         headers: {
           "Content-Type" : "application/json"
@@ -157,7 +157,6 @@ function CustomTabPanel(props) {
     }
    }
 
-    
 
     const handleChange = (e) => {
     e.preventDefault();

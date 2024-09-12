@@ -67,7 +67,7 @@ const columns = [
 
 
 const PageUsuario = async () => {
-    const response = await fetch('http://172.20.20.3:8001/usuarios/listar', {
+    const response = await fetch('/api/usuarios/listar', {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",
@@ -82,7 +82,7 @@ function Usuarios() {
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const [usuario, setUsuario] = useState();
+  const [usuario, setUsuario] = useState([]);
   const [openA, setOpenA] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
@@ -110,6 +110,7 @@ function Usuarios() {
             }))
           setCargando(false);
           setUsuarios(datosT);
+          setUsuario(datosT)
           setTablaUsuario(datosT);
         } else {
           console.log("Error", datos)

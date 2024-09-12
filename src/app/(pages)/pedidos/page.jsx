@@ -9,7 +9,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
-import { conexion } from "../usuarios/page";
 
 
 const style = {
@@ -72,7 +71,7 @@ const columns = [
 ];
 
 const conseguirArticulos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/pedidos/listar", {
+  const response = await fetch("/api/pedidos/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json",
@@ -112,7 +111,7 @@ const Pedidos = () => {
         }, 100);
       }
     } catch (error) {
-      conexion()
+      console.log("Error al obtener los datos", error)
     }
   }
   

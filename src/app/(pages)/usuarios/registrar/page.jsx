@@ -5,7 +5,7 @@ import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, 
 import { useState } from "react";
 
 const registro = async (form) => {
-  const response =  await fetch("http://172.20.20.3:8001/usuarios/nuevo", {
+  const response =  await fetch("/api/usuarios/nuevo", {
     method: "POST",
     body: JSON.stringify(form), 
     headers: { "Content-Type": "application/json" }

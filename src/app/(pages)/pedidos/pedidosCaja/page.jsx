@@ -78,7 +78,7 @@ const columns = [
 
 
 const obtenerProductos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
   });
@@ -165,10 +165,8 @@ const PedidosCaja = () => {
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaProducto.filter((elemento) => {
-      const ARTICULO =
-        elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
-      const DESCRIPCION =
-        elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
+      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
+      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
       if (
         ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
         DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
@@ -253,19 +251,9 @@ const PedidosCaja = () => {
 
   const columnsP = [
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
-    {
-      field: "CPed",
-      headerName: "Cant",
-      width: 80,
-      type: "number",
-      editable: true,
-    },
+    { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true, },
     { field: "PRECIO", headerName: "Precio", width: 130 },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      cellClassName: "actions",
+    { field: "actions", type: "actions", headerName: "Actions", cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {

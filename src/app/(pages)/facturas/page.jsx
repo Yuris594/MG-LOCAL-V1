@@ -20,7 +20,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(`http://172.20.20.3:8001/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
     method: "GET", 
     headers: {
       "Content-Type" : "application/json"
@@ -193,9 +193,9 @@ const Factura = () => {
       pdf.setFontSize(10);
       pdf.text(`TOTAL ITEMS:        ${productos.length}`, 350, pdf.autoTable.previous.finalY + 20);
       pdf.text(`SubTotal:     ${fac.TOTAL_MERCADERIA}`, 470, pdf.autoTable.previous.finalY + 20);
-      pdf.text(`Desc:           ${totales.descuento}`, 470, pdf.autoTable.previous.finalY + 40);
-      pdf.text(`IVA:              ${totales.impuesto}`, 470, pdf.autoTable.previous.finalY + 60);
-      pdf.text(`TOTAL:        ${totales.totalConImpuesto}`, 470, pdf.autoTable.previous.finalY + 80);
+      pdf.text(`Desc:           ${totales?.descuento || 0}`, 470, pdf.autoTable.previous.finalY + 40);
+      pdf.text(`IVA:              ${totales?.impuesto || 0}`, 470, pdf.autoTable.previous.finalY + 60);
+      pdf.text(`TOTAL:        ${totales?.totalConImpuesto || 0}`, 470, pdf.autoTable.previous.finalY + 80);
 
       pdf.setFontSize(11);
       pdf.text("ACEPTO este documento y declaro haber recibido real y \n materialmente los articulos arriba descritos ",12, pdf.autoTable.previous.finalY + 20);

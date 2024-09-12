@@ -33,7 +33,7 @@ const columns = [
 
 
 const obtenerClientes = async () => {
-  const response = await fetch("http://172.20.20.3:8001/clientes/listar", {
+  const response = await fetch("/api/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

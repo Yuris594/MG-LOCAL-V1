@@ -72,7 +72,7 @@ const noExiste = () => {
 };
 
 const registro = async (cedula) => {
-  const response = await fetch(`http://172.20.20.3:8001/control_entradas/documento/${cedula}`, {
+  const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
     method: "POST",
     body: JSON.stringify(cedula), 
     headers: { "Content-Type": "application/json" }
@@ -84,7 +84,7 @@ const Ingresos = () => {
   const inputRef = useRef(null);
   const [checked, setChecked] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
-  const { form, setForm, changed } = useForm({ cedula: "" });
+  const { form, setForm, changed } = useForm({ CEDULA: "" });
 
   useEffect(() => {
     setOnline(navigator.onLine);
@@ -124,7 +124,8 @@ const Ingresos = () => {
   const ingreso = async (e) => {
     e.preventDefault();
     const cedula = form.CEDULA;
-      if (!form.CEDULA) {
+    const datos = await registro(cedula)
+      if (!cedula) {
         console.info("Por favor, completa todos los campos");
         return;
       }
@@ -133,10 +134,9 @@ const Ingresos = () => {
         conexion();
         return;
       }
-
     try {
       espera();
-    const datos = await registro(cedula)
+   
       if (datos) {
         if (res.ok) {
           if (datos.respuesta === "0") {

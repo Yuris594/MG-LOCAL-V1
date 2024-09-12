@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react';
 
 const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
@@ -6,10 +8,18 @@ const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
 
     useEffect(() => {
         const PRDCTO = value === 0 ? productosP : productosConDISP0;
-        if (!Array.isArray(PRDCTO)) {
-            console.error("PRDCTO no es un array", PRDCTO)
+        if(!Array.isArray(PRDCTO)) {
+            console.error("PRDCTO no es un array valido", PRDCTO);
             return;
         }
+
+        if(PRDCTO.length === 0) {
+            setSumaSaldoTotal(0);
+            setSumaSaldoTotalDESC(0);
+            return;
+        }
+        console.log("ProductosP", productosP);
+        console.log("ProductosConDISPO", productosConDISP0);
         const sumaSaldo = PRDCTO.reduce((sum, producto) => {
             return sum + producto.CPed * producto.PRECIO;
         }, 0);
@@ -26,5 +36,6 @@ const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
 
     return { sumaSaldoTotal, sumaSaldoTotalDESC };
 }
+
 
 export default useCalculoSumaSaldo;

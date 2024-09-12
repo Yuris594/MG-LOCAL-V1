@@ -89,7 +89,7 @@ const style = {
 
 
 const conseguirProductos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json",
@@ -101,7 +101,7 @@ const conseguirProductos = async () => {
 
 
 const conseguirProductosP = async (pedidoId) => {
-    const response = await fetch(`http://172.20.20.3:8001/pedidos/detalle_lineas/${pedidoId}`, {
+    const response = await fetch(`/api/pedidos/detalle_lineas/${pedidoId}`, {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",
@@ -111,8 +111,8 @@ const conseguirProductosP = async (pedidoId) => {
     return data
 };
 
-const conseguirProductosPendientes = async (pedidoID) => {
-    const response = await fetch(`http://172.20.20.3:8001/pedidos/articulos_pendientes/${pedidoID}`, {
+const conseguirProductosPendientes = async (pedidoId) => {
+    const response = await fetch(`/api/pedidos/articulos_pendientes/${pedidoId}`, {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",
@@ -123,7 +123,7 @@ const conseguirProductosPendientes = async (pedidoID) => {
 };
 
 const guardarProductos = async (bodyData) => {
-  const response = await fetch("http://172.20.20.3:8001/pedido/crear/", {
+  const response = await fetch("/api/pedido/crear/", {
     method: "POST",
     body: JSON.stringify(bodyData),
     headers: { "Content-Type": "application/json" },
@@ -134,7 +134,7 @@ const guardarProductos = async (bodyData) => {
 };
 
 const guardarProductosP = async (bodyData) => {
-  const response = await fetch("http://172.20.20.3:8001/pedido/crear/", {
+  const response = await fetch("/api/pedido/crear/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),
@@ -207,8 +207,8 @@ export const PedidosC = () => {
     }
   }
 
-  const obtenerProductosPendientes = async (pedidoID) => {
-    const datos = await conseguirProductosPendientes(pedidoID);
+  const obtenerProductosPendientes = async (pedidoId) => {
+    const datos = await conseguirProductosPendientes(pedidoId);
     try {
       if (datos) {
         setProductosConDIPS0(datos);
@@ -745,7 +745,7 @@ export const PedidosC = () => {
 
                 <Box sx={{ height: 350, width: "100%" }}>
                   <DataGrid
-                    rows={productosP}
+                    rows={productosConDISP0}
                     columns={columnsP}
                     getRowId={(row) => row.ARTICULO}
                     onRowSelectionModelChange={handleRowModesModelChange}

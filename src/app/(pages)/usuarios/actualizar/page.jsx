@@ -5,7 +5,7 @@ import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react"
 
 const actualizar = async (form) => {
-  const response = await fetch("http://172.20.20.3:8001/usuarios/actualizar/", {
+  const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
@@ -39,8 +39,8 @@ const UsuarioActualizar = ({usuario}) => {
   const actualizar = async (e) => {
     e.preventDefault();
     try {
-      const response = await actualizar(form)
-        if (response.ok) {
+      const datos = await actualizar(form)
+        if (datos.ok) {
           setOpen(true);
           setTimeout(() => {
             window.location.reload();
