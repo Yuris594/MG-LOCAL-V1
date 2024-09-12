@@ -1,8 +1,8 @@
-
+'use client'
 
 import { Box, Button, Card, CardContent, Divider, IconButton, InputBase, Paper, Typography } from "@mui/material"
 import DirectionsIcon from '@mui/icons-material/Directions';
-import { useGenerarPDF } from "@/app/hooks/useReciboPDF";
+import useGenerarPDF from "@/app/hooks/useReciboPDF";
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from "@/context/authContext";
@@ -17,10 +17,9 @@ const bull = (
 
   const ReciboCaja = () => {
     const { caja, auth } = useAuth(); 
-    const valores = Object.values(caja); 
-    const valores2 = Object.values(caja.tipoPago); 
+    const valores = caja ? Object.values(caja) : []; 
+    const valores2 = caja && caja.tipoPago ? Object.values(caja.tipoPago) : []; 
     const { generarPDF } = useGenerarPDF(valores, valores2, auth, caja); 
-    console.log(caja.cliente.E_MAIL); 
 
     const cerrarP = () => {
         localStorage.removeItem('pago'); 
@@ -79,13 +78,13 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio -  {auth.PER_Nom}..
+                                .. Servicio -  ..
                             </Typography>
                         </CardContent>
 
                         <CardContent>
-                            {valores.map((row) => (
-                                <Typography component="div" key={row.ARTICULO} sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: 0 }}>
+                            {valores.map((row, index) => (
+                                <Typography component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between', paddingTop: 0 }}>
                                     <span>{row.DESCRIPCION}</span>
                                     <span>{row.PRECIO}</span>
                                 </Typography>

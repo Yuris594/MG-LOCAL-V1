@@ -71,13 +71,22 @@ const noExiste = () => {
   });
 };
 
+const registro = async (cedula) => {
+  const response = await fetch(`http://172.20.20.3:8001/control_entradas/documento/${cedula}`, {
+    method: "POST",
+    body: JSON.stringify(cedula), 
+    headers: { "Content-Type": "application/json" }
+  });
+  return response.json()
+}
+
 const Ingresos = () => {
   const inputRef = useRef(null);
   const [checked, setChecked] = useState(false);
-  //const [online, setOnline] = useState(navigator.onLine);
+  const [online, setOnline] = useState(navigator.onLine);
   const { form, setForm, changed } = useForm({ cedula: "" });
 
- /* useEffect(() => {
+  useEffect(() => {
     setOnline(navigator.onLine);
 
     const handleOnline = () => setOnline(true);
@@ -89,7 +98,7 @@ const Ingresos = () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);*/
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -111,25 +120,23 @@ const Ingresos = () => {
     };
   }, []);
 
+
   const ingreso = async (e) => {
     e.preventDefault();
-
     const cedula = form.CEDULA;
+      if (!form.CEDULA) {
+        console.info("Por favor, completa todos los campos");
+        return;
+      }
 
-    if (!form.CEDULA) {
-      console.info("Por favor, completa todos los campos");
-      return;
-    }
-
-   /* if (!online) {
-      conexion();
-      return;
-    }*/
+      if (!online) {
+        conexion();
+        return;
+      }
 
     try {
       espera();
-      const { datos } = await fetch("/api/control_entradas/documento/" + cedula, "POST");
-
+    const datos = await registro(cedula)
       if (datos) {
         if (res.ok) {
           if (datos.respuesta === "0") {
@@ -187,11 +194,11 @@ const Ingresos = () => {
             <Paper className="" component="main">
               <CssBaseline />
               <Box sx={{ padding: 2 }}>
-               {/* {online ? (
+                {online ? (
                   <WifiIcon sx={{ color: "green" }} />
                 ) : (
                   <WifiOffIcon sx={{ color: "red" }} />
-                )}*/}
+                )}
 
                 <Typography variant="h6" noWrap component="div" sx={{ margin: "5px", display: "flex", flexDirection: "column", alignItems: "center", }}>
                   <Image

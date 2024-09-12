@@ -4,6 +4,15 @@
 import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
+const registro = async (form) => {
+  const response =  await fetch("http://172.20.20.3:8001/usuarios/nuevo", {
+    method: "POST",
+    body: JSON.stringify(form), 
+    headers: { "Content-Type": "application/json" }
+  });
+  return response.json()
+}
+
   const Registro = () => {
   const [form, setForm] = useState({});
   const [open, setOpen] = useState(false);
@@ -19,11 +28,7 @@ import { useState } from "react";
         setOpenE(true);
         return;
       }
-      const response =  await fetch("/api/usuarios/nuevo", {
-        method: "POST",
-        body: JSON.stringify(form), 
-        headers: { "Content-Type": "application/json" }
-      });
+      const response = await registro(form)
           if (response.ok) {
             setOpen(true)
             console.log("Salida exitosa");

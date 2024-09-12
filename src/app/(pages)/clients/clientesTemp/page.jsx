@@ -206,7 +206,7 @@ const columnsC = [
 
 
 const ConseguirPedidos = async (clienteT) => {
-  const response = await fetch(`/api/clientes/pedidos/${clienteT.CLIENTE}`, {
+  const response = await fetch(`http://172.20.20.3:8001/clientes/pedidos/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -217,7 +217,7 @@ const ConseguirPedidos = async (clienteT) => {
 };
 
 const ConseguirFacturas = async (clienteT) => {
-  const response = await fetch(`/api/clientes/facturas/${clienteT.CLIENTE}`, {
+  const response = await fetch(`http://172.20.20.3:8001/clientes/facturas/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -227,7 +227,7 @@ const ConseguirFacturas = async (clienteT) => {
 };
 
 const ConseguirCarteras = async (clienteT) => {
-  const response = await fetch(`/api/clientes/cartera/${clienteT.CLIENTE}`, {
+  const response = await fetch(`http://172.20.20.3:8001/clientes/cartera/${clienteT.CLIENTE}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

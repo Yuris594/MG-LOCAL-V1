@@ -173,7 +173,7 @@ const columnsP = [
 
 
 const obtenerProductos = async (bodegaSeleccionada) => {
-  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/listar/${bodegaSeleccionada.BODEGA}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -184,7 +184,7 @@ const obtenerProductos = async (bodegaSeleccionada) => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -195,7 +195,7 @@ const obtenerFacturas = async (articulo) => {
 
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -205,7 +205,7 @@ const obtenerPedidos = async (articulo) => {
 };
 
 const obtenerBodegas = async () => {
-  const response = await fetch("/api/productos/bodegas", {
+  const response = await fetch("http://172.20.20.3:8001/productos/bodegas", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
