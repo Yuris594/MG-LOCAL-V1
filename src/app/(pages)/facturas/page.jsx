@@ -40,6 +40,7 @@ const Factura = () => {
     e.preventDefault();
     const factura_ = form.factura;
     const datos = await obtenerFactura(factura_)
+    console.log(datos)
     try {
       if (datos) {
           setFac(datos[0]);
@@ -104,8 +105,14 @@ const Factura = () => {
       
       setTotales(datosTotal);
       console.log(datosTotal);
-
-
+/*
+      const datosTotal = {
+        sumatotal: parseInt(sumatotal),
+        descuento: descuento.toLocaleString('es-ES'),
+        impuesto: impuesto.toLocaleString('es-ES'),
+        totalConImpuesto: totalConImpuesto.toLocaleString('es-ES'),
+      };
+*/
     const pdf = new jsPDF("portrait", "pt", "letter");
     const columnsParaPDF = [
       { field: "ARTICULO", headerName: "Ref.", width: 200 },

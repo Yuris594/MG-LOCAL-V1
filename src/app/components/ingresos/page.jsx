@@ -138,7 +138,7 @@ const Ingresos = () => {
       espera();
    
       if (datos) {
-        if (res.ok) {
+        if (datos && datos.ok) {
           if (datos.respuesta === "0") {
             setForm({ CEDULA: "" });
             entrada();
@@ -157,7 +157,7 @@ const Ingresos = () => {
         conexion();
       }
     } catch (error) {
-      console.log("Error");
+      console.log("Error", error);
     }
   };
 

@@ -78,7 +78,7 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio -  ..
+                                .. Servicio -  {auth.PER_Nom}..
                             </Typography>
                         </CardContent>
 
@@ -94,7 +94,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Total{bull}
+                                Total{bull}{caja.total}
                             </Typography>
 
                         </CardContent>
@@ -114,7 +114,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio{bull}{}   
+                                Cambio{bull}{}   {caja.cambio.toLocaleString('es')}
                             </Typography>
                         </CardContent>
                     </Card>
