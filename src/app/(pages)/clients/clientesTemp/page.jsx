@@ -36,31 +36,28 @@ function a11yProps(index) {
   };
 }
 
+const fDate = (dateString) => {
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+    return new Date(dateString).toLocaleDateString('es-ES', options);
+}
+
+
 const columnsP = [
   { field: "FECHA_PEDIDO", headerName: "Fecha", width: 250,
-      valueFormatter: (params) => {
-        const FECHA_PEDIDO = params.value;
-        const fecha = new Date (FECHA_PEDIDO);
-
-        return fecha.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        });
-      },
+    renderCell: (params) => fDate(params.value)
   },
   { field: "PEDIDO", headerName: "Pedido", width: 130 },
   { field: "ESTADO", headerName: "Estado", width: 130 },
   { field: "AUTORIZADONOM", headerName: "Autorizado", width: 130 },
   { field: "TOTAL_A_FACTURAR", headerName: "Total a facturar", width: 130, 
-      valueFormatter: (params) => {
-        if (params.value) {
-          return "";
-        }
-        const TOTAL_A_FACTURAR = params.value;
-        const precioRedondeado = Number(TOTAL_A_FACTURAR).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+    valueFormatter: (value) => {
+      const precioRedondeado = Number(value).toFixed(0);
+      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, align: "right",
   },
   { field: "CreatedBy", headerName: "Creado por", width: 230 },
   { field: "U_EDITADOPOR", headerName: "Editado por", width: 130 },
@@ -71,51 +68,38 @@ const columnsP = [
 const columnsF = [
   { field: "FACTURA", headerName: "Factura", width: 130 },
   { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190, 
-      valueFormatter: (params) => {
-        const FECHA_PEDIDO = params.value;
-        const fecha = new Date (FECHA_PEDIDO);
-
-        return fecha.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        });
-      },
+      renderCell: (params) => fDate(params.value)
   },
   { field: "ANULADA", headerName: "AN", width: 130 },
   { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130, 
-      valueFormatter: (params) => {
-        const PRECIO_TOTAL = params.value;
-        const precioRedondeado = Number(PRECIO_TOTAL).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, 
   },
   { field: "PEDIDO", headerName: "Pedido", width: 130 },
   { field: "ARTICULO", headerName: "Articulo", width: 130 },
   { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
   { field: "CANTIDAD", headerName: "Cant", width: 130, 
-      valueFormatter: (params) => {
-        const CANTIDAD = params.value;
-        const precioRedondeado = Number(CANTIDAD).toFixed(1);
-        return precioRedondeado;
-      },  align: "right",
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
   },
   { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130, 
-      valueFormatter: (params) => {
-        const PRECIO_UNITARIO = params.value;
-        const precioRedondeado = Number(PRECIO_UNITARIO).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      },
   },
-  { field: "PORCIVA", headerName: "IVA", width: 130, align: "right" },
+  { field: "PORCIVA", headerName: "IVA", width: 100, align: "right" },
   { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
   { field: "VDESC", headerName: "VDesc", width: 130 },
   { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130, 
-      valueFormatter: (params) => {
-        const TOTAL_MERCADERIA = params.value;
-        const precioRedondeado = Number(TOTAL_MERCADERIA).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      },
   },
   { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
   { field: "FECHARUT", headerName: "FechaRut", width: 300 },
@@ -139,65 +123,42 @@ const columnsF = [
 const columnsC = [
   { field: "DOC", headerName: "DOC", width: 130 },
   { field: "FECHADOC", headerName: "FechaDoc", width: 190, 
-      valueFormatter: (params) => {
-        const FECHADOC = params.value;
-        const fecha = new Date (FECHADOC);
-
-        return fecha.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        });
-      },
+    renderCell: (params) => fDate(params.value)
   },
   { field: "FECHAVENC", headerName: "FechaVenc", width: 190, 
-      valueFormatter: (params) => {
-        const FECHAVENC = params.value;
-        const fecha = new Date (FECHAVENC);
-
-        return fecha.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        });
-      },
+    renderCell: (params) => fDate(params.value)
   },
   { field: "NUMDOC", headerName: "NumDoc", width: 130 },
   { field: "DIASVENC", headerName: "Venc", width: 130, align: "right" },
   { field: "MONTO", headerName: "Monto", width: 130, 
-      valueFormatter: (params) => {
-        const MONTO = params.value;
-        const precioRedondeado = Number(MONTO).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, align: "right",
   },
   { field: "SALDO", headerName: "Saldo", width: 130, 
-      valueFormatter: (params) => {
-        const SALDO = params.value;
-        const precioRedondeado = Number(SALDO).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, align: "right",
   },
   { field: "SMenorA30", headerName: "Venc < 30", width: 130, 
-      valueFormatter: (params) => {
-        const SMenorA30 = params.value;
-        const precioRedondeado = Number(SMenorA30).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, align: "right",
   },
   { field: "SMayorA60", headerName: "Venc < 60", width: 130, 
-      valueFormatter: (params) => {
-        const SMayorA60 = params.value;
-        const precioRedondeado = Number(SMayorA60).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, align: "right",
   },
   { field: "SMenorA60", headerName: "Venc > 60", width: 130, 
-      valueFormatter: (params) => {
-        const SMenorA60 = params.value;
-        const precioRedondeado = Number(SMenorA60).toFixed(0);
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },  align: "right",
+      }, align: "right",
   },
   { field: "PLAZO", headerName: "Plazo", width: 130, align: "right" },
   { field: "VENDEDOR", headerName: "VENDEDOR", width: 130 },
@@ -212,8 +173,13 @@ const ConseguirPedidos = async (clienteT) => {
       "Content-Type" : "application/json"
     }
   });
-  return response.json();
-      
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay pedidos para este cliente.");
+      return [];
+    }
+  }
+  return response.json();     
 };
 
 const ConseguirFacturas = async (clienteT) => {
@@ -223,6 +189,12 @@ const ConseguirFacturas = async (clienteT) => {
       "Content-Type" : "application/json"
     }
   });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay facturas para este cliente.");
+      return [];
+    }
+  }
   return response.json();
 };
 
@@ -233,6 +205,12 @@ const ConseguirCarteras = async (clienteT) => {
       "Content-Type" : "application/json"
     }
   });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay cartera para este cliente.");
+      return [];
+    }
+  }
   return response.json();
 };
 
@@ -456,13 +434,14 @@ const ClientesTemp = () => {
                         <Tab label="" {...a11yProps(3)} />
                       </Tabs>
                     </Box>
+                    
                 <CustomTabPanel value={value} index={0}>
                   <Box sx={{ width: "100%", height: 450 }}>
                       {cargando === true ? (
                         <Box sx={{ width: "100%" }}>
                           <LinearProgress />
                         </Box>
-                      ) : pedidos.length === 0 ? (
+                      ) : pedidos.length <= 0 ? (
                         <h1>NO HAY PEDIDOS</h1>
                       ) : (
                         <DataGrid

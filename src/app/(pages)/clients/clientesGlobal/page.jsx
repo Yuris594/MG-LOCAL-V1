@@ -11,9 +11,6 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Zoom from "@mui/material/Zoom";
 import Box from "@mui/material/Box";
-import Link from "next/link";
-
-
 
 
 const columns = [
@@ -84,12 +81,9 @@ const ClientesGlobal = ({ setOpen }) => {
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaCliente.filter((elemento) => {
-      const CLIENTE =
-        elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
-      const NOMVENDEDOR =
-        elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
-      const NOMBREALIAS =
-        elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
+      const CLIENTE = elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
+      const NOMVENDEDOR = elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
+      const NOMBREALIAS = elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
 
       if (
         CLIENTE?.includes(terminoBusqueda.toLowerCase()) ||
@@ -103,8 +97,7 @@ const ClientesGlobal = ({ setOpen }) => {
     setClientes(resultadosBusqueda);
   };
 
-  const handleSelectionChange = useCallback(
-    (selectionModel) => {
+  const handleSelectionChange = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaCliente.filter((elemento) => {
@@ -159,7 +152,7 @@ const ClientesGlobal = ({ setOpen }) => {
           <Zoom in={checked}>
             <Box  sx={{ height: 640, width: "100%", 
                       '& .super-app-theme--header': {
-                      backgroundColor: '#0a0a0a', color: '#fff' }, }}>
+                      backgroundColor: '#181717', color: '#fff' }, }}>
               <DataGrid
                 rows={clientes}
                 columns={columns}

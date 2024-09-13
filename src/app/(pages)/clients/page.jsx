@@ -23,17 +23,12 @@ import { conexion } from '../usuarios/page';
 
 
 const columns = [
-
   { field: 'CLIENTE', headerName: 'NIT', width: 170 },
   { field: 'NOMBREALIAS', headerName: 'NOMBRE', width: 800 },
   { field: 'DIRECCION', headerName: 'DIRECCIÓN', width: 300 },
   { field: 'TELEFONO1', headerName: 'TELEFONO', width: 190 },
   { field: 'NOMVENDEDOR', headerName: 'VENDEDOR', width: 450 },
-  {
-    field: 'SALDO',
-    headerName: 'CARTERA',
-    type: 'number',
-    width: 120,
+  { field: 'SALDO', headerName: 'CARTERA', type: 'number', width: 120,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0); 
       return `${parseFloat(precioRedondeado).toLocaleString()}`; 
@@ -43,8 +38,11 @@ const columns = [
 
 const conseguirClientes = async () => {
   const response = await fetch("/api/clientes/listar", {
-
-  })
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
   const data = await response.json()
   return data
 }

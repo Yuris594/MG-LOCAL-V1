@@ -111,8 +111,8 @@ const conseguirProductosP = async (pedidoId) => {
     return data
 };
 
-const conseguirProductosPendientes = async (pedidoId) => {
-    const response = await fetch(`/api/pedidos/articulos_pendientes/${pedidoId}`, {
+const conseguirProductosPendientes = async (pedido) => {
+    const response = await fetch(`/api/pedidos/articulos_pendientes/${pedido}`, {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",
@@ -207,17 +207,14 @@ export const PedidosC = () => {
     }
   }
 
-  const obtenerProductosPendientes = async (pedidoId) => {
-    const datos = await conseguirProductosPendientes(pedidoId);
-    try {
-      if (datos) {
-        setProductosConDIPS0(datos);
-      } else {
-        if (datos === 0)
-        console.log("No hay datos")
-      }
+  const obtenerProductosPendientes = async (pedido) => {
+    const datos = await conseguirProductosPendientes(pedido);
+      try {
+        if (datos) {
+          setProductosConDIPS0(datos);
+        } 
     } catch (error) {
-      console.log("Error al obtener los datoscon", error);
+        console.log("Error al obtener los datoscon", error);
     }
   }
 
@@ -229,14 +226,14 @@ export const PedidosC = () => {
       OBSERVACIONES: form.OBSERVACIONES,
     };
     const data = await guardarProductos(bodyData);
-    try {
-          if (data) {
-            console.log("Crear")
-            setOpenS(true);
-          } else {
-            setOpenE(true);
-            console.error("Error de red: ", error);
-          }
+      try {
+        if (data) {
+          console.log("Crear")
+          setOpenS(true);
+        } else {
+          setOpenE(true);
+          console.error("Error de red: ", error);
+        }
     } catch (error) {
         setOpenE(true);
         console.error("Error de red: ", error);
@@ -398,19 +395,19 @@ export const PedidosC = () => {
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
     { field: "DISP", headerName: "Disp", width: 70 },
     { field: "PRECIO", headerName: "Precio", width: 130,
-      /*  valueFormatter: (params) => {
+        valueFormatter: (params) => {
           const PRECIO = params.value;
           const precioRedondeado = Number(PRECIO).toFixed(0);
           return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        }, align: 'right', editable: true, type: 'number'*/
+        }, align: 'right', editable: true, type: 'number'
     },
     { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true, },
     { field: "PORC_DCTO", headerName: "D1", width: 70,
-      /* valueFormatter: (params) => {
+        valueFormatter: (params) => {
           const PORC_DCTO = params.value;
           const precioRedondeado = Number(PORC_DCTO).toFixed(0);
           return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        }, align: 'right', editable: true, type: 'number'*/
+        }, align: 'right', editable: true, type: 'number'
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
     { field: "Em", headerName: "Emp", width: 80 },

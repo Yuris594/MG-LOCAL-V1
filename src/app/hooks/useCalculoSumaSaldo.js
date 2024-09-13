@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 
 const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
-    const [sumaSaldoTotal, setSumaSaldoTotal] = useState('');
-    const [sumaSaldoTotalDESC, setSumaSaldoTotalDESC] = useState('');
+    const [sumaSaldoTotal, setSumaSaldoTotal] = useState(0);
+    const [sumaSaldoTotalDESC, setSumaSaldoTotalDESC] = useState(0);
 
     useEffect(() => {
         const PRDCTO = value === 0 ? productosP : productosConDISP0;

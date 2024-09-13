@@ -2,13 +2,12 @@
 
 import { Box, Button, Typography, Paper, TextField } from "@mui/material";
 import Banner from "@/app/components/banner/banner";
+import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
-//import logo from "../../../../public/img/logo_factura.png"
+import { format } from "date-fns";
+import Swal from "sweetalert2";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { format, parse } from "date-fns";
-import Swal from "sweetalert2";
-import { useForm } from "@/app/hooks/useForm";
 
 
 const noExiste = () => {
@@ -150,6 +149,8 @@ const Factura = () => {
       });
       return rowData;
     });
+
+    
     function encabezado() {
       pdf.setFontSize(11);
       pdf.text("Nuestra dirección y lineas de atención han cambiado:(4) 604 3380 - 3203509705", 100, 17 );
@@ -157,7 +158,7 @@ const Factura = () => {
       pdf.text("_________________________________________________________________________________", 12, 20);
 
       pdf.setFontSize(13);
-      //pdf.addImage(logo, 'PNG', 10, 30, 200, 25);
+      pdf.addImage("logo_factura.png", 'PNG', 10, 30, 200, 25);
       pdf.setFontSize(15);
       pdf.text(`REMISIÓN N°:   ${fac.FACTURA}`, 350, 45);
       pdf.setFontSize(9);
@@ -199,11 +200,7 @@ const Factura = () => {
 
       pdf.setFontSize(11);
       pdf.text("ACEPTO este documento y declaro haber recibido real y \n materialmente los articulos arriba descritos ",12, pdf.autoTable.previous.finalY + 20);
-      pdf.text(
-        `FECHA RECIBIDO_____________`,
-        280,
-        pdf.autoTable.previous.finalY + 72
-      );
+      pdf.text(`FECHA RECIBIDO_____________`, 280, pdf.autoTable.previous.finalY + 72);
       pdf.text(`FIRMA Y SELLO`, 12, pdf.autoTable.previous.finalY + 90);
       pdf.text(`HORA:____:____`, 280, pdf.autoTable.previous.finalY + 86);
       pdf.text(`${fecha}`, 12, pdf.autoTable.previous.finalY + 106);
@@ -219,41 +216,16 @@ const Factura = () => {
   return (
     <>
       <Box marginBottom="50px">
-        {" "}
-        <Banner />{" "}
+        {" "} <Banner />{" "}
       </Box>
       <Box className="container">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "44vw",
-          }}
-        >
-          <Paper
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              bgcolor: "#eeee",
-              padding: 2,
-            }}
-          >
-            <Typography
-              component="h1"
-              variant="h5"
-            >
+        <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "44vw", }}>
+          <Paper sx={{ marginTop: 8,  display: "flex", flexDirection: "column", alignItems: "center", bgcolor: "#eeee", padding: 2, }}>
+            <Typography component="h1" variant="h5">
               Digite número de factura
             </Typography>
 
-            <Box
-              component="form"
-              noValidate
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 required
                 fullWidth
@@ -269,8 +241,7 @@ const Factura = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={factura}
-              >
+                onClick={factura} >
                 Buscar
               </Button>
             </Box>

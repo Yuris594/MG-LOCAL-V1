@@ -9,6 +9,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import CancelIcon from '@mui/icons-material/Cancel';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -77,23 +78,21 @@ function CustomTabPanel(props) {
 
     const columns = [
       { field: 'DESCRIPCION', headerName: 'Referencia', width: 500, editable: true },
-      { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
-      { field: 'TOTAL-DISP', headerName: 'Disp', width: 70 },
+      { field: 'SUBLINEA', headerName: 'Sublinea', width: 250 },
+      { field: 'TOTAL_DISP', headerName: 'Disp', width: 70, },
       { field: 'PRECIO', headerName: 'Precio', width: 130,
-          valueFormatter: (params) => {
-              const PRECIO = params.value;
-              const precioRedondeado = Number(PRECIO).toFixed(0);
-              return `${parseFloat(precioRedondeado).toLocaleString()}`;
-          }, align: 'right', editable: true
+        valueFormatter: (value) => {
+          const precioRedondeado = Number(value).toFixed(0);
+          return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        }, 
       },
       { field: 'CANTIDAD', headerName: 'Cant', width: 80, type: 'number', editable: true},
       { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
       { field: 'PRECIOMASIVA', headerName: 'Masiva', width: 130,
-          valueFormatter: (params) => {
-              const PRECIOMASIVA = params.value;
-              const precioRedondeado = Number(PRECIOMASIVA).toFixed(0);
-              return `${parseFloat(precioRedondeado).toLocaleString()}`;
-          }, align: 'right'
+        valueFormatter: (value) => {
+          const precioRedondeado = Number(value).toFixed(0);
+          return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        }, align: "right",
       },
       { field: 'PORC_DCTO', headerName: 'D1', width: 40 },
       { field: 'UNIDAD_EMPAQUE', headerName: 'Emp', width: 80 },
@@ -101,7 +100,7 @@ function CustomTabPanel(props) {
     ]
 
     const conseguirProductos = async () => {
-      const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
+      const response = await fetch("/api/productos/listar_solo_para_mg", {
         method: "GET",
         headers: {
           "Content-Type" : "application/json"
@@ -131,6 +130,7 @@ function CustomTabPanel(props) {
     const [rowModesModel, setRowModesModel] = useState({});
     const [tablaProducto, setTablaProducto] = useState([]);
     const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(productosP, productosConDISP0, value);
+    
     const handleChanges = (newValue) => {
         setValue(newValue);
     };
@@ -139,6 +139,7 @@ function CustomTabPanel(props) {
     const handleClose = () => setOpen(false);
     const handleOpenP = () => setOpenP(true);
     const handleCloseP = () => setOpenP(false);
+
 
 
     useEffect(() => {
@@ -268,21 +269,19 @@ function CustomTabPanel(props) {
       { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
       { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
       { field: "PRECIO", headerName: "Precio", width: 130,
-          valueFormatter: (params) => {
-            const PRECIO = params.value;
-            const precioRedondeado = Number(PRECIO).toFixed(0);
-            return `${parseFloat(precioRedondeado).toLocaleString()}`;
-          }, align: 'right', editable: true, type: 'number'
+        valueFormatter: (value) => {
+          const precioRedondeado = Number(value).toFixed(0);
+          return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        }, align: "right", editable: true, type: 'number'
       },
       { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true, },
       { field: "PORC_DCTO", headerName: "D1", width: 70, align: 'right', editable: true, type: 'number' },
       { field: "PORC_IMPUESTO", headerName: "IVA", width: 40, editable: true, type: 'number' },
       { field: "PRECIOMASIVA", headerName: "Masiva", width: 130, 
-          valueFormatter: (params) => {
-              const PRECIOMASIVA = params.value;
-              const precioRedondeado = Number(PRECIOMASIVA).toFixed(0);
-              return `${parseFloat(precioRedondeado).toLocaleString()}`;
-          }, align: 'right'
+        valueFormatter: (value) => {
+          const precioRedondeado = Number(value).toFixed(0);
+          return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        }, align: "right",
       },
       { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 80 },
       { field: "EXIST_REAL", headerName: "Existreal", width: 90 },
@@ -369,7 +368,7 @@ function CustomTabPanel(props) {
              : "" }
 
                 <Typography variant="h6" component="h1" gutterBottom  sx={{ display: 'flex', justifyContent: 'left',  alignItems: 'center',  width: "auto",  margin: 0 }}>
-                    Pedidos Generados
+                    Pedidos
                 </Typography>
 
               <Paper style={{ height: "auto", width: '100%', }}>
@@ -564,73 +563,69 @@ function CustomTabPanel(props) {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
                             <Tab label="Detalles Lineas" {...a11yProps(0)} />
-                            <Tab label="Articulos Pendiente" {...a11yProps(1)} />
+                            <Tab label="Articulos Pendientes" {...a11yProps(1)} />
                         </Tabs>
                     </Box>
 
                     <CustomTabPanel value={value} index={0}>
-                        <Zoom in={checked}>
                             <Box sx={{ height: "auto", width: '100%',
-                                        '& .MuiDataGrid-cell--editable': {
-                                            bgcolor: (theme) =>
-                                            theme.palette.mode === 'dark' ? '#376331' : '#f5f5f5',
-                                        '&:hover': {
-                                            backgroundColor: (theme) =>
-                                            theme.palette.mode === 'dark' ? '#275126' : '#e1e1e1', 
-                                        }, }, }}>
+                                  '& .MuiDataGrid-cell--editable': {
+                                      bgcolor: (theme) =>
+                                      theme.palette.mode === 'dark' ? '#376331' : '#f5f5f5',
+                                  '&:hover': {
+                                      backgroundColor: (theme) =>
+                                      theme.palette.mode === 'dark' ? '#275126' : '#e1e1e1', 
+                                  }, }, }}>
 
                                 <Box sx={{ height: 450, width: "100%" }}>
                                   <DataGrid
-                                      //density="compact"
+                                      density="compact"
                                       rows={productosP}
                                       columns={columnsP}
                                       getRowId={(row) => row.ARTICULO}
-                                      //editMode="row"
-                                      //rowModesModel={rowModesModel}
-                                      //onRowModesModelChange={handleRowModesModelChange}
-                                      //onRowEditStop={handleRowEditStop}
-                                      //processRowUpdate={processRowUpdate}
-                                      //slotProps={{ toolbar: { setProductosP, setRowModesModel }, }}
+                                      editMode="row"
+                                      rowModesModel={rowModesModel}
+                                      onRowModesModelChange={handleRowModesModelChange}
+                                      onRowEditStop={handleRowEditStop}
+                                      processRowUpdate={processRowUpdate}
+                                      slotProps={{ toolbar: { setProductosP, setRowModesModel }, }}
                                       initialState={{ pagination: { paginationModel: { page: 0, pageSize: 20 },  }, }}
                                       pageSizeOptions={[20, 40]}                                 
                                     />
                                 </Box>
                             </Box>
-                        </Zoom>
                     </CustomTabPanel>
 
                     <CustomTabPanel value={value} index={1}>
-                        <Zoom in={checked}>
                             <Box sx={{ height: "auto", width: '100%',
-                                      '& .MuiDataGrid-cell--editable': {
-                                          bgcolor: (theme) =>
-                                          theme.palette.mode === 'dark' ? '#376331' : '#f5f5f5',
-                                      '&:hover': {
-                                          backgroundColor: (theme) =>
-                                          theme.palette.mode === 'dark' ? '#275126' : '#e1e1e1', 
-                                        }, }, }}>
+                                  '& .MuiDataGrid-cell--editable': {
+                                      bgcolor: (theme) =>
+                                      theme.palette.mode === 'dark' ? '#376331' : '#f5f5f5',
+                                  '&:hover': {
+                                      backgroundColor: (theme) =>
+                                      theme.palette.mode === 'dark' ? '#275126' : '#e1e1e1', 
+                                    }, }, }}>
 
-                                      <Box sx={{ height: 450, width: "100%" }}>
-                                        <DataGrid
-                                            density="compact"
-                                            rows={productosConDISP0}
-                                            columns={columnsP}
-                                            editMode="row"
-                                            rowModesModel={rowModesModel}
-                                            onRowModesModelChange={handleRowModesModelChange}
-                                            onRowEditStop={handleRowEditStop}
-                                            processRowUpdate={processRowUpdate}
-                                            pageSizeOptions={[5, 10]}
-                                            getRowId={(row) => row.ARTICULO}
-                                            slotProps={{ toolbar: { setProductosP, setRowModesModel }, }}
-                                            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, }, }}
-                                          />
-                                      </Box>
-                                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
-                                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }}><ControlPointIcon /></Button>
-                                  </Box>
+                                <Box sx={{ height: 450, width: "100%" }}>
+                                  <DataGrid
+                                      density="compact"
+                                      rows={productosConDISP0}
+                                      columns={columnsP}
+                                      editMode="row"
+                                      rowModesModel={rowModesModel}
+                                      onRowModesModelChange={handleRowModesModelChange}
+                                      onRowEditStop={handleRowEditStop}
+                                      processRowUpdate={processRowUpdate}
+                                      pageSizeOptions={[5, 10]}
+                                      getRowId={(row) => row.ARTICULO}
+                                      slotProps={{ toolbar: { setProductosP, setRowModesModel }, }}
+                                      initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, }, }}
+                                    />
+                                </Box>
+                              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
+                                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }}><ControlPointIcon /></Button>
+                              </Box>
                             </Box>
-                        </Zoom>
                     </CustomTabPanel>
                 </Paper>
             </Paper>
@@ -667,7 +662,7 @@ function CustomTabPanel(props) {
                         </Paper>
                     </Box>
 
-                    <Box sx={{ height: 950, width: "100%" }}>
+                    <Box sx={{ height: 700, width: "100%" }}>
                         <DataGrid
                           rows={productos}
                           columns={columns}

@@ -69,10 +69,7 @@ const columns = [
 
 
 const columnsP = [
-  {
-    field: "FECHA",
-    headerName: "Fecha",
-    width: 250,
+  { field: "FECHA", headerName: "Fecha", width: 250,
     renderCell: (params) => fDate(params.value)
   },
   { field: "CLIENTE", headerName: "Cliente", width: 180 },
@@ -215,6 +212,12 @@ const obtenerFacturas = async (articulo) => {
       "Content-Type" : "application/json"
     }
   });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay facturas para este producto.");
+      return [];
+    }
+  }
    return response.json()
 };
 
@@ -225,6 +228,12 @@ const obtenerPedidos = async (articulo) => {
       "Content-Type" : "application/json"
     }
   });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay pedidos para este producto.");
+      return [];
+    }
+  }
    return response.json()
 };
 

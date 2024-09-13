@@ -190,6 +190,12 @@ const obtenerFacturas = async (articulo) => {
       "Content-Type" : "application/json"
     }
   });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay facturas para este producto.");
+      return [];
+    }
+  }
   return response.json()
 };
 
@@ -201,11 +207,19 @@ const obtenerPedidos = async (articulo) => {
       "Content-Type" : "application/json"
     }
   });
-  return response.json() 
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay pedidos para este producto.");
+      return [];
+    }
+  }
+  const data = await response.json() 
+  console.log(data)
+  return data
 };
 
 const obtenerBodegas = async () => {
-  const response = await fetch("/api/productos/bodegas", {
+  const response = await fetch('/api/productos/bodegas', {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -355,10 +369,7 @@ function productos() {
 
   return (
     <>
-      <Box marginBottom="50px">
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box> {" "} <Banner />{" "} </Box>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
@@ -393,26 +404,21 @@ function productos() {
             >
               <Paper>
                 <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
                   options={bodegas}
                   value={bodegaSeleccionada}
-                  getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
                   onChange={(event, newValue) => {
                     setBodegaSeleccionada(newValue);
                     conseguirProductos();
                   }}
+                  getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
+                  disablePortal
+                  id="combo-box-demo"
                   sx={{ width: 350 }}
                   isOptionEqualToValue={(option, value) =>
                     option.NOMBRE === value.NOMBRE
                   }
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Bodegas"
-                      placeholder="Selecciona una bodega"
-                      variant="standard"
-                    />
+                    <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" />
                   )}
                   disableCloseOnSelect
                 />
@@ -438,15 +444,8 @@ function productos() {
 
               <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
-                <Paper
-                  sx={{
-                    p: "2px 4px",
-                    display: "flex",
-                    alignItems: "flex-rigth",
-                    width: 800,
-                    margin: "10px",
-                  }}
-                >
+
+                <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px", }}>
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Buscar"
@@ -460,11 +459,7 @@ function productos() {
                     onChange={handleChange}
                     inputRef={inputRef}
                   />
-                  <IconButton
-                    title="buscar"
-                    sx={{ p: "10px" }}
-                    aria-label="search"
-                  >
+                  <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
                     <SearchIcon />
                   </IconButton>
                 </Paper>
@@ -474,41 +469,18 @@ function productos() {
 
           <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChanges}
-                aria-label="basic tabs example"
-              >
-                <Tab
-                  label="Articulos"
-                  {...a11yProps(0)}
-                />
-                <Tab
-                  label={`Pedidos:${pedidos.length}`}
-                  {...a11yProps(1)}
-                  onClick={conseguirPedidos}
-                />
-                <Tab
-                  label={`Facturas:${facturas.length}`}
-                  {...a11yProps(2)}
-                  onClick={conseguirFacturas}
-                />
+              <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+                <Tab label="Articulos" {...a11yProps(0)} />
+                <Tab label={`Pedidos:${pedidos.length}`} {...a11yProps(1)} onClick={conseguirPedidos} />
+                <Tab label={`Facturas:${facturas.length}`} {...a11yProps(2)} onClick={conseguirFacturas} />
               </Tabs>
             </Box>
 
-            <CustomTabPanel
-              component={Box}
-              value={value}
-              index={0}
-            >
+            <CustomTabPanel component={Box} value={value} index={0}>
               <Box sx={{ width: "100%", height: 950 }}>
                 {productos.length <= 0 ? (
-                  <Box
-                    sx={{ width: "100%" }}
-                    title="Seleccione una bodega en la lista de arriba"
-                  >
-                    {" "}
-                    <HelpOutlineIcon />{" "}
+                  <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba" >
+                    {" "}<HelpOutlineIcon />{" "}
                   </Box>
                 ) : (
                   <DataGrid
@@ -529,16 +501,12 @@ function productos() {
               </Box>
             </CustomTabPanel>
 
-            <CustomTabPanel
-              component={Box}
-              value={value}
-              index={1}
-            >
+            <CustomTabPanel component={Box} value={value} index={1}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
                 </Box>
-              ) : pedidos.length <= 0 ? (
+              ) : pedidos.length === 0 ? (
                 <h1>NO HAY PEDIDOS</h1>
               ) : (
                 <Box sx={{ width: "100%", height: 950 }}>
@@ -558,16 +526,12 @@ function productos() {
               )}
             </CustomTabPanel>
 
-            <CustomTabPanel
-              component={Box}
-              value={value}
-              index={2}
-            >
+            <CustomTabPanel component={Box} value={value} index={2}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
                 </Box>
-              ) : facturas.length <= 0 ? (
+              ) : facturas && facturas.length <= 0 ? (
                 <h1>NO HAY FACTURAS</h1>
               ) : (
                 <Box sx={{ width: "100%", height: 950 }}>
