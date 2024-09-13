@@ -27,7 +27,7 @@ export function conexion() {
     title: "No existe conexion",
     text: "Verifique la conexion con la empresa o no tiene internet",
     icon: "warning",
-    button: "Axepatar",
+    button: "Aceptar",
   });
 }
 
@@ -67,7 +67,7 @@ const columns = [
 
 
 const PageUsuario = async () => {
-    const response = await fetch('http://172.20.20.3:8001/usuarios/listar', {
+    const response = await fetch('/api/usuarios/listar', {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",
@@ -82,7 +82,7 @@ function Usuarios() {
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const [usuario, setUsuario] = useState([]);
+  const [usuario, setUsuario] = useState();
   const [openA, setOpenA] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
@@ -110,7 +110,6 @@ function Usuarios() {
             }))
           setCargando(false);
           setUsuarios(datosT);
-          setUsuario(datosT)
           setTablaUsuario(datosT);
         } else {
           console.log("Error", datos)
@@ -158,9 +157,9 @@ function Usuarios() {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaUsuario.filter((elemento) => {
-          const ID = elemento.ID;
-          if (ID) {
-            const IdString = ID.toString();
+          const IdPer = elemento.IdPer;
+          if (IdPer) {
+            const IdString = IdPer.toString();
             return IdString.includes(selectionModel[0]);
           }
           return false;
@@ -168,9 +167,7 @@ function Usuarios() {
         setUsuario(resultadosFiltrados);
         setOpenA(true);
       }
-    },
-    [usuarios]
-  );
+    }, [usuarios]);
 
   return (
     <>

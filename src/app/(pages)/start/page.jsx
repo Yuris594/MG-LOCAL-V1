@@ -1,7 +1,8 @@
 "use client";
 
 import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
-import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, 
+  ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth }  from "@/context/authContext";
@@ -29,7 +30,7 @@ const style = {
 
   const Inicio = () => {
     const router = useRouter();
-    const { auth, logout } = useAuth();
+    const { auth } = useAuth();
     const handleOpen = () => setOpen(true);
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);

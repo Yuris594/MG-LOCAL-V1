@@ -2,12 +2,12 @@
 
 import { Box, Button, Divider, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "@/context/authContext";
+import { DataGrid } from "@mui/x-data-grid";
+import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
-import { DataGrid } from "@mui/x-data-grid";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 
 
@@ -33,19 +33,13 @@ const fDate = (dateString) => {
 }
 
 const columns = [
-  {
-    field: "FECHA_PEDIDO",
-    headerName: "Fecha",
-    width: 170,
+  { field: "FECHA_PEDIDO", headerName: "Fecha", width: 170,
     renderCell: (params) => fDate(params.value)
   },
   { field: "PEDIDO", headerName: "Pedido", width: 160 },
   { field: "ESTADO", headerName: "Estado", width: 70 },
   { field: "IMPRESO", headerName: "IMP", width: 70 },
-  {
-    field: "AUTORIZADONOM",
-    headerName: "Autorizado",
-    width: 200,
+  { field: "AUTORIZADONOM", headerName: "Autorizado", width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
@@ -71,7 +65,7 @@ const columns = [
 ];
 
 const conseguirArticulos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/pedidos/listar", {
+  const response = await fetch("/api/pedidos/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json",
@@ -105,7 +99,7 @@ const Pedidos = () => {
       if (datos) {
         setPedidos(datos);
         setTabla(datos);
-        
+        setCargando(false)
         setTimeout(() => {
             setChecked(true);
         }, 100);
@@ -132,8 +126,7 @@ const Pedidos = () => {
     setPedidos(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback(
-    (selectionModel) => {
+  const handleSelection = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tabla.filter((elemento) => {
@@ -162,22 +155,21 @@ const Pedidos = () => {
       </Box>
 
       <div className="container">
-       
+        {cargando === true ? (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        ) : (
       <Box>
         <div style={{ height: "auto", width: "100%" }}>
-          <Typography
-            variant="h5"
-            component="h1"
-            gutterBottom
+          <Typography variant="h5" component="h1" gutterBottom
             sx={{
               display: "flex",
               justifyContent: "column",
               alignItems: "center",
               width: "auto",
               margin: 0,
-              color: "#000",
-            }}
-          >
+              color: "#000", }}>
             PEDIDOS
           </Typography>
 
@@ -249,15 +241,7 @@ const Pedidos = () => {
                 </Button>
               </Box>
 
-              <Paper
-                sx={{
-                  p: "2px 4px",
-                  display: "flex",
-                  alignItems: "center",
-                  width: 250,
-                  boxShadow: 3,
-                }}
-              >
+              <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 250, boxShadow: 3, }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Buscar"
@@ -265,17 +249,11 @@ const Pedidos = () => {
                   value={busqueda}
                   onChange={handleChange}
                 />
-                <IconButton
-                  type="button"
-                  sx={{ p: "10px" }}
-                  aria-label="search"
-                >
+                <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
                   <SearchIcon />
                 </IconButton>
-                <Divider
-                  sx={{ height: 28, m: 0.5 }}
-                  orientation="vertical"
-                />
+
+                <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
               </Paper>
 
                 <Box sx={{ height: 200, width: "100%" }}>
@@ -297,7 +275,7 @@ const Pedidos = () => {
             </Box>
           </Modal>
         </Box>
-        
+        )}
       </div>
     </>
   );

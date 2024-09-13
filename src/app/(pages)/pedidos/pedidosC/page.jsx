@@ -3,16 +3,16 @@
 import { Search as SearchIcon, HighlightOff as HighlightOffIcon, NoteAdd as NoteAddIcon, ControlPoint as ControlPointIcon, Edit as EditIcon, SaveAs as SaveAsIcon, Print as PrintIcon, DeleteForever as DeleteForeverIcon, Calculate as CalculateIcon, Lock as LockIcon, Mood as MoodIcon, LocalShipping as LocalShippingIcon, People as PeopleIcon, Cached as CachedIcon, DeleteOutlined as DeleteIcon, Close as CancelIcon, Save as SaveIcon, } from "@mui/icons-material";
 import { Box, Tabs, Tab, OutlinedInput, Button, Typography, Zoom, Paper, InputBase, IconButton, TextField, Grid, FormControl, InputLabel, Snackbar, ButtonGroup, Modal, } from "@mui/material";
 import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
+import { useAuth } from "@/context/authContext";
+import { useForm } from "@/app/hooks/useForm";
+import { useEffect, useState } from "react";
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
 import Productos from "../../(producto)/productos/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
 import Banner from "@/app/components/banner/banner";
-import { useForm } from "@/app/hooks/useForm";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/context/authContext";
+import MuiAlert from "@mui/material/Alert";
 import PropTypes from "prop-types";
 import React from "react";
-import MuiAlert from "@mui/material/Alert";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -165,7 +165,7 @@ export const PedidosC = () => {
   const handleChanges = (event, newValue) => { setValue(newValue) };
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
   const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo( productosP, productosConDISP0, value );
-  const { generarPDF } = useGenerarPDF( clienteP, argumentoPDF, sumaSaldoTotalDESC );
+  const { generarPDF } = useGenerarPDF( clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
 
 
   useEffect(() => {
@@ -212,6 +212,9 @@ export const PedidosC = () => {
     try {
       if (datos) {
         setProductosConDIPS0(datos);
+      } else {
+        if (datos === 0)
+        console.log("No hay datos")
       }
     } catch (error) {
       console.log("Error al obtener los datoscon", error);

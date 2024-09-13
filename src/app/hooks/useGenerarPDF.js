@@ -6,9 +6,9 @@ import { format } from 'date-fns';
 
 
 const generarCodigoBarras = (texto) => {
-    //const canvas = document.createElement('canvas');
-    //JsBarcode(canvas, texto, { format: "CODE128" });
-    //return canvas.toDataURL("image/png"); 
+    const canvas = document.createElement('canvas');
+    JsBarcode(canvas, texto, { format: "CODE128" });
+    return canvas.toDataURL("image/png"); 
   };
 
   const useGenerarPDF = (clienteP, productosP, sumaSaldoTotalDESC = {}) => {
@@ -35,7 +35,7 @@ const generarCodigoBarras = (texto) => {
         ];
 
         const styles = {
-          theme: "plain",
+          theme: "grid",
           tableWidth: "auto",
           lineColor: [200, 200, 200],
           lineWight: 0.1,
@@ -44,7 +44,8 @@ const generarCodigoBarras = (texto) => {
           textColor: [0, 0, 0],
           display: "flex",
           cellWidth: "auto",
-          fontSize: 8
+          fontSize: 8,
+          tableLineColor: [200, 200, 200]
         };
 
         const dataToPrint = productosP.map(row => {
@@ -70,9 +71,9 @@ const generarCodigoBarras = (texto) => {
           
           pdf.setFontSize(13);
           pdf.text("PREFACTURA", 12, 30,);
-         if(clienteP.IMPRESO==="S"){
+            if(clienteP.IMPRESO==="S"){
           pdf.text("DUPLICADO", 12, 55,);
-         }
+            }
           pdf.setFontSize(13);
           pdf.text("FACTURA N°________", 450, 30,);
           pdf.setFontSize(9);

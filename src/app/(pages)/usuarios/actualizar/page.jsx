@@ -5,7 +5,7 @@ import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react"
 
 const actualizar = async (form) => {
-  const response = await fetch("http://172.20.20.3:8001/usuarios/actualizar/", {
+  const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
@@ -13,7 +13,7 @@ const actualizar = async (form) => {
   return response.json()
 }
 
-const UsuarioActualizar = ({usuario}) => {
+const UsuarioActualizar = ({ usuario }) => {
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const { form, setForm, changed } = useForm();
@@ -36,7 +36,7 @@ const UsuarioActualizar = ({usuario}) => {
 
   console.log(form);
 
-  const actualizar = async (e) => {
+  const Actualizar = async (e) => {
     e.preventDefault();
     try {
       const datos = await actualizar(form)
@@ -69,7 +69,7 @@ const UsuarioActualizar = ({usuario}) => {
           <Typography component="h1" variant="h5">
             Actualizacion de usuario
           </Typography>
-          <Box component="form" onSubmit={actualizar} noValidate sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={Actualizar} noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
