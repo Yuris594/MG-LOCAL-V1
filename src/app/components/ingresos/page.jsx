@@ -74,7 +74,7 @@ const noExiste = () => {
 const registro = async (cedula) => {
   const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
     method: "POST",
-    body: JSON.stringify(cedula), 
+    body: JSON.stringify({ cedula }), 
     headers: { "Content-Type": "application/json" }
   });
   return response.json()
