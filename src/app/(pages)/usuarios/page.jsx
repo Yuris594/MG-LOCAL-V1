@@ -188,8 +188,8 @@ function Usuarios() {
                 </Box>
               </Modal>
 
-              <Typography variant="h5" component="h1" gutterBottom
-                  sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", color: "#000000", }}>
+              <Typography variant="h5" 
+                  sx={{ color: "#000000", fontWeight: "bold", marginTop: 4, marginBottom: 2, textAlign: "center", }}>
                 USUARIOS
               </Typography>
 

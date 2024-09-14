@@ -64,13 +64,33 @@ const Factura = () => {
           );
 
           if ("PRECIO_TOTAL" in objetoFiltrado) {
-            objetoFiltrado["PRECIO_TOTAL"] = Math.floor(
-              objetoFiltrado["PRECIO_TOTAL"]
-            );
+            objetoFiltrado["PRECIO_TOTAL"] = Math.floor(objetoFiltrado["PRECIO_TOTAL"]);
+          }
+          if ("DESC_TOT_LINEA" in objetoFiltrado) {
+            objetoFiltrado["DESC_TOT_LINEA"] = Math.floor(objetoFiltrado["DESC_TOT_LINEA"]);
           }
           return objetoFiltrado;
         });
         setProductos(productosFiltrados);
+
+        let sumatotal = 0;
+        let descuento = 0;
+
+        productosFiltrados.forEach(producto => {
+          sumatotal += producto.PRECIO_TOTAL || 0;
+          descuento += producto.DESC_TOT_LINEA || 0;
+        });
+
+        const impuesto = sumatotal * 0.19;
+        const totalConImpuesto = sumatotal + impuesto;
+        
+        setTotales({
+          sumatotal: sumatotal.toLocaleString('es-ES'),
+          descuento: descuento.toLocaleString('es-ES'),
+          impuesto: impuesto.toLocaleString('es-ES'),
+          totalConImpuesto: totalConImpuesto.toLocaleString('es-ES'),
+        });
+
       } else {
         noExiste();
       }
@@ -91,28 +111,6 @@ const Factura = () => {
   
   
   const generarPDF = () => {
-    const sumatotal = productos.reduce((acumulador, producto) => acumulador + producto.PRECIO_TOTAL,  0)
-      const descuento = productos.reduce((acumulador, producto) => acumulador + producto.DESC_TOT_LINEA,  0)
-      const impuesto = sumatotal * 0.19;
-      const totalConImpuesto = sumatotal + impuesto;
-      
-      const datosTotal = {
-        sumatotal: parseInt(sumatotal),
-        descuento: parseInt(descuento),
-        impuesto: parseInt(impuesto),
-        totalConImpuesto: parseInt(totalConImpuesto),
-      };
-      
-      setTotales(datosTotal);
-      console.log(datosTotal);
-/*
-      const datosTotal = {
-        sumatotal: parseInt(sumatotal),
-        descuento: descuento.toLocaleString('es-ES'),
-        impuesto: impuesto.toLocaleString('es-ES'),
-        totalConImpuesto: totalConImpuesto.toLocaleString('es-ES'),
-      };
-*/
     const pdf = new jsPDF("portrait", "pt", "letter");
     const columnsParaPDF = [
       { field: "ARTICULO", headerName: "Ref.", width: 200 },
@@ -201,9 +199,9 @@ const Factura = () => {
       pdf.setFontSize(10);
       pdf.text(`TOTAL ITEMS:        ${productos.length}`, 350, pdf.autoTable.previous.finalY + 20);
       pdf.text(`SubTotal:     ${fac.TOTAL_MERCADERIA}`, 470, pdf.autoTable.previous.finalY + 20);
-      pdf.text(`Desc:           ${totales?.descuento || 0}`, 470, pdf.autoTable.previous.finalY + 40);
-      pdf.text(`IVA:              ${totales?.impuesto || 0}`, 470, pdf.autoTable.previous.finalY + 60);
-      pdf.text(`TOTAL:        ${totales?.totalConImpuesto || 0}`, 470, pdf.autoTable.previous.finalY + 80);
+      pdf.text(`Desc:           ${totales.descuento}`, 470, pdf.autoTable.previous.finalY + 40);
+      pdf.text(`IVA:              ${totales.impuesto}`, 470, pdf.autoTable.previous.finalY + 60);
+      pdf.text(`TOTAL:        ${totales.totalConImpuesto}`, 470, pdf.autoTable.previous.finalY + 80);
 
       pdf.setFontSize(11);
       pdf.text("ACEPTO este documento y declaro haber recibido real y \n materialmente los articulos arriba descritos ",12, pdf.autoTable.previous.finalY + 20);

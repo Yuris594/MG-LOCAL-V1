@@ -1,24 +1,18 @@
-//Pedidos que ya realizados
+// Pedidos por generar //
 
 'use client';
 
 import {  GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from '@mui/x-data-grid';
-import { Box, Snackbar, Tabs, Tab, ButtonGroup, OutlinedInput, Button, Typography, Modal, Zoom, Paper, InputBase, IconButton, TextField, Grid, FormControl, InputLabel,  } from '@mui/material';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { Box, Snackbar, Tabs, Tab, ButtonGroup, OutlinedInput, Button, Typography, Modal, Paper, InputBase, 
+        IconButton, TextField, Grid, FormControl, InputLabel, Zoom,  } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import CalculateIcon from '@mui/icons-material/Calculate';
 import CancelIcon from '@mui/icons-material/Cancel';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import SearchIcon from '@mui/icons-material/Search';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import PeopleIcon from '@mui/icons-material/People';
-import CachedIcon from '@mui/icons-material/Cached';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
-import MoodIcon from '@mui/icons-material/Mood';
 import SaveIcon from '@mui/icons-material/Save';
 import MuiAlert from '@mui/material/Alert';
 
@@ -39,7 +33,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   bgcolor: 'white',
   width: "90%",
-  height: "90%",
+  height: "80%",
   boxShadow: 24,
   p: 4,
 };
@@ -131,7 +125,7 @@ function CustomTabPanel(props) {
     const [tablaProducto, setTablaProducto] = useState([]);
     const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(productosP, productosConDISP0, value);
     
-    const handleChanges = (newValue) => {
+    const handleChanges = (event, newValue) => {
         setValue(newValue);
     };
 
@@ -139,7 +133,9 @@ function CustomTabPanel(props) {
     const handleClose = () => setOpen(false);
     const handleOpenP = () => setOpenP(true);
     const handleCloseP = () => setOpenP(false);
-
+    setTimeout(() => {
+      setChecked(true)
+    }, 100);
 
 
     useEffect(() => {
@@ -562,12 +558,13 @@ function CustomTabPanel(props) {
                 <Paper sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
-                            <Tab label="Detalles Lineas" {...a11yProps(0)} />
-                            <Tab label="Articulos Pendientes" {...a11yProps(1)} />
+                            <Tab label="Detalles Lineas" value={0} {...a11yProps(0)} />
+                            <Tab label="Articulos Pendientes" value={1} {...a11yProps(1)} />
                         </Tabs>
                     </Box>
 
                     <CustomTabPanel value={value} index={0}>
+                        <Zoom in={checked}>
                             <Box sx={{ height: "auto", width: '100%',
                                   '& .MuiDataGrid-cell--editable': {
                                       bgcolor: (theme) =>
@@ -579,11 +576,9 @@ function CustomTabPanel(props) {
 
                                 <Box sx={{ height: 450, width: "100%" }}>
                                   <DataGrid
-                                      density="compact"
                                       rows={productosP}
                                       columns={columnsP}
                                       getRowId={(row) => row.ARTICULO}
-                                      editMode="row"
                                       rowModesModel={rowModesModel}
                                       onRowModesModelChange={handleRowModesModelChange}
                                       onRowEditStop={handleRowEditStop}
@@ -594,9 +589,11 @@ function CustomTabPanel(props) {
                                     />
                                 </Box>
                             </Box>
+                          </Zoom>  
                     </CustomTabPanel>
 
                     <CustomTabPanel value={value} index={1}>
+                        <Zoom in={checked}>
                             <Box sx={{ height: "auto", width: '100%',
                                   '& .MuiDataGrid-cell--editable': {
                                       bgcolor: (theme) =>
@@ -608,17 +605,14 @@ function CustomTabPanel(props) {
 
                                 <Box sx={{ height: 450, width: "100%" }}>
                                   <DataGrid
-                                      density="compact"
                                       rows={productosConDISP0}
                                       columns={columnsP}
-                                      editMode="row"
-                                      rowModesModel={rowModesModel}
-                                      onRowModesModelChange={handleRowModesModelChange}
-                                      onRowEditStop={handleRowEditStop}
-                                      processRowUpdate={processRowUpdate}
-                                      pageSizeOptions={[5, 10]}
                                       getRowId={(row) => row.ARTICULO}
-                                      slotProps={{ toolbar: { setProductosP, setRowModesModel }, }}
+                                      rowModesModel={rowModesModel}
+                                      onRowSelectionModelChange={handleRowModesModelChange}
+                                      pageSizeOptions={[5, 10]}
+                                      onRowEditStop={processRowUpdate}
+                                      slotProps={{ toolbar: {setProductosP, setRowModesModel } }}
                                       initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, }, }}
                                     />
                                 </Box>
@@ -626,6 +620,7 @@ function CustomTabPanel(props) {
                                 <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }}><ControlPointIcon /></Button>
                               </Box>
                             </Box>
+                        </Zoom>  
                     </CustomTabPanel>
                 </Paper>
             </Paper>
@@ -662,16 +657,16 @@ function CustomTabPanel(props) {
                         </Paper>
                     </Box>
 
-                    <Box sx={{ height: 700, width: "100%" }}>
+                    <Box sx={{ height: 750, width: "100%" }}>
                         <DataGrid
                           rows={productos}
                           columns={columns}
                           initialState={{
                               pagination: {
-                                  paginationModel: { page: 0, pageSize: 10 },
+                                  paginationModel: { page: 0, pageSize: 12 },
                               },
                           }}
-                          pageSizeOptions={[5, 10]}
+                          pageSizeOptions={[5, 12]}
                           onRowSelectionModelChange={handleSelectionChange}
                           //onSelectionModelChange={(newSelection) => setSelectedRows(newSelection)}
                           rowSelectionModel={selectedRows}

@@ -54,20 +54,18 @@ const columns = [
   { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
   { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
   { field: "PRECIO", headerName: "Precio", width: 130,
-      valueFormatter: (params) => {
-        const PRECIO = params.value;
-        const precioRedondeado = Number(PRECIO).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      }, align: 'right', editable: true
+    valueFormatter: (value) => {
+      const precioRedondeado = Number(value).toFixed(0);
+      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, align: 'right', editable: true
   },
   { field: "CANTIDAD", headerName: "Cant", width: 80, type: "number", editable: true, },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
   { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
-      valueFormatter: (params) => {
-        const PRECIOMASIVA = params.value;
-        const precioRedondeado = Number(PRECIOMASIVA).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      }, align: 'right'
+    valueFormatter: (value) => {
+      const precioRedondeado = Number(value).toFixed(0);
+      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, align: 'right'
   },
   { field: "PORC_DCTO", headerName: "D1", width: 40 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 80 },
@@ -82,7 +80,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   bgcolor: "white",
   width: "90%",
-  height: "100%",
+  height: "80%",
   boxShadow: 24,
   p: 4,
 };
@@ -178,11 +176,10 @@ export const PedidosC = () => {
         obtenerProductosP(clienteP.PEDIDO);
         obtenerProductosPendientes(clienteP.PEDIDO);
       }
-
-    setTimeout(() => {
-      setChecked(true);
-    }, 100);
-  }, []);
+      setTimeout(() => {
+        setChecked(true);
+      }, 100);
+  }, [clienteP, setPedido]);
 
   const obtenerProductos = async () => {
     const datos = await conseguirProductos();
@@ -395,19 +392,17 @@ export const PedidosC = () => {
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
     { field: "DISP", headerName: "Disp", width: 70 },
     { field: "PRECIO", headerName: "Precio", width: 130,
-        valueFormatter: (params) => {
-          const PRECIO = params.value;
-          const precioRedondeado = Number(PRECIO).toFixed(0);
-          return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        }, align: 'right', editable: true, type: 'number'
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
     },
     { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true, },
     { field: "PORC_DCTO", headerName: "D1", width: 70,
-        valueFormatter: (params) => {
-          const PORC_DCTO = params.value;
-          const precioRedondeado = Number(PORC_DCTO).toFixed(0);
-          return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        }, align: 'right', editable: true, type: 'number'
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
     { field: "Em", headerName: "Emp", width: 80 },
@@ -481,7 +476,7 @@ export const PedidosC = () => {
     <>
       <Box marginBottom="50px">  <Banner />  </Box>
           <Typography variant="h5" style={{fontWeight: "bold"}} component="h1" gutterBottom
-              sx={{ display: "flex", justifyContent: "left", alignItems: "center", width: "auto", margin: 0, }}>
+              sx={{ justifyContent: "left", alignItems: "center", width: "auto", margin: 0, }}>
             PEDIDOS
           </Typography>
 
@@ -784,7 +779,7 @@ export const PedidosC = () => {
               <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}> <HighlightOffIcon /> </Button>
             </Box>
 
-              <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600, margin: "0%", }}>
+              <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 500, margin: "0%", }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Buscar"
@@ -803,17 +798,17 @@ export const PedidosC = () => {
               </Paper>
           </Box>
 
-          <Box sx={{ height: 950, width: "100%" }}>
+          <Box sx={{ height: 750, width: "100%" }}>
             <DataGrid
               rows={productos}
               columns={columns}
               getRowId={(row) => row.ARTICULO}
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 20 },
+                  paginationModel: { page: 0, pageSize: 15 },
                 },
               }}
-              pageSizeOptions={[20, 40]}
+              pageSizeOptions={[15, 30]}
               onRowSelectionModelChange={handleSelectionChange}
               onSelectionModelChange={(newSelection) =>
                 setSelectedRows(newSelection)
