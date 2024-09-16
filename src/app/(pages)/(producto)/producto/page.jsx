@@ -222,7 +222,7 @@ const obtenerBodegas = async () => {
 };
 
 
-function productos() {
+function Producto() {
   const inputRef = useRef();
   const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false);
@@ -360,7 +360,6 @@ function productos() {
 
   return (
     <>
-      <Box> {" "} <Banner />{" "} </Box>
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}>
           <CircularProgress color="inherit" />
@@ -541,4 +540,4 @@ function productos() {
   );
 }
 
-export default productos;
+export default Producto;

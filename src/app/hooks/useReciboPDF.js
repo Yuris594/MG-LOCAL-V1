@@ -113,7 +113,7 @@ const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
                 const row = valores[i];
                 pdf.text(`${row.DESCRIPCION}`, 10, currentY);
                 pdf.text(`$${row.PRECIO}`, 100, currentY);
-                currentY += 2;
+                currentY += 15;
             }
         }
 

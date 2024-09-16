@@ -8,16 +8,16 @@ import { Box, Snackbar, Tabs, Tab, ButtonGroup, OutlinedInput, Button, Typograph
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import StarIcon from '@mui/icons-material/Star';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import LockIcon from '@mui/icons-material/Lock';
 import SaveIcon from '@mui/icons-material/Save';
 import MuiAlert from '@mui/material/Alert';
 
 import useCalculoSumaSaldo from '@/app/hooks/useCalculoSumaSaldo';
-import Productos from "../../(producto)/productos/page"
+import Producto from '../../(producto)/producto/page';
 import Banner from '@/app/components/banner/banner';
 import React, { useEffect, useState } from 'react';
 import { useForm } from '@/app/hooks/useForm';
@@ -239,8 +239,7 @@ function CustomTabPanel(props) {
     };
 
     const handleCancelClick = (id) => () => {
-      setRowModesModel({
-          ...rowModesModel,
+      setRowModesModel({ ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
@@ -347,67 +346,38 @@ function CustomTabPanel(props) {
 
   return (
     <>
-      <Box marginBottom="50px">  <Banner /> </Box>
-      <div className='container'>
-            {openS ? <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center', }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
-                        <Alert onClose={handleClose} severity="success" sx={{ width: '400px', height: "100px" }}>
-                            Guardado exitosamente
-                        </Alert>
-                    </Snackbar>
-             :  "" }
+      <Box>  <Banner /> </Box>
+        <div className='container'>
+          <Box sx={{ padding: '20px' }}>
+            <Typography variant="h6" component="h1" gutterBottom  sx={{ display: 'flex', justifyContent: 'left',  alignItems: 'center',  width: "auto",  margin: 0 }}>
+                GESTION DE PEDIDOS
+            </Typography>
 
-            {openE ? <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center', }} open={openE} autoHideDuration={2000} onClose={handleCloses}>
-                        <Alert onClose={handleClose} severity="error" sx={{ width: '400px', height: "100px" }}>
-                            No se puede guardar
-                        </Alert>
-                    </Snackbar>
-             : "" }
-
-                <Typography variant="h6" component="h1" gutterBottom  sx={{ display: 'flex', justifyContent: 'left',  alignItems: 'center',  width: "auto",  margin: 0 }}>
-                    Pedidos
-                </Typography>
-
-              <Paper style={{ height: "auto", width: '100%', }}>
-                  <Box style={{ height: "auto", width: '100%' }}>
-                      <Paper sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', margin: 1, flexDirection: "row", width: '100%', gap: '70px' }}>
-                          <Paper sx={{ p: '2px 4px', display: 'flex', alignItems: 'flex-rigth', width: "auto", margin: "0%" }}>
-                            <InputBase
-                                sx={{ ml: 1, flex: 1 }}
-                                placeholder="Buscar"
-                                inputProps={{ 'aria-label': 'search google maps' }}
-                                id="usuario"
-                                label="Usuario"
-                                name='PER_Usuario'
-                                autoComplete="usuario"
-                                autoFocus
-                                value={busqueda}
-                                onChange={handleChange} 
-                            />
-
-                            <IconButton title="buscar" type="button" sx={{ p: '10px' }} aria-label="search">
-                                <SearchIcon />
-                            </IconButton>
-
-                            {/*<Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }}><PeopleIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }}><MoodIcon /></Button>*/ }
-                          </Paper>
-
-                          <Box>
-                            {/*<Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }}><CachedIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }}><MoodIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#f3fec4" }}><CalculateIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }}><DeleteForeverIcon /></Button>*/}
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenP}><LocalShippingIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}><LockIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}><HighlightOffIcon /></Button>
+              <Paper style={{ width: '100%', p: 2, boxShadow: 3 }}>
+                    <Box style={{ width: '100%', mb: 2 }}>
+                      <Paper sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', p: 1, gap: 2, boxShadow: 2, backgroundColor: '#f5f5f5' }}>
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button variant="filled" sx={{ bgcolor: "#aeefff", '&:hover': { bgcolor: '#91d9e9' } }} onClick={handleOpenP}><LocalShippingIcon /></Button>
+                            <Button variant="filled" sx={{ bgcolor: "#fff694", '&:hover': { bgcolor: '#e5df85' } }} onClick={especial}><StarIcon /></Button>
+                            <Button variant="filled" sx={{ bgcolor: "#ffa28a", '&:hover': { bgcolor: '#e98c74' } }} onClick={cerrarP}><HighlightOffIcon /></Button>
                           </Box>
+                      </Paper>
+                    </Box>
 
-                          <Box>
-                            {/*<Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} ><SaveAsIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }}><EditIcon /></Button>
-                            <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84d8f4" }} ><NoteAddIcon /></Button>*/}
-                          </Box>
-                        </Paper>
+                    <Paper sx={{ display: 'flex', alignItems: 'center', p: '2px 4px', boxShadow: 2, backgroundColor: '#fff', width: "100%",}}>
+                        <InputBase
+                            sx={{ ml: 1, flex: 1 }}
+                            placeholder="Buscar..."
+                            inputProps={{ 'aria-label': 'search google maps' }}
+                            autoFocus
+                            value={busqueda}
+                            onChange={handleChange} 
+                        />
+
+                        <IconButton title="Buscar" sx={{ p: '10px' }} aria-label="search">
+                            <SearchIcon />
+                        </IconButton>
+                      </Paper>
 
                     <Box sx={{ display: "flex", alignItems: "center", alignContent: "center", justifyContent: 'center', zoom: 0.80, margin: 1, }}>
                         <Paper sx={{ width: "65%", height: "auto", padding: 2 }}>
@@ -553,7 +523,7 @@ function CustomTabPanel(props) {
                         </Paper>
                     </Box>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpen}><ControlPointIcon /></Button>
-                </Box>
+               
 
                 <Paper sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -627,7 +597,7 @@ function CustomTabPanel(props) {
 
 
             <Modal open={openP} onClose={handleCloseP} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" >
-                <Box sx={style}> <Productos /> </Box>
+                <Box sx={style}> <Producto /> </Box>
             </Modal>
 
 
@@ -692,7 +662,23 @@ function CustomTabPanel(props) {
                 <Typography variant="body2" color="text.primary"> Editado por: </Typography>
                 <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom> {clienteP?.CreatedBy || ''} </Typography>
               </Box>
-          </div >
+
+
+              {openS ? <Snackbar anchorOrigin={{  vertical: 'top', horizontal: 'center', }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
+                        <Alert onClose={handleClose} severity="success" sx={{ width: '400px', height: "100px" }}>
+                            Guardado exitosamente
+                        </Alert>
+                    </Snackbar>
+             :  "" }
+
+            {openE ? <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center', }} open={openE} autoHideDuration={2000} onClose={handleCloses}>
+                        <Alert onClose={handleClose} severity="error" sx={{ width: '400px', height: "100px" }}>
+                            No se puede guardar
+                        </Alert>
+                    </Snackbar>
+             : "" }
+            </Box>  
+        </div >
       </>
   )
 }
