@@ -7,7 +7,7 @@ import { useAuth } from "@/context/authContext";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import Productos from "../../(producto)/productos/page";
+import Producto from "../../(producto)/producto/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
 import Banner from "@/app/components/banner/banner";
 import MuiAlert from "@mui/material/Alert";
@@ -474,57 +474,40 @@ export const PedidosC = () => {
 
   return (
     <>
-      <Box marginBottom="50px">  <Banner />  </Box>
-          <Typography variant="h5" style={{fontWeight: "bold"}} component="h1" gutterBottom
-              sx={{ justifyContent: "left", alignItems: "center", width: "auto", margin: 0, }}>
+      <Box>  <Banner />  </Box>
+          <Typography variant="h6" component="h1" gutterBottom
+              sx={{ color: "#000000", textAlign: "center", marginTop: 4, marginBottom: 2, }}>
             PEDIDOS
           </Typography>
 
-            <Paper style={{ height: "auto", width: "100%" }}>
-              <Box style={{ height: "auto", width: "100%" }}>
-                <Paper sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: 1, flexDirection: "row", width: "100%", gap: "70px", }}>
-                  <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: "auto", margin: "0%", }}>
+            <Paper style={{ width: "100%", p: 2, boxShadow: 3  }}>
+              <Box style={{ width: "100%", mb: 2 }}>
+                <Paper sx={{display: "flex", alignItems: "center", justifyContent: 'space-between', p: 1, gap: 2, boxShadow: 2, backgroundColor: '#f5f5f5' }}>
+                  <Box sx={{ display: 'flex' }}>
+                    {clienteP?.AUTORIZADONOM || '' === "APROBADO" ? (
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}> <PrintIcon /> </Button>               
+                    ) : (
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled> <PrintIcon /> </Button>
+                    )}
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}> <SaveAsIcon /> </Button>
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenP}> <LocalShippingIcon /> </Button>
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}> <LockIcon /> </Button>
+                      <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}> <HighlightOffIcon /> </Button>
+                  </Box>
+                  
+                  <Paper sx={{ display: 'flex', alignItems: 'center', p: '2px 4px', boxShadow: 2, backgroundColor: '#fff', width: "100%" }}>
                     <InputBase
                       sx={{ ml: 1, flex: 1 }}
                       placeholder="Buscar"
                       inputProps={{ "aria-label": "search google maps" }}
-                      id="usuario"
-                      label="Usuario"
-                      name="PER_Usuario"
-                      autoComplete="usuario"
                       autoFocus
                       value={busqueda}
                       onChange={handleChange}
                     />
-
                       <IconButton title="buscar" type="button"  sx={{ p: "10px" }} aria-label="search">
                         <SearchIcon />
                       </IconButton>
-
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }}> <PeopleIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }}> <MoodIcon /> </Button>
                 </Paper>
-
-                <Box>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }}> <CachedIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenP}> <LocalShippingIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }}> <MoodIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}> <LockIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#f3fec4" }}> <CalculateIcon /> </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }}> <DeleteForeverIcon /> </Button>
-                </Box>
-
-                <Box>
-                  {clienteP?.AUTORIZADONOM || '' === "APROBADO" ? (
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}> <PrintIcon /> </Button>               
-                  ) : (
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled> <PrintIcon /> </Button>
-                  )}
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}> <SaveAsIcon /> </Button>
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }}> <EditIcon /> </Button>
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84d8f4" }}> <NoteAddIcon /> </Button>
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}> <HighlightOffIcon /> </Button>
-                </Box>
               </Paper>
 
               <Box sx={{ display: "flex", alignItems: "center", alignContent: "center", justifyContent: "center", zoom: 0.8, margin: 1, }}>
@@ -767,27 +750,23 @@ export const PedidosC = () => {
       </Paper>
 
       <Modal open={openP} onClose={handleCloseP} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <Box sx={style}> <Productos /> </Box>
+        <Box sx={style}> <Producto /> </Box>
       </Modal>
 
       <Modal open={open} onClose={guardar} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description"
           BackdropProps={{ style: { pointerEvents: "none", }, }}>
         <Box sx={style}>
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5, flexDirection: "row", width: "100%", gap: "70px", }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", }}>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={guardar}> Agregar </Button>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}> <HighlightOffIcon /> </Button>
-            </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", }}>
+                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={guardar}> Agregar </Button>
+                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}> <HighlightOffIcon /> </Button>
+              </Box>
 
               <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 500, margin: "0%", }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Buscar"
                   inputProps={{ "aria-label": "search google maps" }}
-                  id="usuario"
-                  label="Usuario"
-                  name="PER_Usuario"
-                  autoComplete="usuario"
                   autoFocus
                   value={busqueda}
                   onChange={handleChange}

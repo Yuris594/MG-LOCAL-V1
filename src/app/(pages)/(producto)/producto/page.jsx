@@ -433,10 +433,6 @@ function Producto() {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Buscar"
                     inputProps={{ "aria-label": "search google maps" }}
-                    id="usuario"
-                    label="Usuario"
-                    name="PER_usuario"
-                    autoComplete="usuario"
                     autoFocus
                     value={busqueda}
                     onChange={handleChange}

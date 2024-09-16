@@ -349,7 +349,7 @@ function CustomTabPanel(props) {
       <Box>  <Banner /> </Box>
         <div className='container'>
           <Box sx={{ padding: '20px' }}>
-            <Typography variant="h6" component="h1" gutterBottom  sx={{ display: 'flex', justifyContent: 'left',  alignItems: 'center',  width: "auto",  margin: 0 }}>
+            <Typography variant="h6" component="h1" gutterBottom  sx={{ color: "#000000", textAlign: "center", }}>
                 GESTION DE PEDIDOS
             </Typography>
 

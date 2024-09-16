@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import JsBarcode from 'jsbarcode';
 import jsPDF from 'jspdf';
