@@ -1,3 +1,5 @@
+'use client'
+
 import * as XLSX from "xlsx";
 import { useState } from "react";
 import { Button } from "@mui/material";

@@ -33,7 +33,7 @@ const bull = (
     return (
         <Paper className="container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', overflow: "auto"}}>
             <Typography sx={{ fontSize: 50, marginBottom: "15px" }} color="text.secondary" gutterBottom>
-                Valor a Cancelar: ${caja.total}
+                Valor a Cancelar: ${/*caja.total*/}
             </Typography>
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
@@ -78,7 +78,7 @@ const bull = (
                                 ..Miguelgomoz&cia@hotmail.com ..<br />
                                 .https://www.miguelgomez.com.co/. <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio -  {auth.PER_Nom}..
+                                .. Servicio -  {/*auth.PER_Nom*/}..
                             </Typography>
                         </CardContent>
 
@@ -114,7 +114,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio{bull}{}   {caja.cambio.toLocaleString('es')}
+                                Cambio{bull}{}   {/*caja.cambio.toLocaleString('es')*/}
                             </Typography>
                         </CardContent>
                     </Card>
