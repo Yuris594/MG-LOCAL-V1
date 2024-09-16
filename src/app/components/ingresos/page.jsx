@@ -14,27 +14,28 @@ import {
   Zoom,
 } from "@mui/material";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import WifiOffIcon from "@mui/icons-material/WifiOff";
 import { useEffect, useRef, useState } from "react";
-import WifiIcon from "@mui/icons-material/Wifi";
 import { useForm } from "@/app/hooks/useForm";
 import Swal from "sweetalert2";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from 'next/dynamic'
+const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
+const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
 
 
 const entrada = () => {
   Swal.fire({
     title: "¡Hora de ENTRADA registrada",
     icon: "success",
-    button: "Aceptar",
+    confirmButtonText: "Aceptar",
   });
 };
 const salida = () => {
   Swal.fire({
     title: "¡Hora de SALIDA registrada",
     icon: "success",
-    button: "Aceptar",
+    confirmButtonText: "Aceptar",
   });
 };
 
@@ -42,9 +43,7 @@ const servidor = () => {
   Swal.fire({
     title: "¡Por favor verifica la conexion o actualiza la pagina",
     icon: "warning",
-    buttons: {
-      confirm: "Aceptar",
-    },
+    confirmButtonText: "Aceptar"
   });
 };
 const conexion = () => {
@@ -52,7 +51,7 @@ const conexion = () => {
     title: "No existe conexion",
     text: "Verifique la conexion con la empresa o no tiene internet",
     icon: "warning",
-    button: "Aceptar",
+    confirmButtonText: "Aceptar",
   });
 };
 const espera = () => {
@@ -60,24 +59,31 @@ const espera = () => {
     title: "¡Espere un momento porfavor,estamos procesando",
     text: "Si esta muy lento,cancele el proceso y verifique su conexion",
     icon: "warning",
-    button: "cancelar",
+    confirmButtonText: "cancelar",
   });
 };
 const noExiste = () => {
   Swal.fire({
     title: "CEDULA no existe!",
     icon: "error",
-    button: "Aceptar",
+    confirmButtonText: "Aceptar",
   });
 };
 
 const registro = async (cedula) => {
-  const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
-    method: "POST",
-    body: JSON.stringify({ cedula }), 
-    headers: { "Content-Type": "application/json" }
-  });
-  return response.json()
+  try {
+    const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
+      method: "POST",
+      body: JSON.stringify({ cedula }), 
+      headers: { "Content-Type": "application/json" }
+    });
+    if (!response.ok) throw new Error("Error en la respuesta del servidor");
+    
+    return response.json();
+  } catch(error) {
+    console.error("Error al realizar la peticion", error);
+    return null;
+  }
 }
 
 const Ingresos = () => {
@@ -124,7 +130,7 @@ const Ingresos = () => {
   const ingreso = async (e) => {
     e.preventDefault();
     const cedula = form.CEDULA;
-    const datos = await registro(cedula)
+    
       if (!cedula) {
         console.info("Por favor, completa todos los campos");
         return;
@@ -135,8 +141,8 @@ const Ingresos = () => {
         return;
       }
     try {
-      espera();
-   
+      //espera();
+      const datos = await registro(cedula)
       if (datos) {
         if (datos && datos.ok) {
           if (datos.respuesta === "0") {
