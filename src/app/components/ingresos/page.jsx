@@ -13,13 +13,12 @@ import {
   Typography,
   Zoom,
 } from "@mui/material";
-import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "@/app/hooks/useForm";
+import Link from "next/link";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import Link from "next/link";
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from "react";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
 const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
 
@@ -88,9 +87,11 @@ const registro = async (cedula) => {
 
 const Ingresos = () => {
   const inputRef = useRef(null);
+  const [cedula, setCedula] = useState('');
   const [checked, setChecked] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
-  const { form, setForm, changed } = useForm({ CEDULA: "" });
+
+
 
   useEffect(() => {
     setOnline(navigator.onLine);
@@ -126,60 +127,58 @@ const Ingresos = () => {
     };
   }, []);
 
+const ingreso = async (e) => {
+  e.preventDefault();
 
-  const ingreso = async (e) => {
-    e.preventDefault();
-    const cedula = form.CEDULA;
-    
-      if (!cedula) {
-        console.info("Por favor, completa todos los campos");
-        return;
-      }
+  if (!cedula) {
+    console.info("Por favor, completa todos los campos");
+    return;
+  }
 
-      if (!online) {
-        conexion();
-        return;
+  if (!online) {
+    conexion();
+    return;
+  }
+
+  try {
+    espera();
+    const datos = await registro(cedula);
+    console.log("Datos recibidos:", datos);
+
+    if (datos && typeof datos.respuesta !== 'undefined') {
+      switch (datos.respuesta) {
+        case "0":
+          setCedula('');
+          entrada();
+          break;
+        case "1":
+          setCedula('');
+          salida();
+          break;
+        case "3":
+          setCedula('');
+          noExiste();
+          break;
+        default:
+          console.warn("Respuesta inesperada:", datos.respuesta);
       }
-    try {
-      //espera();
-      const datos = await registro(cedula)
-      if (datos) {
-        if (datos && datos.ok) {
-          if (datos.respuesta === "0") {
-            setForm({ CEDULA: "" });
-            entrada();
-          } else if (datos.respuesta === "1") {
-            setForm({ CEDULA: "" });
-            salida();
-          } else if (datos.respuesta === "3") {
-            setForm({ CEDULA: "" });
-            noExiste();
-          }
-        } else {
-          setForm({ CEDULA: "" });
-          servidor();
-        }
-      } else {
-        conexion();
-      }
-    } catch (error) {
-      console.log("Error", error);
+    } else {
+      console.error("Datos no recibidos o respuesta indefinida");
+      conexion();
     }
-  };
+  } catch (error) {
+    console.log("Error al procesar la solicitud:", error);
+  }
+};
+
 
   const handleClick = (event) => {
     const nuevoValor = event.currentTarget.value;
-    setForm((prevForm) => ({
-      ...prevForm,
-      CEDULA: prevForm.CEDULA + nuevoValor,
-    }));
+    setCedula((prevCedula) => prevCedula + nuevoValor);
   };
 
   const handleDelete = () => {
-    setForm((prevForm) => ({
-      ...prevForm,
-      CEDULA: prevForm.CEDULA.slice(0, -1),
-    }));
+    setCedula((prevCedula) => prevCedula.slice(0, -1));
   };
 
   return (
@@ -226,8 +225,8 @@ const Ingresos = () => {
                       name="CEDULA"
                       placeholder="Digite su cédula"
                       autoComplete="CEDULA"
-                      value={form.CEDULA}
-                      onChange={changed}
+                      value={cedula}
+                      onChange={(e) => setCedula(e.target.value)}
                       inputRef={inputRef}
                       sx={{ zoom: 2.5 }}
                     />
