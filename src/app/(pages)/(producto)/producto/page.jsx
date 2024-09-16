@@ -462,7 +462,7 @@ function Producto() {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: 950 }}>
+              <Box sx={{ width: "100%", height: 750 }}>
                 {productos.length <= 0 ? (
                   <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba" >
                     {" "}<HelpOutlineIcon />{" "}
@@ -473,10 +473,10 @@ function Producto() {
                     columns={columns}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 16 },
+                        paginationModel: { page: 0, pageSize: 10 },
                       },
                     }}
-                    pageSizeOptions={[5, 16, 20]}
+                    pageSizeOptions={[5, 10, 20]}
                     onRowSelectionModelChange={handleSelectionChange}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.ARTICULO}
