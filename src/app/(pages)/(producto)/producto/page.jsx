@@ -1,22 +1,20 @@
 "use client"
 
-import { useCallback, useRef, useEffect, useLayoutEffect, useState, } from "react";
-import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import Autocomplete from "@mui/material/Autocomplete";
-import SearchIcon from "@mui/icons-material/Search";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Paper from "@mui/material/Paper";
+import { DataGrid } from "@mui/x-data-grid";
+import InputBase from "@mui/material/InputBase";
+import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import InputBase from "@mui/material/InputBase";
-import { DataGrid } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
-import Tabs from "@mui/material/Tabs";
-import Box from "@mui/material/Box";
-import PropTypes from "prop-types";
-
-import Banner from "../../../components/banner/banner";
+import SearchIcon from "@mui/icons-material/Search";
 import BotonExcel from "@/app/hooks/useExportoExcel";
+import Autocomplete from "@mui/material/Autocomplete";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { useCallback, useRef, useEffect, useState, } from "react";
+import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
 
 
 
@@ -462,7 +460,7 @@ function Producto() {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: 750 }}>
+              <Box sx={{ width: "100%", height: 700 }}>
                 {productos.length <= 0 ? (
                   <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba" >
                     {" "}<HelpOutlineIcon />{" "}
@@ -473,10 +471,10 @@ function Producto() {
                     columns={columns}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
+                        paginationModel: { page: 0, pageSize: 11 },
                       },
                     }}
-                    pageSizeOptions={[5, 10, 20]}
+                    pageSizeOptions={[5, 11, 20]}
                     onRowSelectionModelChange={handleSelectionChange}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.ARTICULO}
@@ -494,16 +492,16 @@ function Producto() {
               ) : pedidos.length === 0 ? (
                 <h1>NO HAY PEDIDOS</h1>
               ) : (
-                <Box sx={{ width: "100%", height: 950 }}>
+                <Box sx={{ width: "100%", height: 700 }}>
                   <DataGrid
                     rows={pedidos}
                     columns={columnsP}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 16 },
+                        paginationModel: { page: 0, pageSize: 11 },
                       },
                     }}
-                    pageSizeOptions={[5, 16, 20]}
+                    pageSizeOptions={[5, 11, 20]}
                     getRowId={(row) => row.PEDIDO}
                     sx={{ backgroundColor: "#ffffff", }}
                   />
@@ -519,16 +517,16 @@ function Producto() {
               ) : facturas && facturas.length <= 0 ? (
                 <h1>NO HAY FACTURAS</h1>
               ) : (
-                <Box sx={{ width: "100%", height: 950 }}>
+                <Box sx={{ width: "100%", height: 700 }}>
                   <DataGrid
                     rows={facturas}
                     columns={columnsF}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 16 },
+                        paginationModel: { page: 0, pageSize: 11 },
                       },
                     }}
-                    pageSizeOptions={[5, 16, 20]}
+                    pageSizeOptions={[5, 11, 20]}
                     getRowId={(row) => row.FACTURA}
                     sx={{ backgroundColor: "#ffffff", }}
                   />
