@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const bull = (
     <Box component="span" sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}>
-        :
+        •
     </Box>
 );
 
@@ -31,9 +31,13 @@ const bull = (
 
 
     return (
+    <>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '10px', boxShadow: '0px 4px 12px rgba(0,0,0,0.1)', }}>
+
         <Paper className="container" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', overflow: "auto"}}>
-            <Typography sx={{ fontSize: 50, marginBottom: "15px" }} color="text.secondary" gutterBottom>
-                Valor a Cancelar: ${caja.total}
+            <Typography variant="body1" textAlign="center" margin="20px 0" sx={{ fontSize: 50, marginBottom: "15px" }} color="#00796b" gutterBottom>
+                Valor a Cancelar: $ {caja.total}
             </Typography>
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
@@ -45,7 +49,7 @@ const bull = (
                                 ¿Como le gustaria recibir su recibo?
                             </Typography>
                             
-                                <Button variant="outlined" sx={{ width: 550, marginBottom: 5, backgroundColor: "#979797", color: "#3c3c3c"}} onClick={generarPDF}>Imprimir Recibo</Button>
+                                <Button variant="outlined" color="primary" sx={{ width: 550, marginBottom: 5, backgroundColor: "#00796b", color: "#fff"}} onClick={generarPDF}>Imprimir Recibo</Button>
                         
                                     <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 550, height: 100, }}>
                                         
@@ -94,7 +98,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Total{bull}{caja.total}
+                                Total {bull} {caja.total}
                             </Typography>
 
                         </CardContent>
@@ -116,7 +120,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio{bull}{}   {caja.cambio}
+                                Cambio {bull}{}   {caja.cambio.toLocaleString('es-ES')}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -124,12 +128,15 @@ const bull = (
             </Box>
 
             <Box sx={{ width: '139vw', padding: 0, margin: 0, paddingTop: 12 }}>
-                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }} onClick={cerrarP}>
+                <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" 
+                        sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }} onClick={cerrarP}>
                     Nuevo Pedido
                 </Button>
             </Box>
         </Paper>
-    )
+      </Box>
+    </>
+  )
 }
 
 export default ReciboCaja;

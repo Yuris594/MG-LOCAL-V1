@@ -152,7 +152,7 @@ const ClientesGlobal = ({ setOpen }) => {
           <Zoom in={checked}>
             <Box  sx={{ height: 640, width: "100%", 
                       '& .super-app-theme--header': {
-                      backgroundColor: '#181717', color: '#fff' }, }}>
+                      backgroundColor: '#353232', color: '#fff' }, }}>
               <DataGrid
                 rows={clientes}
                 columns={columns}
