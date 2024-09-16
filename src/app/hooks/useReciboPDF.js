@@ -1,9 +1,9 @@
 'use client'
 
+import { format } from "date-fns";
 import { useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { format } from "date-fns";
 
 const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
     const [pdfDataUrl, setPdfDataUrl] = useState(null);
@@ -19,7 +19,7 @@ const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
         pdf.text("Tel: 777777", 10, 15);
         pdf.text("Email: miguelgomoz&cia@hotmail.com", 10, 20);
         pdf.text("Website: https://www.miguelgomez.com.co", 10, 25);
-        pdf.text("------------------------------------------------", 10, 30);
+        pdf.text("---------------------------------------------------------------", 10, 30);
 
         // Título del recibo
         pdf.setFontSize(12);
@@ -60,8 +60,14 @@ const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
             valores2.forEach((row) => {
                 Object.entries(row).forEach(([key, value]) => {
                     if (value !== 0 && value != null) {
-                        const text = `${key}: ${value.toLocaleString('es')}`;
-                        pdf.text(text, 10, currentY);
+                        const formattedKey = `${key.charAt(0).toUpperCase()}${key.slice(1).toLowerCase()}:`;
+
+                        pdf.setFont("Helvetica", "bold");
+                        pdf.text(formattedKey, 10, currentY);
+
+                        pdf.setFont("Helvetica", "bold");
+                        const valueText = `$${value.toLocaleString('es')}`;
+                        pdf.text(valueText, 100, currentY);
                         currentY += 10;
                     }
                 });
