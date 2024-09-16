@@ -171,9 +171,7 @@ function Usuarios() {
 
   return (
     <>
-      <Box marginBottom="40px">
-        {" "} <Banner /> {" "}
-      </Box>
+      <Box>{" "} <Banner /> {" "}</Box>
           <Zoom in={checked}>
             <Box style={{ height: "auto", width: "100%" }}>
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

@@ -1,8 +1,7 @@
-
 "use client";
 
-import { AppBar, Box, Button, CssBaseline, Drawer, IconButton, Menu, MenuItem, Modal, Toolbar, Typography, } from "@mui/material";
-import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
+import { AppBar, Box, Button, CssBaseline, IconButton, Menu, MenuItem, Modal, Toolbar, Typography } from "@mui/material";
+import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
@@ -37,15 +36,14 @@ const Banner = () => {
   const handleClose = () => setOpen(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [productos, setProductos] = useState(false);
-  const [anchorElNav, setAnchorElNav] = useState(null);
 
 
   const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+    setAnchorEl(null);
   };
 
   const handleClick = (event) => {
@@ -150,11 +148,11 @@ const Banner = () => {
         </Modal>
 
         <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={productos}
-          onClose={handleCloseM}
-          MenuListProps={{ "aria-labelledby": "basic-button", }}>
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={productos}
+            onClose={handleCloseM}
+            MenuListProps={{ "aria-labelledby": "basic-button", }}>
 
           <MenuItem onClick={handleCloseM} component={Link} href="../../productos" >
             Productos Por Bodega
@@ -165,11 +163,13 @@ const Banner = () => {
         </Menu>
 
         <Menu 
-         id="basic-menu"
-         anchorEl={anchorEl}
-         MenuListProps={{'aria-labelledby': 'basic-button'}}
-         open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: "flex", md: "none" } }}>
-          <Navbar page={page} />
+          id="basic-menu"
+          anchorEl={anchorEl}
+          MenuListProps={{'aria-labelledby': 'basic-button'}}
+          open={Boolean(anchorEl)} 
+          onClose={handleCloseNavMenu} 
+          sx={{ display: { xs: "flex", md: "none" } }}>
+            <Navbar page={page} />
         </Menu>
       </Box>
     </>
