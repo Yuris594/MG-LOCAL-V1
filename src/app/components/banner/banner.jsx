@@ -30,7 +30,7 @@ const style = {
 
 const Banner = () => {
   const router = useRouter();
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -57,23 +57,24 @@ const Banner = () => {
   };
 
   const cerrarSesion = () => {
+    logout()
     router.push("/")
   }
 
   const page = [
     {
       title: "USUARIOS ",
-      url: "../../usuarios",
+      url: "../start/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "../../pedidos",
+      url: "/start/pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "../../clients",
+      url: "/start/clients",
       icon: <Person />,
     },
     {
@@ -83,12 +84,12 @@ const Banner = () => {
     },
     {
       title: "FACTURAS",
-      url: "../../facturas",
+      url: "/start/facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "../../pedidos/pedidosCaja",
+      url: "../start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];
@@ -154,10 +155,10 @@ const Banner = () => {
             onClose={handleCloseM}
             MenuListProps={{ "aria-labelledby": "basic-button", }}>
 
-          <MenuItem onClick={handleCloseM} component={Link} href="../../productos" >
+          <MenuItem onClick={handleCloseM} component={Link} href="../start/productos" >
             Productos Por Bodega
           </MenuItem>
-          <MenuItem onClick={handleCloseM} component={Link} href="../../productosMG">
+          <MenuItem onClick={handleCloseM} component={Link} href="../start/productosMG">
             Productos-MG
           </MenuItem>
         </Menu>

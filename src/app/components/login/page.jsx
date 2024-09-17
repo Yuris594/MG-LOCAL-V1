@@ -55,7 +55,7 @@ const Iniciar = async (usuario, clave) => {
 
 export default function Login() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, auth } = useAuth();
   const [saved, setSaved] = useState();
   const [clave, setClave] = useState("");
   const [open, setOpen] = useState(false);
@@ -70,11 +70,19 @@ export default function Login() {
 
       if (!resultado.error) {
         localStorage.setItem("usuarios", JSON.stringify(resultado));
-        login(resultado);
+          const tokens = resultado;
+          login(tokens);
+
         setOpen(true);
         setSaved(true);
         console.log(resultado)
-        router.push("../../start");
+        router.push("../start")
+
+       /* if (!auth) {
+          router.push("../start");
+        } else {
+          console.log("El estado de sesion no se establecio correctamente")
+        }*/
       } else {
         setError(true);
         setOpenE(true);

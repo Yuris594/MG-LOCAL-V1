@@ -42,47 +42,46 @@ const bull = (
 
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <Box sx={{ with: "50%", margin: 20,}}>
-                            
-                            <Typography sx={{ fontSize: 50, margin: 0, marginBottom: 6, padding: 0 }} color="text.secondary" gutterBottom>
-                                ¿Como le gustaria recibir su recibo?
-                            </Typography>
-                            
-                                <Button variant="outlined" color="primary" sx={{ width: 550, marginBottom: 5, backgroundColor: "#00796b", color: "#fff"}} onClick={generarPDF}>Imprimir Recibo</Button>
-                        
-                                    <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 550, height: 100, }}>
-                                        
-                                        <IconButton sx={{ p: '10px' }} aria-label="menu">
-                                            <MenuIcon />
-                                        </IconButton>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Box sx={{ with: "50%", margin: 20,}}>
+                    
+                  <Typography sx={{ fontSize: 50, margin: 0, marginBottom: 6, padding: 0 }} color="text.secondary" gutterBottom>
+                      ¿Como le gustaria recibir su recibo?
+                  </Typography>
+                  
+                    <Button variant="outlined" color="primary" sx={{ width: 550, marginBottom: 5, backgroundColor: "#00796b", color: "#fff"}} onClick={generarPDF}>Imprimir Recibo</Button>
+            
+                      <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 550, height: 100, }}>
+                          <IconButton sx={{ p: '10px' }} aria-label="menu">
+                              <MenuIcon />
+                          </IconButton>
 
-                                        <InputBase sx={{ ml: 1, flex: 1 }} inputProps={{ 'aria-label': 'search google maps' }}/>
+                          <InputBase sx={{ ml: 1, flex: 1 }} inputProps={{ 'aria-label': 'search google maps' }}/>
 
-                                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                                            <SearchIcon />
-                                        </IconButton>
+                          <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                              <SearchIcon />
+                          </IconButton>
 
-                                        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
 
-                                        <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
-                                            <DirectionsIcon />
-                                        </IconButton>
-                                    </Paper>
-                            </Box>
+                          <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions">
+                              <DirectionsIcon />
+                          </IconButton>
+                      </Paper>
+                  </Box>
 
                 <Box sx={{ width: "50%", bord: 20, }}>
                     <Card sx={{ width: "40vw", height: "100%" }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBotton: 0}}>
                             <Typography sx={{ fontSize: 17, flexDirection: 'column' }} color="text.secondary" gutterBottom>
-                                ...........Miguel gomes & cia...........
+                                ...........Miguel Gómez & Cia...........
                                 <br />
-                                ...................Tel:777777..................
+                                ...................Tel:777777.................
                                 <br />
-                                ..Miguelgomoz&cia@hotmail.com ..<br />
-                                .https://www.miguelgomez.com.co/. <br />
+                                ........Miguelgomoz&cia@hotmail.com...........<br />
+                                ........https://www.miguelgomez.com.co/...... <br />
                                 ------------------------------------------------------- <br />
-                                .. Servicio -  {auth.PER_Nom}..
+                                ........ Servicio -  {auth.PER_Nom}..
                             </Typography>
                         </CardContent>
 
@@ -120,7 +119,7 @@ const bull = (
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
                             <Typography variant="h6" component="div">
                                 -------------------------<br />
-                                Cambio {bull}{}   {caja.cambio.toLocaleString('es-ES')}
+                                Cambio {bull}{} {caja.cambio.toLocaleString('es-ES')}
                             </Typography>
                         </CardContent>
                     </Card>
@@ -129,7 +128,7 @@ const bull = (
 
             <Box sx={{ width: '139vw', padding: 0, margin: 0, paddingTop: 12 }}>
                 <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" 
-                        sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#087ea6", color: "white" }} onClick={cerrarP}>
+                        sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#00796b", color: "white" }} onClick={cerrarP}>
                     Nuevo Pedido
                 </Button>
             </Box>

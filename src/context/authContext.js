@@ -4,10 +4,15 @@ sin necesidad de pasar props a traves de multiples niveles.
 */
 
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react';
+
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import Cookies from 'js-cookie';
 
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+    login: (authTokens) => {},
+    logout: () => {},
+});
 
 
 export const AuthProvider = ({ children }) => {
@@ -17,14 +22,18 @@ export const AuthProvider = ({ children }) => {
     const [pedido, setPedido] = useState({}); 
     const [caja, setCaja] = useState({}); 
     const [loading, setLoading] = useState(true); 
+   
 
-    const login = (userData) => {
-        setAuth(userData);
-    };
-
-    const logout = () => {
-        setAuth(null);
-    };
+  
+    const login = useCallback(function (authTokens) {
+        Cookies.set("authTokens", JSON.stringify(authTokens))
+        setAuth(authTokens);
+        console.log("Tokens de autenticacion establecida", authTokens)
+    }, []);
+  
+    const logout = useCallback(function () {
+     Cookies.remove('authTokens')
+    }, []);
 
     useEffect(() => {
       const user = localStorage.getItem("datos");
@@ -40,19 +49,25 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
 
+    const value = useMemo(
+        () => ({
+            auth,
+            cliente,
+            setCliente,
+            pedido,
+            setPedido,
+            caja,
+            setCaja,
+            loading,
+            login,
+            logout,
+        }),
+        [auth, login, logout]
+      );
+
+
     return (
-        <AuthContext.Provider
-            value={{
-                auth,
-                cliente,
-                setCliente,
-                pedido,
-                setPedido,
-                caja,
-                setCaja,
-                loading,
-                login,
-                logout }}>
+        <AuthContext.Provider value={ value }>
             {children}
         </AuthContext.Provider>
     );

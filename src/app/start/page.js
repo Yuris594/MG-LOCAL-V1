@@ -30,7 +30,7 @@ const style = {
 
   const Inicio = () => {
     const router = useRouter();
-    const { auth } = useAuth();
+    const { auth, logout } = useAuth();
     const handleOpen = () => setOpen(true);
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
@@ -48,6 +48,7 @@ const style = {
       };
 
       const cerrarSesion = () => {
+        logout()
         router.push("/")
       };
 
@@ -55,17 +56,17 @@ const style = {
   const page = [
     {
       title: "USUARIOS ",
-      url: "../../usuarios",
+      url: "../start/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "../../pedidos",
+      url: "../start/pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "../../clients",
+      url: "../start/clients",
       icon: <Person />,
     },
     {
@@ -75,12 +76,12 @@ const style = {
     },
     {
       title: "FACTURAS",
-      url: "../../facturas",
+      url: "../start/facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "../../pedidos/pedidosCaja",
+      url: "../start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];
@@ -168,10 +169,10 @@ const style = {
         </Box>
 
           <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby": "basic-button", }}>
-              <MenuItem onClick={handleCloseM} component={Link} href="../productos" variant="body1" style={{fontWeight: "bold"}}>
+              <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" style={{fontWeight: "bold"}}>
                 Productos Por Bodega
               </MenuItem>
-              <MenuItem onClick={handleCloseM} component={Link} href="../productosMG" variant="body1" style={{fontWeight: "bold"}}>
+              <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" style={{fontWeight: "bold"}}>
                 Productos-MG
               </MenuItem>
           </Menu>
