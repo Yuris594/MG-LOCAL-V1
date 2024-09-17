@@ -6,6 +6,7 @@
       
       //output: 'export',
 
+      
       async rewrites() {
         return [
           {
