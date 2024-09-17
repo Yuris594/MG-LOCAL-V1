@@ -349,17 +349,9 @@ const productosMG = () => {
     setValue(newValue);
   };
 
-  const limpiarBusqueda = () => {
-    setBusqueda();
-    fetchUsuarios();
-  };
-
   return (
     <>
-      <Box marginBottom="50px">
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box>{" "}<Banner />{" "}</Box>
       {cargando2 === true ? (
         <Box sx={{ height: "auto", width: "100%" }}>
           <LinearProgress />
@@ -367,10 +359,7 @@ const productosMG = () => {
       ) : (
         <div style={{ height: "auto", width: "100%" }}>
           <Box>
-            <Typography
-              variant="h5"
-              component="h1"
-              gutterBottom
+            <Typography variant="h5" component="h1" gutterBottom
               sx={{
                 display: "flex",
                 justifyContent: "column",
@@ -378,46 +367,23 @@ const productosMG = () => {
                 width: "auto",
                 margin: 0,
                 color: "#000000",
-              }}
-            >
+              }}>
               PRODUCTOS MG
             </Typography>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "auto",
-                  margin: 1,
-                }}
-              >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
+              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
                 <BotonExcel datos={productos} />
               </Box>
               <Box>
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  gutterBottom
+                <Typography variant="h5" component="h1" gutterBottom
                   sx={{
                     display: "flex",
                     justifyContent: "column",
                     alignItems: "center",
                     width: "auto",
-                    margin: 0,
-                    color: "#920b0d",
-                  }}
-                >
+                    margin: 0, 
+                    color: "#920b0d", }}>
                   {articulo.DESCRIPCION}
                 </Typography>
               </Box>

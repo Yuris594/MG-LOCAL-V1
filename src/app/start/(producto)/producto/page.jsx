@@ -358,7 +358,7 @@ function Producto() {
 
   return (
     <>
-        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}>
           <CircularProgress color="inherit" />
         </Backdrop>
@@ -379,15 +379,7 @@ function Producto() {
             </Typography>
           </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
               <Paper>
                 <Autocomplete
                   options={bodegas}
@@ -419,8 +411,7 @@ function Producto() {
                     width: "auto",
                     margin: 0,
                     color: "#920b0d",
-                  }}
-                >
+                  }}>
                   {articulo.DESCRIPCION}
                 </Typography>
               </Box>

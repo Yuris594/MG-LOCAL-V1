@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     const login = useCallback(function (authTokens) {
         Cookies.set("authTokens", JSON.stringify(authTokens))
         setAuth(authTokens);
-        
     }, []);
   
     const logout = useCallback(function () {

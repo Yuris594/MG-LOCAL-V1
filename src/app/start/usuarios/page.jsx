@@ -9,6 +9,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import Registro from "./registrar/page";
 import UsuarioActualizar from "./actualizar/page";
 import Swal from "sweetalert2";
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
+
 
 
 const styles = {
@@ -79,6 +82,8 @@ const PageUsuario = async () => {
 
 
 function Usuarios() {
+  const { auth } = useAuth();
+  const router = useRouter();
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -91,9 +96,17 @@ function Usuarios() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaUsuario, setTablaUsuario] = useState([]);
 
+  useEffect(() => {
+    if (!auth || auth.IdDiv !== 8) {
+      router.push('/start');
+      }
+    }, [auth, router]);
+
+    if (!auth || auth.IdDiv !== 8) {
+      return null;
+    }
 
   const fecUsuarios = async (e) => {
-   // e.preventDefault();
     try {
       const datos = await PageUsuario();
         if (datos) {
@@ -172,6 +185,12 @@ function Usuarios() {
   return (
     <>
       <Box>{" "} <Banner /> {" "}</Box>
+
+        {cargando === true ? (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        ): (
           <Zoom in={checked}>
             <Box style={{ height: "auto", width: "100%" }}>
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -241,7 +260,7 @@ function Usuarios() {
             </Box>
           </Box>
         </Zoom>
-    
+      )}
     </>
   );
 }
