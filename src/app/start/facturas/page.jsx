@@ -163,7 +163,7 @@ const Factura = () => {
       pdf.text("_________________________________________________________________________________", 12, 20);
 
       pdf.setFontSize(13);
-      pdf.addImage("logo_factura.png", 'PNG', 10, 30, 200, 25);
+      pdf.addImage("/logo_factura.png", 'PNG', 10, 30, 200, 25);
       pdf.setFontSize(15);
       pdf.text(`REMISIÓN N°:   ${fac.FACTURA}`, 350, 45);
       pdf.setFontSize(9);

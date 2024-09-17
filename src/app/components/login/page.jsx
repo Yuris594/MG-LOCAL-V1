@@ -75,14 +75,7 @@ export default function Login() {
 
         setOpen(true);
         setSaved(true);
-        console.log(resultado)
-        router.push("../start")
-
-       /* if (!auth) {
-          router.push("../start");
-        } else {
-          console.log("El estado de sesion no se establecio correctamente")
-        }*/
+        router.push("../start");
       } else {
         setError(true);
         setOpenE(true);
