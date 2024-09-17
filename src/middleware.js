@@ -9,10 +9,9 @@ const corsOptions = {
 
 export function middleware(request) {
   const authTokens = request.cookies.get("authTokens")?.value;
+
   const origin = request.headers.get('origin') ?? ''
   const isAllowedOrigin = allowedOrigins.includes(origin)
- 
-  // Handle preflighted requests
   const isPreflight = request.method === 'OPTIONS'
  
   if (isPreflight) {
