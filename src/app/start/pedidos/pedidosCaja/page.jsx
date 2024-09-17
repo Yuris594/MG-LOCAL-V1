@@ -560,7 +560,7 @@ const PedidosCaja = () => {
 
                 <Button
                   component={Link}
-                  href={sumaSaldoTotalDESC !== "0" ? "../../../caja" : ""}
+                  href={sumaSaldoTotalDESC !== "0" ? "../../../start/caja" : ""}
                   variant="outlined"
                   sx={{
                     width: "100%",

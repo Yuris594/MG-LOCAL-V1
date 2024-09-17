@@ -270,7 +270,7 @@ const style = {
               </Paper>
 
               <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: 0, width: "100%", height: "100%" }}>
-                <Button component={Link} href="../pedidos/ReciboCaja" variant="outlined" onClick={actualizarInformacion}
+                <Button component={Link} href="../start/pedidos/ReciboCaja" variant="outlined" onClick={actualizarInformacion}
                   sx={{ width: "100%", height: 250, backgroundColor: restante === 0 ? "#087ea6" : "transparent", color: restante === 0 ? "white" : "black", }}>
                   Validar
                 </Button>

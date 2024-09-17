@@ -117,7 +117,7 @@ const Clientes = () => {
         });
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
         setCliente(resultadosFiltrados);
-        router.push("/clients/clientesTemp");
+        router.push("/start/clients/clientesTemp");
       }
     },
     [clientes]

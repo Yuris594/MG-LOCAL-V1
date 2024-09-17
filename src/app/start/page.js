@@ -137,34 +137,32 @@ const style = {
                 width="120"
                 height="100"
                 alt="imagenmg"
-                priority={true}/>
+                priority={true} 
+              />
 
               <Typography variant="h6" sx={{ fontWeight: "bold", marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
-            
-            
-
-              <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Image
-                    src="/truperLogo.png"
-                    width="100"
-                    height="100"
-                    alt="imagentru"/>
-                </Box>
-                <Divider orientation="vertical" flexItem sx={{ marginX: 2 }}/>
-                <List>
-                  {page.map((link) => (
-                    <ListItem disablePadding key={link.title}>
-                      <ListItemButton LinkComponent={Link} href={link.url} onClick={link.onClick}>
-                        <ListItemIcon>{link.icon}</ListItemIcon>
-                        <ListItemText>{link.title}</ListItemText>
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </CardActions>
+            <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Image
+                  src="/truperLogo.png"
+                  width="100"
+                  height="100"
+                  alt="imagentru"/>
+              </Box>
+              <Divider orientation="vertical" flexItem sx={{ marginX: 2 }}/>
+              <List>
+                {page.map((link) => (
+                  <ListItem disablePadding key={link.title}>
+                    <ListItemButton LinkComponent={Link} href={link.url} onClick={link.onClick}>
+                      <ListItemIcon>{link.icon}</ListItemIcon>
+                      <ListItemText>{link.title}</ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </CardActions>
           </Paper>
         </Box>
 
