@@ -96,16 +96,6 @@ function Usuarios() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaUsuario, setTablaUsuario] = useState([]);
 
-  useEffect(() => {
-    if (!auth || auth.IdDiv !== 8) {
-      router.push('/start');
-      }
-    }, [auth, router]);
-
-    if (!auth || auth.IdDiv !== 8) {
-      return null;
-    }
-
   const fecUsuarios = async (e) => {
     try {
       const datos = await PageUsuario();
@@ -138,51 +128,61 @@ function Usuarios() {
     setChecked(true);
   }, []);
 
-
+  
   const handleCloseA = () => {
     setUsuario([]);
     setOpenA(false);
   };
-
+  
   const handleChange = (e) => {
     e.preventDefault();
     setBusqueda(e.target.value);
     filtrar(e.target.value);
   };
-
+  
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaUsuario.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
-      );
-      return valores.some((valor) => valor.includes(terminoBusqueda));
-    });
-    setUsuarios(resultadosBusqueda);
-  };
+    );
+    return valores.some((valor) => valor.includes(terminoBusqueda));
+  });
+  setUsuarios(resultadosBusqueda);
+};
 
-  const limpiarBusqueda = () => {
-    setBusqueda();
-    fecUsuarios();
-  };
+const limpiarBusqueda = () => {
+  setBusqueda();
+  fecUsuarios();
+};
 
-  const handleSelection = useCallback(
-    (selectionModel) => {
-      setSelectedRows(selectionModel);
-      if (selectionModel.length > 0) {
-        const resultadosFiltrados = tablaUsuario.filter((elemento) => {
-          const IdPer = elemento.IdPer;
-          if (IdPer) {
-            const IdString = IdPer.toString();
-            return IdString.includes(selectionModel[0]);
-          }
-          return false;
-        });
-        setUsuario(resultadosFiltrados);
-        setOpenA(true);
+const handleSelection = useCallback((selectionModel) => {
+  setSelectedRows(selectionModel);
+  if (selectionModel.length > 0) {
+    const resultadosFiltrados = tablaUsuario.filter((elemento) => {
+      const IdPer = elemento.IdPer;
+      if (IdPer) {
+        const IdString = IdPer.toString();
+        return IdString.includes(selectionModel[0]);
       }
-    }, [usuarios]);
+      return false;
+    });
+    setUsuario(resultadosFiltrados);
+    setOpenA(true);
+  }
+}, [usuarios]);
 
-  return (
+useEffect(() => {
+  if (!auth || auth.IdDiv !== 8) {
+    router.push('/start');
+    }
+  }, [auth, router]);
+
+  if (!auth || auth.IdDiv !== 8) {
+    return null;
+  }
+
+
+return (
     <>
       <Box>{" "} <Banner /> {" "}</Box>
 

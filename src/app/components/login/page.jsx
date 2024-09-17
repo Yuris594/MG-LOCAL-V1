@@ -4,13 +4,13 @@ import { AppBar, Box, Button, Container, CssBaseline, Slide, Snackbar, TextField
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import MuiAlert from "@mui/material/Alert";
 import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/context/authContext";
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -32,7 +32,7 @@ export function Copyright(props) {
 
 const Iniciar = async (usuario, clave) => {
   try {
-    const response = await fetch(`http://172.20.20.3:8001/usuarios/listar/${usuario}/${clave}`, {
+    const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
