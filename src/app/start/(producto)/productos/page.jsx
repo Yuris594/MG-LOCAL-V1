@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useEffect, useLayoutEffect, useState, } from "react";
+import { useCallback, useRef, useEffect, useState, } from "react";
 import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -164,6 +164,17 @@ const columnsP = [
   },
 ];
 
+const obtenerBodegas = async () => {
+  const response = await fetch('/api/productos/bodegas', {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+
+  const data = await response.json()
+  return data;
+};
 
 const obtenerProductos = async (bodegaSeleccionada) => {
   const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
@@ -211,15 +222,6 @@ const obtenerPedidos = async (articulo) => {
   return data
 };
 
-const obtenerBodegas = async () => {
-  const response = await fetch('/api/productos/bodegas', {
-    method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
-  })
-  return response.json()
-};
 
 
 function productos() {
@@ -406,7 +408,7 @@ function productos() {
                   renderInput={(params) => (
                     <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" />
                   )}
-                  disableClearable
+                  
                 />
               </Paper>
 

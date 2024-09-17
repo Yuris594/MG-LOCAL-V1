@@ -22,7 +22,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Departamento de Sistemas "}
+      {"Departamento de Sistemas - "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -69,13 +69,15 @@ export default function Login() {
     const resultado = await Iniciar(usuario, clave);
 
       if (!resultado.error) {
-        localStorage.setItem("usuarios", JSON.stringify(resultado));
-          const tokens = resultado;
-          login(tokens);
 
+        localStorage.setItem("usuarios", JSON.stringify(resultado));
         setOpen(true);
         setSaved(true);
+        
+        const tokens = resultado;
+        login(tokens);
         router.push("../start");
+
       } else {
         setError(true);
         setOpenE(true);

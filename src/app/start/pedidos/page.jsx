@@ -150,7 +150,7 @@ const Pedidos = () => {
 
   return (
     <>
-      <Box marginBottom="50px">
+      <Box>
         {" "}  <Banner /> {" "}
       </Box>
 

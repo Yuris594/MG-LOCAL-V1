@@ -15,15 +15,19 @@ import Cookies from 'js-cookie';
     const [cliente, setCliente] = useState({});
     const [pedido, setPedido] = useState({}); 
     const [caja, setCaja] = useState({}); 
-    const [loading, setLoading] = useState(true); 
+    const [loading] = useState(true); 
    
     const login = useCallback(function (authTokens) {
-        Cookies.set("authTokens", JSON.stringify(authTokens))
+        Cookies.set("authTokens", JSON.stringify(authTokens));
+        localStorage.setItem("auth", JSON.stringify(authTokens))
         setAuth(authTokens);
     }, []);
   
     const logout = useCallback(function () {
      Cookies.remove('authTokens')
+     localStorage.removeItem('auth');
+
+     setAuth(null)
     }, []);
 
   

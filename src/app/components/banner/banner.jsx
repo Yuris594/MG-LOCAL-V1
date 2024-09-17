@@ -149,16 +149,16 @@ const Banner = () => {
         </Modal>
 
         <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={productos}
-            onClose={handleCloseM}
-            MenuListProps={{ "aria-labelledby": "basic-button", }}>
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={productos}
+          onClose={handleCloseM}
+          MenuListProps={{ "aria-labelledby": "basic-button", }}>
 
-          <MenuItem onClick={handleCloseM} component={Link} href="../start/productos" >
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/productos">
             Productos Por Bodega
           </MenuItem>
-          <MenuItem onClick={handleCloseM} component={Link} href="../start/productosMG">
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG">
             Productos-MG
           </MenuItem>
         </Menu>

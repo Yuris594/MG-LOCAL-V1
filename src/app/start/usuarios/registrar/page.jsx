@@ -7,7 +7,7 @@ import { useState } from "react";
 const registro = async (form) => {
   const response =  await fetch("/api/usuarios/nuevo", {
     method: "POST",
-    body: JSON.stringify(form), 
+    body: JSON.stringify({form}), 
     headers: { "Content-Type": "application/json" }
   });
   return response.json()

@@ -186,11 +186,12 @@ return (
     <>
       <Box>{" "} <Banner /> {" "}</Box>
 
-        {cargando === true ? (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-        ): (
+        <div className="container">
+          {cargando === true ? (
+            <Box sx={{ width: "100%" }}>
+              <LinearProgress />
+            </Box>
+          ): (
           <Zoom in={checked}>
             <Box style={{ height: "auto", width: "100%" }}>
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -237,30 +238,31 @@ return (
               </Paper>
             </Box>
 
-            <Box sx={{ height: 950, width: "100%",  }}>
-              <DataGrid
-                rows={usuarios}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 16 },
-                  },
-                }}
-                pageSizeOptions={[5, 16]}
-                onRowSelectionModelChange={handleSelection}
-                rowSelectionModel={selectedRows}
-                getRowId={(row) => row.IdPer}
-                sx={{
-                  "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "#70aca2",
-                  },
-                  color: "#000",
-                }}
-              />
+              <Box sx={{ height: 950, width: "100%",  }}>
+                <DataGrid
+                  rows={usuarios}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 16 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 16]}
+                  onRowSelectionModelChange={handleSelection}
+                  rowSelectionModel={selectedRows}
+                  getRowId={(row) => row.IdPer}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaders": {
+                      backgroundColor: "#70aca2",
+                    },
+                    color: "#000",
+                  }}
+                />
+              </Box>
             </Box>
-          </Box>
-        </Zoom>
-      )}
+          </Zoom>
+        )}
+      </div>
     </>
   );
 }
