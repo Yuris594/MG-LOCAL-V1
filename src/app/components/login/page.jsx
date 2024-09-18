@@ -99,9 +99,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const resultado = await Iniciar(usuario, clave);
-
       if (!resultado.error) {
-
         localStorage.setItem("usuarios", JSON.stringify(resultado));
         setOpen(true);
         setSaved(true);
@@ -143,14 +141,7 @@ export default function Login() {
 
           <CssBaseline />
             <ThemeProvider theme={theme}>
-              <Container component="main" maxWidth="xs" 
-                sx={{
-                  backgroundColor: "#ffffff",
-                  padding: 4,
-                  borderRadius: 2,
-                  boxShadow: "0px 5px 15px rgba(0,0,0,0.3)",
-                  marginTop: 8,
-                }}>
+              <Container component="main" maxWidth="xs" sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 8 }}>
                 <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <Typography variant="h6" noWrap component="div" sx={{ margin: 2 }} >
                       <Image
@@ -210,21 +201,22 @@ export default function Login() {
                   </Box>
                   
 
-                   {/* Snackbar para mostrar mensajes */}
+                    {/* Snackbar para mostrar mensajes */}
                     {open ? (
-                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                      <Alert onClose={handleClose} variant="outlined" severity="success" sx={{ width: "100%" }}>
-                        Usuario identificado.
-                      </Alert>
-                    </Snackbar>
-                  ) : ( "" )}
+                      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} variant="outlined" severity="success" sx={{ width: "100%" }}>
+                          Usuario identificado.
+                        </Alert>
+                      </Snackbar>
+                    ) : ( "" )}
 
-                  {openE ? ( <Snackbar open={openE} autoHideDuration={6000} onClose={handleClose}>
-                      <Alert onClose={handleClose} variant="outlined" severity="error" sx={{ width: "100%" }}>
-                        El usuario o la contraseña son incorrectos.
-                      </Alert>
-                    </Snackbar>
-                  ) : ( "" )}
+                    {openE ? ( 
+                      <Snackbar open={openE} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} variant="outlined" severity="error" sx={{ width: "100%" }}>
+                          El usuario o la contraseña son incorrectos.
+                        </Alert>
+                      </Snackbar>
+                    ) : ( "" )}
               
               <Copyright sx={{ mt: 5, mb: 5 }} />
             </Container>

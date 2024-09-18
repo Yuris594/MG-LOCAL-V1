@@ -20,9 +20,9 @@ const style = {
   width: 400,
   bgcolor: "background.paper",
   alignItems: "center",
-  display: "flex",
   alignContent: "center",
   boxShadow: 24,
+  textAlign: "center",
   pt: 2,
   px: 4,
   pb: 3,
@@ -55,7 +55,7 @@ const style = {
 
   const page = [
     {
-      title: "USUARIOS ",
+      title: "USUARIOS",
       url: "../start/usuarios",
       icon: <AccountCircle />,
     },
@@ -94,22 +94,22 @@ const style = {
               <Image
                 src="/logo2.png"
                 width="80"
-                height="60"
+                height="40"
                 alt="imagenmg"
                 priority={true} />
 
               <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
 
               <Button component={Link} href="../start" color="inherit">
-                <HomeIcon></HomeIcon>
+                <HomeIcon fontSize="large" />
               </Button>
 
-              <Button variant="h5" color="inherit">
-                <PersonIcon></PersonIcon>{auth && auth.PER_Nom}
+              <Button variant="h5" color="inherit" sx={{ fontSize: "15px" }}>
+                <PersonIcon fontSize="large" />{auth && auth.PER_Nom}
               </Button>
 
               <Button color="inherit" onClick={handleOpen}>
-                <LogoutIcon></LogoutIcon>
+                <LogoutIcon fontSize="large" />
               </Button>
             </Toolbar>
           </AppBar>
@@ -129,35 +129,41 @@ const style = {
         </Modal>
 
         <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "50%", height: 500, border: 6, margin: 5, overflow: "auto",}}>
+          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, margin: 5, overflow: "auto",}}>
             
             <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
                 src="/logo2.png"
-                width="135"
+                width="130"
                 height="110"
                 alt="imagenmg"
                 priority={true} 
               />
 
-              <Typography variant="h6" sx={{ fontWeight: "bold", marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
+              <Typography variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
             <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Image
                   src="/truperLogo.png"
-                  width="100"
-                  height="100"
-                  alt="imagentru"/>
+                  width="150"
+                  height="110"
+                  alt="imagentru"
+                  priority={true} 
+                />
               </Box>
               <Divider orientation="vertical" flexItem sx={{ marginX: 2 }}/>
               <List>
                 {page.map((link) => (
                   <ListItem disablePadding key={link.title}>
                     <ListItemButton LinkComponent={Link} href={link.url} onClick={link.onClick}>
-                      <ListItemIcon>{link.icon}</ListItemIcon>
-                      <ListItemText>{link.title}</ListItemText>
+                      <ListItemIcon sx={{ fontSize: 20 }}>
+                        {link.icon}
+                      </ListItemIcon>
+                      <ListItemText primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium', letterSpacing: 0 }}>
+                        {link.title}
+                      </ListItemText>
                     </ListItemButton>
                   </ListItem>
                 ))}
@@ -167,12 +173,12 @@ const style = {
         </Box>
 
           <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby": "basic-button", }}>
-              <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" style={{fontWeight: "bold"}}>
-                Productos Por Bodega
-              </MenuItem>
-              <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" style={{fontWeight: "bold"}}>
-                Productos-MG
-              </MenuItem>
+            <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
+              Productos Por Bodega
+            </MenuItem>
+            <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
+              Productos-MG
+            </MenuItem>
           </Menu>
     </>
   );

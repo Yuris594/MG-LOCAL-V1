@@ -16,7 +16,9 @@ import Link from "next/link";
                   onClick={link.onClick}>
 
                   <ListItemIcon>{link.icon}</ListItemIcon>
-                  <ListItemText>{link.title}</ListItemText>
+                  <ListItemText primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium', letterSpacing: 0 }}>
+                    {link.title}
+                  </ListItemText>
                 </ListItemButton>
               </ListItem>
             ))}

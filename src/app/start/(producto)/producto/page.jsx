@@ -411,18 +411,8 @@ function Producto() {
               </Paper>
 
               <Box>
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  gutterBottom
-                  sx={{
-                    display: "flex",
-                    justifyContent: "column",
-                    alignItems: "center",
-                    width: "auto",
-                    margin: 0,
-                    color: "#920b0d",
-                  }}>
+                <Typography variant="h5" component="h1" gutterBottom
+                    sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d", }}>
                   {articulo.DESCRIPCION}
                 </Typography>
               </Box>
@@ -515,7 +505,7 @@ function Producto() {
               ) : facturas && facturas.length <= 0 ? (
                 <h1>NO HAY FACTURAS</h1>
               ) : (
-                <Box sx={{ width: "100%", height: 700 }}>
+                <Box sx={{ width: "100%", height: 700, }}>
                   <DataGrid
                     rows={facturas}
                     columns={columnsF}
@@ -526,7 +516,8 @@ function Producto() {
                     }}
                     pageSizeOptions={[5, 11, 20]}
                     getRowId={(row) => row.FACTURA}
-                    sx={{ backgroundColor: "#ffffff", }}
+                    sx={{ backgroundColor: "#ffffff" }}
+                    
                   />
                 </Box>
               )}

@@ -2,15 +2,16 @@
 
 import { AppBar, Box, Button, CssBaseline, IconButton, Menu, MenuItem, Modal, Toolbar, Typography } from "@mui/material";
 import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront } from "@mui/icons-material";
+import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { useState } from "react";
 import Navbar from "./navbar";
 import Link from "next/link";
+
 
 
 const style = {
@@ -23,6 +24,7 @@ const style = {
   alignItems: "center",
   justifyContext: "center",
   boxShadow: 24,
+  textAlign: "center",
   pt: 2,
   px: 4,
   pb: 3,
@@ -100,34 +102,33 @@ const Banner = () => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ bgcolor: "#262626", width: "auto" }}>
           <Toolbar>
-            <IconButton color="inherit" onClick={handleOpenNavMenu}
-              sx={{ display: { xs: "flex", md: "none" } }}>
-              <MenuIcon />
+            <IconButton color="inherit" onClick={handleOpenNavMenu} sx={{ display: { xs: "flex", md: "none" } }}>
+              <WidgetsOutlinedIcon fontSize="large" />
             </IconButton>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              {page.map((link) => (
-                <Button sx={{ fontWeight: "bold", }}
-                  color="inherit"
-                  size="large"
-                  key={link.title}
-                  LinkComponent={Link}
-                  href={link.url}
-                  onClick={link.onClick}>
-                  {link.title}
-                </Button>
-              ))}
-            </Box>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
-            <Button component={Link} href="/start" color="inherit">
-              <HomeIcon></HomeIcon>
-            </Button>
-            <Button color="inherit">
-              <PersonIcon></PersonIcon>
-              {auth && auth.PER_Nom}
-            </Button>
-            <Button color="inherit" onClick={handleOpen}>
-              <LogoutIcon></LogoutIcon>
-            </Button>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                {page.map((link) => (
+                  <Button sx={{ fontSize: "15px" }}
+                    color="inherit"
+                    size="large"
+                    key={link.title}
+                    LinkComponent={Link}
+                    href={link.url}
+                    onClick={link.onClick}>
+                    {link.title}
+                  </Button>
+                ))}
+              </Box>
+              <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
+              <Button component={Link} href="/start" color="inherit">
+                <HomeIcon fontSize="large" />
+              </Button>
+              <Button color="inherit" sx={{ fontSize: "15px" }} >
+                <PersonIcon fontSize="large" />
+                {auth && auth.PER_Nom}
+              </Button>
+              <Button color="inherit" onClick={handleOpen}>
+                <LogoutIcon fontSize="large" />
+              </Button>
           </Toolbar>
         </AppBar>
 
