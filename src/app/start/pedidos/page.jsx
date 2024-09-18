@@ -65,7 +65,7 @@ const columns = [
 ];
 
 const conseguirArticulos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
+  const response = await fetch("http://172.20.20.3:8001/pedidos/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json",

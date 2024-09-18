@@ -70,7 +70,7 @@ const columns = [
 
 
 const PageUsuario = async () => {
-    const response = await fetch('/api/usuarios/listar', {
+    const response = await fetch('http://172.20.20.3:8001/usuarios/listar', {
       method: "GET",
       headers: {
         "Content-Type" : "application/json",

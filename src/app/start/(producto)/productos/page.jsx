@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useCallback, useRef, useEffect, useState, } from "react";
+import { useCallback, useRef, useEffect, useState, useLayoutEffect, } from "react";
 import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 
 import Banner from "../../../components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
+import { conexion } from "../../usuarios/page";
 
 
 
@@ -165,7 +166,7 @@ const columnsP = [
 ];
 
 const obtenerBodegas = async () => {
-  const response = await fetch('/api/productos/bodegas', {
+  const response = await fetch('http://172.20.20.3:8001/productos/bodegas', {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -177,7 +178,7 @@ const obtenerBodegas = async () => {
 };
 
 const obtenerProductos = async (bodegaSeleccionada) => {
-  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/listar/${bodegaSeleccionada.BODEGA}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -188,7 +189,7 @@ const obtenerProductos = async (bodegaSeleccionada) => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -205,7 +206,7 @@ const obtenerFacturas = async (articulo) => {
 
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -237,46 +238,65 @@ function productos() {
   const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
-  const [bodegaSeleccionada, setBodegaSeleccionada] = useState();
+  const [bodegaSeleccionada, setBodegaSeleccionada] = useState(null);
+
+  const conseguirBodegas = async () => {
+    const datos = await obtenerBodegas()
+    try {
+      if (datos)
+      setBodegas(datos);
+    } catch (error) {
+      conexion()
+    }
+  };
+
 
   useEffect(() => {
-    inputRef.current.focus();
     conseguirBodegas();
   }, []);
 
   useEffect(() => {
     if (bodegaSeleccionada) {
+      inputRef.current.focus();
       conseguirProductos();
     }
   }, [bodegaSeleccionada]);
 
-  const conseguirBodegas = async () => {
-    const datos = await obtenerBodegas()
-      setBodegas(datos);
-  };
+  useEffect(() => {
+    setCargando(true)
+  }, [value])
 
+  const handleBodega = (event, newValue) => {
+    if (newValue) {
+      setBodegaSeleccionada(null);
+      setBodegaSeleccionada(newValue);
+      conseguirProductos(newValue);
+    }
+  }
+  
+  
   const conseguirProductos = async () => {
     if (bodegaSeleccionada) {
       setOpen(true);
-    const datos = await obtenerProductos(bodegaSeleccionada)
-    try {
+      const datos = await obtenerProductos(bodegaSeleccionada)
+      try {
         if (datos) {
           setOpen(false)
           setProductos(datos);
           setTablaProducto(datos);
           setCargando(false)
-         
+          
         } else {
           setOpen(false);
           setProductos([]);
           setCargando(false);
         }
       } catch (error) {
-      setOpen(false);
+        setOpen(false);
+      }
     }
-  }
-};
-
+  };
+  
   const conseguirFacturas = async () => {
     const datos = await obtenerFacturas(articulo)
     setFacturas([]);
@@ -294,7 +314,7 @@ function productos() {
       setOpen(false);
     }
   };
-
+  
   const conseguirPedidos = async () => {
     const datos = await obtenerPedidos(articulo)
     setPedidos([]);
@@ -312,7 +332,7 @@ function productos() {
       console.log(error);
     }
   };
-
+  
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -331,8 +351,7 @@ function productos() {
     setProductos(resultadosBusqueda);
   };
 
-  const handleSelectionChange = useCallback(
-    (selectionModel) => {
+  /*const handleSelectionChange = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaProducto.filter((elemento) => {
@@ -347,18 +366,34 @@ function productos() {
       }
     },
     [productos]
+  );*/
+
+  const handleSelectionChange = useCallback(
+    (selectionModel) => {
+      setSelectedRows(selectionModel);
+      if (selectionModel.length > 0) {
+        const resultadosFiltrados = tablaProducto.filter((elemento) => {
+          const ARTICULO = elemento.ARTICULO;
+          if (ARTICULO) {
+            const productoString = ARTICULO.toString();
+            return selectionModel.includes(productoString);
+          }
+          return false;
+        });
+        if (resultadosFiltrados.length > 0) {
+          setArticulo(resultadosFiltrados[0]);
+          conseguirFacturas();
+          conseguirPedidos();
+        }
+      }
+    },
+    [tablaProducto]
   );
 
   const handleChanges = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleBodega = (event, newValue) => {
-    if (newValue) {
-      setBodegaSeleccionada(newValue);
-      conseguirProductos(newValue);
-    }
-  }
 
   return (
     <>
