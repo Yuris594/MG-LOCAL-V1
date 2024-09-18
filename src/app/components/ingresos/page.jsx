@@ -225,7 +225,7 @@ const ingreso = async (e) => {
         <CssBaseline />
           <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="sm" 
-              sx={{ backgroundColor: "#ffffff", padding: 5, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 8, fontSize: "1.5rem" }}>     
+              sx={{ backgroundColor: "#ffffff", padding: 5, marginTop: 8, fontSize: "1.5rem" }}>     
                 <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", }}>
                   <Zoom in={checked}>
                     <Paper className="" component="main">
@@ -259,10 +259,10 @@ const ingreso = async (e) => {
                               value={cedula}
                               onChange={(e) => setCedula(e.target.value)}
                               inputRef={inputRef}
-                              sx={{ width: "100%", mb: 2, fontSize: "1.5rem", textAlign: "center", padding: 2, height: "60px" }}
+                              sx={{ width: "100%", mb: 2, fontSize: "2rem", padding: 2, height: "60px", boxSizing: "border-box" }}
                             />
 
-                            <Button type="submit" variant="contained" color="success" sx={{ width: "100%", mb: 2, fontSize: "1.5rem", padding: 2, height: "60px" }}>
+                            <Button type="submit" variant="contained" color="success" sx={{ width: "88%", mb: 2, padding: 2, height: "50px", }}>
                               Enviar
                             </Button>
                           </Box>
