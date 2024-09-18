@@ -195,7 +195,7 @@ function allyProps(index) {
 }
 
 const obtenerProductos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -206,7 +206,7 @@ const obtenerProductos = async () => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`http://172.20.20.3:8001/productos/facturas/${articulo.ARTICULO}`,{
+  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`,{
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -222,7 +222,7 @@ const obtenerFacturas = async (articulo) => {
 };
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(`http://172.20.20.3:8001/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
