@@ -351,23 +351,6 @@ function productos() {
     setProductos(resultadosBusqueda);
   };
 
-  /*const handleSelectionChange = useCallback((selectionModel) => {
-      setSelectedRows(selectionModel);
-      if (selectionModel.length > 0) {
-        const resultadosFiltrados = tablaProducto.filter((elemento) => {
-          const ARTICULO = elemento.ARTICULO;
-          if (ARTICULO) {
-            const productoString = ARTICULO.toString();
-            return productoString.includes(selectionModel[0]);
-          }
-          return false;
-        });
-        setArticulo(resultadosFiltrados[0]);
-      }
-    },
-    [productos]
-  );*/
-
   const handleSelectionChange = useCallback(
     (selectionModel) => {
       setSelectedRows(selectionModel);
@@ -468,7 +451,7 @@ function productos() {
               <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
 
-                <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px", }}>
+                <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px", }}>
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Buscar"

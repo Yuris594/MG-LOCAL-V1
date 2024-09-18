@@ -133,7 +133,7 @@ const ClientesGlobal = ({ setOpen }) => {
             <Button variant="outlined" sx={{ margin: "2px" }}>
                 Nuevo
             </Button>
-            <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 650, margin: "0%", }}>
+            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 650, margin: "0%", }}>
               <InputBase
                 sx={{ ml: 1, flex: 1, }}
                 placeholder="Buscar"

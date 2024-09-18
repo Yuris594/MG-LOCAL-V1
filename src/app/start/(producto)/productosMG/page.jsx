@@ -387,7 +387,7 @@ const productosMG = () => {
                   {articulo.DESCRIPCION}
                 </Typography>
               </Box>
-              <Paper
+              <Paper elevation={3}
                 sx={{
                   p: "2px 4px",
                   display: "flex",

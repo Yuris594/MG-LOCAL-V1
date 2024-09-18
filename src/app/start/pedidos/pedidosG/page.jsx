@@ -364,7 +364,7 @@ function CustomTabPanel(props) {
                       </Paper>
                     </Box>
 
-                    <Paper sx={{ display: 'flex', alignItems: 'center', p: '2px 4px', boxShadow: 2, backgroundColor: '#fff', width: "100%",}}>
+                    <Paper elevation={3} sx={{ display: 'flex', alignItems: 'center', p: '2px 4px', boxShadow: 2, backgroundColor: '#fff', width: "100%",}}>
                         <InputBase
                             sx={{ ml: 1, flex: 1 }}
                             placeholder="Buscar..."

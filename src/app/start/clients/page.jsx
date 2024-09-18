@@ -149,7 +149,7 @@ const Clientes = () => {
                 </Link>
                 <BotonExcel datos={clientes} />
               </Box>
-                <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px", }}>
+                <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px", }}>
                   <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Buscar..."
