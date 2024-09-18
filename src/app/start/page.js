@@ -94,7 +94,7 @@ const style = {
               <Image
                 src="/logo2.png"
                 width="80"
-                height="40"
+                height="60"
                 alt="imagenmg"
                 priority={true} />
 
@@ -134,8 +134,8 @@ const style = {
             <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
                 src="/logo2.png"
-                width="120"
-                height="100"
+                width="135"
+                height="110"
                 alt="imagenmg"
                 priority={true} 
               />

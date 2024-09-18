@@ -6,10 +6,12 @@ import {
   Button,
   ButtonGroup,
   Container,
+  createTheme,
   CssBaseline,
   Paper,
   Slide,
   TextField,
+  ThemeProvider,
   Toolbar,
   Typography,
   Zoom,
@@ -23,6 +25,32 @@ import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
 const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
 
+
+const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: "5px",
+          boxShadow: "0px, 3px, 5px rgba(0,0,0,0.2)",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "8px",
+          boxShadow: "0px 3px 5px rgba(0,0,0,0.2)",
+          transition: "0.3s",
+          "&:hover": {
+            boxShadow: "0px 5px 10px rgba(0,0,0,0.4)",
+            backgroundColor: "#388e3c",
+          },
+        },
+      },
+    },
+  },
+});
 
 const entrada = () => {
   Swal.fire({
@@ -194,99 +222,101 @@ const ingreso = async (e) => {
           </AppBar>
         </Slide>
        
-          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", }}>
-            <Zoom in={checked}>
-              <Paper className="" component="main">
-                <CssBaseline />
-                <Box sx={{ padding: 2 }}>
-                  {online ? (
-                    <WifiIcon sx={{ color: "green" }} />
-                  ) : (
-                    <WifiOffIcon sx={{ color: "red" }} />
-                  )}
+        <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="sm" 
+              sx={{ backgroundColor: "#ffffff", padding: 5, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 8, fontSize: "1.5rem" }}>     
+                <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", }}>
+                  <Zoom in={checked}>
+                    <Paper className="" component="main">
+                      <Box sx={{ padding: 2 }}>
+                        {online ? (
+                          <WifiIcon sx={{ color: "green" }} />
+                        ) : (
+                          <WifiOffIcon sx={{ color: "red" }} />
+                        )}
 
-                  <Typography variant="h6" noWrap component="div" sx={{ mb: 2, display: "flex", justifyContent: "center", }}>
-                    <Image
-                      src="/logo_miguelgomez-bglight.png"
-                      width="120"
-                      height="80"
-                      alt="imagenmg"
-                      priority={true}
-                    />
-                  </Typography>
+                        <Typography variant="h6" noWrap component="div" sx={{ mb: 2, display: "flex", justifyContent: "center", }}>
+                          <Image
+                            src="/logo_miguelgomez-bglight.png"
+                            width="120"
+                            height="80"
+                            alt="imagenmg"
+                            priority={true}
+                          />
+                        </Typography>
 
-                  <Zoom in={checked} style={{ transitionDelay: checked ? "700ms" : "0ms" }}>
-                    <Box component="form" onSubmit={ingreso} noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="CEDULA"
-                        name="CEDULA"
-                        placeholder="Digite su cédula"
-                        autoComplete="CEDULA"
-                        value={cedula}
-                        onChange={(e) => setCedula(e.target.value)}
-                        inputRef={inputRef}
-                        sx={{ mb: 2, fontSize: "1.5rem", textAlign: "center" }}
-                      />
+                      
+                          <Box component="form" onSubmit={ingreso} noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
+                            <TextField
+                              margin="normal"
+                              required
+                              fullWidth
+                              id="CEDULA"
+                              name="CEDULA"
+                              placeholder="Digite su cédula"
+                              autoComplete="CEDULA"
+                              value={cedula}
+                              onChange={(e) => setCedula(e.target.value)}
+                              inputRef={inputRef}
+                              sx={{ width: "100%", mb: 2, fontSize: "1.5rem", textAlign: "center", padding: 2, height: "60px" }}
+                            />
 
-                      <Button type="submit" variant="contained" color="success" sx={{ width: "100%", mb: 2, fontSize: "1.5rem", }}>
-                        Enviar
-                      </Button>
-                    
+                            <Button type="submit" variant="contained" color="success" sx={{ width: "100%", mb: 2, fontSize: "1.5rem", padding: 2, height: "60px" }}>
+                              Enviar
+                            </Button>
+                          </Box>
 
-                    <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
-                      <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={1} onClick={handleClick}>
-                          1
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={4} onClick={handleClick}>
-                          4
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={7} onClick={handleClick}>
-                          7
-                        </Button>
-                      </ButtonGroup>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
+                          <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={1} onClick={handleClick}>
+                              1
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={4} onClick={handleClick}>
+                              4
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={7} onClick={handleClick}>
+                              7
+                            </Button>
+                        </ButtonGroup>
 
-                      <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={2} onClick={handleClick}>
-                          2
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={5} onClick={handleClick}>
-                          5
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={8} onClick={handleClick}>
-                          8
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
-                          0
-                        </Button>
-                      </ButtonGroup>
+                          <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={2} onClick={handleClick}>
+                              2
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={5} onClick={handleClick}>
+                              5
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={8} onClick={handleClick}>
+                              8
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
+                              0
+                            </Button>
+                          </ButtonGroup>
 
-                      <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text"
-                            sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={3} onClick={handleClick}>
-                          3
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={6} onClick={handleClick}>
-                          6
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%" }} value={9} onClick={handleClick}>
-                          9
-                        </Button>
-                        <Button variant="outlined" sx={{ height: "100%", bgcolor: "#ff615b", color: "black", }} onClick={handleDelete}>
-                          X
-                        </Button>
-                      </ButtonGroup>
-                    </Box>
-                  </Box>
-                </Zoom>
-              </Box>
-            </Paper>
-          </Zoom>
+                          <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={3} onClick={handleClick}>
+                              3
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={6} onClick={handleClick}>
+                              6
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%" }} value={9} onClick={handleClick}>
+                              9
+                            </Button>
+                            <Button variant="outlined" sx={{ height: "100%", bgcolor: "#ff615b", color: "black", }} onClick={handleDelete}>
+                              X
+                            </Button>
+                          </ButtonGroup>
+                        </Box>
+                      </Box>
+                    </Paper>
+                  </Zoom>
+                </Box>
+              </Container> 
+            </ThemeProvider> 
         </Box>
-      </Box>
   );
 };
 
