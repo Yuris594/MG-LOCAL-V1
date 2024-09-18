@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Container,
   CssBaseline,
   Paper,
   Slide,
@@ -182,8 +183,7 @@ const ingreso = async (e) => {
   };
 
   return (
-    <Box className="login-content">
-      <Box sx={{ height: 180 }}>
+      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
         <Slide direction="down" in={checked} mountOnEnter unmountOnExit>
           <AppBar position="static" sx={{ bgcolor: "#262626", height: "80px" }}>
             <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
@@ -193,51 +193,50 @@ const ingreso = async (e) => {
             </Toolbar>
           </AppBar>
         </Slide>
-        
-        <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", }}>
-          <Zoom in={checked}>
-            <Paper className="" component="main">
-              <CssBaseline />
-              <Box sx={{ padding: 2 }}>
-                {online ? (
-                  <WifiIcon sx={{ color: "green" }} />
-                ) : (
-                  <WifiOffIcon sx={{ color: "red" }} />
-                )}
+       
+          <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", }}>
+            <Zoom in={checked}>
+              <Paper className="" component="main">
+                <CssBaseline />
+                <Box sx={{ padding: 2 }}>
+                  {online ? (
+                    <WifiIcon sx={{ color: "green" }} />
+                  ) : (
+                    <WifiOffIcon sx={{ color: "red" }} />
+                  )}
 
-                <Typography variant="h6" noWrap component="div" sx={{ margin: "5px", display: "flex", flexDirection: "column", alignItems: "center", }}>
-                  <Image
-                    src="/logo_miguelgomez-bglight.png"
-                    width="120"
-                    height="80"
-                    alt="imagenmg"
-                    priority={true}
-                  />
-                </Typography>
-
-                <Zoom in={checked} style={{ transitionDelay: checked ? "700ms" : "0ms" }}>
-                  <Box component="form" onSubmit={ingreso} noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="CEDULA"
-                      name="CEDULA"
-                      placeholder="Digite su cédula"
-                      autoComplete="CEDULA"
-                      value={cedula}
-                      onChange={(e) => setCedula(e.target.value)}
-                      inputRef={inputRef}
-                      sx={{ zoom: 2.5 }}
+                  <Typography variant="h6" noWrap component="div" sx={{ mb: 2, display: "flex", justifyContent: "center", }}>
+                    <Image
+                      src="/logo_miguelgomez-bglight.png"
+                      width="120"
+                      height="80"
+                      alt="imagenmg"
+                      priority={true}
                     />
+                  </Typography>
 
-                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", }}>
-                      <Button type="submit" variant="contained" color="success" sx={{ width: 600, height: 100, margin: 1, fontSize: 30, }}>
+                  <Zoom in={checked} style={{ transitionDelay: checked ? "700ms" : "0ms" }}>
+                    <Box component="form" onSubmit={ingreso} noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="CEDULA"
+                        name="CEDULA"
+                        placeholder="Digite su cédula"
+                        autoComplete="CEDULA"
+                        value={cedula}
+                        onChange={(e) => setCedula(e.target.value)}
+                        inputRef={inputRef}
+                        sx={{ mb: 2, fontSize: "1.5rem", textAlign: "center" }}
+                      />
+
+                      <Button type="submit" variant="contained" color="success" sx={{ width: "100%", mb: 2, fontSize: "1.5rem", }}>
                         Enviar
                       </Button>
-                    </Box>
+                    
 
-                    <Box sx={{ zoom: 4.1 }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
                       <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
                         <Button variant="outlined" sx={{ height: "100%" }} value={1} onClick={handleClick}>
                           1
@@ -288,7 +287,6 @@ const ingreso = async (e) => {
           </Zoom>
         </Box>
       </Box>
-    </Box>
   );
 };
 

@@ -22,7 +22,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Departamento de Sistemas - "}
+      {"Departamento de Sistemas © Version 0.1 - "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -62,6 +62,13 @@ export default function Login() {
   const [openE, setOpenE] = useState(false);
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState("");
+  const [checked, setChecked] = useState(false);
+
+  if ( checked === false) {
+    setTimeout(() => {
+      setChecked(true)
+    }, 500)
+  }
   
 
   const handleSubmit = async (e) => {
@@ -94,9 +101,8 @@ export default function Login() {
 
   return (
     <>
-      <Box sx={{ height: 180 }}>
-
-        <Slide direction="down" in={true} mountOnEnter unmountOnExit>
+      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <Slide direction="down" in={checked} mountOnEnter unmountOnExit>
           <AppBar position="static" sx={{ bgcolor: "#262626", height: "80px" }}>
             <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
               <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, marginLeft: "10px" }}>
@@ -110,9 +116,9 @@ export default function Login() {
           </AppBar>
         </Slide>
 
-        <Box sx={{ zoom: 1.2 }}>
-          <Zoom in={true}>
-            <Container className="login" component="main" maxWidth="xs">
+        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <Zoom in={checked}>
+            <Container maxWidth="xs">
               <CssBaseline />
                 <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", height: "auto", }}>
 
@@ -121,7 +127,7 @@ export default function Login() {
                       className="logo"
                       src="/logo_miguelgomez.png"
                       width="230"
-                      height="230"
+                      height="200"
                       alt="Logo"
                       priority={true}
                     />
@@ -137,39 +143,42 @@ export default function Login() {
                       ""
                     )}
                 
+                  <Zoom in={checked} style={{ transitionDelay: checked ? "700ms" : "0ms"}}> 
+                    <Box component="form" noValidate onSubmit={handleSubmit}
+                      sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
+                      
+                      <TextField
+                        error={error}
+                        id="usuario"
+                        label="Usuario"
+                        margin="normal"
+                        fullWidth
+                        name="PER_Usuario"
+                        value={usuario}
+                        onChange={(e) => setUsuario(e.target.value)}
+                      />
 
-                  <Box component="form" noValidate onSubmit={handleSubmit}
-                    sx={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
-                    
-                    <TextField
-                      error={error}
-                      id="usuario"
-                      label="Usuario"
-                      margin="normal"
-                      fullWidth
-                      name="PER_Usuario"
-                      value={usuario}
-                      onChange={(e) => setUsuario(e.target.value)}
-                    />
+                      <Typography component="h1" variant="h6"></Typography>
 
-                    <TextField
-                      error={error}
-                      margin="normal"
-                      required
-                      fullWidth
-                      type="password"
-                      name="PER_Clave"
-                      id="contraseña"
-                      label="Contraseña"
-                      value={clave}
-                      onChange={(e) => setClave(e.target.value)}
-                    />
+                      <TextField
+                        error={error}
+                        margin="normal"
+                        required
+                        fullWidth
+                        type="password"
+                        name="PER_Clave"
+                        id="contraseña"
+                        label="Contraseña"
+                        value={clave}
+                        onChange={(e) => setClave(e.target.value)}
+                      />
 
-                    <Button type="submit" variant="contained" color="success"
-                        sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 398,}}>
-                      Iniciar sesión
-                    </Button>
-                  </Box>
+                      <Button type="submit" variant="contained" color="success"
+                          sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 380,}}>
+                        Iniciar sesión
+                      </Button>
+                    </Box>
+                  </Zoom> 
 
                    {/* Snackbar para mostrar mensajes */}
                     {open ? (
@@ -196,3 +205,4 @@ export default function Login() {
     </>
   );
 }
+
