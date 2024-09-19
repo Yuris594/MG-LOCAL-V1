@@ -6,7 +6,7 @@ import Link from "next/link";
       <Box>
           <List>
             {page.map((link) => (
-              <ListItem
+              <ListItem 
                 disablePadding
                 key={link.title}>
                   

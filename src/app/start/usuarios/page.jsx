@@ -12,8 +12,6 @@ import Swal from "sweetalert2";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 
-
-
 const styles = {
   position: "absolute",
   top: "50%",
@@ -38,34 +36,11 @@ const columns = [
   { field: "PER_Nom", headerName: "Nombre", width: 200, editable: true },
   { field: "PER_Usuario", headerName: "Usuario", width: 150, editable: true },
   { field: "PER_Clave", headerName: "Contraseña", width: 150, editable: true },
-  {
-    field: "IdDiv",
-    headerName: "ID División",
-    type: "number",
-    width: 120,
-    editable: true,
-  },
-  {
-    field: "PERAUTOPED",
-    headerName: "Auto Pedidos",
-    type: "number",
-    width: 130,
-    editable: true,
-  },
-  {
-    field: "CODVEND",
-    headerName: "Código Vendedor",
-    width: 150,
-    editable: true,
-  },
+  { field: "IdDiv", headerName: "ID División", type: "number", width: 120, editable: true, },
+  { field: "PERAUTOPED", headerName: "Auto Pedidos", type: "number", width: 130, editable: true, },
+  { field: "CODVEND", headerName: "Código Vendedor", width: 150, editable: true },
   { field: "PREFIJO", headerName: "Prefijo", width: 120, editable: true },
-  {
-    field: "CONSECUTIVOPED",
-    headerName: "Consecutivo Pedidos",
-    type: "number",
-    width: 180,
-    editable: true,
-  },
+  { field: "CONSECUTIVOPED", headerName: "Consecutivo Pedidos", type: "number", width: 180, editable: true },
 ];
 
 
@@ -236,7 +211,6 @@ return (
                   value={busqueda}
                   onChange={handleChange}
                 />
-
                 {busqueda.length == 0 ? (
                   <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
                     <SearchIcon />
@@ -249,7 +223,7 @@ return (
               </Paper>
             </Box>
 
-              <Box sx={{ height: 950, width: "100%",  }}>
+              <Box  sx={{ height: 950, width: "100%",  }}>
                 <DataGrid
                   rows={usuarios}
                   columns={columns}
@@ -267,7 +241,6 @@ return (
                     '& .MuiDataGrid-columnHeaderTitle': {
                       fontWeight: "bold"
                     },
-                   
                   }}
                 />
               </Box>

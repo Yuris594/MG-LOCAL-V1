@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Lora } from "next/font/google";
+
+const inter = Lora({ subsets: ['latin'] })
 
 const style = {
   position: "absolute",
@@ -93,10 +96,11 @@ const style = {
             <Toolbar>
               <Image
                 src="/logo2.png"
-                width="80"
-                height="40"
+                width={80}
+                height={40}
                 alt="imagenmg"
-                priority={true} />
+                priority={true}
+              />
 
               <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
 
@@ -104,7 +108,7 @@ const style = {
                 <HomeIcon fontSize="large" />
               </Button>
 
-              <Button variant="h5" color="inherit" sx={{ fontSize: "15px" }}>
+              <Button className={inter.className} variant="h5" color="inherit" sx={{ fontSize: "15px" }}>
                 <PersonIcon fontSize="large" />{auth && auth.PER_Nom}
               </Button>
 
@@ -129,26 +133,25 @@ const style = {
         </Modal>
 
         <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, margin: 5, overflow: "auto",}}>
-            
+          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, margin: 5, overflow: "auto",}}> 
             <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
                 src="/logo2.png"
-                width="130"
-                height="110"
+                width={200}
+                height={110}
                 alt="imagenmg"
-                priority={true} 
+                priority={true}
               />
 
-              <Typography variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
+              <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
             <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Image
                   src="/truperLogo.png"
-                  width="150"
-                  height="110"
+                  width={150}
+                  height={110}
                   alt="imagentru"
                   priority={true} 
                 />
@@ -172,15 +175,15 @@ const style = {
           </Paper>
         </Box>
 
-          <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby": "basic-button", }}>
-            <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
-              Productos Por Bodega
-            </MenuItem>
-            <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
-              Productos-MG
-            </MenuItem>
-          </Menu>
-    </>
+        <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby": "basic-button", }}>
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
+            Productos Por Bodega
+          </MenuItem>
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
+            Productos-MG
+          </MenuItem>
+        </Menu>
+  </>
   );
 };
 

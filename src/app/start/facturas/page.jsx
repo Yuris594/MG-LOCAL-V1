@@ -8,7 +8,9 @@ import { format } from "date-fns";
 import Swal from "sweetalert2";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { Lora } from "next/font/google";
 
+const inter = Lora({ subsets: ["latin"] });
 
 const noExiste = () => {
   Swal.fire({
@@ -145,6 +147,7 @@ const Factura = () => {
       textColor: [0, 0, 0],
       dispaly: "flex",
       fontSize: 8,
+     
     };
 
     const dataToPrint = productos.map((row) => {
@@ -220,14 +223,14 @@ const Factura = () => {
 
   return (
     <>
-      <Box marginBottom="50px">
+      <Box>
         {" "} <Banner />{" "}
       </Box>
       <Box className="container">
-        <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "44vw", }}>
+        <Box className={inter.className} sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "44vw", }}>
           <Paper sx={{ marginTop: 8,  display: "flex", flexDirection: "column", alignItems: "center", bgcolor: "#eeee", padding: 2, }}>
-            <Typography component="h1" variant="h5">
-              Digite número de factura
+            <Typography  className={inter.className} component="h1" variant="h5">
+              Digite el número de la Factura
             </Typography>
 
             <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -241,7 +244,7 @@ const Factura = () => {
                 value={form.factura || ""}
                 onChange={changed}
               />
-              <Button
+              <Button className={inter.className}
                 type="submit"
                 fullWidth
                 variant="contained"

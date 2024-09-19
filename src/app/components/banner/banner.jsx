@@ -11,7 +11,9 @@ import { useAuth } from "@/context/authContext";
 import { useState } from "react";
 import Navbar from "./navbar";
 import Link from "next/link";
+import { Lora } from "next/font/google";
 
+const inter = Lora({ subsets: ['latin'] })
 
 
 const style = {
@@ -122,7 +124,7 @@ const Banner = () => {
               <Button component={Link} href="/start" color="inherit">
                 <HomeIcon fontSize="large" />
               </Button>
-              <Button color="inherit" sx={{ fontSize: "15px" }} >
+              <Button className={inter.className} color="inherit" sx={{ fontSize: "15px" }} >
                 <PersonIcon fontSize="large" />
                 {auth && auth.PER_Nom}
               </Button>
