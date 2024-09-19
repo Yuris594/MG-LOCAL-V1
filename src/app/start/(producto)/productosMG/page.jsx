@@ -26,29 +26,20 @@ const columns = [
   { field: "ARTICULO", headerName: "Cod", width: 130 },
   { field: "DESCRIPCION", headerName: "Referencia", width: 700 },
   { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  {
-    field: "TOTAL_DISP",
-    headerName: "Disp",
-    width: 130,
+  { field: "TOTAL_DISP", headerName: "Disp", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  {
-    field: "PRECIO",
-    headerName: "Precio",
-    width: 130,
+  { field: "PRECIO", headerName: "Precio", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     }, align: "right",
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
-  {
-    field: "PRECIOMASIVA",
-    headerName: "Masiva",
-    width: 130,
+  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
@@ -56,10 +47,7 @@ const columns = [
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 130 },
-  {
-    field: "EXIST_REAL",
-    headerName: "Existreal",
-    width: 130,
+  { field: "EXIST_REAL", headerName: "Existreal", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
@@ -79,10 +67,7 @@ const columnsP = [
   { field: "DESP", headerName: "Desp", width: 100, align: "right" },
   { field: "PEND", headerName: "Pend", width: 100, align: "right" },
   { field: "ESTADO", headerName: "Estado", width: 160 },
-  {
-    field: "AUTORIZADONOM",
-    headerName: "Autortizado",
-    width: 200,
+  { field: "AUTORIZADONOM", headerName: "Autortizado", width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
 
@@ -195,7 +180,7 @@ function allyProps(index) {
 }
 
 const obtenerProductos = async () => {
-  const response = await fetch("/api/productos/listar_solo_para_mg", {
+  const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -206,7 +191,7 @@ const obtenerProductos = async () => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`,{
+  const response = await fetch(`http://172.20.20.3:8001/productos/facturas/${articulo.ARTICULO}`,{
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -222,7 +207,7 @@ const obtenerFacturas = async (articulo) => {
 };
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(`http://172.20.20.3:8001/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
