@@ -5,7 +5,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Registro from "./registrar/page";
 import UsuarioActualizar from "./actualizar/page";
 import Swal from "sweetalert2";
@@ -84,6 +84,7 @@ const PageUsuario = async () => {
 function Usuarios() {
   const { auth } = useAuth();
   const router = useRouter();
+  const [authLoading, setAuthLoading] = useState(true);
   const handleOpen = () => setOpen(true);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -172,10 +173,21 @@ const handleSelection = useCallback((selectionModel) => {
 }, [usuarios]);
 
 useEffect(() => {
-  if (!auth || auth.IdDiv !== 8) {
-    router.push('/start');
-    }
-  }, [auth, router]);
+  if (auth !== undefined) {
+    setAuthLoading(false);
+      if (!auth || auth.IdDiv !== 8) {
+        router.push('/start');
+        }
+      }
+    }, [auth, router]);
+
+  if (authLoading) {
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
 
   if (!auth || auth.IdDiv !== 8) {
     return null;
@@ -186,7 +198,7 @@ return (
     <>
       <Box>{" "} <Banner /> {" "}</Box>
 
-        <div className="container">
+        <Box className="container">
           {cargando === true ? (
             <Box sx={{ width: "100%" }}>
               <LinearProgress />
@@ -206,8 +218,7 @@ return (
                 </Box>
               </Modal>
 
-              <Typography variant="h5" 
-                  sx={{ color: "#000000", fontWeight: "bold", marginTop: 4, marginBottom: 2, textAlign: "center", }}>
+              <Typography variant="h5" sx={{  display: "flex", justifyContent: "column", alignItems: "center", width: "auto", color: "#000000", margin: 0 }}>
                 USUARIOS
               </Typography>
 
@@ -251,20 +262,24 @@ return (
                   onRowSelectionModelChange={handleSelection}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.IdPer}
+                  slots={{ toolbar: GridToolbar }}
                   sx={{
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: "#70aca2",
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                      fontWeight: "bold"
                     },
-                    color: "#000",
+                   
                   }}
                 />
               </Box>
             </Box>
           </Zoom>
         )}
-      </div>
+      </Box>
     </>
+  
   );
 }
 
 export default Usuarios;
+
+

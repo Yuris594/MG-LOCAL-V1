@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -126,16 +126,15 @@ const Clientes = () => {
   return (
 
   <>
-      <Box marginBottom="40px">
-        <Banner />
-      </Box>
+      <Box> <Banner /> </Box>
 
-        {cargando === true ? (
-          <Box sx={{ width: '100%' }}>
-            <LinearProgress />
-          </Box>
-        ) : (
-          <Box >
+        <Box className="container">
+          {cargando === true ? (
+            <Box sx={{ width: '100%' }}>
+              <LinearProgress />
+            </Box>
+          ) : (
+          <Box>
             <Typography variant="h5" component="h1" gutterBottom sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#000" }}>
               CLIENTES
             </Typography>
@@ -165,7 +164,7 @@ const Clientes = () => {
               </Box>
 
               <Zoom in={checked}>
-                <Box sx={{ height: 900, width: "100%", backgroundColor: "#d80606" }}>
+                <Box sx={{ height: 990, width: "100%" }}>
                   <DataGrid
                     rows={clientes}
                     columns={columns}
@@ -178,13 +177,15 @@ const Clientes = () => {
                     onRowSelectionModelChange={handleSelection}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.CLIENTE}
+                    slots={{ toolbar: GridToolbar }}
                     sx={{ backgroundColor: "#ffffff" }}
                   />
                 </Box>
               </Zoom>
             </Box>
           )}
-  </>
+        </Box>
+    </>
   )
 }
 

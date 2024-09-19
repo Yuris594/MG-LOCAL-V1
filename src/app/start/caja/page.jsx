@@ -212,7 +212,7 @@ const style = {
         <Box sx={{  width: "auto", height: "auto", display: "auto", justifyContent: "center", margin: "10%", alignItems: "center", padding: "auto" }}>
           <Typography sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }} gutterBottom> PAGO </Typography>
             <Divider></Divider>
-          <Button component={Link} variant="outlined" href="../pedidos/pedidosCaja" sx={{ margin: "2px", bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
+          <Button component={Link} variant="outlined" href="../start/pedidos/pedidosCaja" sx={{ margin: "2px", bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
             Atras
           </Button>
 

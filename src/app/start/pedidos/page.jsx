@@ -3,7 +3,7 @@
 import { Box, Button, Divider, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/authContext";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
@@ -201,7 +201,7 @@ const Pedidos = () => {
           </Box>
 
             <Zoom in={checked}>
-              <Box sx={{ height: 950, width: "100%" }}>
+              <Box sx={{ height: 999, width: "100%" }}>
               <DataGrid
                   rows={pedidosMemo}
                   columns={columns}
@@ -212,6 +212,7 @@ const Pedidos = () => {
                   }}
                   pageSizeOptions={[5, 16]}
                   onRowSelectionModelChange={handleSelection}
+                  slots={{ toolbar: GridToolbar }}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.PEDIDO}
                   sx={{ backgroundColor: '#ffffff' }}
@@ -267,6 +268,7 @@ const Pedidos = () => {
                       },
                     }}
                     pageSizeOptions={[5, 18]}
+                    slots={{ toolbar: GridToolbar }}
                     rowSelectionModel={selectedRows}
                     onRowSelectionModelChange={handleSelection}
                   />

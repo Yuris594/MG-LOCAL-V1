@@ -70,7 +70,7 @@ const columns = [
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right", editable: true, headerClassName: 'super-app-theme--header',
+    }, editable: true, headerClassName: 'super-app-theme--header',
   },
   { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: 'super-app-theme--header', },
   { field: "EXIST_REAL", headerName: "Existreal", width: 90, headerClassName: 'super-app-theme--header', },
@@ -394,22 +394,8 @@ const PedidosCaja = () => {
         />
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          height: "100%",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box
-          sx={{
-            width: "33%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
+      <Box sx={{ display: "flex", flexDirection: "row", height: "100%", justifyContent: "space-between", }}>
+        <Box sx={{ width: "33%", display: "flex", flexDirection: "column", gap: 2, }}>
           <Box
             sx={{
               mb: 1,
@@ -566,7 +552,7 @@ const PedidosCaja = () => {
                     width: "100%",
                     height: "100%",
                     backgroundColor:
-                      sumaSaldoTotalDESC !== "0" ? "#087ea6" : "transparent",
+                      sumaSaldoTotalDESC !== "0" ? "#00796b" : "transparent",
                     color: sumaSaldoTotalDESC !== "0" ? "white" : "black",
                   }}
                   onClick={sumaSaldoTotalDESC !== "0" ? pago : null}
@@ -780,7 +766,7 @@ const PedidosCaja = () => {
         >
           <Box sx={{ display: "flex", width: "100%", height: 1030, 
                     '& .super-app-theme--header': {
-                      backgroundColor: 'rgba(117, 116, 116, 0.541)', color: '#000000' } }}>
+                      backgroundColor: '#DCDCDC', color: '#000000' } }}>
             {cargando === true ? (
               <Box sx={{ width: "100%" }}>
                 {" "}

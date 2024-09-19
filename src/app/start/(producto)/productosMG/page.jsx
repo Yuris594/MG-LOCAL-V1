@@ -518,7 +518,7 @@ const productosMG = () => {
             </CustomTabPanel>
           </Box>
         </div>
-      )}
+        )}
     </>
   );
 };
