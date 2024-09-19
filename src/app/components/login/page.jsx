@@ -57,7 +57,7 @@ export function Copyright(props) {
 
 const Iniciar = async (usuario, clave) => {
   try {
-    const response = await fetch(`http://172.20.20.3:8001/usuarios/listar/${usuario}/${clave}`, {
+    const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
