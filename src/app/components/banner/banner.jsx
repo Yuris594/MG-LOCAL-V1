@@ -93,7 +93,7 @@ const Banner = () => {
     },
     {
       title: "CAJA",
-      url: "../start/pedidos/pedidosCaja",
+      url: "/start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];

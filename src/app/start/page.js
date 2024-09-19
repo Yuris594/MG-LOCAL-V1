@@ -109,7 +109,7 @@ const style = {
               </Button>
 
               <Button className={inter.className} variant="h5" color="inherit" sx={{ fontSize: "15px" }}>
-                <PersonIcon fontSize="large" />{auth && auth.PER_Nom}
+                <PersonIcon fontSize="large" /> {auth && auth.PER_Nom}
               </Button>
 
               <Button color="inherit" onClick={handleOpen}>
@@ -142,7 +142,6 @@ const style = {
                 alt="imagenmg"
                 priority={true}
               />
-
               <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 

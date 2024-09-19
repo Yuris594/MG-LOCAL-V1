@@ -7,6 +7,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
+import { Lora } from "next/font/google";
+
+const inter = Lora({ subsets: ['latin'] })
 
 
 const bull = (
@@ -73,7 +76,7 @@ const bull = (
                 <Box sx={{ width: "50%", bord: 20, }}>
                     <Card sx={{ width: "40vw", height: "100%" }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBotton: 0}}>
-                            <Typography sx={{ fontSize: 17, flexDirection: 'column' }} color="text.secondary" gutterBottom>
+                            <Typography className={inter.className} sx={{ fontSize: 17, flexDirection: 'column' }} color="text.secondary" gutterBottom>
                                 ...........Miguel Gómez & Cia...........
                                 <br />
                                 ...................Tel:777777.................

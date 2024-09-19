@@ -8,6 +8,9 @@ import Link from "next/link";
 import ClientesGlobal from "../clients/clientesGlobal/page";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
+import { Lora } from "next/font/google";
+
+const inter = Lora({ subsets: ['latin'] })
 
 const style = {
   position: "absolute",
@@ -210,7 +213,7 @@ const style = {
     <>
       <Box marginBottom="50px">  <Banner /> </Box>
         <Box sx={{  width: "auto", height: "auto", display: "auto", justifyContent: "center", margin: "10%", alignItems: "center", padding: "auto" }}>
-          <Typography sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }} gutterBottom> PAGO </Typography>
+          <Typography className={inter.className} sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }} gutterBottom> PAGO </Typography>
             <Divider></Divider>
           <Button component={Link} variant="outlined" href="../start/pedidos/pedidosCaja" sx={{ margin: "2px", bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
             Atras
@@ -271,7 +274,7 @@ const style = {
 
               <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: 0, width: "100%", height: "100%" }}>
                 <Button component={Link} href="../start/pedidos/ReciboCaja" variant="outlined" onClick={actualizarInformacion}
-                  sx={{ width: "100%", height: 250, backgroundColor: restante === 0 ? "#087ea6" : "transparent", color: restante === 0 ? "white" : "black", }}>
+                  sx={{ width: "100%", height: 250, backgroundColor: restante === 0 ? "#00796b" : "transparent", color: restante === 0 ? "white" : "black", }}>
                   Validar
                 </Button>
               </ButtonGroup>
