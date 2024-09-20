@@ -44,7 +44,7 @@ const columns = [
 ];
 
 function Usuarios({ usuarios }) {
-  const [usuario, setUsuario] = useState();
+  const [usuario, setUsuario] = useState(usuarios);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -157,16 +157,16 @@ return (
               </Paper>
             </Box>
 
-            <Box  sx={{ height: 950, width: "100%",  }}>
+            <Box  sx={{ height: 765, width: "100%",  }}>
               <DataGrid
-                rows={usuarios}
+                rows={usuario}
                 columns={columns}
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 16 },
+                    paginationModel: { page: 0, pageSize: 12 },
                   },
                 }}
-                pageSizeOptions={[5, 16]}
+                pageSizeOptions={[12]}
                 getRowId={(row) => row.IdPer}
                 onRowSelectionModelChange={handleSelection}
                 rowSelectionModel={selectedRows}

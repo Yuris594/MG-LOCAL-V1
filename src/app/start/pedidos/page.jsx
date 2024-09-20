@@ -63,21 +63,20 @@ const columns = [
   { field: "CIUDAD", headerName: "Ciudad", width: 200 },
 ];
 
-const Pedidos = ({ pedidos: initialPedidos }) => {
+const Pedidos = ({ pedidos }) => {
   const router = useRouter();
-  const { setPedido } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
-  const [pedidos, setPedidos] = useState(initialPedidos)
+  const [pedidosFiltrados, setPedidosFiltrados] = useState(pedidos);
   const [selectedRows, setSelectedRows] = useState([]);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    setPedidos(initialPedidos);
+    setPedidosFiltrados(pedidos);
     setCargando(false);
-  }, [initialPedidos])
+  }, [pedidos]);
+
 
   const handleChange = (e) => {
-    e.preventDefault();
     setBusqueda(e.target.value);
     filtrar(e.target.value);
   };
@@ -89,7 +88,7 @@ const Pedidos = ({ pedidos: initialPedidos }) => {
       );
       return valores.some((valor) => valor.includes(terminoBusqueda));
     });
-    setPedido(resultadosBusqueda);
+    setPedidosFiltrados(resultadosBusqueda);
   };
 
   const handleSelection = useCallback((selectionModel) => {
@@ -104,11 +103,10 @@ const Pedidos = ({ pedidos: initialPedidos }) => {
           return false;
         });
         localStorage.setItem("pedidoTemp", JSON.stringify(resultadosFiltrados));
-        setPedido(resultadosFiltrados);
         router.push("/start/pedidos/pedidosC");
       }
     },
-    [pedidos]
+    [pedidosFiltrados]
   );
 
   return (
@@ -159,16 +157,16 @@ const Pedidos = ({ pedidos: initialPedidos }) => {
             </Box>
           </Box>
 
-              <Box sx={{ height: 999, width: "100%" }}>
+              <Box sx={{ height: 780, width: "100%" }}>
               <DataGrid
-                  rows={pedidos}
+                  rows={pedidosFiltrados}
                   columns={columns}
                   initialState={{
                       pagination: {
-                          paginationModel: { page: 0, pageSize: 16 },
+                          paginationModel: { page: 0, pageSize: 12 },
                       },
                   }}
-                  pageSizeOptions={[5, 16]}
+                  pageSizeOptions={[12]}
                   onRowSelectionModelChange={handleSelection}
                   slots={{ toolbar: GridToolbar }}
                   rowSelectionModel={selectedRows}

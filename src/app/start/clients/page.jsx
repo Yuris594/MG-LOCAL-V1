@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Banner from '@/app/components/banner/banner';
 import BotonExcel from '@/app/hooks/useExportoExcel';
-import { conexion } from '../usuarios/page';
+
 
 
 
@@ -39,7 +39,7 @@ const Clientes = ({ clientes }) => {
   const router = useRouter()
   const { setCliente } = useAuth()
   const [busqueda, setBusqueda] = useState([]);
-  const [checked, setChecked] = useState(false);
+  const [clientesFiltrados, setClientesFiltrados] = useState(clientes)
   const [selectedRows, setSelectedRows] = useState([]);
 
 
@@ -63,7 +63,7 @@ const Clientes = ({ clientes }) => {
         }
       return null; 
     });
-    setClientes(resultadosBusqueda);
+    setClientesFiltrados(resultadosBusqueda);
   };
 
   const handleSelection = useCallback(
@@ -79,11 +79,11 @@ const Clientes = ({ clientes }) => {
           return false;
         });
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
-        setCliente(resultadosFiltrados);
+        setClientesFiltrados(resultadosFiltrados);
         router.push("/start/clients/clientesTemp");
       }
     },
-    [clientes]
+    [clientesFiltrados]
   )
 
   return (
@@ -120,16 +120,16 @@ const Clientes = ({ clientes }) => {
                 </Paper>
               </Box>
 
-                <Box sx={{ height: 990, width: "100%" }}>
+                <Box sx={{ height: 780, width: "100%" }}>
                   <DataGrid
-                    rows={clientes}
+                    rows={clientesFiltrados}
                     columns={columns}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 15},
+                        paginationModel: { page: 0, pageSize: 12},
                       },
                     }}
-                    pageSizeOptions={[5, 15]}
+                    pageSizeOptions={[12]}
                     onRowSelectionModelChange={handleSelection}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.CLIENTE}
