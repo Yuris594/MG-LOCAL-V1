@@ -69,7 +69,7 @@ const style = {
     },
     {
       title: "CLIENTES",
-      url: "../start/clients",
+      url: "../components/clientes",
       icon: <Person />,
     },
     {
