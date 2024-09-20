@@ -22,7 +22,7 @@ import {
   InputBase,
   LinearProgress,
 } from "@mui/material";
-import ClienteGlobal from "../../clients/clientesGlobal/page";
+import conseguirClientes from "@/app/components/clientes/clientesGlobal/page";
 import useTecladoCaja from "@/app/hooks/useTecladoCaja";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
@@ -77,20 +77,13 @@ const columns = [
 ];
 
 
-const obtenerProductos = async () => {
-  const response = await fetch("/api/productos/listar_solo_para_mg", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-  });
-  return response.json()
-};
 
-const PedidosCaja = () => {
+const PedidosCaja = ({ producto }) => {
   const { setCaja, cliente } = useAuth();
   const [open, setOpen] = useState(false);
   const [opcion, setOpcion] = useState("CPed");
   const [busqueda, setBusqueda] = useState([]);
-  const [productos, setProductos] = useState([]);
+  const [productos, setProductos] = useState(producto);
   const [cargando, setCargando] = useState(true);
   const [productosP, setProductosP] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -102,10 +95,7 @@ const PedidosCaja = () => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  useEffect(() => {
-    conseguirProductos();
-  }, []);
+;
 
   useEffect(() => {
     setTimeout(() => {
@@ -152,16 +142,6 @@ const PedidosCaja = () => {
     }
   }, [selectedRows]);
 
-  const conseguirProductos = async () => {
-    const datos = await obtenerProductos();
-    try {
-      setProductos(datos);
-      setTablaProducto(datos);
-      setCargando(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaProducto.filter((elemento) => {
@@ -540,7 +520,7 @@ const PedidosCaja = () => {
                   aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
-                    <ClienteGlobal setOpen={setOpen} />
+                    <conseguirClientes />
                   </Box>
                 </Modal>
 

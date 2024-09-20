@@ -84,7 +84,7 @@ const style = {
     },
     {
       title: "CAJA",
-      url: "../start/pedidos/pedidosCaja",
+      url: "../components/pedidosCaja",
       icon: <Storefront />,
     },
   ];

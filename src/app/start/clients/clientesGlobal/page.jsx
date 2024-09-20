@@ -29,49 +29,12 @@ const columns = [
 ];
 
 
-const obtenerClientes = async () => {
-  const response = await fetch("/api/clientes/listar", {
-    method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
-  });
-  return response.json()
-};
 
-const ClientesGlobal = ({ setOpen }) => {
+const ClientesGlobal = ({ setOpen, clientes }) => {
   const { setCliente } = useAuth();
-  const [clientes, setClientes] = useState();
+  const [clientesFiltrados, setClientesFiltrados] = useState(clientes);
   const [busqueda, setBusqueda] = useState("");
-  const [checked, setChecked] = useState(false);
-  const [tablaCliente, setTablaCliente] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
-  useEffect(() => {
-    conseguirClientes();
-  }, []);
-
-  const conseguirClientes = async () => {
-    const datos = await obtenerClientes()
-    try {
-      if (datos) {
-        setClientes(datos);
-        setTablaCliente(datos);
-      }
-      setTimeout(() => {
-        setChecked(true);
-      }, 100);
-
-    } catch (error) {
-      console.log("Error al obtener los datos", error);
-    }
-  };
-
-  const memoizedFetchData = useMemo(() => conseguirClientes, []);
-
-  useEffect(() => {
-    memoizedFetchData();
-  }, [memoizedFetchData]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -80,7 +43,7 @@ const ClientesGlobal = ({ setOpen }) => {
   };
 
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = tablaCliente.filter((elemento) => {
+    const resultadosBusqueda = clientes.filter((elemento) => {
       const CLIENTE = elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
       const NOMVENDEDOR = elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
       const NOMBREALIAS = elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
@@ -94,13 +57,13 @@ const ClientesGlobal = ({ setOpen }) => {
       }
       return null;
     });
-    setClientes(resultadosBusqueda);
+    setClientesFiltrados(resultadosBusqueda);
   };
 
   const handleSelectionChange = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
-        const resultadosFiltrados = tablaCliente.filter((elemento) => {
+        const resultadosFiltrados = clientes.filter((elemento) => {
           const CLIENTE = elemento.CLIENTE;
           if (CLIENTE) {
             const clienteString = CLIENTE.toString();
@@ -110,16 +73,13 @@ const ClientesGlobal = ({ setOpen }) => {
         });
 
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
-        setCliente(resultadosFiltrados[0]);
+        setClientesFiltrados(resultadosFiltrados[0]);
         setOpen(false);
       }
     },
-    [clientes]
+    [clientesFiltrados]
   );
 
-  setTimeout(() => {
-    setChecked(true);
-  }, 100);
 
   return (
     <>
@@ -148,13 +108,11 @@ const ClientesGlobal = ({ setOpen }) => {
               </IconButton>
             </Paper>
           </Box>
-
-          <Zoom in={checked}>
-            <Box  sx={{ height: 640, width: "100%", 
+            <Box sx={{ height: 640, width: "100%", 
                       '& .super-app-theme--header': {
                       backgroundColor: '#00796b', color: '#000000', }, }}>
               <DataGrid
-                rows={clientes}
+                rows={clientesFiltrados}
                 columns={columns}
                 initialState={{
                   pagination: {
@@ -168,7 +126,6 @@ const ClientesGlobal = ({ setOpen }) => {
                 sx={{ backgroundColor: "#ffffff" }}
               />
             </Box>
-          </Zoom>
       </div>
     </>
   );

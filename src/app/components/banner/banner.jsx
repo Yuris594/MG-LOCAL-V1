@@ -88,12 +88,12 @@ const Banner = () => {
     },
     {
       title: "FACTURAS",
-      url: "/start/facturas",
+      url: "../start/facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "/start/pedidos/pedidosCaja",
+      url: "../components/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];
