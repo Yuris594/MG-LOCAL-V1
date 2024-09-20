@@ -1,11 +1,13 @@
 
-import Login from "./components/login/page"
-import Usuarios from "./start/usuarios/page";
+import Login from './components/login/page'
+import Inicio from './start/page'
 
-export default function Home() {
+const page = () => {
   return (
-    <>
-      <Usuarios />
-    </>
-  );
+    <div>
+      <Login />
+    </div>
+  )
 }
+
+export default page

@@ -43,74 +43,24 @@ const columns = [
   { field: "CONSECUTIVOPED", headerName: "Consecutivo Pedidos", type: "number", width: 180, editable: true },
 ];
 
-
-const PageUsuario = async () => {
-    const response = await fetch('/api/usuarios/listar', {
-      method: "GET",
-      headers: {
-        "Content-Type" : "application/json",
-      },
-      
-    });
-    const data = await response.json();
-    return data;
-};
-
-
-function Usuarios() {
+function Usuarios({ usuarios }) {
+  const [usuario, setUsuario] = useState();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [openA, setOpenA] = useState(false);
+  const [busqueda, setBusqueda] = useState([]);
   const { auth } = useAuth();
   const router = useRouter();
   const [authLoading, setAuthLoading] = useState(true);
-  const handleOpen = () => setOpen(true);
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
-  const [usuario, setUsuario] = useState();
-  const [openA, setOpenA] = useState(false);
-  const [usuarios, setUsuarios] = useState([]);
-  const [busqueda, setBusqueda] = useState([]);
-  const [checked, setChecked] = useState(false);
-  const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [tablaUsuario, setTablaUsuario] = useState([]);
-
-  const fecUsuarios = async (e) => {
-    try {
-      const datos = await PageUsuario();
-        if (datos) {
-            const datosT = datos.map((item) => ({
-              IdPer: item.IdPer,
-              PER_Nom: item.PER_Nom,
-              PER_Usuario: item.PER_Usuario,
-              PER_Clave: item.PER_Clave,
-              IdDiv: item.IdDiv,
-              PERAUTOPED: item.PERAUTOPED,
-              CODVEND: item.CODVEND,
-              PREFIJO: item.PREFIJO,
-              CONSECUTIVOPED: item.CONSECUTIVOPED
-            }))
-          setCargando(false);
-          setUsuarios(datosT);
-          setTablaUsuario(datosT);
-        } else {
-          console.log("Error", datos)
-        }
-    } catch (error) {
-      console.error("Error: No hay datos", error);
-      conexion();
-    }
-  }
-
-  useEffect(() => {
-    fecUsuarios();
-    setChecked(true);
-  }, []);
-
+  
   
   const handleCloseA = () => {
     setUsuario([]);
     setOpenA(false);
   };
-  
+
   const handleChange = (e) => {
     e.preventDefault();
     setBusqueda(e.target.value);
@@ -118,56 +68,51 @@ function Usuarios() {
   };
   
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = tablaUsuario.filter((elemento) => {
+    const resultadosBusqueda = usuarios.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
     );
     return valores.some((valor) => valor.includes(terminoBusqueda));
   });
-  setUsuarios(resultadosBusqueda);
-};
+    setUsuario(resultadosBusqueda);
+  };
 
-const limpiarBusqueda = () => {
-  setBusqueda();
-  fecUsuarios();
-};
-
-const handleSelection = useCallback((selectionModel) => {
-  setSelectedRows(selectionModel);
-  if (selectionModel.length > 0) {
-    const resultadosFiltrados = tablaUsuario.filter((elemento) => {
-      const IdPer = elemento.IdPer;
-      if (IdPer) {
-        const IdString = IdPer.toString();
-        return IdString.includes(selectionModel[0]);
-      }
-      return false;
-    });
-    setUsuario(resultadosFiltrados);
-    setOpenA(true);
-  }
-}, [usuarios]);
-
-useEffect(() => {
-  if (auth !== undefined) {
-    setAuthLoading(false);
-      if (!auth || auth.IdDiv !== 8) {
-        router.push('/start');
+  const handleSelection = useCallback((selectionModel) => {
+    setSelectedRows(selectionModel);
+    if (selectionModel.length > 0) {
+      const resultadosFiltrados = usuarios.filter((elemento) => {
+        const IdPer = elemento.IdPer;
+        if (IdPer) {
+          const IdString = IdPer.toString();
+          return IdString.includes(selectionModel[0]);
         }
-      }
-    }, [auth, router]);
+        return false;
+      });
+      setUsuario(resultadosFiltrados);
+      setOpenA(true);
+    }
+  }, [usuarios]);
 
-  if (authLoading) {
-    return (
-      <Box sx={{ width: "100%" }}>
-        <LinearProgress />
-      </Box>
-    );
-  }
-
-  if (!auth || auth.IdDiv !== 8) {
-    return null;
-  }
+  /*useEffect(() => {
+    if (auth !== undefined) {
+      setAuthLoading(false);
+        if (!auth || auth.IdDiv !== 8) {
+          router.push('/start');
+          }
+        }
+      }, [auth, router]);
+  
+    if (authLoading) {
+      return (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+        </Box>
+      );
+    }
+  
+    if (!auth || auth.IdDiv !== 8) {
+      return null;
+    }*/
 
 
 return (
@@ -175,15 +120,9 @@ return (
       <Box>{" "} <Banner /> {" "}</Box>
 
         <Box className="container">
-          {cargando === true ? (
-            <Box sx={{ width: "100%" }}>
-              <LinearProgress />
-            </Box>
-          ): (
-          <Zoom in={checked}>
-            <Box style={{ height: "auto", width: "100%" }}>
+          <Box style={{ height: "auto", width: "100%" }}>
               <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-                <Box sx={styles}>
+                    <Box sx={styles}>
                   <Registro />
                 </Box>
               </Modal>
@@ -212,42 +151,34 @@ return (
                   value={busqueda}
                   onChange={handleChange}
                 />
-                {busqueda.length == 0 ? (
-                  <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton title="buscar" sx={{ p: "10px" }} aria-label="buscar" onClick={limpiarBusqueda}>
-                    <HighlightOffIcon />
-                  </IconButton>
-                )}
+                <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
+                  <SearchIcon />
+                </IconButton>
               </Paper>
             </Box>
 
-              <Box  sx={{ height: 950, width: "100%",  }}>
-                <DataGrid
-                  rows={usuarios}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 16 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 16]}
-                  onRowSelectionModelChange={handleSelection}
-                  rowSelectionModel={selectedRows}
-                  getRowId={(row) => row.IdPer}
-                  slots={{ toolbar: GridToolbar }}
-                  sx={{
-                    '& .MuiDataGrid-columnHeaderTitle': {
-                      fontWeight: "bold"
-                    },
-                  }}
-                />
-              </Box>
+            <Box  sx={{ height: 950, width: "100%",  }}>
+              <DataGrid
+                rows={usuarios}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 16 },
+                  },
+                }}
+                pageSizeOptions={[5, 16]}
+                getRowId={(row) => row.IdPer}
+                onRowSelectionModelChange={handleSelection}
+                rowSelectionModel={selectedRows}
+                slots={{ toolbar: GridToolbar }}
+                sx={{
+                  '& .MuiDataGrid-columnHeaderTitle': {
+                    fontWeight: "bold"
+                  },
+                }}
+              />
             </Box>
-          </Zoom>
-        )}
+          </Box>
       </Box>
     </>
   
@@ -255,3 +186,4 @@ return (
 }
 
 export default Usuarios;
+

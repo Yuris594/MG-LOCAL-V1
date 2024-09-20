@@ -59,12 +59,12 @@ const style = {
   const page = [
     {
       title: "USUARIOS",
-      url: "../start/usuarios",
+      url: "../components/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "../start/pedidos",
+      url: "../components/pedidos",
       icon: <Assignment />,
     },
     {

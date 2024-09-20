@@ -1,14 +1,13 @@
 "use client";
 
-import { Box, Button, Divider, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
+import { useCallback,  useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
-import Link from "next/link";
 
 
 const style = {
@@ -64,51 +63,12 @@ const columns = [
   { field: "CIUDAD", headerName: "Ciudad", width: 200 },
 ];
 
-const conseguirArticulos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
-    method: "GET",
-    headers: {
-      "Content-Type" : "application/json",
-    }
-  });
-    const data = await response.json()
-    return data
-  
-};
-
-const Pedidos = () => {
+const Pedidos = ({ pedidos }) => {
   const router = useRouter();
   const { setPedido } = useAuth();
-  const [tabla, setTabla] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [pedidos, setPedidos] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
-  const [checked, setChecked] = useState(false);
-  const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const pedidosMemo = useMemo(() => pedidos, [pedidos]);
-
-  useEffect(() => {
-    Pedidos();
-  }, []);
-
-  const Pedidos = async () => {
-    const datos = await conseguirArticulos();
-    try {
-      if (datos) {
-        setPedidos(datos);
-        setTabla(datos);
-        setCargando(false)
-        setTimeout(() => {
-            setChecked(true);
-        }, 100);
-      }
-    } catch (error) {
-      console.log("Error al obtener los datos", error)
-    }
-  }
-  
   
   const handleChange = (e) => {
     e.preventDefault();
@@ -117,19 +77,19 @@ const Pedidos = () => {
   };
 
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = tabla.filter((elemento) => {
+    const resultadosBusqueda = pedidos.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
       );
       return valores.some((valor) => valor.includes(terminoBusqueda));
     });
-    setPedidos(resultadosBusqueda);
+    setPedido(resultadosBusqueda);
   };
 
   const handleSelection = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
-        const resultadosFiltrados = tabla.filter((elemento) => {
+        const resultadosFiltrados = pedidos.filter((elemento) => {
           const PEDIDO = elemento.PEDIDO;
           if (PEDIDO) {
             const pedidoString = PEDIDO.toString();
@@ -139,27 +99,17 @@ const Pedidos = () => {
         });
         localStorage.setItem("pedidoTemp", JSON.stringify(resultadosFiltrados));
         setPedido(resultadosFiltrados);
-        router.push("./pedidos/pedidosC");
+        router.push("/start/pedidos/pedidosC");
       }
     },
     [pedidos]
   );
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   return (
     <>
-      <Box>
-        {" "}  <Banner /> {" "}
-      </Box>
+      <Box> {" "} <Banner /> {" "} </Box>
 
       <div className="container">
-        {cargando === true ? (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-        ) : (
       <Box>
         <div style={{ height: "auto", width: "100%" }}>
           <Typography variant="h5" component="h1" gutterBottom
@@ -176,9 +126,7 @@ const Pedidos = () => {
           <Box>
             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
               <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", }}>
-                <Button variant="outlined" sx={{ margin: "10px" }} onClick={handleOpen}>
-                  {" "} Nuevo {" "}
-                </Button>
+                <Button variant="outlined" sx={{ margin: "10px" }}> {" "} Nuevo {" "} </Button>
                 <BotonExcel datos={pedidos} />
               </Box>
 
@@ -200,10 +148,9 @@ const Pedidos = () => {
             </Box>
           </Box>
 
-            <Zoom in={checked}>
               <Box sx={{ height: 999, width: "100%" }}>
               <DataGrid
-                  rows={pedidosMemo}
+                  rows={pedidos}
                   columns={columns}
                   initialState={{
                       pagination: {
@@ -218,10 +165,9 @@ const Pedidos = () => {
                   sx={{ backgroundColor: '#ffffff' }}
                 />
               </Box>
-            </Zoom>
           </div>
 
-            <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+           {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
               <Box sx={style}>
                 <Box>
                   <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -275,9 +221,8 @@ const Pedidos = () => {
                 </Box>
               </Box>
             </Box>
-          </Modal>
+          </Modal>*/}
         </Box>
-        )}
       </div>
     </>
   );

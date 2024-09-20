@@ -77,14 +77,12 @@ const bull = (
                     <Card sx={{ width: "40vw", height: "100%" }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBotton: 0}}>
                             <Typography className={inter.className} sx={{ fontSize: 17, flexDirection: 'column' }} color="text.secondary" gutterBottom>
-                                ...........Miguel Gómez & Cia...........
-                                <br />
-                                ...................Tel:777777.................
-                                <br />
+                                ...........Miguel Gómez & Cia.................<br />
+                                ...................Tel:777777.................<br />
                                 ........Miguelgomoz&cia@hotmail.com...........<br />
-                                ........https://www.miguelgomez.com.co/...... <br />
-                                ------------------------------------------------------- <br />
-                                ........ Servicio -  {/*auth.PER_Nom*/}..
+                                ........https://www.miguelgomez.com.co/.......<br />
+                                ----------------------------------------------<br />
+                                ........ Servicio -  {/*auth.PER_Nom*/}.......
                             </Typography>
                         </CardContent>
 

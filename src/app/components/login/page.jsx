@@ -54,27 +54,16 @@ export function Copyright(props) {
   );
 }
 
-
 const Iniciar = async (usuario, clave) => {
-  try {
-    const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
+  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data
 
-    if (!response.ok || !data || !data.length === 0) {
-      return { error: "Usuario o Clave incorrecta" }
-    }
-
-    return data
-   
-  } catch (error) {
-    console.error("Error en la petición: ", error);
-    return { error: "Error en la conexión" };
-  }
 };
 
 
