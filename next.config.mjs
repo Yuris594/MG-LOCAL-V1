@@ -4,7 +4,7 @@
         unoptimized: true,
       },
       
-     output: 'export',
+      output: 'export',
 
       
      /* async rewrites() {

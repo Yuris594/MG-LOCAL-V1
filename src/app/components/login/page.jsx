@@ -11,6 +11,7 @@ import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Iniciar from "../iniciar/page";
 
 const theme = createTheme({
   components: {
@@ -54,18 +55,6 @@ export function Copyright(props) {
   );
 }
 
-const Iniciar = async (usuario, clave) => {
-  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data
-
-};
-
 
 export default function Login() {
   const router = useRouter();
@@ -87,21 +76,23 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultado = await Iniciar(usuario, clave);
-      if (!resultado.error) {
-        localStorage.setItem("usuarios", JSON.stringify(resultado));
-        setOpen(true);
-        setSaved(true);
-        
-        const tokens = resultado;
-        login(tokens);
-        router.push("../start");
-
-      } else {
-        setError(true);
-        setOpenE(true);
-        console.log("Error", resultado.error);
-      }
+    try {
+      const resultado = await Iniciar(usuario, clave);
+        if (resultado.error) {
+          setError(true);
+        } else {
+          localStorage.setItem("usuarios", JSON.stringify(resultado));
+          setOpen(true);
+          setSaved(true);
+          const tokens = resultado;
+          login(tokens);
+          router.push("../start");
+        }
+    } catch (error) {
+          setError(true);
+          setOpenE(true);
+          console.log("Error", resultado.error);
+    }
   };
 
   const handleClose = (reason) => {

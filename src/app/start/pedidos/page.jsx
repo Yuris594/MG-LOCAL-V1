@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
-import { useCallback,  useState } from "react";
+import { useCallback,  useEffect,  useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
@@ -63,13 +63,19 @@ const columns = [
   { field: "CIUDAD", headerName: "Ciudad", width: 200 },
 ];
 
-const Pedidos = ({ pedidos }) => {
+const Pedidos = ({ pedidos: initialPedidos }) => {
   const router = useRouter();
   const { setPedido } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
+  const [pedidos, setPedidos] = useState(initialPedidos)
   const [selectedRows, setSelectedRows] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
-  
+  useEffect(() => {
+    setPedidos(initialPedidos);
+    setCargando(false);
+  }, [initialPedidos])
+
   const handleChange = (e) => {
     e.preventDefault();
     setBusqueda(e.target.value);
@@ -110,6 +116,11 @@ const Pedidos = ({ pedidos }) => {
       <Box> {" "} <Banner /> {" "} </Box>
 
       <div className="container">
+        {cargando === true ? (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        ) : (  
       <Box>
         <div style={{ height: "auto", width: "100%" }}>
           <Typography variant="h5" component="h1" gutterBottom
@@ -167,62 +178,8 @@ const Pedidos = ({ pedidos }) => {
               </Box>
           </div>
 
-           {/* <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-              <Box sx={style}>
-                <Box>
-                  <Typography id="modal-modal-title" variant="h6" component="h2">
-                    {" "} Seleccionar articulo {" "}
-                  </Typography>
-
-              <Divider sx={{ height: 4, m: 0.5, marginBottom: "" }} orientation="horizontal" />
-
-              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "right", }}>
-                <Link href="../pedidos">
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }}>
-                    {" "} Agregear {" "}
-                  </Button>
-                </Link>
-                
-                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={handleClose}>
-                  {" "} Cerrar {" "}
-                </Button>
-              </Box>
-
-              <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 250, boxShadow: 3, }}>
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Buscar"
-                  inputProps={{ "aria-label": "search google maps" }}
-                  value={busqueda}
-                  onChange={handleChange}
-                />
-                <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-
-                <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-              </Paper>
-
-                <Box sx={{ height: 200, width: "100%" }}>
-                  <DataGrid
-                    rows={pedidos}
-                    columns={columns}
-                    getRowId={(row) => row.PEDIDO}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 18 },
-                      },
-                    }}
-                    pageSizeOptions={[5, 18]}
-                    slots={{ toolbar: GridToolbar }}
-                    rowSelectionModel={selectedRows}
-                    onRowSelectionModelChange={handleSelection}
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </Modal>*/}
         </Box>
+          )}
       </div>
     </>
   );
