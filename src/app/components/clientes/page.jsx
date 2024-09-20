@@ -1,5 +1,7 @@
 import Clientes from "@/app/start/clients/page";
 
+export const revalidate = 60
+
 const conseguirClientes = async () => {
     const response = await fetch("http://172.20.20.3:8001/clientes/listar", {
       method: "GET",
