@@ -105,7 +105,7 @@ const Banner = () => {
         <AppBar position="static" sx={{ bgcolor: "#262626", width: "auto" }}>
           <Toolbar>
             <IconButton color="inherit" onClick={handleOpenNavMenu} sx={{ display: { xs: "flex", md: "none" } }}>
-              <WidgetsOutlinedIcon fontSize="large" />
+              <WidgetsOutlinedIcon />
             </IconButton>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 {page.map((link) => (
@@ -122,14 +122,14 @@ const Banner = () => {
               </Box>
               <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
               <Button component={Link} href="/start" color="inherit">
-                <HomeIcon fontSize="large" />
+                <HomeIcon />
               </Button>
               <Button className={inter.className} color="inherit" sx={{ fontSize: "15px" }} >
-                <PersonIcon fontSize="large" />
+                <PersonIcon />
                 {auth && auth.PER_Nom}
               </Button>
               <Button color="inherit" onClick={handleOpen}>
-                <LogoutIcon fontSize="large" />
+                <LogoutIcon />
               </Button>
           </Toolbar>
         </AppBar>
