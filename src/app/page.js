@@ -5,7 +5,7 @@ import Inicio from './start/page'
 const page = () => {
   return (
     <div>
-      <Login />
+      <Inicio />
     </div>
   )
 }
