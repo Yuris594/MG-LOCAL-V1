@@ -551,3 +551,8 @@ const PedidosCaja = ({ producto }) => {
 };
 
 export default PedidosCaja;
+
+
+//Probar con generateStaticParams, revisar como utilizar el cache, este tiene un limite
+// export const dynamic 
+ 
