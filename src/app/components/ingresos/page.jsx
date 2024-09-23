@@ -118,12 +118,12 @@ const Ingresos = () => {
   const inputRef = useRef(null);
   const [cedula, setCedula] = useState('');
   const [checked, setChecked] = useState(false);
-  const [online, setOnline] = useState(navigator.onLine);
+  const [online, setOnline] = useState(true);
 
 
 
   useEffect(() => {
-    setOnline(navigator.onLine);
+    setOnline(true);
 
     const handleOnline = () => setOnline(true);
     const handleOffline = () => setOnline(false);
