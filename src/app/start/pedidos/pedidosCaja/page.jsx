@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   Edit as EditIcon,
   DeleteOutlined as DeleteIcon,
@@ -22,12 +22,12 @@ import {
   InputBase,
   LinearProgress,
 } from "@mui/material";
-import conseguirClientes from "@/app/components/clientes/clientesGlobal/page";
 import useTecladoCaja from "@/app/hooks/useTecladoCaja";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import PropTypes from "prop-types";
 import Link from "next/link";
+import ClientesGlobal from "../../clients/clientesGlobal/page";
 
 
 function CustomTabPanel(props) {
@@ -76,14 +76,21 @@ const columns = [
   { field: "EXIST_REAL", headerName: "Existreal", width: 90, headerClassName: 'super-app-theme--header', },
 ];
 
+const conseguirProductos = async () => {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
+    method: "GET",
+    headers: { "Content-Type" : "application/json" }
+  });
+  return response.json();
 
+}
 
-const PedidosCaja = ({ producto }) => {
+const PedidosCaja = () => {
   const { setCaja, cliente } = useAuth();
   const [open, setOpen] = useState(false);
   const [opcion, setOpcion] = useState("CPed");
   const [busqueda, setBusqueda] = useState([]);
-  const [productos, setProductos] = useState(producto);
+  const [productos, setProductos] = useState();
   const [cargando, setCargando] = useState(true);
   const [productosP, setProductosP] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -95,7 +102,21 @@ const PedidosCaja = ({ producto }) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-;
+
+  useEffect(() => {
+    Producto();
+  }, []);
+
+  const Producto = async () => {
+    const datos = await conseguirProductos();
+    if (datos) {
+      setProductos(datos);
+      setTablaProducto(datos)
+      setCargando(false)
+    } else {
+      console.log("Error")
+    }
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -425,7 +446,7 @@ const PedidosCaja = ({ producto }) => {
                 </Button>
                 <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                   <Box sx={style}>
-                    <conseguirClientes />
+                    <ClientesGlobal setOpen={setOpen} />
                   </Box>
                 </Modal>
 

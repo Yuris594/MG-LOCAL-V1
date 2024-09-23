@@ -1,13 +1,14 @@
 
-import Iniciar from './components/iniciar/page'
-import Inicio from './start/page'
+import Login from './components/login/page';
 
-const page = () => {
+const Inicio = () => {
   return (
     <div>
-      <Iniciar />
+      <Login />
     </div>
   )
 }
 
-export default page
+export default Inicio;
+
+

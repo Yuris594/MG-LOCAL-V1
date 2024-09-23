@@ -11,7 +11,7 @@ import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Iniciar from "../iniciar/page";
+import { useEffect } from "react";
 
 const theme = createTheme({
   components: {
@@ -56,6 +56,20 @@ export function Copyright(props) {
 }
 
 
+const Iniciar = async (usuario, clave) => {
+  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  return data;
+  
+};
+
+
 export default function Login() {
   const router = useRouter();
   const { login, auth } = useAuth();
@@ -66,32 +80,39 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState("");
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  if ( checked === false) {
-    setTimeout(() => {
-      setChecked(true)
-    }, 500)
-  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setChecked(true);
+    }, 500);
+    return () => clearTimeout(timer)
+  }, []);
+
   
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const resultado = await Iniciar(usuario, clave);
         if (resultado.error) {
           setError(true);
+          setErrorMessage(resultado.error.detail || JSON.stringify(resultado.error))
+          set
         } else {
-          localStorage.setItem("usuarios", JSON.stringify(resultado));
+          //localStorage.setItem("usuarios", JSON.stringify(resultado));
           setOpen(true);
           setSaved(true);
-          const tokens = resultado;
-          login(tokens);
+          //const tokens = resultado;
+          login(resultado);
           router.push("../start");
         }
     } catch (error) {
           setError(true);
           setOpenE(true);
           console.log("Error", resultado.error);
+          setErrorMessage(error.message)
     }
   };
 
@@ -100,6 +121,7 @@ export default function Login() {
       return;
     }
     setOpen(false);
+    setError(false);
   };
 
   return (
@@ -173,9 +195,9 @@ export default function Login() {
                         onChange={(e) => setClave(e.target.value)}
                       />
 
-                      <Button type="submit" variant="contained" color="success"
+                      <Button type="submit" variant="contained" color="success" disabled={loading}
                           sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 380,}}>
-                        Iniciar sesión
+                        {loading ? "Cargando..." : "Iniciar sesión"}
                       </Button>
                     </Box>
                   </Box>
