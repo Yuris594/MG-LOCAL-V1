@@ -13,7 +13,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-import Iniciar from "./components/login/page";
+//import Iniciar from "./components/login/page";
 
 
 const theme = createTheme({
@@ -57,6 +57,25 @@ export function Copyright(props) {
     </Typography>
   );
 }
+
+
+const Iniciar = async (usuario, clave) => {
+  const response = await fetch(`http://172.20.20.3:8001/usuarios/listar/${usuario}/${clave}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("Error");
+      return [];
+    }
+  }
+  return response.json();
+  
+};
 
 
 
