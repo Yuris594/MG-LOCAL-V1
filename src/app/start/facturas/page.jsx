@@ -21,7 +21,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(`http://172.20.20.3:8001/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

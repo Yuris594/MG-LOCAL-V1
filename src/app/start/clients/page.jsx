@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -37,7 +37,7 @@ const columns = [
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch("/api/clientes/listar", {
+  const response = await fetch("http://172.20.20.3:8001/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

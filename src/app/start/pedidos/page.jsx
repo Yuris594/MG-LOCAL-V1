@@ -79,7 +79,7 @@ const columns = [
 ];
 
 const conseguirPedidos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
+  const response = await fetch("http://172.20.20.3:8001/pedidos/listar", {
     next: { revalidate: 60 },
     method: "GET",
     headers: { "Content-Type" : "application/json" }
