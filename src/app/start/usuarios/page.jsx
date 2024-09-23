@@ -1,10 +1,19 @@
 "use client";
 
-import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom, } from "@mui/material";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  LinearProgress,
+  Modal,
+  Paper,
+  Typography,
+  Zoom,
+} from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import Banner from "@/app/components/banner/banner";
+//import Banner from "@/app/_components/banner/banner";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Registro from "./registrar/page";
 import UsuarioActualizar from "./actualizar/page";
@@ -36,11 +45,34 @@ const columns = [
   { field: "PER_Nom", headerName: "Nombre", width: 200, editable: true },
   { field: "PER_Usuario", headerName: "Usuario", width: 150, editable: true },
   { field: "PER_Clave", headerName: "Contraseña", width: 150, editable: true },
-  { field: "IdDiv", headerName: "ID División", type: "number", width: 120, editable: true, },
-  { field: "PERAUTOPED", headerName: "Auto Pedidos", type: "number", width: 130, editable: true, },
-  { field: "CODVEND", headerName: "Código Vendedor", width: 150, editable: true },
+  {
+    field: "IdDiv",
+    headerName: "ID División",
+    type: "number",
+    width: 120,
+    editable: true,
+  },
+  {
+    field: "PERAUTOPED",
+    headerName: "Auto Pedidos",
+    type: "number",
+    width: 130,
+    editable: true,
+  },
+  {
+    field: "CODVEND",
+    headerName: "Código Vendedor",
+    width: 150,
+    editable: true,
+  },
   { field: "PREFIJO", headerName: "Prefijo", width: 120, editable: true },
-  { field: "CONSECUTIVOPED", headerName: "Consecutivo Pedidos", type: "number", width: 180, editable: true },
+  {
+    field: "CONSECUTIVOPED",
+    headerName: "Consecutivo Pedidos",
+    type: "number",
+    width: 180,
+    editable: true,
+  },
 ];
 
 function Usuarios({ usuarios }) {
@@ -54,8 +86,7 @@ function Usuarios({ usuarios }) {
   const router = useRouter();
   const [authLoading, setAuthLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
-  
-  
+
   const handleCloseA = () => {
     setUsuario([]);
     setOpenA(false);
@@ -66,32 +97,35 @@ function Usuarios({ usuarios }) {
     setBusqueda(e.target.value);
     filtrar(e.target.value);
   };
-  
+
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = usuarios.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
-    );
-    return valores.some((valor) => valor.includes(terminoBusqueda));
-  });
+      );
+      return valores.some((valor) => valor.includes(terminoBusqueda));
+    });
     setUsuario(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback((selectionModel) => {
-    setSelectedRows(selectionModel);
-    if (selectionModel.length > 0) {
-      const resultadosFiltrados = usuarios.filter((elemento) => {
-        const IdPer = elemento.IdPer;
-        if (IdPer) {
-          const IdString = IdPer.toString();
-          return IdString.includes(selectionModel[0]);
-        }
-        return false;
-      });
-      setUsuario(resultadosFiltrados);
-      setOpenA(true);
-    }
-  }, [usuarios]);
+  const handleSelection = useCallback(
+    (selectionModel) => {
+      setSelectedRows(selectionModel);
+      if (selectionModel.length > 0) {
+        const resultadosFiltrados = usuarios.filter((elemento) => {
+          const IdPer = elemento.IdPer;
+          if (IdPer) {
+            const IdString = IdPer.toString();
+            return IdString.includes(selectionModel[0]);
+          }
+          return false;
+        });
+        setUsuario(resultadosFiltrados);
+        setOpenA(true);
+      }
+    },
+    [usuarios]
+  );
 
   /*useEffect(() => {
     if (auth !== undefined) {
@@ -114,76 +148,123 @@ function Usuarios({ usuarios }) {
       return null;
     }*/
 
-
-return (
+  return (
     <>
-      <Box>{" "} <Banner /> {" "}</Box>
+      <Box>
+        {" "}
+        <Banner />{" "}
+      </Box>
 
-        <Box className="container">
-          <Box style={{ height: "auto", width: "100%" }}>
-              <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-                    <Box sx={styles}>
-                  <Registro />
-                </Box>
-              </Modal>
-
-              <Modal open={openA} onClose={handleCloseA} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-                <Box sx={styles}>
-                  <UsuarioActualizar usuario={usuario} />
-                </Box>
-              </Modal>
-
-              <Typography variant="h5" sx={{  display: "flex", justifyContent: "column", alignItems: "center", width: "auto", color: "#000000", margin: 0 }}>
-                USUARIOS
-              </Typography>
-
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
-              <Button variant="outlined" onClick={handleOpen} sx={{ margin: "10px" }} color="primary">
-                Nuevo Usuario
-              </Button>
-
-              <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px", }}>
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Buscar..."
-                  inputProps={{ "aria-label": "search google maps" }}
-                  autoFocus
-                  value={busqueda}
-                  onChange={handleChange}
-                />
-                <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
+      <Box className="container">
+        <Box style={{ height: "auto", width: "100%" }}>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={styles}>
+              <Registro />
             </Box>
+          </Modal>
 
-            <Box  sx={{ height: 765, width: "100%",  }}>
-              <DataGrid
-                rows={usuario}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 12 },
-                  },
-                }}
-                pageSizeOptions={[12]}
-                getRowId={(row) => row.IdPer}
-                onRowSelectionModelChange={handleSelection}
-                rowSelectionModel={selectedRows}
-                slots={{ toolbar: GridToolbar }}
-                sx={{
-                  '& .MuiDataGrid-columnHeaderTitle': {
-                    fontWeight: "bold"
-                  },
-                }}
+          <Modal
+            open={openA}
+            onClose={handleCloseA}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={styles}>
+              <UsuarioActualizar usuario={usuario} />
+            </Box>
+          </Modal>
+
+          <Typography
+            variant="h5"
+            sx={{
+              display: "flex",
+              justifyContent: "column",
+              alignItems: "center",
+              width: "auto",
+              color: "#000000",
+              margin: 0,
+            }}
+          >
+            USUARIOS
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "auto",
+              margin: 1,
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handleOpen}
+              sx={{ margin: "10px" }}
+              color="primary"
+            >
+              Nuevo Usuario
+            </Button>
+
+            <Paper
+              elevation={3}
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                alignItems: "flex-rigth",
+                width: 1100,
+                margin: "10px",
+              }}
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Buscar..."
+                inputProps={{ "aria-label": "search google maps" }}
+                autoFocus
+                value={busqueda}
+                onChange={handleChange}
               />
-            </Box>
+              <IconButton
+                title="buscar"
+                sx={{ p: "10px" }}
+                aria-label="search"
+              >
+                <SearchIcon />
+              </IconButton>
+            </Paper>
           </Box>
+
+          <Box sx={{ height: 765, width: "100%" }}>
+            <DataGrid
+              rows={usuario}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 12 },
+                },
+              }}
+              pageSizeOptions={[12]}
+              getRowId={(row) => row.IdPer}
+              onRowSelectionModelChange={handleSelection}
+              rowSelectionModel={selectedRows}
+              slots={{ toolbar: GridToolbar }}
+              sx={{
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </Box>
+        </Box>
       </Box>
     </>
-  
   );
 }
 
 export default Usuarios;
-

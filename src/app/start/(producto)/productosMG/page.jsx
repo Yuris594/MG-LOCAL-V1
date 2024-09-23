@@ -1,15 +1,22 @@
 "use client";
 
-import { Box, IconButton, InputBase, LinearProgress, Paper, Tab, Tabs, Typography, } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  InputBase,
+  LinearProgress,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
 
-import Banner from "../../../components/banner/banner";
+//import Banner from "../../../_components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
-
-
 
 const fDate = (dateString) => {
   const options = {
@@ -17,48 +24,63 @@ const fDate = (dateString) => {
     month: "short",
     day: "numeric",
   };
-    return new Date(dateString).toLocaleDateString('es-ES', options);
-}
-
-
+  return new Date(dateString).toLocaleDateString("es-ES", options);
+};
 
 const columns = [
   { field: "ARTICULO", headerName: "Cod", width: 130 },
   { field: "DESCRIPCION", headerName: "Referencia", width: 700 },
   { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  { field: "TOTAL_DISP", headerName: "Disp", width: 130,
+  {
+    field: "TOTAL_DISP",
+    headerName: "Disp",
+    width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  { field: "PRECIO", headerName: "Precio", width: 130,
+  {
+    field: "PRECIO",
+    headerName: "Precio",
+    width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+    },
+    align: "right",
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
-  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
+  {
+    field: "PRECIOMASIVA",
+    headerName: "Masiva",
+    width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+    },
+    align: "right",
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 130 },
-  { field: "EXIST_REAL", headerName: "Existreal", width: 130,
+  {
+    field: "EXIST_REAL",
+    headerName: "Existreal",
+    width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+    },
+    align: "right",
   },
 ];
 
-
 const columnsP = [
-  { field: "FECHA", headerName: "Fecha", width: 250,
-    renderCell: (params) => fDate(params.value)
+  {
+    field: "FECHA",
+    headerName: "Fecha",
+    width: 250,
+    renderCell: (params) => fDate(params.value),
   },
   { field: "CLIENTE", headerName: "Cliente", width: 180 },
   { field: "PEDIDO", headerName: "Pedido", width: 150 },
@@ -67,7 +89,10 @@ const columnsP = [
   { field: "DESP", headerName: "Desp", width: 100, align: "right" },
   { field: "PEND", headerName: "Pend", width: 100, align: "right" },
   { field: "ESTADO", headerName: "Estado", width: 160 },
-  { field: "AUTORIZADONOM", headerName: "Autortizado", width: 200,
+  {
+    field: "AUTORIZADONOM",
+    headerName: "Autortizado",
+    width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
 
@@ -91,7 +116,7 @@ const columnsF = [
     field: "FECHA_DESPACHO",
     headerName: "Fecha",
     width: 190,
-    renderCell: (params) => fDate(params.value)
+    renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 50 },
   {
@@ -101,7 +126,8 @@ const columnsF = [
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+    },
+    align: "right",
   },
   { field: "PEDIDO", headerName: "Pedido", width: 130 },
   { field: "ARTICULO", headerName: "Articulo", width: 130 },
@@ -113,7 +139,8 @@ const columnsF = [
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+    },
+    align: "right",
   },
   {
     field: "PRECIO_UNITARIO",
@@ -145,7 +172,7 @@ const columnsF = [
     field: "FECHAGUIA",
     headerName: "FechaGuia",
     width: 250,
-    renderCell: (params) => fDate(params.value)
+    renderCell: (params) => fDate(params.value),
   },
   { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
   { field: "RUBRO1", headerName: "Docs2", width: 500 },
@@ -183,19 +210,18 @@ const obtenerProductos = async () => {
   const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
-      "Content-Type" : "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
-  return response.json()
-    
+  return response.json();
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`,{
+  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
-      "Content-Type" : "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
   if (!response.ok) {
     if (response.status === 404) {
@@ -203,15 +229,15 @@ const obtenerFacturas = async (articulo) => {
       return [];
     }
   }
-   return response.json()
+  return response.json();
 };
 
 const obtenerPedidos = async (articulo) => {
   const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
-      "Content-Type" : "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
   if (!response.ok) {
     if (response.status === 404) {
@@ -219,7 +245,7 @@ const obtenerPedidos = async (articulo) => {
       return [];
     }
   }
-   return response.json()
+  return response.json();
 };
 
 const productosMG = () => {
@@ -243,7 +269,7 @@ const productosMG = () => {
   }, []);
 
   const conseguirProductos = async () => {
-    const datos = await obtenerProductos()
+    const datos = await obtenerProductos();
     try {
       if (datos) {
         setProductos(datos);
@@ -265,7 +291,7 @@ const productosMG = () => {
   }, [memo]);
 
   const conseguirFacturas = async () => {
-    const datos = await obtenerFacturas(articulo)
+    const datos = await obtenerFacturas(articulo);
     setFacturas([]);
     try {
       if (datos) {
@@ -281,7 +307,7 @@ const productosMG = () => {
   };
 
   const conseguirPedidos = async () => {
-    const datos = await obtenerPedidos(articulo)
+    const datos = await obtenerPedidos(articulo);
     setPedidos([]);
     try {
       if (datos) {
@@ -336,7 +362,10 @@ const productosMG = () => {
 
   return (
     <>
-      <Box>{" "}<Banner />{" "}</Box>
+      <Box>
+        {" "}
+        <Banner />{" "}
+      </Box>
       {cargando2 === true ? (
         <Box sx={{ height: "auto", width: "100%" }}>
           <LinearProgress />
@@ -344,7 +373,10 @@ const productosMG = () => {
       ) : (
         <div style={{ height: "auto", width: "100%" }}>
           <Box>
-            <Typography variant="h5" component="h1" gutterBottom
+            <Typography
+              variant="h5"
+              component="h1"
+              gutterBottom
               sx={{
                 display: "flex",
                 justifyContent: "column",
@@ -352,27 +384,51 @@ const productosMG = () => {
                 width: "auto",
                 margin: 0,
                 color: "#000000",
-              }}>
+              }}
+            >
               PRODUCTOS MG
             </Typography>
 
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "auto",
+                  margin: 1,
+                }}
+              >
                 <BotonExcel datos={productos} />
               </Box>
               <Box>
-                <Typography variant="h5" component="h1" gutterBottom
+                <Typography
+                  variant="h5"
+                  component="h1"
+                  gutterBottom
                   sx={{
                     display: "flex",
                     justifyContent: "column",
                     alignItems: "center",
                     width: "auto",
-                    margin: 0, 
-                    color: "#920b0d", }}>
+                    margin: 0,
+                    color: "#920b0d",
+                  }}
+                >
                   {articulo.DESCRIPCION}
                 </Typography>
               </Box>
-              <Paper elevation={3}
+              <Paper
+                elevation={3}
                 sx={{
                   p: "2px 4px",
                   display: "flex",
@@ -503,7 +559,7 @@ const productosMG = () => {
             </CustomTabPanel>
           </Box>
         </div>
-        )}
+      )}
     </>
   );
 };

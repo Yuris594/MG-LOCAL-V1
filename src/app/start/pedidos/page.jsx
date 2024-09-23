@@ -1,14 +1,23 @@
 "use client";
 
-import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography, Zoom } from "@mui/material";
-import { useCallback,  useEffect,  useState } from "react";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  LinearProgress,
+  Modal,
+  Paper,
+  Typography,
+  Zoom,
+} from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
-import Banner from "@/app/components/banner/banner";
-
+//import Banner from "@/app/_components/banner/banner";
 
 const style = {
   position: "absolute",
@@ -28,17 +37,23 @@ const fDate = (dateString) => {
     month: "long",
     day: "numeric",
   };
-  return new Date(dateString).toLocaleDateString('es-ES', options);
-}
+  return new Date(dateString).toLocaleDateString("es-ES", options);
+};
 
 const columns = [
-  { field: "FECHA_PEDIDO", headerName: "Fecha", width: 170,
-    renderCell: (params) => fDate(params.value)
+  {
+    field: "FECHA_PEDIDO",
+    headerName: "Fecha",
+    width: 170,
+    renderCell: (params) => fDate(params.value),
   },
   { field: "PEDIDO", headerName: "Pedido", width: 160 },
   { field: "ESTADO", headerName: "Estado", width: 70 },
   { field: "IMPRESO", headerName: "IMP", width: 70 },
-  { field: "AUTORIZADONOM", headerName: "Autorizado", width: 200,
+  {
+    field: "AUTORIZADONOM",
+    headerName: "Autorizado",
+    width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
@@ -75,7 +90,6 @@ const Pedidos = ({ pedidos }) => {
     setCargando(false);
   }, [pedidos]);
 
-
   const handleChange = (e) => {
     setBusqueda(e.target.value);
     filtrar(e.target.value);
@@ -91,7 +105,8 @@ const Pedidos = ({ pedidos }) => {
     setPedidosFiltrados(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback((selectionModel) => {
+  const handleSelection = useCallback(
+    (selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = pedidos.filter((elemento) => {
@@ -111,73 +126,114 @@ const Pedidos = ({ pedidos }) => {
 
   return (
     <>
-      <Box> {" "} <Banner /> {" "} </Box>
+      <Box>
+        {" "}
+        <Banner />{" "}
+      </Box>
 
       <div className="container">
         {cargando === true ? (
           <Box sx={{ width: "100%" }}>
             <LinearProgress />
           </Box>
-        ) : (  
-      <Box>
-        <div style={{ height: "auto", width: "100%" }}>
-          <Typography variant="h5" component="h1" gutterBottom
-            sx={{
-              display: "flex",
-              justifyContent: "column",
-              alignItems: "center",
-              width: "auto",
-              margin: 0,
-              color: "#000", }}>
-            PEDIDOS
-          </Typography>
-
+        ) : (
           <Box>
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
-              <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", }}>
-                <Button variant="outlined" sx={{ margin: "10px" }}> {" "} Nuevo {" "} </Button>
-                <BotonExcel datos={pedidos} />
+            <div style={{ height: "auto", width: "100%" }}>
+              <Typography
+                variant="h5"
+                component="h1"
+                gutterBottom
+                sx={{
+                  display: "flex",
+                  justifyContent: "column",
+                  alignItems: "center",
+                  width: "auto",
+                  margin: 0,
+                  color: "#000",
+                }}
+              >
+                PEDIDOS
+              </Typography>
+
+              <Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "auto",
+                    margin: 1,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{ margin: "10px" }}
+                    >
+                      {" "}
+                      Nuevo{" "}
+                    </Button>
+                    <BotonExcel datos={pedidos} />
+                  </Box>
+
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      p: "2px 4px",
+                      display: "flex",
+                      alignItems: "flex-rigth",
+                      width: 1100,
+                      margin: "10px",
+                    }}
+                  >
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Buscar..."
+                      inputProps={{ "aria-label": "search google maps" }}
+                      autoFocus
+                      name="PER_Usuario"
+                      value={busqueda}
+                      onChange={handleChange}
+                    />
+
+                    <IconButton
+                      title="buscar"
+                      sx={{ p: "10px" }}
+                      aria-label="search"
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </Paper>
+                </Box>
               </Box>
 
-              <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px", }}>
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Buscar..."
-                  inputProps={{ "aria-label": "search google maps" }}
-                  autoFocus
-                  name="PER_Usuario"
-                  value={busqueda}
-                  onChange={handleChange}
-                />
-
-                <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
-            </Box>
-          </Box>
-
               <Box sx={{ height: 780, width: "100%" }}>
-              <DataGrid
+                <DataGrid
                   rows={pedidosFiltrados}
                   columns={columns}
                   initialState={{
-                      pagination: {
-                          paginationModel: { page: 0, pageSize: 12 },
-                      },
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 12 },
+                    },
                   }}
                   pageSizeOptions={[12]}
                   onRowSelectionModelChange={handleSelection}
                   slots={{ toolbar: GridToolbar }}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.PEDIDO}
-                  sx={{ backgroundColor: '#ffffff' }}
+                  sx={{ backgroundColor: "#ffffff" }}
                 />
               </Box>
-          </div>
-
-        </Box>
-          )}
+            </div>
+          </Box>
+        )}
       </div>
     </>
   );

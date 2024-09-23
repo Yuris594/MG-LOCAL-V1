@@ -1,67 +1,70 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Zoom from '@mui/material/Zoom';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import IconButton from '@mui/material/IconButton';
-import { LinearProgress } from '@mui/material';
-import { useAuth } from '@/context/authContext';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Banner from '@/app/components/banner/banner';
-import BotonExcel from '@/app/hooks/useExportoExcel';
-
-
-
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Zoom from "@mui/material/Zoom";
+import Paper from "@mui/material/Paper";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import IconButton from "@mui/material/IconButton";
+import { LinearProgress } from "@mui/material";
+import { useAuth } from "@/context/authContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+//import Banner from "@/app/_components/banner/banner";
+import BotonExcel from "@/app/hooks/useExportoExcel";
 
 const columns = [
-  { field: 'CLIENTE', headerName: 'NIT', width: 170 },
-  { field: 'NOMBREALIAS', headerName: 'NOMBRE', width: 800 },
-  { field: 'DIRECCION', headerName: 'DIRECCIÓN', width: 300 },
-  { field: 'TELEFONO1', headerName: 'TELEFONO', width: 190 },
-  { field: 'NOMVENDEDOR', headerName: 'VENDEDOR', width: 450 },
-  { field: 'SALDO', headerName: 'CARTERA', type: 'number', width: 120,
+  { field: "CLIENTE", headerName: "NIT", width: 170 },
+  { field: "NOMBREALIAS", headerName: "NOMBRE", width: 800 },
+  { field: "DIRECCION", headerName: "DIRECCIÓN", width: 300 },
+  { field: "TELEFONO1", headerName: "TELEFONO", width: 190 },
+  { field: "NOMVENDEDOR", headerName: "VENDEDOR", width: 450 },
+  {
+    field: "SALDO",
+    headerName: "CARTERA",
+    type: "number",
+    width: 120,
     valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0); 
-      return `${parseFloat(precioRedondeado).toLocaleString()}`; 
-    }, align: 'right'
+      const precioRedondeado = Number(value).toFixed(0);
+      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+    },
+    align: "right",
   },
 ];
 
-
 const Clientes = ({ clientes }) => {
-  const router = useRouter()
-  const { setCliente } = useAuth()
+  const router = useRouter();
+  const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
-  const [clientesFiltrados, setClientesFiltrados] = useState(clientes)
+  const [clientesFiltrados, setClientesFiltrados] = useState(clientes);
   const [selectedRows, setSelectedRows] = useState([]);
 
-
-  const handleChange = e => {
-    e.preventDefault()
-    setBusqueda(e.target.value)
+  const handleChange = (e) => {
+    e.preventDefault();
+    setBusqueda(e.target.value);
     filtrar(e.target.value);
-  }
+  };
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = clientes.filter((elemento) => {
-      const CLIENTE = elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
-      const NOMVENDEDOR = elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
-      const NOMBREALIAS = elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
-        if (
-          CLIENTE?.includes(terminoBusqueda.toLowerCase()) ||
-          NOMVENDEDOR?.includes(terminoBusqueda.toLowerCase()) ||
-          NOMBREALIAS?.includes(terminoBusqueda.toLowerCase())
-        ) {
-          return elemento;
-        }
-      return null; 
+      const CLIENTE =
+        elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
+      const NOMVENDEDOR =
+        elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
+      const NOMBREALIAS =
+        elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
+      if (
+        CLIENTE?.includes(terminoBusqueda.toLowerCase()) ||
+        NOMVENDEDOR?.includes(terminoBusqueda.toLowerCase()) ||
+        NOMBREALIAS?.includes(terminoBusqueda.toLowerCase())
+      ) {
+        return elemento;
+      }
+      return null;
     });
     setClientesFiltrados(resultadosBusqueda);
   };
@@ -84,63 +87,108 @@ const Clientes = ({ clientes }) => {
       }
     },
     [clientesFiltrados]
-  )
+  );
 
   return (
+    <>
+      <Box>
+        {" "}
+        <Banner />{" "}
+      </Box>
+      <Box className="container">
+        <Box>
+          <Typography
+            variant="h5"
+            component="h1"
+            gutterBottom
+            sx={{
+              display: "flex",
+              justifyContent: "column",
+              alignItems: "center",
+              width: "auto",
+              margin: 0,
+              color: "#000",
+            }}
+          >
+            CLIENTES
+          </Typography>
 
-  <>
-      <Box> <Banner /> </Box>
-        <Box className="container">
-          <Box>
-            <Typography variant="h5" component="h1" gutterBottom sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#000" }}>
-              CLIENTES
-            </Typography>
-
-              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1}}>
-              <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Link href="">
-                  <Button variant="outlined" sx={{ margin: "2px" }}>
-                    Nuevo
-                  </Button>
-                </Link>
-                <BotonExcel datos={clientes} />
-              </Box>
-                <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px", }}>
-                  <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="Buscar..."
-                    inputProps={{ "aria-label": "search google maps" }}
-                    autoFocus
-                    value={busqueda}
-                    onChange={handleChange}
-                  />
-                  <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                </Paper>
-              </Box>
-
-                <Box sx={{ height: 780, width: "100%" }}>
-                  <DataGrid
-                    rows={clientesFiltrados}
-                    columns={columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 12},
-                      },
-                    }}
-                    pageSizeOptions={[12]}
-                    onRowSelectionModelChange={handleSelection}
-                    rowSelectionModel={selectedRows}
-                    getRowId={(row) => row.CLIENTE}
-                    slots={{ toolbar: GridToolbar }}
-                    sx={{ backgroundColor: "#ffffff" }}
-                  />
-                </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              margin: 1,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Link href="">
+                <Button
+                  variant="outlined"
+                  sx={{ margin: "2px" }}
+                >
+                  Nuevo
+                </Button>
+              </Link>
+              <BotonExcel datos={clientes} />
             </Box>
+            <Paper
+              elevation={3}
+              sx={{
+                p: "2px 4px",
+                display: "flex",
+                alignItems: "flex-rigth",
+                width: 1100,
+                margin: "10px",
+              }}
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Buscar..."
+                inputProps={{ "aria-label": "search google maps" }}
+                autoFocus
+                value={busqueda}
+                onChange={handleChange}
+              />
+              <IconButton
+                title="buscar"
+                sx={{ p: "10px" }}
+                aria-label="search"
+              >
+                <SearchIcon />
+              </IconButton>
+            </Paper>
+          </Box>
+
+          <Box sx={{ height: 780, width: "100%" }}>
+            <DataGrid
+              rows={clientesFiltrados}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 12 },
+                },
+              }}
+              pageSizeOptions={[12]}
+              onRowSelectionModelChange={handleSelection}
+              rowSelectionModel={selectedRows}
+              getRowId={(row) => row.CLIENTE}
+              slots={{ toolbar: GridToolbar }}
+              sx={{ backgroundColor: "#ffffff" }}
+            />
+          </Box>
         </Box>
+      </Box>
     </>
-  )
-}
+  );
+};
 
 export default Clientes;
