@@ -20,7 +20,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useAuth } from "@/context/authContext";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;

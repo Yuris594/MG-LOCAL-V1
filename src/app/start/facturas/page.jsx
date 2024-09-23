@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, Typography, Paper, TextField } from "@mui/material";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";

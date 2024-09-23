@@ -17,7 +17,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 
 const style = {
   position: "absolute",
@@ -78,17 +78,39 @@ const columns = [
   { field: "CIUDAD", headerName: "Ciudad", width: 200 },
 ];
 
-const Pedidos = ({ pedidos }) => {
+const conseguirPedidos = async () => {
+  const response = await fetch("/api/pedidos/listar", {
+    next: { revalidate: 60 },
+    method: "GET",
+    headers: { "Content-Type" : "application/json" }
+  });
+  const pedidos = await response.json();
+  return pedidos
+    
+}
+
+const Pedidos = () => {
   const router = useRouter();
   const [busqueda, setBusqueda] = useState([]);
-  const [pedidosFiltrados, setPedidosFiltrados] = useState(pedidos);
+  const [pedidosFiltrados, setPedidosFiltrados] = useState();
+  const [tablaPedido, setTablaPedido] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    setPedidosFiltrados(pedidos);
+    obtenerPedidos();
     setCargando(false);
-  }, [pedidos]);
+  }, []);
+
+  const obtenerPedidos = async () => {
+    const datos = await conseguirPedidos();
+    try {
+      setPedidosFiltrados(datos);
+      setTablaPedido(datos);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleChange = (e) => {
     setBusqueda(e.target.value);
@@ -96,7 +118,7 @@ const Pedidos = ({ pedidos }) => {
   };
 
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = pedidos.filter((elemento) => {
+    const resultadosBusqueda = tablaPedido.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
       );
@@ -109,7 +131,7 @@ const Pedidos = ({ pedidos }) => {
     (selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
-        const resultadosFiltrados = pedidos.filter((elemento) => {
+        const resultadosFiltrados = tablaPedido.filter((elemento) => {
           const PEDIDO = elemento.PEDIDO;
           if (PEDIDO) {
             const pedidoString = PEDIDO.toString();
@@ -126,10 +148,7 @@ const Pedidos = ({ pedidos }) => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box> {" "}<Banner />{" "} </Box>
 
       <div className="container">
         {cargando === true ? (
@@ -180,7 +199,7 @@ const Pedidos = ({ pedidos }) => {
                       {" "}
                       Nuevo{" "}
                     </Button>
-                    <BotonExcel datos={pedidos} />
+                    <BotonExcel datos={pedidosFiltrados} />
                   </Box>
 
                   <Paper

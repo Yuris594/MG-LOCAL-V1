@@ -15,7 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
 
-//import Banner from "../../../_components/banner/banner";
+import Banner from "../../../components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 
 const fDate = (dateString) => {

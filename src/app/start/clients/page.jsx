@@ -14,7 +14,7 @@ import { LinearProgress } from "@mui/material";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 
 const columns = [
@@ -36,12 +36,38 @@ const columns = [
   },
 ];
 
-const Clientes = ({ clientes }) => {
+const conseguirClientes = async () => {
+  const response = await fetch("/api/clientes/listar", {
+    method: "GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  });
+  const data = await response.json()
+  return data;
+}
+
+const Clientes = () => {
   const router = useRouter();
   const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
-  const [clientesFiltrados, setClientesFiltrados] = useState(clientes);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [tablaClientes, setTablaClientes] = useState();
+  const [clientesFiltrados, setClientesFiltrados] = useState();
+
+  useEffect(() => {
+    obtenerClientes();
+  }, []);
+
+  const obtenerClientes = async () => {
+    const datos = await conseguirClientes();
+    try {
+      setClientesFiltrados(datos);
+      setTablaClientes(datos);
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -49,8 +75,9 @@ const Clientes = ({ clientes }) => {
     filtrar(e.target.value);
   };
 
+
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = clientes.filter((elemento) => {
+    const resultadosBusqueda = tablaClientes.filter((elemento) => {
       const CLIENTE =
         elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
       const NOMVENDEDOR =
@@ -73,7 +100,7 @@ const Clientes = ({ clientes }) => {
     (selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
-        const resultadosFiltrados = clientes.filter((elemento) => {
+        const resultadosFiltrados = tablaClientes.filter((elemento) => {
           const CLIENTE = elemento.CLIENTE;
           if (CLIENTE) {
             const clienteString = CLIENTE.toString();
@@ -82,7 +109,7 @@ const Clientes = ({ clientes }) => {
           return false;
         });
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
-        setClientesFiltrados(resultadosFiltrados);
+        setCliente(resultadosFiltrados);
         router.push("/start/clients/clientesTemp");
       }
     },
@@ -138,7 +165,7 @@ const Clientes = ({ clientes }) => {
                   Nuevo
                 </Button>
               </Link>
-              <BotonExcel datos={clientes} />
+              <BotonExcel datos={clientesFiltrados} />
             </Box>
             <Paper
               elevation={3}

@@ -59,17 +59,17 @@ const style = {
   const page = [
     {
       title: "USUARIOS",
-      url: "../components/usuarios",
+      url: "../start/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "../components/pedidos",
+      url: "../start/pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "../components/clientes",
+      url: "../start/clients",
       icon: <Person />,
     },
     {
@@ -84,7 +84,7 @@ const style = {
     },
     {
       title: "CAJA",
-      url: "../components/pedidosCaja",
+      url: "../start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];

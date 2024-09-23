@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Registro from "./registrar/page";
 import UsuarioActualizar from "./actualizar/page";
@@ -45,47 +45,55 @@ const columns = [
   { field: "PER_Nom", headerName: "Nombre", width: 200, editable: true },
   { field: "PER_Usuario", headerName: "Usuario", width: 150, editable: true },
   { field: "PER_Clave", headerName: "Contraseña", width: 150, editable: true },
-  {
-    field: "IdDiv",
-    headerName: "ID División",
-    type: "number",
-    width: 120,
-    editable: true,
-  },
-  {
-    field: "PERAUTOPED",
-    headerName: "Auto Pedidos",
-    type: "number",
-    width: 130,
-    editable: true,
-  },
-  {
-    field: "CODVEND",
-    headerName: "Código Vendedor",
-    width: 150,
-    editable: true,
-  },
+  { field: "IdDiv", headerName: "ID División", type: "number", width: 120, editable: true },
+  { field: "PERAUTOPED", headerName: "Auto Pedidos", type: "number", width: 130, editable: true },
+  { field: "CODVEND", headerName: "Código Vendedor", width: 150, editable: true },
   { field: "PREFIJO", headerName: "Prefijo", width: 120, editable: true },
-  {
-    field: "CONSECUTIVOPED",
-    headerName: "Consecutivo Pedidos",
-    type: "number",
-    width: 180,
-    editable: true,
-  },
+  { field: "CONSECUTIVOPED", headerName: "Consecutivo Pedidos", type: "number", width: 180, editable: true },
 ];
 
-function Usuarios({ usuarios }) {
-  const [usuario, setUsuario] = useState(usuarios);
-  const [open, setOpen] = useState(false);
+
+const obtenerUsuario = async () => {
+  const response = await fetch('/api/usuarios/listar', {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
+
+
+
+function Usuarios() {
+  const router = useRouter();
+  const { auth } = useAuth();
   const handleOpen = () => setOpen(true);
+  const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [openA, setOpenA] = useState(false);
+  const [usuario, setUsuario] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
-  const { auth } = useAuth();
-  const router = useRouter();
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState();
+  const [tablaUsuario, setTablaUsuario] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+
+
+  useEffect(() => {
+    conseguirUsuarios();
+  }, []);
+
+  const conseguirUsuarios = async () => {
+    const datos = await obtenerUsuario();
+    try {
+      if (datos)
+        setUsuario(datos);
+        setTablaUsuario(datos);
+    } catch (error) {
+        console.log(error)
+    }
+  }
 
   const handleCloseA = () => {
     setUsuario([]);
@@ -99,7 +107,7 @@ function Usuarios({ usuarios }) {
   };
 
   const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = usuarios.filter((elemento) => {
+    const resultadosBusqueda = tablaUsuario.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
       );
@@ -112,7 +120,7 @@ function Usuarios({ usuarios }) {
     (selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
-        const resultadosFiltrados = usuarios.filter((elemento) => {
+        const resultadosFiltrados = tablaUsuario.filter((elemento) => {
           const IdPer = elemento.IdPer;
           if (IdPer) {
             const IdString = IdPer.toString();
@@ -124,10 +132,10 @@ function Usuarios({ usuarios }) {
         setOpenA(true);
       }
     },
-    [usuarios]
+    [usuario]
   );
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (auth !== undefined) {
       setAuthLoading(false);
         if (!auth || auth.IdDiv !== 8) {
@@ -146,82 +154,49 @@ function Usuarios({ usuarios }) {
   
     if (!auth || auth.IdDiv !== 8) {
       return null;
-    }*/
+    }
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box> {" "} <Banner />{" "} </Box>
+        <Box className="container">
+          <Box style={{ height: "auto", width: "100%" }}>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box sx={styles}>
+                <Registro />
+              </Box>
+            </Modal>
 
-      <Box className="container">
-        <Box style={{ height: "auto", width: "100%" }}>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={styles}>
-              <Registro />
-            </Box>
-          </Modal>
+            <Modal
+              open={openA}
+              onClose={handleCloseA}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box sx={styles}>
+                <UsuarioActualizar usuario={usuario} />
+              </Box>
+            </Modal>
 
-          <Modal
-            open={openA}
-            onClose={handleCloseA}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={styles}>
-              <UsuarioActualizar usuario={usuario} />
-            </Box>
-          </Modal>
-
-          <Typography
-            variant="h5"
-            sx={{
+            <Typography variant="h5" sx={{
               display: "flex",
               justifyContent: "column",
               alignItems: "center",
               width: "auto",
               color: "#000000",
-              margin: 0,
-            }}
-          >
-            USUARIOS
-          </Typography>
+              margin: 0 }}>
+                USUARIOS
+            </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "auto",
-              margin: 1,
-            }}
-          >
-            <Button
-              variant="outlined"
-              onClick={handleOpen}
-              sx={{ margin: "10px" }}
-              color="primary"
-            >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
+            <Button variant="outlined" onClick={handleOpen} sx={{ margin: "10px" }} color="primary">
               Nuevo Usuario
             </Button>
 
-            <Paper
-              elevation={3}
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                alignItems: "flex-rigth",
-                width: 1100,
-                margin: "10px",
-              }}
-            >
+            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px" }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar..."
@@ -230,11 +205,7 @@ function Usuarios({ usuarios }) {
                 value={busqueda}
                 onChange={handleChange}
               />
-              <IconButton
-                title="buscar"
-                sx={{ p: "10px" }}
-                aria-label="search"
-              >
+              <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>

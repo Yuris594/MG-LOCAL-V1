@@ -13,7 +13,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-//import Iniciar from "./components/login/page";
+
 
 
 const theme = createTheme({
@@ -60,7 +60,7 @@ export function Copyright(props) {
 
 
 const Iniciar = async (usuario, clave) => {
-  const response = await fetch(`http://172.20.20.3:8001/usuarios/listar/${usuario}/${clave}`, {
+  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -69,8 +69,9 @@ const Iniciar = async (usuario, clave) => {
 
   if (!response.ok) {
     if (response.status === 404) {
-      console.log("Error");
-      return [];
+      return { error: { detail: "Credenciales incorrectas" } };
+    } else {
+      return { error: { detail: "Error desconocido" } };
     }
   }
   return response.json();
@@ -89,7 +90,6 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState("");
   const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -102,18 +102,17 @@ export default function Login() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
       const resultado = await Iniciar(usuario, clave);
-      console.log(resultado);
         if (resultado.error) {
           setError(true);
+          setSaved(false);
           setOpenE(true);
           console.log(resultado.error.detail || "Error desconocido");
         } else {
           setOpen(true);
-          login(resultado);
+          const tokens = resultado;
+          login(tokens);
           router.push("../start");
         }
     } catch (error) {
@@ -202,9 +201,9 @@ export default function Login() {
                         onChange={(e) => setClave(e.target.value)}
                       />
 
-                      <Button type="submit" variant="contained" color="success" disabled={loading}
+                      <Button type="submit" variant="contained" color="success" 
                           sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 380,}}>
-                        {loading ? "Cargando..." : "Iniciar sesión"}
+                            Iniciar sesión
                       </Button>
                     </Box>
                   </Box>

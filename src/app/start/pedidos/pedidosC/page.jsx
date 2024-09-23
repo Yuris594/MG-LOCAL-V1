@@ -50,7 +50,7 @@ import { useEffect, useState } from "react";
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
 import Producto from "../../(producto)/producto/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import MuiAlert from "@mui/material/Alert";
 import PropTypes from "prop-types";
 import React from "react";

@@ -23,7 +23,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import useTecladoCaja from "@/app/hooks/useTecladoCaja";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import PropTypes from "prop-types";
 import Link from "next/link";

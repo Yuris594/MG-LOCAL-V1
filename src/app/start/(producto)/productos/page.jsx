@@ -21,7 +21,7 @@ import Tabs from "@mui/material/Tabs";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 
-//import Banner from "../../../_components/banner/banner";
+import Banner from "../../../components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { conexion } from "../../usuarios/page";
 

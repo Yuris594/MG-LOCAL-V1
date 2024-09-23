@@ -40,7 +40,7 @@ import MuiAlert from "@mui/material/Alert";
 
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
 import Producto from "../../(producto)/producto/page";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import React, { useEffect, useState } from "react";
 import { useForm } from "@/app/hooks/useForm";
 import { useAuth } from "@/context/authContext";

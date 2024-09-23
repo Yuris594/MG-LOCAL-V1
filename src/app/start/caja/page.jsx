@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import ClientesGlobal from "../clients/clientesGlobal/page";
-//import Banner from "@/app/_components/banner/banner";
+import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { Lora } from "next/font/google";
 
@@ -224,10 +224,7 @@ const pago = () => {
 
   return (
     <>
-      <Box marginBottom="50px">
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box> {" "} <Banner /> {" "} </Box>
       <Box
         sx={{
           width: "auto",
@@ -239,13 +236,8 @@ const pago = () => {
           padding: "auto",
         }}
       >
-        <Typography
-          className={inter.className}
-          sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }}
-          gutterBottom
-        >
-          {" "}
-          PAGO{" "}
+        <Typography className={inter.className} sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }} gutterBottom>
+          {" "} PAGO {" "}
         </Typography>
         <Divider></Divider>
         <Button
