@@ -150,7 +150,7 @@ const style = {
 };
 
 const conseguirProductos = async () => {
-  const response = await fetch("http://172.20.20.3:8001/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const conseguirProductos = async () => {
 };
 
 const conseguirProductosP = async (pedidoId) => {
-  const response = await fetch(`http://172.20.20.3:8001/pedidos/detalle_lineas/${pedidoId}`, {
+  const response = await fetch(`/api/pedidos/detalle_lineas/${pedidoId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -172,7 +172,7 @@ const conseguirProductosP = async (pedidoId) => {
 };
 
 const conseguirProductosPendientes = async (pedido) => {
-  const response = await fetch(`http://172.20.20.3:8001/pedidos/articulos_pendientes/${pedido}`, {
+  const response = await fetch(`/api/pedidos/articulos_pendientes/${pedido}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -183,7 +183,7 @@ const conseguirProductosPendientes = async (pedido) => {
 };
 
 const guardarProductos = async (bodyData) => {
-  const response = await fetch("http://172.20.20.3:8001/pedido/crear/", {
+  const response = await fetch("/api/pedido/crear/", {
     method: "POST",
     body: JSON.stringify(bodyData),
     headers: { "Content-Type": "application/json" },
@@ -194,7 +194,7 @@ const guardarProductos = async (bodyData) => {
 };
 
 const guardarProductosP = async (bodyData) => {
-  const response = await fetch("http://172.20.20.3:8001/pedido/crear/", {
+  const response = await fetch("/api/pedido/crear/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),

@@ -64,7 +64,7 @@ const style = {
     },
     {
       title: "PEDIDOS",
-      url: "../start/pedidos",
+      url: "../components/pedidos",
       icon: <Assignment />,
     },
     {
