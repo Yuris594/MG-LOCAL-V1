@@ -560,24 +560,20 @@ export const PedidosC = () => {
   return (
     <>
       <Box> {" "} <Banner />{" "} </Box>
-      <Typography
-        variant="h6"
-        component="h1"
-        gutterBottom
+      <Typography variant="h6" component="h1" gutterBottom
         sx={{
           color: "#000000",
           textAlign: "center",
           marginTop: 4,
           marginBottom: 2,
-        }}
-      >
+        }}>
+
         PEDIDOS
       </Typography>
 
       <Paper style={{ width: "100%", p: 2, boxShadow: 3 }}>
         <Box style={{ width: "100%", mb: 2 }}>
-          <Paper
-            sx={{
+          <Paper sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -585,8 +581,8 @@ export const PedidosC = () => {
               gap: 2,
               boxShadow: 2,
               backgroundColor: "#f5f5f5",
-            }}
-          >
+            }}>
+
             <Box sx={{ display: "flex" }}>
               {clienteP?.AUTORIZADONOM || "" === "APROBADO" ? (
                 <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
@@ -597,51 +593,29 @@ export const PedidosC = () => {
                 {" "}<PrintIcon />{" "}
                 </Button>
               )}
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#eabafe" }}
-                onClick={productosGuardar}
-              >
-                {" "}
-                <SaveAsIcon />{" "}
+
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}> 
+                {" "}<SaveAsIcon />{" "}
               </Button>
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#aeefff" }}
-                onClick={handleOpenP}
-              >
-                {" "}
-                <LocalShippingIcon />{" "}
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenP}>
+                {" "}<LocalShippingIcon />{" "}
               </Button>
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#fff694" }}
-                onClick={especial}
-              >
-                {" "}
-                <LockIcon />{" "}
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}>
+                {" "}<LockIcon />{" "}
               </Button>
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#ffa28a" }}
-                onClick={cerrarP}
-              >
-                {" "}
-                <HighlightOffIcon />{" "}
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}>
+                {" "}<HighlightOffIcon />{" "}
               </Button>
             </Box>
 
-            <Paper
-              elevation={3}
-              sx={{
+            <Paper elevation={3} sx={{
                 display: "flex",
                 alignItems: "center",
                 p: "2px 4px",
                 boxShadow: 2,
                 backgroundColor: "#fff",
                 width: "100%",
-              }}
-            >
+              }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar"
@@ -671,7 +645,7 @@ export const PedidosC = () => {
               margin: 1,
             }}
           >
-            <Paper sx={{ width: "65%", height: "auto", padding: 2 }}>
+            <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
               <Grid
                 container
                 spacing={1}

@@ -22,11 +22,11 @@ import {
   InputBase,
   IconButton,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Zoom,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2"
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
@@ -441,9 +441,7 @@ const pedidosG = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
+      <Box> {" "} <Banner />{" "}
       </Box>
       <div className="container">
         <Box sx={{ padding: "20px" }}>
@@ -524,11 +522,7 @@ const pedidosG = () => {
                 onChange={handleChange}
               />
 
-              <IconButton
-                title="Buscar"
-                sx={{ p: "10px" }}
-                aria-label="search"
-              >
+              <IconButton title="Buscar" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>
@@ -543,18 +537,9 @@ const pedidosG = () => {
                 margin: 1,
               }}
             >
-              <Paper sx={{ width: "65%", height: "auto", padding: 2 }}>
-                <Grid
-                  container
-                  spacing={1}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    sm={3}
-                    md={3}
-                    lg={3}
-                  >
+              <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12} sm={3} md={3} lg={3}>
                     <FormControl sx={{ margin: 0.5 }}>
                       <InputLabel htmlFor="component-">Estado</InputLabel>
                       <OutlinedInput
@@ -563,15 +548,9 @@ const pedidosG = () => {
                         label="Estado"
                       />
                     </FormControl>
-                  </Grid>{" "}
-                  <br />
-                  <Grid
-                    item
-                    xs={12}
-                    sm={2}
-                    md={2}
-                    lg={2}
-                  >
+                  </Grid>
+
+                  <Grid item xs={12} sm={2} md={2} lg={2}>
                     <FormControl sx={{ margin: 0.5, display: "flex" }}>
                       <InputLabel htmlFor="component-disabled">
                         Authorizacion
@@ -583,13 +562,8 @@ const pedidosG = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={3}
-                    md={3}
-                    lg={3}
-                  >
+
+                  <Grid item xs={12} sm={3} md={3} lg={3}>
                     <FormControl sx={{ margin: 0.5, display: "flex" }}>
                       <InputLabel htmlFor=""> </InputLabel>
                       <OutlinedInput
@@ -599,13 +573,8 @@ const pedidosG = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={2}
-                    md={2}
-                    lg={2}
-                  >
+
+                  <Grid item xs={12} sm={2} md={2} lg={2}>
                     <FormControl sx={{ margin: 0.5, display: "flex" }}>
                       <InputLabel htmlFor="component-disabled">
                         Impreso

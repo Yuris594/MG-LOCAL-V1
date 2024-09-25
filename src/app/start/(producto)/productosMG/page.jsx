@@ -362,16 +362,15 @@ const productosMG = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box>{" "}<Banner />{" "}</Box>
+
       {cargando2 === true ? (
-        <Box sx={{ height: "auto", width: "100%" }}>
+        <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
       ) : (
-        <div style={{ height: "auto", width: "100%" }}>
+
+        <div className="container">
           <Box>
             <Typography
               variant="h5"
