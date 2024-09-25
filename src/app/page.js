@@ -1,5 +1,4 @@
-
-'use client'
+'use client';
 
 import { AppBar, Box, Button, Container, createTheme, CssBaseline, Slide, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Zoom } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
@@ -13,7 +12,6 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
-
 
 
 const theme = createTheme({
@@ -58,7 +56,6 @@ export function Copyright(props) {
   );
 }
 
-
 const Iniciar = async (usuario, clave) => {
   const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
@@ -75,20 +72,17 @@ const Iniciar = async (usuario, clave) => {
     }
   }
   return response.json();
-  
 };
-
-
 
 export default function Login() {
   const router = useRouter();
   const { login, auth } = useAuth();
   const [saved, setSaved] = useState();
-  const [clave, setClave] = useState("");
+  const [clave, setClave] = useState('');
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const [error, setError] = useState(false);
-  const [usuario, setUsuario] = useState("");
+  const [usuario, setUsuario] = useState('');
   const [checked, setChecked] = useState(false);
 
 
@@ -108,7 +102,7 @@ export default function Login() {
           setError(true);
           setSaved(false);
           setOpenE(true);
-          console.log(resultado.error.detail || "Error desconocido");
+          
         } else {
           setOpen(true);
           const tokens = resultado;
@@ -121,6 +115,7 @@ export default function Login() {
           console.log("Error en la pagina Iniciar Sesión", error)
     }
   };
+
 
   const handleClose = (reason) => {
     if (reason === "clicaway") {
@@ -233,3 +228,7 @@ export default function Login() {
       </>
   );
 }
+
+
+
+

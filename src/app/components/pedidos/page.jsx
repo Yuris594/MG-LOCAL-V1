@@ -1,17 +1,22 @@
-import Pedidos from "@/app/start/pedidos/page"
+import Pedidos from "@/app/start/pedidos/page";
 
+export const revalidate = 60
 
-const PedidosApi = async () => {
-    const response = await fetch("http://172.20.20.3:8001/pedidos/listar", {
-        method: "GET",
-        headers: { "Content-Type" : "application/json" }
-    })
+export const dynamicParams = true
+
+export const generateStaticParams = async () => {
+    const response = await fetch("http://172.20.20.3:8001/pedidos/listar");
     const data = await response.json();
 
-    return (
-        <Pedidos  pedidos={data} />
-    )
+    return { props: { pedidos: data } };
+};
 
+
+const Page = async () => {
+    const response = await fetch("http://172.20.20.3:8001/pedidos/listar");
+    const pedidos = await response.json();
+
+    return <Pedidos pedidos={pedidos} />
 }
 
-export default PedidosApi
+export default Page;

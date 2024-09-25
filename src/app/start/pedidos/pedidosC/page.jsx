@@ -31,13 +31,13 @@ import {
   InputBase,
   IconButton,
   TextField,
-  Grid,
   FormControl,
   InputLabel,
   Snackbar,
   ButtonGroup,
   Modal,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import {
   GridRowModes,
   DataGrid,
@@ -559,10 +559,7 @@ export const PedidosC = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box> {" "} <Banner />{" "} </Box>
       <Typography
         variant="h6"
         component="h1"
@@ -592,22 +589,12 @@ export const PedidosC = () => {
           >
             <Box sx={{ display: "flex" }}>
               {clienteP?.AUTORIZADONOM || "" === "APROBADO" ? (
-                <Button
-                  variant="filled"
-                  sx={{ margin: "2px", bgcolor: "#fff694" }}
-                  onClick={generarPDF}
-                >
-                  {" "}
-                  <PrintIcon />{" "}
+                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
+                  {" "}<PrintIcon />{" "}
                 </Button>
               ) : (
-                <Button
-                  variant="filled"
-                  sx={{ margin: "2px", bgcolor: "#fff64" }}
-                  disabled
-                >
-                  {" "}
-                  <PrintIcon />{" "}
+                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled> 
+                {" "}<PrintIcon />{" "}
                 </Button>
               )}
               <Button

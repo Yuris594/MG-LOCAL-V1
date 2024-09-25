@@ -1,4 +1,4 @@
-/*"use client";
+"use client";
 
 import {
   Box,
@@ -97,14 +97,15 @@ const Pedidos = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [cargando, setCargando] = useState(true);
 
+
   useEffect(() => {
     obtenerPedidos();
-    setCargando(false);
   }, []);
 
   const obtenerPedidos = async () => {
     const datos = await conseguirPedidos();
     try {
+      setCargando(false);
       setPedidosFiltrados(datos);
       setTablaPedido(datos);
     } catch (error) {
@@ -158,10 +159,7 @@ const Pedidos = () => {
         ) : (
           <Box>
             <div style={{ height: "auto", width: "100%" }}>
-              <Typography
-                variant="h5"
-                component="h1"
-                gutterBottom
+              <Typography variant="h5" component="h1" gutterBottom
                 sx={{
                   display: "flex",
                   justifyContent: "column",
@@ -169,8 +167,8 @@ const Pedidos = () => {
                   width: "auto",
                   margin: 0,
                   color: "#000",
-                }}
-              >
+                }}>
+                  
                 PEDIDOS
               </Typography>
 
@@ -258,9 +256,12 @@ const Pedidos = () => {
   );
 };
 
-export default Pedidos;*/
+export default Pedidos;
 
 
+
+
+/*
 
 "use client";
 
@@ -335,32 +336,6 @@ const Pedidos = ({ pedidos }) => {
   const [cargando, setCargando] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://172.20.20.3:8001/pedidos/listar");
-
-    socket.onopen = () => {
-      console.log("Conexión WebSocket establecida");
-    };
-
-    socket.onmessage = (event) => {
-      const updatedData = JSON.parse(event.data);
-      setTablaPedido(updatedData);
-      setPedidosFiltrados(updatedData);
-      setCargando(false);
-    };
-
-    socket.onerror = (error) => {
-      console.error("Error en WebSocket:", error);
-    };
-
-    socket.onclose = () => {
-      console.log("Conexión WebSocket cerrada");
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
 
   const handleChange = (e) => {
     setBusqueda(e.target.value);
@@ -489,3 +464,4 @@ const Pedidos = ({ pedidos }) => {
 };
 
 export default Pedidos;
+*/

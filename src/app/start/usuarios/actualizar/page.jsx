@@ -18,6 +18,7 @@ const UsuarioActualizar = ({ usuario }) => {
   const [openE, setOpenE] = useState(false);
   const { form, setForm, changed } = useForm();
 
+  
   useEffect(() => {
     if (usuario && usuario.length > 0) {
       setForm({

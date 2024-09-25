@@ -74,26 +74,16 @@ function Usuarios() {
   const handleClose = () => setOpen(false);
   const [openA, setOpenA] = useState(false);
   const [usuario, setUsuario] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
   const [authLoading, setAuthLoading] = useState();
   const [tablaUsuario, setTablaUsuario] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     conseguirUsuarios();
   }, []);
-
-  const conseguirUsuarios = async () => {
-    const datos = await obtenerUsuario();
-    try {
-      if (datos)
-        setUsuario(datos);
-        setTablaUsuario(datos);
-    } catch (error) {
-        console.log(error)
-    }
-  }
 
   const handleCloseA = () => {
     setUsuario([]);
@@ -106,6 +96,18 @@ function Usuarios() {
     filtrar(e.target.value);
   };
 
+  const conseguirUsuarios = async () => {
+    const datos = await obtenerUsuario();
+    try {
+      if (datos)
+        setCargando(false);
+        setUsuarios(datos);
+        setTablaUsuario(datos);
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaUsuario.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
@@ -113,11 +115,10 @@ function Usuarios() {
       );
       return valores.some((valor) => valor.includes(terminoBusqueda));
     });
-    setUsuario(resultadosBusqueda);
+    setUsuarios(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback(
-    (selectionModel) => {
+  const handleSelection = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaUsuario.filter((elemento) => {
@@ -132,7 +133,7 @@ function Usuarios() {
         setOpenA(true);
       }
     },
-    [usuario]
+    [usuarios]
   );
 
   useEffect(() => {
@@ -158,8 +159,13 @@ function Usuarios() {
 
   return (
     <>
-      <Box> {" "} <Banner />{" "} </Box>
+      <Box>{" "}<Banner />{" "} </Box>
         <Box className="container">
+          {cargando === true ? (
+            <Box sx={{ width: "100%" }}>
+              <LinearProgress />
+            </Box>
+          ):(
           <Box style={{ height: "auto", width: "100%" }}>
             <Modal
               open={open}
@@ -213,7 +219,7 @@ function Usuarios() {
 
           <Box sx={{ height: 765, width: "100%" }}>
             <DataGrid
-              rows={usuario}
+              rows={usuarios}
               columns={columns}
               initialState={{
                 pagination: {
@@ -233,6 +239,7 @@ function Usuarios() {
             />
           </Box>
         </Box>
+       )}
       </Box>
     </>
   );
