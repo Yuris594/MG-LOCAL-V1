@@ -1,3 +1,123 @@
+/*"use client";
+
+import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
+import { useForm } from "@/app/hooks/useForm";
+import useGenerarPDF from "@/app/hooks/useGenerarPDF";
+import { useAuth } from "@/context/authContext";
+import { Box, FormControl, Grid, InputLabel, ListItem, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
+import { useState } from "react";
+
+const PedidoC = () => {
+  const { form, changed } = useForm({});
+  const [value, setValue] = useState(0);
+  const [open, setOpen] = useState(false);
+  const { pedido, setPedido } = useAuth();
+  const [openP, setOpenP] = useState(false);
+  const [openS, setOpenS] = useState(false);
+  const [openE, setOpenE] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [productos, setProductos] = useState([]);
+  const [productosP, setProductosP] = useState([]);
+  const [clienteP, setClienteP] = useState(pedido[0]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [tablaProducto, setTablaProducto] = useState([]);
+  const [rowModesModel, setRowModesModel] = useState({});
+  const [productosConDISP0, setProductosConDIPS0] = useState([]);
+  const handleChanges = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const argumentoPDF = value === 0 ? productosP : productosConDISP0;
+  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(
+    productosP, productosConDISP0, value );
+  const { generarPDF } = useGenerarPDF(
+    clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
+
+
+  return (
+    <>
+       <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center",
+              justifyContent: "center", zoom: 0.8, margin: 1 }}>
+            <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
+              <Grid container spacing={1}>
+                <Grid item xs={6} md={8}>
+                <InputLabel >
+                      {" "}Impreso{" "}
+                    </InputLabel>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                <InputLabel >
+                      {" "}Impreso{" "}
+                    </InputLabel>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                <InputLabel >
+                      {" "}Impreso{" "}
+                    </InputLabel>
+                </Grid>
+                <Grid item xs={6} md={8}>
+                <InputLabel >
+                      {" "}Impreso{" "}
+                    </InputLabel>
+                </Grid>
+               
+               
+              </Grid>
+            </Paper>
+          </Box>
+    </>
+  )
+}
+
+export default PedidoC;
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import {
@@ -36,8 +156,8 @@ import {
   Snackbar,
   ButtonGroup,
   Modal,
+  Grid,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import {
   GridRowModes,
   DataGrid,
@@ -55,14 +175,22 @@ import MuiAlert from "@mui/material/Alert";
 import PropTypes from "prop-types";
 import React from "react";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "white",
+  width: "90%",
+  height: "80%",
+  boxShadow: 24,
+  p: 4,
+};
+
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
-    <MuiAlert
-      elevation={6}
-      ref={ref}
-      variant="filled"
-      {...props}
-    />
+    <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
   );
 });
 
@@ -95,59 +223,30 @@ function a11yProps(index) {
 }
 
 const columns = [
-  {
-    field: "DESCRIPCION",
-    headerName: "Referencia",
-    width: 500,
-    editable: true,
+  { field: "DESCRIPCION", headerName: "Referencia", width: 500, editable: true,
   },
   { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
   { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
-  {
-    field: "PRECIO",
-    headerName: "Precio",
-    width: 130,
+  { field: "PRECIO", headerName: "Precio", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
-    editable: true,
+    }, align: "right", editable: true,
   },
-  {
-    field: "CANTIDAD",
-    headerName: "Cant",
-    width: 80,
-    type: "number",
-    editable: true,
+  { field: "CANTIDAD", headerName: "Cant", width: 80, type: "number", editable: true,
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-  {
-    field: "PRECIOMASIVA",
-    headerName: "Masiva",
-    width: 130,
+  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PORC_DCTO", headerName: "D1", width: 40 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 80 },
   { field: "EXIST_REAL", headerName: "Existreal", width: 90 },
 ];
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "white",
-  width: "90%",
-  height: "80%",
-  boxShadow: 24,
-  p: 4,
-};
 
 const conseguirProductos = async () => {
   const response = await fetch("/api/productos/listar_solo_para_mg", {
@@ -216,7 +315,7 @@ export const PedidosC = () => {
   const [checked, setChecked] = useState(false);
   const [productos, setProductos] = useState([]);
   const [productosP, setProductosP] = useState([]);
-  const [clienteP, setClienteP] = useState(pedido[0]);
+  const [clienteP, setClienteP] = useState(pedido);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -224,18 +323,12 @@ export const PedidosC = () => {
   const handleChanges = (event, newValue) => {
     setValue(newValue);
   };
+
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
   const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(
-    productosP,
-    productosConDISP0,
-    value
-  );
+    productosP, productosConDISP0, value );
   const { generarPDF } = useGenerarPDF(
-    clienteP,
-    argumentoPDF,
-    sumaSaldoTotalDESC,
-    productosP
-  );
+    clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
 
   useEffect(() => {
     const pedido = JSON.parse(localStorage.getItem("pedidoTemp"));
@@ -251,6 +344,7 @@ export const PedidosC = () => {
       setChecked(true);
     }, 100);
   }, [clienteP, setPedido]);
+
 
   const obtenerProductos = async () => {
     const datos = await conseguirProductos();
@@ -459,26 +553,15 @@ export const PedidosC = () => {
   const columnsP = [
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
     { field: "DISP", headerName: "Disp", width: 70 },
-    {
-      field: "PRECIO",
-      headerName: "Precio",
-      width: 130,
+    { field: "PRECIO", headerName: "Precio", width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
       },
     },
-    {
-      field: "CPed",
-      headerName: "Cant",
-      width: 80,
-      type: "number",
-      editable: true,
+    { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true,
     },
-    {
-      field: "PORC_DCTO",
-      headerName: "D1",
-      width: 70,
+    { field: "PORC_DCTO", headerName: "D1", width: 70,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
@@ -487,12 +570,7 @@ export const PedidosC = () => {
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
     { field: "Em", headerName: "Emp", width: 80 },
     { field: "EXIST_REAL", headerName: "Existreal", width: 90 },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      width: 100,
-      cellClassName: "actions",
+    { field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -635,49 +713,25 @@ export const PedidosC = () => {
             </Paper>
           </Paper>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-              zoom: 0.8,
-              margin: 1,
-            }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center",
+              justifyContent: "center", zoom: 0.8, margin: 1 }}>
             <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
-              <Grid
-                container
-                spacing={1}
-              >
-                <Grid
-                  item
-                  xs={12}
-                  sm={3}
-                  md={3}
-                  lg={3}
-                >
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={3} md={3} lg={3}>
                   <FormControl sx={{ margin: 0.5 }}>
                     <InputLabel htmlFor="component-">Estado</InputLabel>
                     <OutlinedInput
                       id="component-disabled"
-                      defaultValue={clienteP?.ESTADO || ""}
+                      defaultValue={clienteP?.ESTADO || ''}
                       label="Estado"
                     />
                   </FormControl>
-                </Grid>{" "}
-                <br />
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+                </Grid>
+
+                <Grid item xs={12} sm={2} md={2} lg={2}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Authorizacion{" "}
+                      {" "}Authorizacion{" "}
                     </InputLabel>
                     <OutlinedInput
                       id="component-disabled"
@@ -686,13 +740,8 @@ export const PedidosC = () => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={3}
-                  md={3}
-                  lg={3}
-                >
+
+                <Grid item xs={12} sm={3} md={3} lg={3}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor=""> </InputLabel>
                     <OutlinedInput
@@ -702,6 +751,7 @@ export const PedidosC = () => {
                     />
                   </FormControl>
                 </Grid>
+
                 <Grid
                   item
                   xs={12}
@@ -711,8 +761,7 @@ export const PedidosC = () => {
                 >
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Impreso{" "}
+                      {" "}Impreso{" "}
                     </InputLabel>
                     <OutlinedInput
                       id="component-disabled"
@@ -872,8 +921,7 @@ export const PedidosC = () => {
                 >
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Nota Factura (Doc2){" "}
+                      {" "}Nota Factura (Doc2){" "}
                     </InputLabel>
                     <OutlinedInput
                       label="Nota Factura (Doc2)"

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Edit as EditIcon,
   DeleteOutlined as DeleteIcon,
@@ -151,16 +151,12 @@ const PedidosCaja = () => {
     setTimeout(() => {
       productosP;
       const sumaSaldoDESC = productosP.reduce((sum, producto) => {
-        const precioConDescuento =
-          producto.PRECIO * (1 - producto.PORC_DCTO / 100);
-        const precioConIVA =
-          precioConDescuento * (1 + producto.PORC_IMPUESTO / 100);
+        const precioConDescuento = producto.PRECIO * (1 - producto.PORC_DCTO / 100);
+        const precioConIVA = precioConDescuento * (1 + producto.PORC_IMPUESTO / 100);
         return sum + producto.CPed * precioConIVA;
       }, 0);
       const precioRedondeadoDESC = Number(sumaSaldoDESC).toFixed(0);
-      setSumaSaldoTotalDESC(
-        `${parseFloat(precioRedondeadoDESC).toLocaleString()}`
-      );
+      setSumaSaldoTotalDESC(`${parseFloat(precioRedondeadoDESC).toLocaleString()}`);
     }, 100);
   }, [productosP, selectedRowsP]);
 
@@ -184,8 +180,7 @@ const PedidosCaja = () => {
         }
         filasSeleccionadas[index] = fila;
       });
-      const datosActuales =
-        JSON.parse(localStorage.getItem("pedidoGTemp")) || {};
+      const datosActuales = JSON.parse(localStorage.getItem("pedidoGTemp")) || {};
       const datosActualizados = { ...datosActuales, ...filasSeleccionadas };
       localStorage.setItem("pedidoTempG", JSON.stringify(datosActualizados));
       if (datosActualizados !== undefined) {
@@ -196,10 +191,8 @@ const PedidosCaja = () => {
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaProducto.filter((elemento) => {
-      const ARTICULO =
-        elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
-      const DESCRIPCION =
-        elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
+      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
+      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
       if (
         ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
         DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
@@ -208,6 +201,7 @@ const PedidosCaja = () => {
       }
       return null;
     });
+
     const resultadosFiltrados = resultadosBusqueda.filter(
       (elemento) => elemento !== null
     );
@@ -216,7 +210,32 @@ const PedidosCaja = () => {
 
   const handleSelectionChange = (newSelection) => {
     setSelectedRows(newSelection);
-    setSelectedRowsP(newSelection);
+    //setSelectedRowsP(newSelection);
+
+    const productosActualizados = productosP.map((producto) => {
+      if ( newSelection.includes(producto.ARTICULO)) {
+        return { ...producto, CPed: producto.CPed ? producto.CPed + 1 : 1 };
+      }
+        return producto;
+    });
+
+    setProductosP(productosActualizados);
+
+    const filasSeleccionadas = {};
+    newSelection.forEach((id, index) => {
+      const fila = productosActualizados.find((producto) => producto.ARTICULO === id);
+      if (fila) {
+        filasSeleccionadas[index] = fila;
+      }
+    });
+
+    const datosActuales = JSON.parse(localStorage.getItem("pedidoGTemp")) || {};
+    const datosActualizados = { ...datosActuales, ...filasSeleccionadas };
+    localStorage.setItem("pedidoTemp", JSON.stringify(datosActualizados));
+
+    if (datosActualizados !== undefined) {
+      guardar();
+    }
   };
 
   const handleSelectionChanges = (newSelection) => {
@@ -258,10 +277,7 @@ const PedidosCaja = () => {
   };
 
   const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
+    setRowModesModel({...rowModesModel, [id]: { mode: GridRowModes.View, ignoreModifications: true } });
     const editedRow = productosP.find((row) => row.ARTICULO === id);
     if (editedRow.isNew) {
       setProductosP(productosP.filter((row) => row.ARTICULO !== id));
@@ -270,6 +286,7 @@ const PedidosCaja = () => {
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
+    updatedRow.CPed = (updatedRow.CPed || 0);
     setProductosP(
       productosP.map((row) =>
         row.ARTICULO === newRow.ARTICULO ? updatedRow : row
@@ -284,19 +301,9 @@ const PedidosCaja = () => {
 
   const columnsP = [
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
-    {
-      field: "CPed",
-      headerName: "Cant",
-      width: 80,
-      type: "number",
-      editable: true,
-    },
+    { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true },
     { field: "PRECIO", headerName: "Precio", width: 130 },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      cellClassName: "actions",
+    { field: "actions", type: "actions", headerName: "Actions", cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -403,21 +410,12 @@ const PedidosCaja = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
+      <Box>{" "}<Banner />{" "}</Box>
+      <Box sx={{ display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
           gap: 2,
-          flexWrap: "wrap",
-          mt: 2,
-          mr: 4,
-        }}
-      >
+          flexWrap: "wrap", mt: 2, mr: 4 }}>
         <InputBase
           sx={{
             ml: 1,

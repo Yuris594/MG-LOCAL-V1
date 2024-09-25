@@ -98,40 +98,24 @@ function a11yProps(index) {
 }
 
 const columns = [
-  {
-    field: "DESCRIPCION",
-    headerName: "Referencia",
-    width: 500,
-    editable: true,
+  { field: "DESCRIPCION", headerName: "Referencia", width: 500, editable: true,
   },
   { field: "SUBLINEA", headerName: "Sublinea", width: 250 },
   { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
-  {
-    field: "PRECIO",
-    headerName: "Precio",
-    width: 130,
+  { field: "PRECIO", headerName: "Precio", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  {
-    field: "CANTIDAD",
-    headerName: "Cant",
-    width: 80,
-    type: "number",
-    editable: true,
+  { field: "CANTIDAD", headerName: "Cant", width: 80, type: "number", editable: true,
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-  {
-    field: "PRECIOMASIVA",
-    headerName: "Masiva",
-    width: 130,
+  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PORC_DCTO", headerName: "D1", width: 40 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 80 },
@@ -167,10 +151,7 @@ const pedidosG = () => {
   const [rowModesModel, setRowModesModel] = useState({});
   const [tablaProducto, setTablaProducto] = useState([]);
   const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(
-    productosP,
-    productosConDISP0,
-    value
-  );
+     productosP, productosConDISP0, value);
 
   const handleChanges = (event, newValue) => {
     setValue(newValue);
