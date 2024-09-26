@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  LinearProgress,
-  Modal,
-  Paper,
-  Typography,
-  Zoom,
-} from "@mui/material";
+import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";

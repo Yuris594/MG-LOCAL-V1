@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 const actualizar = async (form) => {
   const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
-    body: JSON.stringify({form}),
+    body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
   });
   return response.json()
