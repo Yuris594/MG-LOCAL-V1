@@ -1,16 +1,15 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials"
+import Credentials from "next-auth/providers/credentials"
 
 
-export default NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
-        CredentialsProvider({
-            name: "Credentials",
+        Credentials({
             credentials: {
                 usuario: { label: "Usuario", type: "text" },
                 clave: { label: "Contraseña", type: "password" }
             },
-            async authorize(credentials) {
+            authorize: async (credentials) => {
                 const response = await fetch(`/api/usuarios/listar/${credentials.usuario}/${credentials.calve}`, {
                     method: "GET",
                     headers: { "Content-Type" : "application/json" },

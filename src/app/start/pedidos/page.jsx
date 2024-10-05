@@ -9,10 +9,8 @@ import {
   Modal,
   Paper,
   Typography,
-  Zoom,
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "@/context/authContext";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";

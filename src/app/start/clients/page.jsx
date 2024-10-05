@@ -5,7 +5,6 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Zoom from "@mui/material/Zoom";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
@@ -23,11 +22,7 @@ const columns = [
   { field: "DIRECCION", headerName: "DIRECCIÓN", width: 300 },
   { field: "TELEFONO1", headerName: "TELEFONO", width: 190 },
   { field: "NOMVENDEDOR", headerName: "VENDEDOR", width: 450 },
-  {
-    field: "SALDO",
-    headerName: "CARTERA",
-    type: "number",
-    width: 120,
+  { field: "SALDO", headerName: "CARTERA", type: "number", width: 120,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
@@ -53,6 +48,7 @@ const Clientes = () => {
   const [busqueda, setBusqueda] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaClientes, setTablaClientes] = useState();
+  const [cargando, setCargando] = useState(true);
   const [clientesFiltrados, setClientesFiltrados] = useState();
 
   useEffect(() => {
@@ -64,6 +60,7 @@ const Clientes = () => {
     try {
       setClientesFiltrados(datos);
       setTablaClientes(datos);
+      setCargando(false);
     } catch (error) {
       console.log(error)
     }
@@ -78,12 +75,9 @@ const Clientes = () => {
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaClientes.filter((elemento) => {
-      const CLIENTE =
-        elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
-      const NOMVENDEDOR =
-        elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
-      const NOMBREALIAS =
-        elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
+      const CLIENTE = elemento.CLIENTE && elemento.CLIENTE.toString().toLowerCase();
+      const NOMVENDEDOR = elemento.NOMVENDEDOR && elemento.NOMVENDEDOR.toString().toLowerCase();
+      const NOMBREALIAS = elemento.NOMBREALIAS && elemento.NOMBREALIAS.toLowerCase();
       if (
         CLIENTE?.includes(terminoBusqueda.toLowerCase()) ||
         NOMVENDEDOR?.includes(terminoBusqueda.toLowerCase()) ||
@@ -118,65 +112,29 @@ const Clientes = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box>{" "}<Banner />{" "}</Box>
       <Box className="container">
+        {cargando === true ? (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        ) : (
         <Box>
-          <Typography
-            variant="h5"
-            component="h1"
-            gutterBottom
-            sx={{
-              display: "flex",
-              justifyContent: "column",
-              alignItems: "center",
-              width: "auto",
-              margin: 0,
-              color: "#000",
-            }}
-          >
+          <Typography variant="h5" component="h1" gutterBottom
+            sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#000" }}>
             CLIENTES
           </Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              margin: 1,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
+          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <Link href="">
-                <Button
-                  variant="outlined"
-                  sx={{ margin: "2px" }}
-                >
+                <Button variant="outlined" sx={{ margin: "2px" }}>
                   Nuevo
                 </Button>
               </Link>
               <BotonExcel datos={clientesFiltrados} />
             </Box>
-            <Paper
-              elevation={3}
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                alignItems: "flex-rigth",
-                width: 1100,
-                margin: "10px",
-              }}
-            >
+            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px" }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar..."
@@ -185,11 +143,7 @@ const Clientes = () => {
                 value={busqueda}
                 onChange={handleChange}
               />
-              <IconButton
-                title="buscar"
-                sx={{ p: "10px" }}
-                aria-label="search"
-              >
+              <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>
@@ -213,6 +167,7 @@ const Clientes = () => {
             />
           </Box>
         </Box>
+        )}
       </Box>
     </>
   );

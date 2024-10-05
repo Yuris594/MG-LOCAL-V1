@@ -160,7 +160,7 @@ const Factura = () => {
       font: "helvetica",
       fontStyle: "normal",
       textColor: [0, 0, 0],
-      dispaly: "flex",
+      display : "flex",
       fontSize: 8,
     };
 
@@ -196,11 +196,7 @@ const Factura = () => {
       pdf.text("FECHA", 460, 65);
       pdf.text("NIT.830.900.137-1", 50, 65);
       pdf.setFontSize(13);
-      pdf.text(
-        "_________________________________________________________________________________",
-        12,
-        70
-      );
+      pdf.text("_____________________________________________________________________________", 12, 70);
       pdf.setFontSize(9);
       pdf.text(`CLIENTE:    ${fac.CLIENTE}`, 12, 85);
       pdf.text(`NIT/CEDULA:    ${fac.CreatedBy}`, 12, 98);

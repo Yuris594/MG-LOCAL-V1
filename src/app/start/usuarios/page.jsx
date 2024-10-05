@@ -109,7 +109,7 @@ function Usuarios() {
   };
 
   const handleSelection = useCallback((selectionModel) => {
-      setSelectedRows(selectionModel);
+    setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaUsuario.filter((elemento) => {
           const IdPer = elemento.IdPer;
@@ -122,9 +122,8 @@ function Usuarios() {
         setUsuario(resultadosFiltrados);
         setOpenA(true);
       }
-    },
-    [usuarios]
-  );
+    }, [usuarios]);
+
 
   useEffect(() => {
     if (auth !== undefined) {
