@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
+import { useAuth } from "@/context/authContext";
 
 const style = {
   position: "absolute",
@@ -89,6 +90,7 @@ const conseguirPedidos = async () => {
 
 const Pedidos = () => {
   const router = useRouter();
+  const { setPedido } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
   const [pedidosFiltrados, setPedidosFiltrados] = useState();
   const [tablaPedido, setTablaPedido] = useState();
@@ -139,6 +141,7 @@ const Pedidos = () => {
           return false;
         });
         localStorage.setItem("pedidoTemp", JSON.stringify(resultadosFiltrados));
+        setPedido(resultadosFiltrados);
         router.push("/start/pedidos/pedidosC");
       }
     },

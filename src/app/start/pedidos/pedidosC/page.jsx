@@ -331,6 +331,13 @@ export const PedidosC = () => {
     clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
 
   useEffect(() => {
+    const datos = localStorage.getItem("pedidoTemp");
+    if (datos) {
+      setClienteP(JSON.parse(datos)[0]);
+    }
+  }, []);
+
+  useEffect(() => {
     const pedido = JSON.parse(localStorage.getItem("pedidoTemp"));
     if (pedido) {
       setPedido(pedido[0]);

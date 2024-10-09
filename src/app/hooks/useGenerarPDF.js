@@ -60,11 +60,11 @@ const generarCodigoBarras = (texto) => {
 
         encabezado()
           pdf.autoTable({
-              head: [columnsParaPDF.map(column => column.headerName)], 
-              body: dataToPrint, 
-              styles,
-              startY: 148,
-              theme:'plain',
+            head: [columnsParaPDF.map(column => column.headerName)], 
+            body: dataToPrint, 
+            styles,
+            startY: 148,
+            theme:'plain',
           });
 
         function encabezado() {

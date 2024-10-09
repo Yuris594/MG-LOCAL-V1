@@ -1,6 +1,7 @@
 'use client'
 
-import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 
 const registro = async (form) => {
@@ -28,14 +29,14 @@ const registro = async (form) => {
         return;
       }
       const response = await registro(form)
-          if (response.ok) {
-            setOpen(true)
-            console.log("Salida exitosa");
-            window.location.reload();
-          } else {
-            setOpenE(true);
-            console.error("Error al enviar la solicitud: ", response.statusText);
-          }
+        if (response.ok) {
+          setOpen(true)
+          console.log("Salida exitosa");
+          window.location.reload();
+        } else {
+          setOpenE(true);
+          console.error("Error al enviar la solicitud: ", response.statusText);
+        }
     }
 
   const handleClose = (reason) => {
@@ -72,8 +73,8 @@ const registro = async (form) => {
             </Typography>
 
               <Box component="form" noValidate onSubmit={register} sx={{ mt: 3 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                  <Grid size={6}>
                       <TextField
                         autoComplete="given-name"
                         name="PER_Nom"
@@ -86,7 +87,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={6}>
                       <TextField
                         required
                         fullWidth
@@ -98,7 +99,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                       <TextField
                         required
                         fullWidth
@@ -111,7 +112,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={6}>
                       <TextField
                         required
                         fullWidth
@@ -124,7 +125,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={6}>
                       <TextField
                         fullWidth
                         id="PERAUTOPED"
@@ -136,7 +137,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid size={4}>
                       <TextField
                         fullWidth
                         id="CODVEND"
@@ -147,7 +148,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid size={4}>
                       <TextField
                         fullWidth
                         id="PREFIJO"
@@ -158,7 +159,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid size={4}>
                       <TextField
                         fullWidth
                         id="CONSECUTIVOPED"

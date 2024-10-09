@@ -102,7 +102,7 @@ const registro = async (cedula) => {
   try {
     const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
       method: "POST",
-      body: JSON.stringify({ cedula }), 
+      body: JSON.stringify(cedula), 
       headers: { "Content-Type": "application/json" }
     });
     if (!response.ok) throw new Error("Error en la respuesta del servidor");
@@ -190,6 +190,7 @@ const ingreso = async (e) => {
           break;
         default:
           console.warn("Respuesta inesperada:", datos.respuesta);
+          servidor();
       }
     } else {
       console.error("Datos no recibidos o respuesta indefinida");

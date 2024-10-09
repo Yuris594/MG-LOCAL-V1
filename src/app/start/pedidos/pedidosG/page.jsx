@@ -303,18 +303,11 @@ const pedidosG = () => {
     { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
     { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
     { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
-    {
-      field: "PRECIO",
-      headerName: "Precio",
-      width: 130,
+    { field: "PRECIO", headerName: "Precio", width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },
-      align: "right",
-      editable: true,
-      type: "number",
-    },
+      }, align: "right", editable: true, type: "number", },
     {
       field: "CPed",
       headerName: "Cant",
@@ -422,23 +415,16 @@ const pedidosG = () => {
 
   return (
     <>
-      <Box> {" "} <Banner />{" "}
-      </Box>
+      <Box>{" "}<Banner />{" "}</Box>
       <div className="container">
         <Box sx={{ padding: "20px" }}>
-          <Typography
-            variant="h6"
-            component="h1"
-            gutterBottom
-            sx={{ color: "#000000", textAlign: "center" }}
-          >
+          <Typography variant="h6" component="h1" gutterBottom sx={{ color: "#000000", textAlign: "center" }}>
             GESTION DE PEDIDOS
           </Typography>
 
           <Paper style={{ width: "100%", p: 2, boxShadow: 3 }}>
             <Box style={{ width: "100%", mb: 2 }}>
-              <Paper
-                sx={{
+              <Paper sx={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -446,8 +432,7 @@ const pedidosG = () => {
                   gap: 2,
                   boxShadow: 2,
                   backgroundColor: "#f5f5f5",
-                }}
-              >
+                }}>
                 <Box sx={{ display: "flex", gap: 1 }}>
                   <Button
                     variant="filled"
@@ -455,8 +440,7 @@ const pedidosG = () => {
                       bgcolor: "#aeefff",
                       "&:hover": { bgcolor: "#91d9e9" },
                     }}
-                    onClick={handleOpenP}
-                  >
+                    onClick={handleOpenP}>
                     <LocalShippingIcon />
                   </Button>
                   <Button

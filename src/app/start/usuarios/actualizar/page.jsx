@@ -1,8 +1,9 @@
 "use client";
 
-import { Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, TextField, Typography, } from "@mui/material";
+import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { useForm } from "@/app/hooks/useForm";
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 const actualizar = async (form) => {
   const response = await fetch("/api/usuarios/actualizar/", {
@@ -10,15 +11,14 @@ const actualizar = async (form) => {
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
   });
-  return response.json()
-}
+  return response.json();
+};
 
 const UsuarioActualizar = ({ usuario }) => {
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const { form, setForm, changed } = useForm();
 
-  
   useEffect(() => {
     if (usuario && usuario.length > 0) {
       setForm({
@@ -35,20 +35,19 @@ const UsuarioActualizar = ({ usuario }) => {
     }
   }, [usuario]);
 
-
   const Actualizar = async (e) => {
     e.preventDefault();
     try {
-      const datos = await actualizar(form)
-        if (datos.ok) {
-          setOpen(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        } else {
-          console.log("Error", response.statusText);
-          setOpenE(true);
-        }
+      const datos = await actualizar(form);
+      if (datos.ok) {
+        setOpen(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        console.log("Error", datos.statusText);
+        setOpenE(true);
+      }
     } catch (error) {
       console.error("Error al enviar la solicitud:", error);
       setOpenE(true);
@@ -65,13 +64,13 @@ const UsuarioActualizar = ({ usuario }) => {
     <>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2, }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
           <Typography component="h1" variant="h5">
             Actualizacion de usuario
           </Typography>
           <Box component="form" onSubmit={Actualizar} noValidate sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+            <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid size={6}>
                 <TextField
                   required
                   fullWidth
@@ -83,7 +82,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={6}>
                 <TextField
                   required
                   fullWidth
@@ -94,7 +93,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   required
                   fullWidth
@@ -106,7 +105,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={6}>
                 <TextField
                   required
                   fullWidth
@@ -118,7 +117,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={6}>
                 <TextField
                   required
                   fullWidth
@@ -130,7 +129,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid size={4}>
                 <TextField
                   fullWidth
                   id="CODVEND"
@@ -140,7 +139,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid size={4}>
                 <TextField
                   fullWidth
                   id="PREFIJO"
@@ -150,7 +149,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid size={4}>
                 <TextField
                   fullWidth
                   id="CONSECUTIVOPED"
@@ -161,10 +160,10 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                Actualizar
-              </Button>
             </Grid>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Actualizar
+            </Button>
           </Box>
           {open && (
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
