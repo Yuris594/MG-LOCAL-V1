@@ -49,7 +49,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Departamento de Sistemas © Version 0.1 - "}
+      {"Departamento de Sistemas © Version 0.2 - "}
       {new Date().getFullYear()}
       {"."}
     </Typography>

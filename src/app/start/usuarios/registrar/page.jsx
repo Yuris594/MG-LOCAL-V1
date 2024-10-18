@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -24,19 +24,23 @@ const registro = async (form) => {
 
   const register = async (e) => {
     e.preventDefault();
+    console.log("Datos del formulario", form);
       if (!form.PER_Nom || !form.IdDiv){
         setOpenE(true);
         return;
       }
-      const response = await registro(form)
-        if (response.ok) {
-          setOpen(true)
-          console.log("Salida exitosa");
-          window.location.reload();
-        } else {
-          setOpenE(true);
-          console.error("Error al enviar la solicitud: ", response.statusText);
-        }
+      try {
+        const response = await registro(form)
+          if (response.ok) {
+            setOpen(true)
+            console.log("Salida exitosa");
+            window.location.reload();
+          } else {
+            setOpenE(true);
+          }
+      } catch (error) {
+        console.error("Error al enviar la solicitud: ", error);
+      }
     }
 
   const handleClose = (reason) => {

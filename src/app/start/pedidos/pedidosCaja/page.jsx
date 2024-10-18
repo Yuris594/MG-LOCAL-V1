@@ -11,8 +11,7 @@ import {
   GridRowModes,
   DataGrid,
   GridActionsCellItem,
-  GridRowEditStopReasons,
-} from "@mui/x-data-grid";
+  GridRowEditStopReasons, } from "@mui/x-data-grid";
 import {
   Box,
   Modal,
@@ -363,9 +362,7 @@ const PedidosCaja = () => {
       if (valorActual === "0" || valorActual === "") {
         productosEditados[indiceObjetoEditar][opcion] = nuevoValor;
       } else {
-        productosEditados[indiceObjetoEditar][
-          opcion
-        ] = `${valorActual}${nuevoValor}`;
+        productosEditados[indiceObjetoEditar][opcion] = `${valorActual}${nuevoValor}`;
       }
       setProductosP(productosEditados);
     }
@@ -533,7 +530,7 @@ const PedidosCaja = () => {
                 variant="outlined"
                 aria-label="text button group"
               >
-                <Button sx={{ flexDirection: "column" }}>
+                <Button sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography
                     sx={{ display: "flex", color: "black" }}
                     gutterBottom
@@ -542,7 +539,7 @@ const PedidosCaja = () => {
                     Nota del Cliente{" "}
                   </Typography>
                 </Button>
-                <Button sx={{ flexDirection: "column" }}>
+                <Button sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography
                     sx={{ display: "flex", color: "black" }}
                     gutterBottom
@@ -551,7 +548,7 @@ const PedidosCaja = () => {
                     Reembolso{" "}
                   </Typography>
                 </Button>
-                <Button sx={{ flexDirection: "column" }}>
+                <Button sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography
                     sx={{ display: "flex", color: "black" }}
                     gutterBottom

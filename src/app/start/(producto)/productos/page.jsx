@@ -290,7 +290,8 @@ function productos() {
   const conseguirBodegas = async () => {
     const datos = await obtenerBodegas();
     try {
-      if (datos) setBodegas(datos);
+      if (datos) 
+        setBodegas(datos);
     } catch (error) {
       conexion();
     }

@@ -18,6 +18,8 @@ const generarCodigoBarras = (texto) => {
     const [fecha] = useState(format(new Date(), 'dd/MM/yyyy HH:mm:ss'));
     const codigoBarras = generarCodigoBarras(); 
 
+    console.log(clienteP, productosP, sumaSaldoTotalDESC)
+
     const generarPDF = () => {
         const pdf = new jsPDF('portrait', 'pt', 'letter');
         const columnsParaPDF = [
@@ -58,6 +60,7 @@ const generarCodigoBarras = (texto) => {
             return rowData;
         });
 
+        
         encabezado()
           pdf.autoTable({
             head: [columnsParaPDF.map(column => column.headerName)], 
@@ -69,7 +72,7 @@ const generarCodigoBarras = (texto) => {
 
         function encabezado() {
           pdf.setFontSize(20);
-          pdf.addImage(`${codigoBarras}`, 220, 10,130,60);
+          //pdf.addImage(`${codigoBarras}`, 220, 10,130,60);
           
           pdf.setFontSize(13);
           pdf.text("PREFACTURA", 12, 30,);

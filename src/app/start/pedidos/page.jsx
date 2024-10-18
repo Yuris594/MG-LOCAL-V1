@@ -6,7 +6,6 @@ import {
   IconButton,
   InputBase,
   LinearProgress,
-  Modal,
   Paper,
   Typography,
 } from "@mui/material";
