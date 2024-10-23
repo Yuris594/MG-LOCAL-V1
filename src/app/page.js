@@ -1,6 +1,7 @@
 'use client';
 
-import { AppBar, Box, Button, Container, createTheme, CssBaseline, Slide, Snackbar, TextField, ThemeProvider, Toolbar, Typography, Zoom } from "@mui/material";
+import { AppBar, Box, Button, Container, createTheme, CssBaseline, Slide, Snackbar, 
+        TextField, ThemeProvider, Toolbar, Typography, Zoom } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
@@ -107,7 +108,12 @@ export default function Login() {
           setOpen(true);
           const tokens = resultado;
           login(tokens);
-          router.push("../start");
+          
+          if(tokens.IdDiv === 8) {  //En caso de ingresar los demas usuarios pasara de ser IdDiv a Roles
+            router.push("../start");
+          } else {
+            router.push("../pages");
+          }
         }
     } catch (error) {
           setError(true);
