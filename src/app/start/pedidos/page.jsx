@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  LinearProgress,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, InputBase, LinearProgress, Paper, Typography, } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
@@ -39,19 +31,13 @@ const fDate = (dateString) => {
 };
 
 const columns = [
-  {
-    field: "FECHA_PEDIDO",
-    headerName: "Fecha",
-    width: 170,
+  { field: "FECHA_PEDIDO", headerName: "FECHA", width: 170,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "PEDIDO", headerName: "Pedido", width: 160 },
-  { field: "ESTADO", headerName: "Estado", width: 70 },
+  { field: "PEDIDO", headerName: "PEDIDO", width: 160 },
+  { field: "ESTADO", headerName: "ESTADO", width: 70 },
   { field: "IMPRESO", headerName: "IMP", width: 70 },
-  {
-    field: "AUTORIZADONOM",
-    headerName: "Autorizado",
-    width: 200,
+  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
@@ -66,14 +52,14 @@ const columns = [
       return <Typography style={cellStyle}>{AUTORIZADONOM}</Typography>;
     },
   },
-  { field: "U_COMPESPECIAL", headerName: "Esp", width: 190 },
-  { field: "VENDEDOR", headerName: "Vend", width: 100 },
-  { field: "COMENTARIO_CXC", headerName: "AUT.sistema", width: 200 },
+  { field: "U_COMPESPECIAL", headerName: "ESP", width: 190 },
+  { field: "VENDEDOR", headerName: "VEND", width: 100 },
+  { field: "COMENTARIO_CXC", headerName: "AUT. SISTEMA", width: 250 },
   { field: "TOTAL_A_FACTURAR", headerName: "A FACT", width: 120 },
-  { field: "NOMBRE_RAZON", headerName: "Cliente", width: 400 },
-  { field: "U_EDITADOPOR", headerName: "Usuario MG", width: 100 },
-  { field: "DEPTO", headerName: "Departamento", width: 130 },
-  { field: "CIUDAD", headerName: "Ciudad", width: 200 },
+  { field: "NOMBRE_RAZON", headerName: "CLIENTE", width: 400 },
+  { field: "U_EDITADOPOR", headerName: "USUARIO MG", width: 100 },
+  { field: "DEPTO", headerName: "DEPARTAMENTO", width: 130 },
+  { field: "CIUDAD", headerName: "CIUDAD", width: 200 },
 ];
 
 const conseguirPedidos = async () => {
@@ -83,9 +69,8 @@ const conseguirPedidos = async () => {
     headers: { "Content-Type" : "application/json" }
   });
   const pedidos = await response.json();
-  return pedidos
-    
-}
+  return pedidos 
+};
 
 const Pedidos = () => {
   const router = useRouter();
@@ -98,20 +83,20 @@ const Pedidos = () => {
 
 
   useEffect(() => {
+    const obtenerPedidos = async () => {
+      const datos = await conseguirPedidos();
+      try {
+        setCargando(false);
+        setPedidosFiltrados(datos);
+        setTablaPedido(datos);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     obtenerPedidos();
   }, []);
 
-  const obtenerPedidos = async () => {
-    const datos = await conseguirPedidos();
-    try {
-      setCargando(false);
-      setPedidosFiltrados(datos);
-      setTablaPedido(datos);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
+  
   const handleChange = (e) => {
     setBusqueda(e.target.value);
     filtrar(e.target.value);
@@ -127,9 +112,8 @@ const Pedidos = () => {
     setPedidosFiltrados(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback(
-    (selectionModel) => {
-      setSelectedRows(selectionModel);
+  const handleSelection = useCallback((selectionModel) => {
+    setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaPedido.filter((elemento) => {
           const PEDIDO = elemento.PEDIDO;
@@ -159,57 +143,15 @@ const Pedidos = () => {
         ) : (
           <Box>
             <div style={{ height: "auto", width: "100%" }}>
-              <Typography variant="h5" component="h1" gutterBottom
-                sx={{
-                  display: "flex",
-                  justifyContent: "column",
-                  alignItems: "center",
-                  width: "auto",
-                  margin: 0,
-                  color: "#000",
-                }}>
-                  
-                PEDIDOS
-              </Typography>
-
+              <h2><strong>PEDIDOS</strong></h2>
               <Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "auto",
-                    margin: 1,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      variant="outlined"
-                      sx={{ margin: "10px" }}
-                    >
-                      {" "}
-                      Nuevo{" "}
-                    </Button>
+                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
+                  <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", }}>
+                    <Button variant="outlined" sx={{ margin: "10px" }}>{" "}Nuevo{" "}</Button>
                     <BotonExcel datos={pedidosFiltrados} />
                   </Box>
 
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      p: "2px 4px",
-                      display: "flex",
-                      alignItems: "flex-rigth",
-                      width: 1100,
-                      margin: "10px",
-                    }}
-                  >
+                  <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 900, margin: "10px", }}>
                     <InputBase
                       sx={{ ml: 1, flex: 1 }}
                       placeholder="Buscar..."
@@ -220,11 +162,7 @@ const Pedidos = () => {
                       onChange={handleChange}
                     />
 
-                    <IconButton
-                      title="buscar"
-                      sx={{ p: "10px" }}
-                      aria-label="search"
-                    >
+                    <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
                       <SearchIcon />
                     </IconButton>
                   </Paper>

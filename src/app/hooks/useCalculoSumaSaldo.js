@@ -8,21 +8,10 @@ const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
 
     useEffect(() => {
         const PRDCTO = value === 0 ? productosP : productosConDISP0;
-        if(!Array.isArray(PRDCTO)) {
-            console.error("PRDCTO no es un array valido", PRDCTO);
-            return;
-        }
-
-        if(PRDCTO.length === 0) {
-            setSumaSaldoTotal(0);
-            setSumaSaldoTotalDESC(0);
-            return;
-        }
-        console.log("ProductosP", productosP);
-        console.log("ProductosConDISPO", productosConDISP0);
-        const sumaSaldo = PRDCTO.reduce((sum, producto) => {
-            return sum + producto.CPed * producto.PRECIO;
-        }, 0);
+        if (Array.isArray(PRDCTO)) {  
+            const sumaSaldo = PRDCTO.reduce((sum, producto) => {
+                return sum + producto.CPed * producto.PRECIO;
+            }, 0);
         const sumaSaldoDESC = PRDCTO.reduce((sum, producto) => {
             const precioConDescuento = producto.PRECIO * (1 - producto.PORC_DCTO / 100);
             const precioConIVA = precioConDescuento * (1 + producto.PORC_IMPUESTO / 100);
@@ -32,6 +21,7 @@ const useCalculoSumaSaldo = (productosP, productosConDISP0, value) => {
         const precioRedondeadoDESC = Number(sumaSaldoDESC).toFixed(0); 
         setSumaSaldoTotal(`${parseFloat(precioRedondeado).toLocaleString()}`);
         setSumaSaldoTotalDESC(`${parseFloat(precioRedondeadoDESC).toLocaleString()}`);
+        }
     }, [productosP, productosConDISP0, value]); 
 
     return { sumaSaldoTotal, sumaSaldoTotalDESC };

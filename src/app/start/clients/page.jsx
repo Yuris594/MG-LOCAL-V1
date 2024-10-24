@@ -52,26 +52,25 @@ const Clientes = () => {
   const [clientesFiltrados, setClientesFiltrados] = useState();
 
   useEffect(() => {
+    const obtenerClientes = async () => {
+      const datos = await conseguirClientes();
+      try {
+        setClientesFiltrados(datos);
+        setTablaClientes(datos);
+        setCargando(false);
+      } catch (error) {
+        console.log(error)
+      }
+    }
     obtenerClientes();
   }, []);
 
-  const obtenerClientes = async () => {
-    const datos = await conseguirClientes();
-    try {
-      setClientesFiltrados(datos);
-      setTablaClientes(datos);
-      setCargando(false);
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const handleChange = (e) => {
     e.preventDefault();
     setBusqueda(e.target.value);
     filtrar(e.target.value);
   };
-
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaClientes.filter((elemento) => {
@@ -120,11 +119,7 @@ const Clientes = () => {
           </Box>
         ) : (
         <Box>
-          <Typography variant="h5" component="h1" gutterBottom
-            sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#000" }}>
-            CLIENTES
-          </Typography>
-
+          <h2><strong>CLIENTES</strong></h2>
           <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
             <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <Link href="">
@@ -134,6 +129,7 @@ const Clientes = () => {
               </Link>
               <BotonExcel datos={clientesFiltrados} />
             </Box>
+            
             <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px" }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}

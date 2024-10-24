@@ -1,136 +1,32 @@
-/*"use client";
-
-import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import { useForm } from "@/app/hooks/useForm";
-import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-import { useAuth } from "@/context/authContext";
-import { Box, FormControl, Grid, InputLabel, ListItem, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-
-const PedidoC = () => {
-  const { form, changed } = useForm({});
-  const [value, setValue] = useState(0);
-  const [open, setOpen] = useState(false);
-  const { pedido, setPedido } = useAuth();
-  const [openP, setOpenP] = useState(false);
-  const [openS, setOpenS] = useState(false);
-  const [openE, setOpenE] = useState(false);
-  const [busqueda, setBusqueda] = useState("");
-  const [checked, setChecked] = useState(false);
-  const [productos, setProductos] = useState([]);
-  const [productosP, setProductosP] = useState([]);
-  const [clienteP, setClienteP] = useState(pedido[0]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [tablaProducto, setTablaProducto] = useState([]);
-  const [rowModesModel, setRowModesModel] = useState({});
-  const [productosConDISP0, setProductosConDIPS0] = useState([]);
-  const handleChanges = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const argumentoPDF = value === 0 ? productosP : productosConDISP0;
-  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(
-    productosP, productosConDISP0, value );
-  const { generarPDF } = useGenerarPDF(
-    clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
-
-
-  return (
-    <>
-       <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center",
-              justifyContent: "center", zoom: 0.8, margin: 1 }}>
-            <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={6} md={8}>
-                <InputLabel >
-                      {" "}Impreso{" "}
-                    </InputLabel>
-                </Grid>
-                <Grid item xs={6} md={4}>
-                <InputLabel >
-                      {" "}Impreso{" "}
-                    </InputLabel>
-                </Grid>
-                <Grid item xs={6} md={4}>
-                <InputLabel >
-                      {" "}Impreso{" "}
-                    </InputLabel>
-                </Grid>
-                <Grid item xs={6} md={8}>
-                <InputLabel >
-                      {" "}Impreso{" "}
-                    </InputLabel>
-                </Grid>
-               
-               
-              </Grid>
-            </Paper>
-          </Box>
-    </>
-  )
-}
-
-export default PedidoC;
-*/
-
-
-
 "use client";
 
-import {
-  Search as SearchIcon,
-  HighlightOff as HighlightOffIcon,
-  NoteAdd as NoteAddIcon,
-  ControlPoint as ControlPointIcon,
-  Edit as EditIcon,
-  SaveAs as SaveAsIcon,
-  Print as PrintIcon,
-  DeleteForever as DeleteForeverIcon,
-  Calculate as CalculateIcon,
-  Lock as LockIcon,
-  Mood as MoodIcon,
-  LocalShipping as LocalShippingIcon,
-  People as PeopleIcon,
-  Cached as CachedIcon,
-  DeleteOutlined as DeleteIcon,
-  Close as CancelIcon,
-  Save as SaveIcon,
-} from "@mui/icons-material";
-import {
-  Box,
-  Tabs,
-  Tab,
-  OutlinedInput,
-  Button,
-  Typography,
-  Zoom,
-  Paper,
-  InputBase,
-  IconButton,
-  TextField,
-  FormControl,
-  InputLabel,
-  Snackbar,
-  ButtonGroup,
-  Modal,
-  Grid,
-} from "@mui/material";
-import {
-  GridRowModes,
-  DataGrid,
-  GridActionsCellItem,
-  GridRowEditStopReasons,
-} from "@mui/x-data-grid";
+import { Box, Tabs, Tab, OutlinedInput, Button, Typography, Zoom, Paper, InputBase, IconButton,
+        TextField, FormControl, InputLabel, Snackbar, ButtonGroup, Modal } from "@mui/material";
+import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import Producto from "../../(producto)/producto/page";
+import useGenerarPDF from "@/app/hooks/useGenerarPDF";
+import SearchIcon from '@mui/icons-material/Search';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Banner from "@/app/components/banner/banner";
+import DeleteIcon from '@mui/icons-material/Delete';
+import PrintIcon from '@mui/icons-material/Print';
+import EditIcon from '@mui/icons-material/Edit';
+import LockIcon from '@mui/icons-material/Lock';
+import SaveIcon from '@mui/icons-material/Save';
 import { useAuth } from "@/context/authContext";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
-import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import Producto from "../../(producto)/producto/page";
-import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-import Banner from "@/app/components/banner/banner";
 import MuiAlert from "@mui/material/Alert";
+import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import React from "react";
+
+
 
 const style = {
   position: "absolute",
@@ -166,11 +62,13 @@ function CustomTabPanel(props) {
   );
 }
 
+
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
+
 
 function a11yProps(index) {
   return {
@@ -205,46 +103,38 @@ const columns = [
 ];
 
 
-const conseguirProductos = async () => {
-  const response = await fetch("/api/productos/listar_solo_para_mg", {
+const conseguirProductosP = async (clienteP) => {
+  const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type" : "application/json" }
+  });
+  if (!response.ok) {
+    if (response.status === 400) {
+      console.log("No hay articulos para este cliente");
+      return [];
+    }
+  }
+  const datos = await response.json();
+  return datos;
+};
+
+
+const conseguirProductosPendientes = async (clienteP) => {
+  const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json", },
   });
   const data = await response.json();
   return data;
 };
 
-const conseguirProductosP = async (pedidoId) => {
-  const response = await fetch(`/api/pedidos/detalle_lineas/${pedidoId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
-};
-
-const conseguirProductosPendientes = async (pedido) => {
-  const response = await fetch(`/api/pedidos/articulos_pendientes/${pedido}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
-};
 
 const guardarProductos = async (bodyData) => {
   const response = await fetch("/api/pedido/crear/", {
     method: "POST",
-    body: JSON.stringify(bodyData),
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bodyData),
   });
-
   const data = await response.json();
   return data;
 };
@@ -255,14 +145,15 @@ const guardarProductosP = async (bodyData) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),
   });
-
   const data = await response.json();
   return data;
 };
 
+
 export const PedidosC = () => {
   const { form, changed } = useForm({});
   const [value, setValue] = useState(0);
+  const [fecha, setFecha] = useState("");
   const [open, setOpen] = useState(false);
   const { pedido, setPedido } = useAuth();
   const [openP, setOpenP] = useState(false);
@@ -272,20 +163,29 @@ export const PedidosC = () => {
   const [checked, setChecked] = useState(false);
   const [productos, setProductos] = useState([]);
   const [productosP, setProductosP] = useState([]);
-  const [clienteP, setClienteP] = useState(pedido);
+  const [clienteP, setClienteP] = useState(null);
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [productosConDISP0, setProductosConDIPS0] = useState([]);
-  const handleChanges = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
-  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(
-    productosP, productosConDISP0, value );
-  const { generarPDF } = useGenerarPDF(
-    clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
+  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo( productosP, productosConDISP0, value );
+  const { generarPDF } = useGenerarPDF( clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
+  const handleChanges = (event, newValue) => {
+    setValue(newValue); 
+  };
+  
+  
+  useEffect(() => {
+    if(clienteP) {
+      obtenerProductos();
+      obtenerProductosP(clienteP.PEDIDO);
+      obtenerProductosPendientes(clienteP.PEDIDO);
+    }
+  }, [clienteP]);
+
 
   useEffect(() => {
     const datos = localStorage.getItem("pedidoTemp");
@@ -294,53 +194,60 @@ export const PedidosC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const pedido = JSON.parse(localStorage.getItem("pedidoTemp"));
-    if (pedido) {
-      setPedido(pedido[0]);
-    }
-    if (clienteP) {
-      obtenerProductos();
-      obtenerProductosP(clienteP.PEDIDO);
-      obtenerProductosPendientes(clienteP.PEDIDO);
-    }
-    setTimeout(() => {
-      setChecked(true);
-    }, 100);
-  }, [clienteP, setPedido]);
 
+  useEffect(() => {
+    if (clienteP?.FECHA_PEDIDO) {
+      const fechaActual = () => {
+        const fechaPedido = new Date(clienteP.FECHA_PEDIDO);
+        const dias = fechaPedido.getDate().toString().padStart(2, '0');
+        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
+        const anio = fechaPedido.getFullYear();
+
+        const fechaFormateada = `${dias}/${mes}/${anio}`;
+        setFecha(fechaFormateada);
+      };
+      fechaActual(); 
+    }
+  }, [clienteP]);
+ 
 
   const obtenerProductos = async () => {
-    const datos = await conseguirProductos();
     try {
+      const response = await fetch("/api/productos/listar_solo_para_mg", {
+        method: "GET",
+        headers: { "Content-Type" : "application/json" }
+      });
+      const datos = await response.json();
       if (datos) {
         setProductos(datos);
         setTablaProducto(datos);
       }
     } catch (error) {
-      console.log("Error al obtener los datos", error);
+      console.log("Error al obtener los datos de Productos", error);
     }
   };
 
-  const obtenerProductosP = async (pedidoId) => {
-    const datos = await conseguirProductosP(pedidoId);
+  const obtenerProductosP = async () => {
     try {
+      const datos = await conseguirProductosP(clienteP);
       if (datos) {
         setProductosP(datos);
+      } else {
+        console.log("Error.....")
       }
     } catch (error) {
-      console.log("Error al obtener los datosP", error);
+      console.log("Error al obtener los datos de Detalles de Lineas", error);
     }
   };
 
-  const obtenerProductosPendientes = async (pedido) => {
-    const datos = await conseguirProductosPendientes(pedido);
+  const obtenerProductosPendientes = async () => {
     try {
+      const datos = await conseguirProductosPendientes(clienteP);
       if (datos) {
         setProductosConDIPS0(datos);
       }
     } catch (error) {
-      console.log("Error al obtener los datoscon", error);
+      console.log("Error al obtener los datos de Articulos Pendientes", error);
     }
   };
 
@@ -366,6 +273,7 @@ export const PedidosC = () => {
     }
   };
 
+
   const productosguardarP = async () => {
     const bodyData = {
       ...clienteP,
@@ -375,6 +283,7 @@ export const PedidosC = () => {
     try {
       if (data) {
         setOpenS(true);
+        console.log("Crear x2")
       } else {
         console.error("Error de reed: ", error);
       }
@@ -388,6 +297,13 @@ export const PedidosC = () => {
   const handleClose = () => setOpen(false);
   const handleOpenP = () => setOpenP(true);
   const handleCloseP = () => setOpenP(false);
+  const handleSelectionChange = (newSelection) => {
+    setSelectedRows(newSelection);
+  };
+
+  setTimeout(() => {
+    setChecked(true);
+  }, 100);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -395,13 +311,11 @@ export const PedidosC = () => {
     filtrar(e.target.value);
   };
 
+
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaProducto.filter((elemento) => {
-      const ARTICULO =
-        elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
-      const DESCRIPCION =
-        elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
-
+      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
+      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
       if (
         ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
         DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
@@ -416,9 +330,7 @@ export const PedidosC = () => {
     setProductos(resultadosFiltrados);
   };
 
-  const handleSelectionChange = (newSelection) => {
-    setSelectedRows(newSelection);
-  };
+
 
   const filasSelecciondas = {};
   selectedRows.forEach((id, index) => {
@@ -602,17 +514,8 @@ export const PedidosC = () => {
   return (
     <>
       <Box> {" "} <Banner />{" "} </Box>
-      <Typography variant="h6" component="h1" gutterBottom
-        sx={{
-          color: "#000000",
-          textAlign: "center",
-          marginTop: 4,
-          marginBottom: 2,
-        }}>
-
-        PEDIDOS
-      </Typography>
-
+      <Box sx={{ padding: "20px" }}>
+      <h2 style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", margin: 6 }}><strong>PEDIDOS</strong></h2>
       <Paper style={{ width: "100%", p: 2, boxShadow: 3 }}>
         <Box style={{ width: "100%", mb: 2 }}>
           <Paper sx={{
@@ -626,7 +529,7 @@ export const PedidosC = () => {
             }}>
 
             <Box sx={{ display: "flex" }}>
-              {clienteP?.AUTORIZADONOM || "" === "APROBADO" ? (
+              {clienteP?.AUTORIZADONOM === "APROBADO" ? (
                 <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
                   {" "}<PrintIcon />{" "}
                 </Button>
@@ -650,14 +553,8 @@ export const PedidosC = () => {
               </Button>
             </Box>
 
-            <Paper elevation={3} sx={{
-                display: "flex",
-                alignItems: "center",
-                p: "2px 4px",
-                boxShadow: 2,
-                backgroundColor: "#fff",
-                width: "100%",
-              }}>
+
+            <Paper elevation={3} sx={{ display: "flex", alignItems: "center", p: "2px 4px", boxShadow: 2, backgroundColor: "#fff", width: "100%" }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar"
@@ -666,227 +563,104 @@ export const PedidosC = () => {
                 value={busqueda}
                 onChange={handleChange}
               />
-              <IconButton
-                title="buscar"
-                type="button"
-                sx={{ p: "10px" }}
-                aria-label="search"
-              >
+              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>
           </Paper>
 
-          <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center",
-              justifyContent: "center", zoom: 0.8, margin: 1 }}>
+
+
+          <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center", justifyContent: "center", zoom: 0.8, margin: 1 }}>
             <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
               <Grid container spacing={1}>
-                <Grid item xs={12} sm={3} md={3} lg={3}>
+                <Grid size={{ xs: 12, sm: 3, md: 3, lg: 3 }}>
                   <FormControl sx={{ margin: 0.5 }}>
                     <InputLabel htmlFor="component-">Estado</InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.ESTADO || ''}
-                      label="Estado"
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.ESTADO || ''} label="Estado" />
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={2} md={2} lg={2}>
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}Authorizacion{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.AUTORIZADONOM || ""}
-                      label="Authorizacion"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Authorizacion{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.AUTORIZADONOM || ""} label="Authorizacion" />
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} sm={3} md={3} lg={3}>
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor=""> </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue=""
-                      label=""
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue="" label="" />
                   </FormControl>
                 </Grid>
 
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}Impreso{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.IMPRESO || ""}
-                      label="Impreso"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Impreso{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.IMPRESO || ""} label="Impreso" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+
+                <Grid size={{ xs: 12, sm: 3, md: 3, lg: 3 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">Nro</InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.PEDIDO || ""}
-                      label="Nro"
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.PEDIDO || ""} label="Nro" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Cliente{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.CLIENTE || ""}
-                      label="Cliente"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Cliente{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.CLIENTE || ""} label="Cliente" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={8}
-                  md={8}
-                  lg={8}
-                >
+
+                <Grid size={{ xs: 12, sm: 8, md: 8, lg: 8 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled"></InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.NOMBRE_RAZON || ""}
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.NOMBRE_RAZON || ""} />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">Fecha</InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.FECHA_PEDIDO || ""}
-                      label="Fecha"
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={fecha} label="Fecha" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={5}
-                  md={5}
-                  lg={5}
-                >
+
+                <Grid size={{ xs: 12, sm: 5, md: 5, lg: 5 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Direccion envio{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.DEPTO || ""}
-                      label="Direccion envio"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Direccion envio{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.DEPTO || ""} label="Direccion Envio" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={5}
-                  md={5}
-                  lg={5}
-                >
+
+                <Grid size={{ xs: 12, sm: 5, md: 5, lg: 5 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled"></InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.CIUDAD || ""}
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.CIUDAD || ""} />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={1}
-                  md={1}
-                  lg={1}
-                >
+
+                <Grid size={{ xs: 12, sm: 1, md: 1, lg: 1 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">Vend</InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue={clienteP?.VENDEDOR || ""}
-                      label="Vend"
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.VENDEDOR || ""} label="Vend" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={1}
-                  md={1}
-                  lg={1}
-                >
+
+                <Grid size={{ xs: 12, sm: 1, md: 1, lg: 1 }}>
                   <Paper>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      {" "}
-                      Especial{" "}
-                    </Typography>
-                    <Typography
-                      sx={{ fontSize: 20, padding: 0.5, color: "red" }}
-                      variant="body2"
-                      color="text.primary"
-                    >
-                      {" "}
-                      {clienteP?.U_COMPESPECIAL || ""}{" "}
-                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
+                    <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
                   </Paper>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={6.3}
-                  md={6.3}
-                  lg={6.3}
-                >
+
+                <Grid size={{ xs: 12, sm: 6.3, md: 6.3, lg: 6.3 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}Nota Factura (Doc2){" "}
-                    </InputLabel>
+                    <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
                     <OutlinedInput
                       label="Nota Factura (Doc2)"
                       id="OBSERVACIONES"
@@ -898,32 +672,15 @@ export const PedidosC = () => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={0.9}
-                  md={0.9}
-                  lg={0.9}
-                >
+
+                <Grid size={{ xs: 12, sm: 0.9, md: 0.9, lg: 0.9 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Finac %/Dias{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue="Composed TextField"
-                      label="Finac %/Dias"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Finac %/Dias{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Finac %/Dias" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={0.9}
-                  md={0.9}
-                  lg={0.9}
-                >
+                
+                <Grid size={{ xs: 12, sm: 0.9, md: 0.9, lg: 0.9 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">D'UNA</InputLabel>
                     <OutlinedInput
@@ -932,51 +689,21 @@ export const PedidosC = () => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={2}
-                  md={2}
-                  lg={2}
-                >
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Ped.Origen{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue="Composed TextField"
-                      label="Ped.Origen"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Ped.Origen{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Ped.Origen"  />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={1.9}
-                  md={1.9}
-                  lg={1.9}
-                >
+
+                <Grid size={{ xs: 12, sm: 1.9, md: 1.9, lg: 1.9 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">
-                      {" "}
-                      Pendiente{" "}
-                    </InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue="Composed TextField"
-                      label="Pendiente"
-                    />
+                    <InputLabel htmlFor="component-disabled">{" "}Pendiente{" "}</InputLabel>
+                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Pendiente" />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={11}
-                  md={11}
-                  lg={11}
-                >
+
+                <Grid size={{ xs: 12, sm: 10, md: 10, lg: 10 }}>
                   <FormControl sx={{ margin: 0.5 }}>
                     <InputLabel htmlFor="component-disabled"></InputLabel>
                     <TextField
@@ -985,66 +712,37 @@ export const PedidosC = () => {
                       multiline
                       rows={1.0}
                       defaultValue={clienteP?.OBSERVACIONES || ""}
-                      sx={{ width: 760 }}
+                      sx={{ width: 600 }}
                     />
                   </FormControl>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sm={1}
-                  md={1}
-                  lg={1}
-                >
+
+                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">Plazo</InputLabel>
-                    <OutlinedInput
-                      id="component-disabled"
-                      defaultValue="Composed TextField"
-                      label="Plazo"
-                    />
+                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Plazo" />
                   </FormControl>
                 </Grid>
               </Grid>
             </Paper>
           </Box>
 
-          <Button
-            variant="filled"
-            sx={{ margin: "2px", bgcolor: "#b6ff91" }}
-            onClick={handleOpen}
-          >
+          <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpen}>
             <ControlPointIcon />
           </Button>
         </Box>
 
         <Paper sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChanges}
-              aria-label="basic tabs example"
-            >
-              <Tab
-                label="Detalles Lineas"
-                {...a11yProps(0)}
-              />
-              <Tab
-                label="Articulos Pendiente"
-                {...a11yProps(1)}
-              />
+            <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example" >
+              <Tab label="Detalles Lineas" {...a11yProps(0)} />
+              <Tab label="Articulos Pendientes" {...a11yProps(1)} />
             </Tabs>
           </Box>
 
-          <CustomTabPanel
-            value={value}
-            index={0}
-          >
+          <CustomTabPanel value={value} index={0}>
             <Zoom in={checked}>
-              <Box
-                sx={{
-                  height: "auto",
-                  width: "100%",
+              <Box sx={{ height: "auto", width: "100%",
                   "& .MuiDataGrid-cell--editable": {
                     bgcolor: (theme) =>
                       theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
@@ -1053,9 +751,8 @@ export const PedidosC = () => {
                         theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                     },
                   },
-                }}
-              >
-                <Box sx={{ height: 350, width: "100%" }}>
+                }}>
+                <Box sx={{ height: "auto", width: "100%" }}>
                   <DataGrid
                     density="compact"
                     rows={productosP}
@@ -1068,25 +765,19 @@ export const PedidosC = () => {
                     slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 20 },
+                        paginationModel: { page: 0, pageSize: 10 },
                       },
                     }}
-                    pageSizeOptions={[20, 40]}
+                    pageSizeOptions={[10]}
                   />
                 </Box>
               </Box>
             </Zoom>
           </CustomTabPanel>
 
-          <CustomTabPanel
-            value={value}
-            index={1}
-          >
+          <CustomTabPanel value={value} index={1}>
             <Zoom in={checked}>
-              <Box
-                sx={{
-                  height: "auto",
-                  width: "100%",
+              <Box sx={{ height: "auto", width: "100%",
                   "& .MuiDataGrid-cell--editable": {
                     bgcolor: (theme) =>
                       theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
@@ -1095,10 +786,10 @@ export const PedidosC = () => {
                         theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                     },
                   },
-                }}
-              >
-                <Box sx={{ height: 350, width: "100%" }}>
+                }}>
+                <Box sx={{ height: "auto", width: "100%" }}>
                   <DataGrid
+                    density="compact"
                     rows={productosConDISP0}
                     columns={columnsP}
                     getRowId={(row) => row.ARTICULO}
@@ -1110,25 +801,15 @@ export const PedidosC = () => {
                     }}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 20 },
+                        paginationModel: { page: 0, pageSize: 10 },
                       },
                     }}
-                    pageSizeOptions={[20, 40]}
+                    pageSizeOptions={[10]}
                   />
                 </Box>
 
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="filled"
-                    sx={{ margin: "2px", bgcolor: "#84D8F4" }}
-                    onClick={productosguardarP}
-                  >
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
                     <ControlPointIcon />
                   </Button>
                 </Box>
@@ -1142,12 +823,8 @@ export const PedidosC = () => {
         open={openP}
         onClose={handleCloseP}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {" "}
-          <Producto />{" "}
-        </Box>
+        aria-describedby="modal-modal-description">
+        <Box sx={style}>{" "}<Producto />{" "}</Box>
       </Modal>
 
       <Modal
@@ -1155,48 +832,19 @@ export const PedidosC = () => {
         onClose={guardar}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        BackdropProps={{ style: { pointerEvents: "none" } }}
-      >
+        BackdropProps={{ style: { pointerEvents: "none" } }}>
         <Box sx={style}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 5,
-              flexDirection: "row",
-              width: "100%",
-              gap: "70px",
-            }}
-          >
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5, flexDirection: "row", width: "100%", gap: "70px"  }}>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#b6ff91" }}
-                onClick={guardar}
-              >
-                {" "}
-                Agregar{" "}
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={guardar}>
+                {" "}Agregar{" "}
               </Button>
-              <Button
-                variant="filled"
-                sx={{ margin: "2px", bgcolor: "#ffa28a" }}
-                onClick={cerrar}
-              >
-                {" "}
-                <HighlightOffIcon />{" "}
+              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}>
+                {" "}<HighlightOffIcon />{" "}
               </Button>
             </Box>
 
-            <Paper
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                alignItems: "center",
-                width: 500,
-                margin: "0%",
-              }}
-            >
+            <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 500, margin: "0%", }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar"
@@ -1205,140 +853,82 @@ export const PedidosC = () => {
                 value={busqueda}
                 onChange={handleChange}
               />
-              <IconButton
-                title="buscar"
-                type="button"
-                sx={{ p: "10px" }}
-                aria-label="search"
-              >
+              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>
           </Box>
 
-          <Box sx={{ height: 750, width: "100%" }}>
+          <Box sx={{ height: "auto", width: "100%" }}>
             <DataGrid
               rows={productos}
               columns={columns}
               getRowId={(row) => row.ARTICULO}
+              pageSizeOptions={[15]}
+              onRowSelectionModelChange={handleSelectionChange}
+              rowSelectionModel={selectedRows}
+              onSelectionModelChange={(newSelection) =>
+                setSelectedRows(newSelection)
+              }
               initialState={{
                 pagination: {
                   paginationModel: { page: 0, pageSize: 15 },
                 },
               }}
-              pageSizeOptions={[15, 30]}
-              onRowSelectionModelChange={handleSelectionChange}
-              onSelectionModelChange={(newSelection) =>
-                setSelectedRows(newSelection)
-              }
-              rowSelectionModel={selectedRows}
             />
           </Box>
         </Box>
       </Modal>
 
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-        }}
-      >
-        <ButtonGroup
-          variant="text"
-          aria-label="text button group"
-          sx={{ height: 60 }}
-        >
+
+      <Paper sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", }}>
+        <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
           <Button sx={{ flexDirection: "column" }}>
-            <Typography
-              sx={{ display: "flex", fontSize: 14, paddingRight: 5 }}
-              gutterBottom
-            >
-              {" "}
-              {sumaSaldoTotal}{" "}
+            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+              {" "}{sumaSaldoTotal}{" "}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.primary"
-            >
-              {" "}
-              Sub-Total{" "}
+            <Typography variant="body2" color="text.primary">
+              {" "}Sub-Total{" "}
             </Typography>
           </Button>
 
           <Button sx={{ flexDirection: "column" }}>
-            <Typography
-              sx={{ display: "flex", fontSize: 14, paddingRight: 5 }}
-              gutterBottom
-            >
-              {" "}
-              {sumaSaldoTotalDESC}{" "}
+            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+              {" "}{sumaSaldoTotalDESC}{" "}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.primary"
-            >
-              {" "}
-              Total-Pedido{" "}
+            <Typography variant="body2" color="text.primary">
+              {" "}Total-Pedido{" "}
             </Typography>
           </Button>
         </ButtonGroup>
       </Paper>
 
+
       <Box sx={{ flexDirection: "row", display: "flex" }}>
-        <Typography
-          variant="body2"
-          color="text.primary"
-        >
-          {" "}
-          Editado por:{" "}
+        <Typography variant="body2" color="text.primary">
+          {" "}Editado por:{" "}
         </Typography>
-        <Typography
-          sx={{ display: "flex", fontSize: 14, paddingRight: 5 }}
-          gutterBottom
-        >
-          {" "}
-          {clienteP?.createdBy || ""}{" "}
+        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+          {" "}{clienteP?.createdBy || ""}{" "}
         </Typography>
+      </Box>
       </Box>
 
       {openS ? (
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={openS}
-          autoHideDuration={2000}
-          onClose={handleCloses}
-        >
-          <Alert
-            onClose={handleCloses}
-            severity="success"
-            sx={{ width: "400px", height: "100px" }}
-          >
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
+          <Alert onClose={handleCloses} severity="success" sx={{ width: "400px", height: "100px" }}>
             Guardado exitosamente
           </Alert>
         </Snackbar>
-      ) : (
-        ""
-      )}
+      ) : ( "" )}
 
       {openE ? (
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={openS}
-          autoHideDuration={2000}
-          onClose={handleCloses}
-        >
-          <Alert
-            onClose={handleCloses}
-            severity="error"
-            sx={{ width: "400px", height: "100px" }}
-          >
+        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
+          <Alert onClose={handleCloses} severity="error" sx={{ width: "400px", height: "100px" }}>
             No se pudo guardar
           </Alert>
         </Snackbar>
-      ) : (
-        ""
-      )}
+      ) : ( "" )}
     </>
   );
 };

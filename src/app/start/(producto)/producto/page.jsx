@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
@@ -212,10 +212,8 @@ const obtenerPedidos = async (articulo) => {
 const obtenerBodegas = async () => {
   const response = await fetch('/api/productos/bodegas', {
     method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
-  })
+    headers: { "Content-Type" : "application/json" }
+  });
   return response.json()
 };
 
@@ -235,20 +233,20 @@ function Producto() {
   const [tablaProducto, setTablaProducto] = useState([]);
   const [bodegaSeleccionada, setBodegaSeleccionada] = useState();
 
-  const conseguirBodegas = async () => {
-    const datos = await obtenerBodegas()
-    try {
-      if (datos)
-      setBodegas(datos);
-    } catch (error) {
-      conexion()
-    }
-  };
-
-
+  
   useEffect(() => {
+    const conseguirBodegas = async () => {
+      const datos = await obtenerBodegas()
+      try {
+        if (datos)
+        setBodegas(datos);
+      } catch (error) {
+        conexion()
+      }
+    };
     conseguirBodegas();
   }, []);
+
 
   useEffect(() => {
     if (bodegaSeleccionada) {
@@ -257,9 +255,11 @@ function Producto() {
     }
   }, [bodegaSeleccionada]);
 
+
   useEffect(() => {
     setCargando(true)
-  }, [value])
+  }, [value]);
+
 
   const handleBodega = (event, newValue) => {
     if (newValue) {
@@ -267,7 +267,8 @@ function Producto() {
       setBodegaSeleccionada(newValue);
       conseguirProductos(newValue);
     }
-  }
+  };
+  
   const conseguirProductos = async () => {
     if (bodegaSeleccionada) {
       setOpen(true);
@@ -369,46 +370,29 @@ function Producto() {
 
   return (
     <>
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-          <Box sx={{ padding: '20px' }}>
-            <Typography
-              variant="h5"
-              component="h1"
-              gutterBottom
-              sx={{
-                display: "flex",
-                justifyContent: "column",
-                alignItems: "center",
-                width: "auto",
-                margin: 0,
-                color: "#000000",
-              }}>
-              PRODUCTOS
-            </Typography>
-          </Box>
-
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-              <Paper>
-                <Autocomplete
-                  options={bodegas}
-                  value={bodegaSeleccionada}
-                  onChange={handleBodega}
-                  getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
-                  disablePortal
-                  id="clear-on-escape"
-                  sx={{ width: 350 }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.NOMBRE === value.NOMBRE
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" />
-                  )}
-                  disableClearable
-                />
-              </Paper>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+        <h2><strong>PRODUCTOS</strong></h2>
+          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
+            <Paper>
+              <Autocomplete
+                options={bodegas}
+                value={bodegaSeleccionada}
+                onChange={handleBodega}
+                getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
+                disablePortal
+                id="clear-on-escape"
+                sx={{ width: 350 }}
+                isOptionEqualToValue={(option, value) =>
+                  option.NOMBRE === value.NOMBRE
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" />
+                )}
+                disableClearable
+              />
+            </Paper>
 
               <Box>
                 <Typography variant="h5" component="h1" gutterBottom
@@ -448,25 +432,26 @@ function Producto() {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: 700 }}>
+              <Box sx={{ width: "100%", height: "auto" }}>
                 {productos.length <= 0 ? (
                   <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba" >
                     {" "}<HelpOutlineIcon />{" "}
                   </Box>
                 ) : (
                   <DataGrid
+                    density="compact"
                     rows={productos}
                     columns={columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 11 },
-                      },
-                    }}
                     pageSizeOptions={[5, 11, 20]}
                     onRowSelectionModelChange={handleSelectionChange}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.ARTICULO}
                     sx={{ backgroundColor: "#ffffff" }}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 11 },
+                      },
+                    }}
                   />
                 )}
               </Box>
@@ -477,22 +462,23 @@ function Producto() {
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
                 </Box>
-              ) : pedidos.length === 0 ? (
-                <h1>NO HAY PEDIDOS</h1>
-              ) : (
-                <Box sx={{ width: "100%", height: 700 }}>
+                ) : pedidos.length === 0 ? (
+                  <h1>NO HAY PEDIDOS</h1>
+                ) : (
+                <Box sx={{ width: "100%", height: "auto" }}>
                   <DataGrid
+                  density="compact"
                     rows={pedidos}
                     columns={columnsP}
+                    pageSizeOptions={[5, 11, 20]}
+                    getRowId={(row) => row.PEDIDO}
+                    sx={{ backgroundColor: "#ffffff", }}
                     initialState={{
                       pagination: {
                         paginationModel: { page: 0, pageSize: 11 },
                       },
                     }}
-                    pageSizeOptions={[5, 11, 20]}
-                    getRowId={(row) => row.PEDIDO}
-                    sx={{ backgroundColor: "#ffffff", }}
-                  />
+                    />
                 </Box>
               )}
             </CustomTabPanel>
@@ -502,22 +488,22 @@ function Producto() {
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
                 </Box>
-              ) : facturas && facturas.length <= 0 ? (
-                <h1>NO HAY FACTURAS</h1>
-              ) : (
-                <Box sx={{ width: "100%", height: 700, }}>
+                ) : facturas && facturas.length <= 0 ? (
+                  <h1>NO HAY FACTURAS</h1>
+                ) : (
+                <Box sx={{ width: "100%", height: "auto", }}>
                   <DataGrid
+                    density="compact"
                     rows={facturas}
                     columns={columnsF}
+                    pageSizeOptions={[5, 11, 20]}
+                    getRowId={(row) => row.FACTURA}
+                    sx={{ backgroundColor: "#ffffff" }}
                     initialState={{
                       pagination: {
                         paginationModel: { page: 0, pageSize: 11 },
                       },
                     }}
-                    pageSizeOptions={[5, 11, 20]}
-                    getRowId={(row) => row.FACTURA}
-                    sx={{ backgroundColor: "#ffffff" }}
-                    
                   />
                 </Box>
               )}

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react'
 import JsBarcode from 'jsbarcode';
@@ -8,54 +8,52 @@ import { format } from 'date-fns';
 
 
 const generarCodigoBarras = (texto) => {
-   /* const canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     JsBarcode(canvas, texto, { format: "CODE128" });
-    return canvas.toDataURL("image/png"); */
+    return canvas.toDataURL("image/png"); 
   };
 
-  const useGenerarPDF = (clienteP, productosP, sumaSaldoTotalDESC = {}) => {
+  const useGenerarPDF = (clienteP = {}, productosP = [], sumaSaldoTotalDESC = {}) => {
     const [pdfDataUrl, ] = useState(null);
     const [fecha] = useState(format(new Date(), 'dd/MM/yyyy HH:mm:ss'));
-    const codigoBarras = generarCodigoBarras(); 
-
-    console.log(clienteP, productosP, sumaSaldoTotalDESC)
+    const codigoBarras = generarCodigoBarras(clienteP?.PEDIDO); 
 
     const generarPDF = () => {
         const pdf = new jsPDF('portrait', 'pt', 'letter');
         const columnsParaPDF = [
-            { field: 'ARTICULO', headerName: 'Codigo', width: 200 },
-            { field: 'DESCRIPCION', headerName: 'Referencia', width: 500 },
-            { field: 'PRECIO',  headerName: 'Precio', width: 200,
-                valueFormatter: (params) => {
-                    const PRECIO = params.value;
-                    const precioRedondeado = Number(PRECIO).toFixed(0);
-                    return `${parseFloat(precioRedondeado).toLocaleString()}`;
-                }, align: 'right',
-            },
-            { field: 'CPed', headerName: 'Cant', width: 200, type: 'number' },
-            { field: 'DESP', headerName: 'Desp', width: 250, type: 'number' },
+            { field: 'ARTICULO', headerName: 'CODIGO', width: 200 },
+            { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500 },
+            { field: 'PRECIO',  headerName: 'PRECIO', width: 200 },
+            { field: 'CPed', headerName: 'CANT', width: 200, type: 'number' },
+            { field: 'DESP', headerName: 'DESP', width: 250, type: 'number' },
             { field: 'EMPA', headerName: 'EMPA', width: 200, type: 'number' },
 
         ];
 
         const styles = {
-          theme: "grid",
+          theme: "plain",
           tableWidth: "auto",
           lineColor: [200, 200, 200],
           lineWight: 0.1,
-          font: "helvetica",
+          font: "times",
           fontStyle: "normal",
           textColor: [0, 0, 0],
           display: "flex",
           cellWidth: "auto",
           fontSize: 8,
-          tableLineColor: [200, 200, 200]
         };
+    
 
         const dataToPrint = productosP.map(row => {
           const rowData = [];
             columnsParaPDF.forEach(column => {
-                rowData.push(row[column.field]);
+                let value = row[column.field];
+
+                if (column.field === "PRECIO") {
+                  const precioRedondeado = Number(value).toFixed(0);
+                  value = parseFloat(precioRedondeado).toLocaleString();
+                }
+                rowData.push(value);
             });
             return rowData;
         });
@@ -66,17 +64,18 @@ const generarCodigoBarras = (texto) => {
             head: [columnsParaPDF.map(column => column.headerName)], 
             body: dataToPrint, 
             styles,
-            startY: 148,
+            startY: 150,
             theme:'plain',
+            columnStyles: { cellWidth: "auto" },
           });
 
         function encabezado() {
           pdf.setFontSize(20);
-          //pdf.addImage(`${codigoBarras}`, 220, 10,130,60);
-          
+          pdf.addImage(`${codigoBarras}`, 220, 10,130,60);
+          pdf.setFont("helvetica", "italic");
           pdf.setFontSize(13);
           pdf.text("PREFACTURA", 12, 30,);
-            if(clienteP.IMPRESO==="S"){
+            if(clienteP.IMPRESO === "S"){
           pdf.text("DUPLICADO", 12, 55,);
             }
           pdf.setFontSize(13);
@@ -89,27 +88,26 @@ const generarCodigoBarras = (texto) => {
           pdf.setFontSize(9);
           pdf.text(`CLIENTE:    ${clienteP.NOMBRE_RAZON}`, 12, 85,);
           pdf.text(`NIT/CEDULA:    ${clienteP.CLIENTE}`, 12, 98,);
-          pdf.text(`DOC2:    ${clienteP.PEDIDO}`, 200, 98,);
-          pdf.text(`PEORI:    ${clienteP.PEDIDO}`, 350, 98,);
+          pdf.text(`DOC2:    ${clienteP.PEDIDO}`, 340, 98,);
+          pdf.text(`PEORI:    ${clienteP.PEDIDO}`, 450, 98,);
           pdf.text(`CIUDAD PPAL:    ${clienteP.CIUDAD}-${clienteP.DEPTO}`, 12, 112,);
           pdf.text(`TEL:    ${clienteP.PEDIDO}`, 340, 112,);
           pdf.text(`D'UNA:    ${clienteP.PEDIDO}`, 450, 112,);
           pdf.text(`DIRECCION Y CIDUAD DE DESPACHO:    ${clienteP.PEDIDO}`, 12, 125,);
-          pdf.text(`SOLICITA:   ${clienteP.PEDIDO}`, 12, 139,);
+          pdf.text(`SOLICITA:   ${clienteP.PEDIDO}`, 340, 125,);
         }
 
         function agregarContenido() {
-          // Agrega el contenido del PDF aquí
-          pdf.setFontSize(11);
+          pdf.setFontSize(10);
           pdf.text(`TOTAL ITEMS: ${productosP.length}`, 350, pdf.autoTable.previous.finalY + 20);
           pdf.text(`Total: ${sumaSaldoTotalDESC}`, 470, pdf.autoTable.previous.finalY + 20);
           pdf.text("SEPARADO POR_____________________________________", 12, pdf.autoTable.previous.finalY + 20)
           pdf.text("REVISADO POR______________________________________", 12, pdf.autoTable.previous.finalY + 40);
           pdf.text("DESPACHADO POR______________________", 350, pdf.autoTable.previous.finalY + 40);
-          pdf.setFontSize(9);
+          pdf.setFontSize(8);
           pdf.text(`VENDEDOR: ${clienteP.VENDEDOR}`, 12, pdf.autoTable.previous.finalY + 65);
           pdf.text(`MODIFICADO POR: ${clienteP.U_EDITADOPOR}`, 350, pdf.autoTable.previous.finalY + 65);
-          pdf.text(`AUTORIZADO EN CARTERA POR:: ${clienteP.VENDEDOR}`, 12, pdf.autoTable.previous.finalY + 80);
+          pdf.text(`AUTORIZADO EN CARTERA POR: ${clienteP.VENDEDOR}`, 12, pdf.autoTable.previous.finalY + 80);
           pdf.text(`FECHA AUTORIZADO: ${clienteP.U_EDITADOPOR}`, 350, pdf.autoTable.previous.finalY + 80);
           pdf.text("___________________________________________________________________________________________________________________", 12, pdf.autoTable.previous.finalY + 90);
           pdf.text(`${fecha}`, 12, pdf.autoTable.previous.finalY + 103);

@@ -134,7 +134,7 @@ const style = {
         </Modal>
 
         <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, margin: 5, overflow: "auto",}}> 
+          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, overflow: "auto",}}> 
             <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
                 src="/logo2.png"
