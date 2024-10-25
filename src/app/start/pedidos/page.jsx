@@ -169,7 +169,7 @@ const Pedidos = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ height: 785, width: "100%" }}>
+              <Box sx={{ height: 795, width: "100%" }}>
                 <DataGrid
                   rows={pedidosFiltrados}
                   columns={columns}
