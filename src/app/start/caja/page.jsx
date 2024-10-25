@@ -1,19 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Modal,
-  Button,
-  ButtonGroup,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Paper,
-  Typography,
-  Divider,
-} from "@mui/material";
+import { Box, Modal, Button, ButtonGroup, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, Typography, Divider, } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -23,6 +10,7 @@ import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { Lora } from "next/font/google";
 
+
 const inter = Lora({ subsets: ["latin"] });
 
 const style = {
@@ -30,11 +18,14 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "80%",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 24
 };
 
 const pago = () => {
@@ -225,149 +216,73 @@ const pago = () => {
   return (
     <>
       <Box> {" "} <Banner /> {" "} </Box>
-      <Box
-        sx={{
-          width: "auto",
-          height: "auto",
-          display: "auto",
-          justifyContent: "center",
-          margin: "10%",
-          alignItems: "center",
-          padding: "auto",
-        }}
-      >
-        <Typography className={inter.className} sx={{ fontSize: 50, alignItems: "center", justifyContent: "center" }} gutterBottom>
-          {" "} PAGO {" "}
-        </Typography>
+      <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '10px', boxShadow: '0px 4px 12px rgba(0,0,0,0.1)', }}>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%", margin: 1 }}>
+          <h2 className={inter.className} style={{ fontSize: "2rem", alignItems: "center", justifyContent: "center" }}>
+            {" "} PAGO {" "}
+          </h2>
+          <Button component={Link} variant="outlined" href="../start/pedidos/pedidosCaja" sx={{ bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
+            Atras
+          </Button>
+        </Box>
         <Divider></Divider>
-        <Button
-          component={Link}
-          variant="outlined"
-          href="../start/pedidos/pedidosCaja"
-          sx={{ margin: "2px", bgcolor: "#B0DDFF", color: "black" }}
-          onClick={Cerrar}
-        >
-          Atras
-        </Button>
 
-        <Paper
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Paper sx={{ width: "100%", bgcolor: "background" }}>
+        <Paper sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", }}>
+          <Paper sx={{ width: "50%", bgcolor: "background" }}>
             <Paper sx={{ backgroundColor: "#ffffff" }}>
-              <Typography
-                sx={{ fontSize: 17 }}
-                color="primary"
-                gutterBottom
-              >
-                Metodo de Pago
-              </Typography>
+              <Typography sx={{ fontSize: 17 }} color="primary" gutterBottom>Metodo de Pago</Typography>
             </Paper>
 
             <Paper>
-              <List
-                component="nav"
-                aria-label="main mailbox folders"
-              >
-                <ListItemButton
-                  selected={selectedIndex === 0}
-                  onClick={(event) => handleListItemClick(event, 0)}
-                >
+              <List component="nav" aria-label="main mailbox folders">
+                <ListItemButton selected={selectedIndex === 0} onClick={(event) => handleListItemClick(event, 0)}>
                   <ListItemText primary="Efectivo" />
                 </ListItemButton>
 
-                <ListItemButton
-                  selected={selectedIndex === 1}
-                  onClick={(event) => handleListItemClick(event, 1)}
-                >
+                <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
                   <ListItemText primary="Banco" />
                 </ListItemButton>
 
-                <ListItemButton
-                  selected={selectedIndex === 2}
-                  onClick={(event) => handleListItemClick(event, 2)}
-                >
+                <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
                   <ListItemText primary="Cuenta Cliente" />
                 </ListItemButton>
               </List>
             </Paper>
 
             <Paper sx={{ backgroundColor: "#ffffff" }}>
-              <Typography
-                sx={{ fontSize: 17, marginBottom: 1 }}
-                color="primary"
-                gutterBottom
-              >
+              <Typography sx={{ fontSize: 17, marginBottom: 1 }} color="primary" gutterBottom>
                 Resumen
               </Typography>
             </Paper>
 
             <Paper>
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    value={0}
-                    onClick={handleDeleteComplete}
-                    edge="end: "
-                    aria-label="delete"
-                  >
+              <ListItem secondaryAction={
+                  <IconButton value={0} onClick={handleDeleteComplete} edge="end: " aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
-                }
-              >
-                <ListItemText
-                  primary={`Efectivo:  ${efectivo.toLocaleString("es")}`}
-                />
+                }>
+                <ListItemText primary={`Efectivo:  ${efectivo.toLocaleString("es")}`} />
               </ListItem>
 
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    value={1}
-                    onClick={handleDeleteComplete}
-                    edge="end"
-                    aria-label="delete"
-                  >
+              <ListItem secondaryAction={
+                  <IconButton value={1} onClick={handleDeleteComplete} edge="end" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
-                }
-              >
-                <ListItemText
-                  primary={"Banco:   " + banco.toLocaleString("es")}
-                />
+                }>
+                <ListItemText primary={"Banco:   " + banco.toLocaleString("es")} />
               </ListItem>
 
-              <ListItem
-                secondaryAction={
-                  <IconButton
-                    value={2}
-                    onClick={handleDeleteComplete}
-                    edge="end"
-                    aria-label="delete"
-                  >
+              <ListItem secondaryAction={
+                  <IconButton value={2} onClick={handleDeleteComplete} edge="end" aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
-                }
-              >
-                <ListItemText
-                  primary={
-                    "Cuenta Cliente: " + cuentaCliente.toLocaleString("es")
-                  }
-                />
+                }>
+                <ListItemText primary={ "Cuenta Cliente: " + cuentaCliente.toLocaleString("es")} />
               </ListItem>
             </Paper>
 
-            <ButtonGroup
-              orientation="vertical"
-              aria-label="vertical outlined button group"
-              variant="text"
-              sx={{ margin: 0, width: "100%", height: "100%" }}
-            >
+            <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: 0, width: "100%", height: "100%" }}>
               <Button
                 component={Link}
                 href="../start/pedidos/ReciboCaja"
@@ -378,267 +293,102 @@ const pago = () => {
                   height: 250,
                   backgroundColor: restante === 0 ? "#00796b" : "transparent",
                   color: restante === 0 ? "white" : "black",
-                }}
-              >
+                }}>
                 Validar
               </Button>
             </ButtonGroup>
           </Paper>
 
-          <Paper
-            sx={{ display: "flex", flexDirection: "column", width: "50%" }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                zoom: 2,
-                width: "auto",
-              }}
-            >
-              <ButtonGroup
-                variant="text"
-                aria-label="text button group"
-                sx={{ height: 60 }}
-              >
+          <Paper sx={{ display: "flex", flexDirection: "column", width: "50%" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", zoom: 2, width: "auto", }}>
+              <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography
-                    variant="outline"
-                    sx={{
-                      display: "flex",
-                      paddingRight: 2,
-                      color: "black",
-                      fontSize: "1vw",
-                    }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Cambio: ${" "}
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "10px" }} gutterBottom>
+                    {" "}Cambio: {" "}
                   </Typography>
-                  <Typography
-                    sx={{ fontSize: "1vw" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    {cambio.toLocaleString("es")}{" "}
+                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                    {" "}${cambio.toLocaleString("es")}{" "}
                   </Typography>
                 </Button>
 
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography
-                    variant="outline"
-                    sx={{
-                      display: "flex",
-                      paddingRight: 2,
-                      color: "black",
-                      fontSize: "1vw",
-                    }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Restante: ${" "}
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "10px",}} gutterBottom>
+                    {" "}Restante: {" "}
                   </Typography>
-                  <Typography
-                    sx={{ fontSize: "1vw" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    {restante.toLocaleString("es")}{" "}
+                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                    {" "}${restante.toLocaleString("es")}{" "}
                   </Typography>
                 </Button>
 
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography
-                    variant="outline"
-                    sx={{
-                      display: "flex",
-                      paddingRight: 2,
-                      color: "black",
-                      fontSize: "1vw",
-                    }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Total: ${" "}
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2,  color: "black", fontSize: "10px" }} gutterBottom>
+                    {" "}Total: {" "}
                   </Typography>
-                  <Typography
-                    sx={{ fontSize: "1vw" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    {caja.total}{" "}
+                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                    {" "}${caja.total}{" "}
                   </Typography>
                 </Button>
               </ButtonGroup>
             </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                alignContent: "center",
-                width: "100%",
-                height: "100%",
-                zoom: 1.5,
-              }}
-            >
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical outlined button group"
-                variant="text"
-                sx={{ margin: "2px", width: "50%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={1}
-                  onClick={handleClick}
-                >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", alignContent: "center", width: "100%", height: "100%", zoom: 1.5, }}>
+              <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "50%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100px" }} value={1} onClick={handleClick}>
                   1
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={4}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={4} onClick={handleClick}>
                   4
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={7}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={7} onClick={handleClick}>
                   7
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={0}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={0} onClick={handleClick}>
                   +/-
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "50%", height: "100%" }}
-              >
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "50%", height: "100%" }}>
                 <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={2}
-                  onClick={handleClick}
-                >
+                  variant="outlined" sx={{ height: "100px" }} value={2} onClick={handleClick}>
                   2
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={5}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={5} onClick={handleClick}>
                   5
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={8}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={8} onClick={handleClick}>
                   8
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={0}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={0} onClick={handleClick}>
                   0
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "50%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={3}
-                  onClick={handleClick}
-                >
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "50%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100px" }} value={3} onClick={handleClick}>
                   3
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={6}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={6} onClick={handleClick}>
                   6
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={9}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={9} onClick={handleClick}>
                   9
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={","}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={","} onClick={handleClick}>
                   ,
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "50%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={10}
-                  onClick={handleClick}
-                >
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "50%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100px" }} value={10} onClick={handleClick}>
                   +10
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={20}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={20} onClick={handleClick}>
                   +20
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  value={50}
-                  onClick={handleClick}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} value={50} onClick={handleClick}>
                   +50
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100px" }}
-                  onClick={handleDelete}
-                >
+                <Button variant="outlined" sx={{ height: "100px" }} onClick={handleDelete}>
                   X
                 </Button>
               </ButtonGroup>
@@ -646,22 +396,12 @@ const pago = () => {
           </Paper>
 
           <Paper sx={{ width: "20%", bgcolor: "background.paper" }}>
-            <List
-              component="nav"
-              aria-label="main mailbox folders"
-              sx={{ marginTop: -47 }}
-            >
-              <ListItemButton
-                selected={selectedIndex === 3}
-                onClick={handleOpen}
-              >
-                <ListItemText primary={`Cliente: ${cliente.NOMBREALIAS}`} />
+            <List component="nav" aria-label="main mailbox folders" sx={{ marginTop: -47 }}>
+              <ListItemButton selected={selectedIndex === 3} onClick={handleOpen}>
+                <ListItemText primary={`CLIENTE: ${cliente.NOMBREALIAS}`} />
               </ListItemButton>
-              <ListItemButton
-                selected={selectedIndex === 4}
-                onClick={(event) => handleListItemClick(event, 4)}
-              >
-                <ListItemText primary="Factura" />
+              <ListItemButton selected={selectedIndex === 4} onClick={(event) => handleListItemClick(event, 4)}>
+                <ListItemText primary="FACTURA" />
               </ListItemButton>
             </List>
 
@@ -669,8 +409,7 @@ const pago = () => {
               open={open}
               onClose={handleClose}
               aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
+              aria-describedby="modal-modal-description">
               <Box sx={style}>
                 <ClientesGlobal setOpen={setOpen} />
               </Box>

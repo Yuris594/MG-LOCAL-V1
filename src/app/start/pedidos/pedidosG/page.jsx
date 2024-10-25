@@ -31,12 +31,15 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  bgcolor: "white",
-  width: "90%",
-  height: "80%",
-  boxShadow: 24,
-  p: 4,
-};
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  bgcolor: "#ffffff",
+  borderRadius: "8px",
+  boxShadow: 24
+}
 
 
 const Alert = React.forwardRef(function Alert(props, Ref) {
@@ -674,8 +677,9 @@ const pedidosG = () => {
                 </Paper>
               </Box>
 
-              <Box sx={{ height: 750, width: "100%" }}>
+              <Box sx={{ height: 755, width: "100%", bgcolor: "#ffffff" }}>
                 <DataGrid
+                  density="compact"
                   rows={productos}
                   columns={columns}
                   initialState={{

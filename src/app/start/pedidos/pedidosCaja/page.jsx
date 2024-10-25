@@ -1,32 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Edit as EditIcon,
-  DeleteOutlined as DeleteIcon,
-  Close as CancelIcon,
-  Save as SaveIcon,
-} from "@mui/icons-material";
-import {
-  GridRowModes,
-  DataGrid,
-  GridActionsCellItem,
-  GridRowEditStopReasons, } from "@mui/x-data-grid";
-import {
-  Box,
-  Modal,
-  ButtonGroup,
-  Button,
-  Typography,
-  InputBase,
-  LinearProgress,
-} from "@mui/material";
+import { Edit as EditIcon, DeleteOutlined as DeleteIcon, Close as CancelIcon, Save as SaveIcon, } from "@mui/icons-material";
+import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
+import { Box, Modal, ButtonGroup, Button, Typography, InputBase, LinearProgress, } from "@mui/material";
+import ClientesGlobal from "../../clients/clientesGlobal/page";
 import useTecladoCaja from "@/app/hooks/useTecladoCaja";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import ClientesGlobal from "../../clients/clientesGlobal/page";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,67 +26,41 @@ function CustomTabPanel(props) {
     </div>
   );
 }
+
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
 
+
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "80%",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 24
 };
 
 const columns = [
-  {
-    field: "DESCRIPCION",
-    headerName: "Referencia",
-    width: 500,
-    headerClassName: "super-app-theme--header",
-  },
-  {
-    field: "SUBLINEA",
-    headerName: "Sublinea",
-    width: 300,
-    headerClassName: "super-app-theme--header",
-  },
-  {
-    field: "TOTAL_DISP",
-    headerName: "Disp",
-    width: 70,
-    headerClassName: "super-app-theme--header",
-  },
-  {
-    field: "PRECIO",
-    headerName: "Precio",
-    width: 130,
+  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, headerClassName: "super-app-theme--header", },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, headerClassName: "super-app-theme--header", },
+  { field: "TOTAL_DISP", headerName: "DISP", width: 70, headerClassName: "super-app-theme--header", },
+  { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    editable: true,
-    headerClassName: "super-app-theme--header",
+    }, editable: true, headerClassName: "super-app-theme--header",
   },
-  {
-    field: "CANTIDAD",
-    headerName: "",
-    width: 50,
-    type: "number",
-    headerClassName: "super-app-theme--header",
-  },
-  {
-    field: "EXIST_REAL",
-    headerName: "Existreal",
-    width: 90,
-    headerClassName: "super-app-theme--header",
-  },
+  { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: "super-app-theme--header",},
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, headerClassName: "super-app-theme--header", },
 ];
 
 const conseguirProductos = async () => {
@@ -127,28 +85,30 @@ const PedidosCaja = () => {
   const [rowModesModel, setRowModesModel] = useState({});
   const [sumaSaldoTotalDESC, setSumaSaldoTotalDESC] = useState(0);
   useTecladoCaja(productosP, setProductosP, selectedRowsP, opcion);
-
+  const handleSelectionChanges = (newSelection) => {
+    setSelectedRowsP(newSelection);
+  };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
+    const Producto = async () => {
+      const datos = await conseguirProductos();
+      if (datos) {
+        setProductos(datos);
+        setTablaProducto(datos);
+        setCargando(false);
+      } else {
+        console.log("Error");
+      }
+    };
+
     Producto();
   }, []);
 
-  const Producto = async () => {
-    const datos = await conseguirProductos();
-    if (datos) {
-      setProductos(datos);
-      setTablaProducto(datos);
-      setCargando(false);
-    } else {
-      console.log("Error");
-    }
-  };
 
   useEffect(() => {
-    setTimeout(() => {
-      productosP;
+    setTimeout(() => { productosP;
       const sumaSaldoDESC = productosP.reduce((sum, producto) => {
         const precioConDescuento = producto.PRECIO * (1 - producto.PORC_DCTO / 100);
         const precioConIVA = precioConDescuento * (1 + producto.PORC_IMPUESTO / 100);
@@ -209,15 +169,12 @@ const PedidosCaja = () => {
 
   const handleSelectionChange = (newSelection) => {
     setSelectedRows(newSelection);
-    //setSelectedRowsP(newSelection);
-
     const productosActualizados = productosP.map((producto) => {
       if ( newSelection.includes(producto.ARTICULO)) {
         return { ...producto, CPed: producto.CPed ? producto.CPed + 1 : 1 };
       }
         return producto;
     });
-
     setProductosP(productosActualizados);
 
     const filasSeleccionadas = {};
@@ -237,9 +194,6 @@ const PedidosCaja = () => {
     }
   };
 
-  const handleSelectionChanges = (newSelection) => {
-    setSelectedRowsP(newSelection);
-  };
 
   const guardar = () => {
     const pedido = JSON.parse(localStorage.getItem("pedidoTempG"));
@@ -399,7 +353,6 @@ const PedidosCaja = () => {
     const sumaSaldoTotalObjeto = {
       total: sumaSaldoTotalDESC,
     };
-
     const datosDePago = { ...sumaSaldoTotalObjeto, ...productosP };
     localStorage.setItem("pago", JSON.stringify(datosDePago));
     setCaja(datosDePago);
@@ -408,21 +361,8 @@ const PedidosCaja = () => {
   return (
     <>
       <Box>{" "}<Banner />{" "}</Box>
-      <Box sx={{ display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          gap: 2,
-          flexWrap: "wrap", mt: 2, mr: 4 }}>
-        <InputBase
-          sx={{
-            ml: 1,
-            flex: 1,
-            maxWidth: "300px",
-            border: "2px solid black",
-            borderRadius: "4px",
-            p: 1,
-            mb: 2,
-          }}
+      <Box sx={{ display: "flex", alignItems: "center",justifyContent: "flex-end", gap: 2, flexWrap: "wrap", mt: 2, mr: 4 }}>
+        <InputBase sx={{ ml: 1, flex: 1, maxWidth: "300px", border: "2px solid black", borderRadius: "4px", p: 1, mb: 2, }}
           type="text"
           value={busqueda}
           onChange={handleChange}
@@ -432,27 +372,9 @@ const PedidosCaja = () => {
         />
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          height: "100%",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box
-          sx={{
-            width: "33%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}
-        >
-          <Box
-            sx={{
-              mb: 1,
-              height: 700,
-              width: "100%",
+      <Box sx={{ display: "flex", flexDirection: "row", height: "100%", justifyContent: "space-between", }}>
+        <Box sx={{ width: "30%", display: "flex", flexDirection: "column", gap: 2, }}>
+          <Box sx={{ mb: 1, height: 700, width: "100%",
               "& .MuiDataGrid-cell--editable": {
                 bgcolor: (theme) =>
                   theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
@@ -465,8 +387,7 @@ const PedidosCaja = () => {
                 backgroundColor: "rgba(0, 0, 0, 0.541)",
                 color: "#fff",
               },
-            }}
-          >
+            }}>
             <DataGrid
               density="compact"
               rows={productosP}
@@ -487,361 +408,159 @@ const PedidosCaja = () => {
             />
           </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              mt: 1,
-            }}
-          >
-            <ButtonGroup
-              variant="text"
-              aria-label="text button group"
-              sx={{ height: 20 }}
-            >
+          <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", mt: 1, }}>
+            <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 20 }}>
               <Button sx={{ flexDirection: "row" }}>
-                <Typography
-                  variant="outline"
-                  sx={{ paddingRight: 2, color: "black" }}
-                  gutterBottom
-                >
-                  {" "}
-                  Total:${" "}
+                <Typography variant="outline" sx={{ paddingRight: 2, color: "black" }} gutterBottom>
+                  {" "} Total:${" "}
                 </Typography>
-                <Typography
-                  sx={{}}
-                  gutterBottom
-                >
-                  {" "}
-                  {sumaSaldoTotalDESC}{" "}
-                </Typography>
+                <Typography gutterBottom>{" "}{sumaSaldoTotalDESC}{" "}</Typography>
               </Button>
             </ButtonGroup>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <ButtonGroup
-                variant="outlined"
-                aria-label="text button group"
-              >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", }}>
+              <ButtonGroup variant="outlined" aria-label="text button group">
                 <Button sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    sx={{ display: "flex", color: "black" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Nota del Cliente{" "}
+                  <Typography sx={{ display: "flex", color: "black" }} gutterBottom>
+                    {" "}Nota del Cliente{" "}
                   </Typography>
                 </Button>
                 <Button sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    sx={{ display: "flex", color: "black" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Reembolso{" "}
+                  <Typography sx={{ display: "flex", color: "black" }} gutterBottom>
+                    {" "}Reembolso{" "}
                   </Typography>
                 </Button>
                 <Button sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    sx={{ display: "flex", color: "black" }}
-                    gutterBottom
-                  >
-                    {" "}
-                    Informacion{" "}
+                  <Typography sx={{ display: "flex", color: "black" }} gutterBottom>
+                    {" "}Informacion{" "}
                   </Typography>
                 </Button>
               </ButtonGroup>
             </Box>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                height: "230px",
-                overflow: "auto",
-              }}
-            >
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical outlined button group"
-                variant="text"
-                sx={{ margin: "2px", width: "100%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ width: "100%", height: "30%" }}
-                  onClick={handleOpen}
-                >
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%", height: "230px", overflow: "auto", }}>
+              <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "100%", height: "100%" }}>
+                <Button variant="outlined" sx={{ width: "100%", height: "30%" }} onClick={handleOpen}>
                   Cliente:{cliente.NOMBREALIAS}
                 </Button>
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
+                <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                   <Box sx={style}>
                     <ClientesGlobal setOpen={setOpen} />
                   </Box>
                 </Modal>
 
-                <Button
-                  component={Link}
+                <Button component={Link} variant="outlined"
                   href={sumaSaldoTotalDESC !== "0" ? "../../../start/caja" : ""}
-                  variant="outlined"
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor:
-                      sumaSaldoTotalDESC !== "0" ? "#00796b" : "transparent",
-                    color: sumaSaldoTotalDESC !== "0" ? "white" : "black",
-                  }}
                   onClick={sumaSaldoTotalDESC !== "0" ? pago : null}
-                >
+                  sx={{ width: "100%", height: "100%",
+                    backgroundColor: sumaSaldoTotalDESC !== "0" ? "#00796b" : "transparent",
+                    color: sumaSaldoTotalDESC !== "0" ? "white" : "black", }}>
                   Pago
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical outlined button group"
-                variant="text"
-                sx={{ margin: "2px", width: "30%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={1}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  1{" "}
+              <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text"
+                sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100%" }} value={1} onClick={handleClick}>
+                  {" "}1{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={4}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  4{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={4} onClick={handleClick}>
+                  {" "}4{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={7}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  7{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={7} onClick={handleClick}>
+                  {" "}7{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={0}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  +/-{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
+                  {" "}+/-{" "}
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "30%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={2}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  2{" "}
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100%" }} value={2} onClick={handleClick}>
+                  {" "}2{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={5}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  5{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={5} onClick={handleClick}>
+                  {" "}5{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={8}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  8{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={8} onClick={handleClick}>
+                  {" "}8{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={0}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  0{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
+                  {" "}0{" "}
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "30%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={3}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  3{" "}
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                <Button variant="outlined" sx={{ height: "100%" }} value={3} onClick={handleClick}>
+                  {" "}3{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={6}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  6{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={6} onClick={handleClick}>
+                  {" "}6{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={9}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  9{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={9} onClick={handleClick}>
+                  {" "}9{" "}
                 </Button>
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  value={0}
-                  onClick={handleClick}
-                >
-                  {" "}
-                  ,{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
+                  {" "},{" "}
                 </Button>
               </ButtonGroup>
 
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text"
-                sx={{ margin: "2px", width: "30%", height: "100%" }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{
-                    backgroundColor:
-                      opcion === "CPed" ? "#606060" : "transparent",
+              <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
+                <Button variant="outlined" sx={{
+                    backgroundColor: opcion === "CPed" ? "#606060" : "transparent",
                     color: opcion === "CPed" ? "white" : "",
-                    height: "100%",
-                  }}
-                  onClick={() => setOpcion("CPed")}
-                >
-                  {" "}
-                  Ctdad{" "}
+                    height: "100%", }}
+                    onClick={() => setOpcion("CPed")}>
+                  {" "}Ctdad{" "}
                 </Button>
 
-                <Button
-                  variant="outlined"
-                  sx={{
-                    backgroundColor:
-                      opcion === "PORC_DCTO" ? "#606060" : "transparent",
+                <Button variant="outlined" sx={{
+                    backgroundColor: opcion === "PORC_DCTO" ? "#606060" : "transparent",
                     color: opcion === "PORC_DCTO" ? "white" : "",
-                    height: "100%",
-                  }}
-                  onClick={() => setOpcion("PORC_DCTO")}
-                >
-                  {" "}
-                  %Desc{" "}
+                    height: "100%", }}
+                    onClick={() => setOpcion("PORC_DCTO")}>
+                  {" "}%Desc{" "}
                 </Button>
 
-                <Button
-                  variant="outlined"
-                  sx={{
-                    backgroundColor:
-                      opcion === "PRECIO" ? "#606060" : "transparent",
+                <Button variant="outlined" sx={{
+                    backgroundColor: opcion === "PRECIO" ? "#606060" : "transparent",
                     color: opcion === "PRECIO" ? "white" : "",
-                    height: "100%",
-                  }}
-                  onClick={() => setOpcion("PRECIO")}
-                >
-                  {" "}
-                  Precio{" "}
+                    height: "100%", }}
+                    onClick={() => setOpcion("PRECIO")}>
+                  {" "}Precio{" "}
                 </Button>
 
-                <Button
-                  variant="outlined"
-                  sx={{ height: "100%" }}
-                  onClick={handleDelete}
-                >
-                  {" "}
-                  X{" "}
+                <Button variant="outlined" sx={{ height: "100%" }} onClick={handleDelete}>
+                  {" "}X{" "}
                 </Button>
               </ButtonGroup>
             </Box>
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            width: "70%",
-            alignItems: "center",
-            height: "100%",
-            justifyContent: "space-between",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              height: 1030,
+        <Box sx={{ display: "flex", width: "70%", alignItems: "center", height: "100%", justifyContent: "space-between", flexDirection: "column", }}>
+          <Box sx={{ display: "flex", width: "100%", height: 1030,
               "& .super-app-theme--header": {
                 backgroundColor: "#DCDCDC",
                 color: "#000000",
-              },
-            }}
-          >
-            {cargando === true ? (
+              }, 
+              }}>
+              {cargando === true ? (
               <Box sx={{ width: "100%" }}>
-                {" "}
-                <LinearProgress />{" "}
+                {" "}<LinearProgress />{" "}
               </Box>
-            ) : (
+              ) : (
               <DataGrid
                 rows={productos}
                 columns={columns}
                 getRowId={(row) => row.ARTICULO}
+                pageSizeOptions={[17]}
+                onRowSelectionModelChange={handleSelectionChange}
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 18 },
+                    paginationModel: { page: 0, pageSize: 17 },
                   },
                 }}
-                pageSizeOptions={[5, 18]}
-                onRowSelectionModelChange={handleSelectionChange}
                 onSelectionModelChange={(newSelection) =>
                   setSelectedRows(newSelection)
                 }
@@ -857,5 +576,3 @@ const PedidosCaja = () => {
 
 export default PedidosCaja;
 
-//Probar con generateStaticParams, revisar como utilizar el cache, este tiene un limite
-// export const dynamic

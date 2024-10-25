@@ -46,11 +46,11 @@ const bull = (
                 <Divider sx={{ fonSize:30 }} orientation="horizontal"></Divider>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                <Box sx={{ with: "50%", margin: 20,}}>
+                <Box sx={{ with: "50%", margin: 5 }}>
                     
-                  <Typography sx={{ fontSize: 50, margin: 0, marginBottom: 6, padding: 0 }} color="text.secondary" gutterBottom>
+                  <h3 style={{ fontSize: 40, margin: 0, marginBottom: 6, padding: 0 }}>
                       ¿Como le gustaria recibir su recibo?
-                  </Typography>
+                  </h3>
                   
                     <Button variant="outlined" color="primary" sx={{ width: 550, marginBottom: 5, backgroundColor: "#00796b", color: "#fff"}} onClick={generarPDF}>Imprimir Recibo</Button>
             
@@ -74,7 +74,7 @@ const bull = (
                   </Box>
 
                 <Box sx={{ width: "50%", bord: 20, }}>
-                    <Card sx={{ width: "40vw", height: "100%" }}>
+                    <Card sx={{ width: "100%", height: "100%" }}>
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBotton: 0}}>
                             <Typography className={inter.className} sx={{ fontSize: 17, flexDirection: 'column' }} color="text.secondary" gutterBottom>
                                 ...........Miguel Gómez & Cia.................<br />
@@ -96,10 +96,10 @@ const bull = (
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0}}>
-                            <Typography variant="h6" component="div">
+                            <h3>
                                 -------------------------<br />
                                 Total {bull} {caja.total}
-                            </Typography>
+                            </h3>
 
                         </CardContent>
 
@@ -118,16 +118,16 @@ const bull = (
                         </CardContent>
 
                         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', paddingTop: 0 }}>
-                            <Typography variant="h6" component="div">
+                            <h3>
                                 -------------------------<br />
                                 Cambio {bull}{} {caja.cambio}
-                            </Typography>
+                            </h3>
                         </CardContent>
                     </Card>
                 </Box>
             </Box>
 
-            <Box sx={{ width: '139vw', padding: 0, margin: 0, paddingTop: 12 }}>
+            <Box sx={{ width: '100%', padding: 0, margin: 0, paddingTop: 12 }}>
                 <Button component={Link} href="../../pedidos/pedidosCaja" variant="outlined" 
                         sx={{ width: "100%", height: 300, padding: 0, margin: 0, backgroundColor: "#00796b", color: "white" }} onClick={cerrarP}>
                     Nuevo Pedido

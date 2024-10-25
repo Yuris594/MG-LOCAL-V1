@@ -32,14 +32,14 @@ export function conexion() {
 }
 
 const columns = [
-  { field: "PER_Nom", headerName: "Nombre", width: 200, editable: true },
-  { field: "PER_Usuario", headerName: "Usuario", width: 150, editable: true },
-  { field: "PER_Clave", headerName: "Contraseña", width: 150, editable: true },
-  { field: "IdDiv", headerName: "ID División", type: "number", width: 120, editable: true },
-  { field: "PERAUTOPED", headerName: "Auto Pedidos", type: "number", width: 130, editable: true },
-  { field: "CODVEND", headerName: "Código Vendedor", width: 150, editable: true },
-  { field: "PREFIJO", headerName: "Prefijo", width: 120, editable: true },
-  { field: "CONSECUTIVOPED", headerName: "Consecutivo Pedidos", type: "number", width: 180, editable: true },
+  { field: "PER_Nom", headerName: "NOMBRE", width: 200, editable: true },
+  { field: "PER_Usuario", headerName: "USUARIO", width: 150, editable: true },
+  { field: "PER_Clave", headerName: "CONTRASEÑA", width: 150, editable: true },
+  { field: "IdDiv", headerName: "ID DIVISIÓN", type: "number", width: 120, editable: true },
+  { field: "PERAUTOPED", headerName: "AUTO PEDIDOS", type: "number", width: 130, editable: true },
+  { field: "CODVEND", headerName: "CÓDIGO VENDEDOR", width: 150, editable: true },
+  { field: "PREFIJO", headerName: "PREFIJO", width: 120, editable: true },
+  { field: "CONSECUTIVOPED", headerName: "CONSECUTIVO PEDIDOS", type: "number", width: 180, editable: true },
 ];
 
 
@@ -176,22 +176,16 @@ function Usuarios() {
               </Box>
             </Modal>
 
-            <Typography variant="h5" sx={{
-              display: "flex",
-              justifyContent: "column",
-              alignItems: "center",
-              width: "auto",
-              color: "#000000",
-              margin: 0 }}>
+            <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", color: "#000000", margin: 0 }}>
                 USUARIOS
-            </Typography>
+            </h2>
 
             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
             <Button variant="outlined" onClick={handleOpen} sx={{ margin: "10px" }} color="primary">
               Nuevo Usuario
             </Button>
 
-            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px" }}>
+            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 900, margin: "10px" }}>
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Buscar..."
@@ -206,7 +200,7 @@ function Usuarios() {
             </Paper>
           </Box>
 
-          <Box sx={{ height: 765, width: "100%" }}>
+          <Box sx={{ height: 772, width: "100%" }}>
             <DataGrid
               rows={usuarios}
               columns={columns}

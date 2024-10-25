@@ -1,6 +1,6 @@
 'use client';
 
-import { createTheme } from "@mui/material"
+import { createTheme, responsiveFontSizes } from "@mui/material"
 
 const theme = createTheme({
     breakpoints: {
@@ -27,7 +27,7 @@ const theme = createTheme({
       fontFamily: "Roboto, Arial, san-serif"
     },
       fontSize: 25
-  })
+  });
 
 
 export default theme;

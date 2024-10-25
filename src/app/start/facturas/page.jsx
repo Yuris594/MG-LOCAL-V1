@@ -117,39 +117,12 @@ const Factura = () => {
     const columnsParaPDF = [
       { field: "ARTICULO", headerName: "Ref.", width: 200 },
       { field: "CANTIDAD", headerName: "CANT", width: 200, align: "right" },
-      {
-        field: "CPed",
-        headerName: "UND",
-        width: 200,
-        type: "number",
-        align: "right",
-      },
+      { field: "CPed", headerName: "UND", width: 200, type: "number", align: "right", },
       { field: "DESCRIPCION", headerName: "DESCRIPCIÓN", width: 1000 },
       { field: "PORCIVA", headerName: "IVA", width: 200, align: "right" },
       { field: "PORDESC", headerName: "DTO", width: 200, align: "right" },
-      {
-        field: "PRECIO_UNITARIO",
-        headerName: "VALOR UNI",
-        width: 200,
-        valueFormatter: (params) => {
-          const PRECIO_UNITARIO = params.value;
-          const precioRedondeado = Number(PRECIO_UNITARIO).toFixed(0);
-          return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        },
-        align: "right",
-      },
-      {
-        field: "PRECIO_TOTAL",
-        headerName: "TOTAL",
-        width: 250,
-        type: "number",
-        valueFormatter: (params) => {
-          const PRECIO_TOTAL = params.value;
-          const precioRedondeado = Number(PRECIO_TOTAL).toFixed(0);
-          return `${parseFloat(precioRedondeado).toLocaleString()}`;
-        },
-        align: "right",
-      },
+      { field: "PRECIO_UNITARIO", headerName: "VALOR UNI", width: 200, align: "right", },
+      { field: "PRECIO_TOTAL", headerName: "TOTAL", width: 250, type: "number", align: "right"},
     ];
 
     const styles = {
@@ -157,7 +130,7 @@ const Factura = () => {
       tableWidth: "auto",
       lineColor: [200, 200, 200],
       lineWidth: 0.1,
-      font: "helvetica",
+      font: "times",
       fontStyle: "normal",
       textColor: [0, 0, 0],
       display : "flex",
@@ -167,25 +140,23 @@ const Factura = () => {
     const dataToPrint = productos.map((row) => {
       const rowData = [];
       columnsParaPDF.forEach((column) => {
-        rowData.push(row[column.field]);
+        let value = row[column.field];
+
+        if (column.field === "PRECIO_UNITARIO" || column.field === "PRECIO_TOTAL") {
+          const precioRedondeado = Number(value).toFixed(0);
+          value = parseFloat(precioRedondeado).toLocaleString();
+        }
+        rowData.push(value);
       });
       return rowData;
     });
 
     function encabezado() {
       pdf.setFontSize(11);
-      pdf.text(
-        "Nuestra dirección y lineas de atención han cambiado:(4) 604 3380 - 3203509705",
-        100,
-        17
-      );
+      pdf.setFont("times", "italic")
+      pdf.text("Nuestra dirección y lineas de atención han cambiado:(4) 604 3380 - 3203509705", 100, 17);
       pdf.setFontSize(13);
-      pdf.text(
-        "_________________________________________________________________________________",
-        12,
-        20
-      );
-
+      pdf.text("_________________________________________________________________________________", 12, 20);
       pdf.setFontSize(13);
       pdf.addImage("/logo_factura.png", "PNG", 10, 30, 200, 25);
       pdf.setFontSize(15);
@@ -200,11 +171,11 @@ const Factura = () => {
       pdf.setFontSize(9);
       pdf.text(`CLIENTE:    ${fac.CLIENTE}`, 12, 85);
       pdf.text(`NIT/CEDULA:    ${fac.CreatedBy}`, 12, 98);
-      pdf.text(`TEL:    ${fac.CreatedBy}`, 200, 98);
-      pdf.text(`VENDEDOR:    ${fac.CreatedBy}`, 350, 98);
+      pdf.text(`TEL:    ${fac.CreatedBy}`, 330, 98);
+      pdf.text(`VENDEDOR:    ${fac.CreatedBy}`, 440, 98);
       pdf.text(`MUNICIPIO:    ${fac.CreatedBy}-${fac.CreatedBy}`, 12, 112);
-      pdf.text(`PEDIDO:    ${fac.PEDIDO}`, 340, 112);
-      pdf.text(`CREADO:    ${fac.CreatedBy}`, 450, 112);
+      pdf.text(`PEDIDO:    ${fac.PEDIDO}`, 330, 112);
+      pdf.text(`CREADO:    ${fac.CreatedBy}`, 440, 112);
       pdf.text(`DIRECCION:    ${fac.CreatedBy}`, 12, 125);
       pdf.text(`NOTA:   ${fac.OBSERVACIONES}`, 12, 139);
     }
@@ -221,43 +192,16 @@ const Factura = () => {
 
     function agregarContenido() {
       pdf.setFontSize(10);
-      pdf.text(
-        `TOTAL ITEMS:        ${productos.length}`,
-        350,
-        pdf.autoTable.previous.finalY + 20
-      );
-      pdf.text(
-        `SubTotal:     ${fac.TOTAL_MERCADERIA.toLocaleString("es-ES")}`,
-        470,
-        pdf.autoTable.previous.finalY + 20
-      );
-      pdf.text(
-        `Desc:           ${totales.descuento.toLocaleString("es-ES")}`,
-        470,
-        pdf.autoTable.previous.finalY + 40
-      );
-      pdf.text(
-        `IVA:              ${totales.impuesto}`,
-        470,
-        pdf.autoTable.previous.finalY + 60
-      );
-      pdf.text(
-        `TOTAL:        ${totales.totalConImpuesto}`,
-        470,
-        pdf.autoTable.previous.finalY + 80
-      );
+      pdf.setFont("times", "italic")
+      pdf.text(`TOTAL ITEMS:        ${productos.length}`, 350, pdf.autoTable.previous.finalY + 20);
+      pdf.text(`SubTotal:     ${fac.TOTAL_MERCADERIA.toLocaleString("es-ES")}`, 470, pdf.autoTable.previous.finalY + 20);
+      pdf.text(`Desc:           ${totales.descuento.toLocaleString("es-ES")}`,470,pdf.autoTable.previous.finalY + 40);
+      pdf.text(`IVA:              ${totales.impuesto}`, 470, pdf.autoTable.previous.finalY + 60);
+      pdf.text(`TOTAL:        ${totales.totalConImpuesto}`, 470,pdf.autoTable.previous.finalY + 80);
 
       pdf.setFontSize(11);
-      pdf.text(
-        "ACEPTO este documento y declaro haber recibido real y \n materialmente los articulos arriba descritos ",
-        12,
-        pdf.autoTable.previous.finalY + 20
-      );
-      pdf.text(
-        `FECHA RECIBIDO_____________`,
-        280,
-        pdf.autoTable.previous.finalY + 72
-      );
+      pdf.text("ACEPTO este documento y declaro haber recibido real y \n materialmente los articulos arriba descritos ", 12, pdf.autoTable.previous.finalY + 20);
+      pdf.text(`FECHA RECIBIDO_____________`, 280, pdf.autoTable.previous.finalY + 72);
       pdf.text(`FIRMA Y SELLO`, 12, pdf.autoTable.previous.finalY + 90);
       pdf.text(`HORA:____:____`, 280, pdf.autoTable.previous.finalY + 86);
       pdf.text(`${fecha}`, 12, pdf.autoTable.previous.finalY + 106);
@@ -272,21 +216,9 @@ const Factura = () => {
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
+      <Box>{" "}<Banner />{" "}</Box>
       <Box className="container">
-        <Box
-          className={inter.className}
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "44vw",
-          }}
-        >
+        <Box className={inter.className} sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "44vw", }}>
           <Paper
             sx={{
               marginTop: 8,
@@ -295,21 +227,12 @@ const Factura = () => {
               alignItems: "center",
               bgcolor: "#eeee",
               padding: 2,
-            }}
-          >
-            <Typography
-              className={inter.className}
-              component="h1"
-              variant="h5"
-            >
+            }}>
+            <Typography className={inter.className} component="h1" variant="h5">
               Digite el número de la Factura
             </Typography>
 
-            <Box
-              component="form"
-              noValidate
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 required
                 fullWidth

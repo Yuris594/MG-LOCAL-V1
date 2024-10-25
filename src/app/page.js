@@ -133,11 +133,11 @@ export default function Login() {
 
   return (
       <>
-        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ height: "90vh", display: "flex", flexDirection: "column" }}>
           <Slide direction="down" in={checked} mountOnEnter unmountOnExit>
-            <AppBar position="static" sx={{ bgcolor: "#262626", height: "80px" }}>
+            <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
               <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, marginLeft: "10px" }}>
+                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                   {" "}
                 </Typography>
                 <Button component={Link} href="/components/ingresos" sx={{ color: "white" }}
@@ -150,30 +150,28 @@ export default function Login() {
 
           <CssBaseline />
             <ThemeProvider theme={theme}>
-              <Container component="main" maxWidth="xs" sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 8 }}>
-                <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <Typography variant="h6" noWrap component="div" sx={{ margin: 2 }} >
-                      <Image
-                        className="logo"
-                        src="/logo_miguelgomez.png"
-                        width="230"
-                        height="200"
-                        alt="Logo"
-                        priority={true}
-                      />
-                    </Typography>
-                      {saved == "saved" ? (
-                        <HowToRegIcon sx={{ color: "green" }}></HowToRegIcon>
-                      ) : (
-                        ""
-                      )}
-                      {saved == "error" ? (
-                        <HighlightOffIcon sx={{ color: "red" }}></HighlightOffIcon>
-                      ) : (
-                        ""
-                      )}
+              <Container component="main" maxWidth="xs" sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 6, mb: 2 }}>
+                <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", height: 350 }}>
+                  <Image
+                    className="logo"
+                    src="/logo_miguelgomez.png"
+                    width={250}
+                    height={150}
+                    alt="Logo"
+                    priority={true}
+                  />
+                  {saved == "saved" ? (
+                    <HowToRegIcon sx={{ color: "green" }}></HowToRegIcon>
+                  ) : (
+                    ""
+                  )}
+                  {saved == "error" ? (
+                    <HighlightOffIcon sx={{ color: "red" }}></HighlightOffIcon>
+                  ) : (
+                    ""
+                  )}
                   
-                  <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", }}></Box>
+                  <Box sx={{ margin: 1, display: "flex", flexDirection: "column", alignItems: "center", }}></Box>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                       
                       <TextField
@@ -209,6 +207,7 @@ export default function Login() {
                     </Box>
                   </Box>
                   
+                  <Copyright sx={{ mt: 3, mb: 1 }} />
 
                     {/* Snackbar para mostrar mensajes */}
                     {open ? (
@@ -227,7 +226,6 @@ export default function Login() {
                       </Snackbar>
                     ) : ( "" )}
               
-              <Copyright sx={{ mt: 5, mb: 5 }} />
             </Container>
           </ThemeProvider>
         </Box>

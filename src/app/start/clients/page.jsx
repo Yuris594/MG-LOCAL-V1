@@ -159,7 +159,11 @@ const Clientes = () => {
               rowSelectionModel={selectedRows}
               getRowId={(row) => row.CLIENTE}
               slots={{ toolbar: GridToolbar }}
-              sx={{ backgroundColor: "#ffffff" }}
+              sx={{
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontWeight: "bold",
+                },
+              }}
             />
           </Box>
         </Box>

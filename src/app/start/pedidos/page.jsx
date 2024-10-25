@@ -169,7 +169,7 @@ const Pedidos = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ height: 780, width: "100%" }}>
+              <Box sx={{ height: 785, width: "100%" }}>
                 <DataGrid
                   rows={pedidosFiltrados}
                   columns={columns}
@@ -183,7 +183,11 @@ const Pedidos = () => {
                   slots={{ toolbar: GridToolbar }}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.PEDIDO}
-                  sx={{ backgroundColor: "#ffffff" }}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
                 />
               </Box>
             </div>

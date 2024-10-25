@@ -2,7 +2,7 @@
 
 import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
 import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, 
-  ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography } from "@mui/material";
+  ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth }  from "@/context/authContext";
@@ -20,16 +20,20 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  alignItems: "center",
-  alignContent: "center",
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  bgcolor: "#ffffff",
+  borderRadius: "8px",
   boxShadow: 24,
   textAlign: "center",
   pt: 2,
   px: 4,
   pb: 3,
 };
+
 
   const Inicio = () => {
     const router = useRouter();
@@ -39,6 +43,9 @@ const style = {
     const handleClose = () => setOpen(false);
     const [anchor, setAnchor] = useState(null);
     const [productos, setProductos] = useState(false);
+
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm", "md"));
 
       const handleClick = (event) => {
         setProductos(true);
@@ -133,30 +140,30 @@ const style = {
           </Box>
         </Modal>
 
-        <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Paper id="wave" sx={{ minWidth: "50%", maxWidth: "70%", height: 550, border: 6, overflow: "auto",}}> 
-            <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
+        <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: isSmallScreen ? "column" : "row", padding: isSmallScreen ? 2 : 0 }}>
+          <Paper id="wave" sx={{ width: isSmallScreen ? "70%" : "40%", height: 490, border: 6, overflow: "auto",}}> 
+            <CardContent sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
               <Image
                 src="/logo2.png"
-                width={200}
-                height={110}
+                width={isSmallScreen ? 100 : 200}
+                height={isSmallScreen ? 55 : 110}
                 alt="imagenmg"
                 priority={true}
               />
               <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
-            <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, }}>
+            <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, flexDirection: isSmallScreen ? "column" : "row" }}>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Image
                   src="/truperLogo.png"
-                  width={150}
-                  height={110}
+                  width={isSmallScreen ? 100 : 150}
+                  height={isSmallScreen ? 55 : 110}
                   alt="imagentru"
                   priority={true} 
                 />
               </Box>
-              <Divider orientation="vertical" flexItem sx={{ marginX: 2 }}/>
+              {!isSmallScreen && <Divider orientation="vertical" flexItem sx={{ margin: 2 }}/>}
               <List>
                 {page.map((link) => (
                   <ListItem disablePadding key={link.title}>

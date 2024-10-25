@@ -394,13 +394,10 @@ function Producto() {
               />
             </Paper>
 
-              <Box>
-                <Typography variant="h5" component="h1" gutterBottom
-                    sx={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d", }}>
-                  {articulo.DESCRIPCION}
-                </Typography>
-              </Box>
-
+            <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d", }}>
+              {articulo.DESCRIPCION}
+            </h2>
+            
               <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
 
@@ -446,10 +443,14 @@ function Producto() {
                     onRowSelectionModelChange={handleSelectionChange}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.ARTICULO}
-                    sx={{ backgroundColor: "#ffffff" }}
                     initialState={{
                       pagination: {
                         paginationModel: { page: 0, pageSize: 11 },
+                      },
+                    }}
+                    sx={{
+                      "& .MuiDataGrid-columnHeaderTitle": {
+                        fontWeight: "bold",
                       },
                     }}
                   />
@@ -467,15 +468,19 @@ function Producto() {
                 ) : (
                 <Box sx={{ width: "100%", height: "auto" }}>
                   <DataGrid
-                  density="compact"
+                    density="compact"
                     rows={pedidos}
                     columns={columnsP}
                     pageSizeOptions={[5, 11, 20]}
                     getRowId={(row) => row.PEDIDO}
-                    sx={{ backgroundColor: "#ffffff", }}
                     initialState={{
                       pagination: {
                         paginationModel: { page: 0, pageSize: 11 },
+                      },
+                    }}
+                    sx={{
+                      "& .MuiDataGrid-columnHeaderTitle": {
+                        fontWeight: "bold",
                       },
                     }}
                     />
@@ -498,10 +503,14 @@ function Producto() {
                     columns={columnsF}
                     pageSizeOptions={[5, 11, 20]}
                     getRowId={(row) => row.FACTURA}
-                    sx={{ backgroundColor: "#ffffff" }}
                     initialState={{
                       pagination: {
                         paginationModel: { page: 0, pageSize: 11 },
+                      },
+                    }}
+                    sx={{
+                      "& .MuiDataGrid-columnHeaderTitle": {
+                        fontWeight: "bold",
                       },
                     }}
                   />

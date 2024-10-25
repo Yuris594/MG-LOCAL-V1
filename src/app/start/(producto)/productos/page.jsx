@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useRef,
-  useEffect,
-  useState,
-  useLayoutEffect,
-} from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -66,113 +60,75 @@ const columns = [
   { field: "ARTICULO", headerName: "Cod", width: 130 },
   { field: "DESCRIPCION", headerName: "Referencia", width: 700 },
   { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  {
-    field: "TOTAL_DISP",
-    headerName: "Disp",
-    width: 130,
+  { field: "TOTAL_DISP", headerName: "Disp", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
-  {
-    field: "PRECIO",
-    headerName: "Precio",
-    width: 130,
+  { field: "PRECIO", headerName: "Precio", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
-  {
-    field: "PRECIOMASIVA",
-    headerName: "Masiva",
-    width: 130,
+  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
   { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 130 },
-  {
-    field: "EXIST_REAL",
-    headerName: "Existreal",
-    width: 130,
+  { field: "EXIST_REAL", headerName: "Existreal", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
 ];
 
 const columnsF = [
   { field: "FACTURA", headerName: "Factura", width: 130 },
-  {
-    field: "FECHA_DESPACHO",
-    headerName: "Fecha",
-    width: 190,
+  { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190,
     renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 50 },
-  {
-    field: "PRECIO_TOTAL",
-    headerName: "V.fact",
-    width: 130,
+  { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PEDIDO", headerName: "Pedido", width: 130 },
   { field: "ARTICULO", headerName: "Articulo", width: 130 },
   { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
-  {
-    field: "CANTIDAD",
-    headerName: "Cant",
-    width: 130,
+  { field: "CANTIDAD", headerName: "Cant", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(1);
       return precioRedondeado;
-    },
-    align: "right",
+    }, align: "right",
   },
-  {
-    field: "PRECIO_UNITARIO",
-    headerName: "PrecioUni",
-    width: 130,
+  { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "PORCIVA", headerName: "IVA", width: 130, align: "right" },
   { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
   { field: "VDESC", headerName: "VDesc", width: 130 },
-  {
-    field: "TOTAL_MERCADERIA",
-    headerName: "VTotal ",
-    width: 130,
+  { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
   { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
   { field: "FECHARUT", headerName: "FechaRut", width: 300 },
   { field: "IDGUIA", headerName: "IdGuia", width: 130 },
-  {
-    field: "FECHAGUIA",
-    headerName: "FechaGuia",
-    width: 250,
+  { field: "FECHAGUIA", headerName: "FechaGuia", width: 250,
     renderCell: (params) => fDate(params.value),
   },
   { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
@@ -180,10 +136,7 @@ const columnsF = [
 ];
 
 const columnsP = [
-  {
-    field: "FECHA",
-    headerName: "Fecha",
-    width: 250,
+  { field: "FECHA", headerName: "Fecha", width: 250,
     renderCell: (params) => fDate(params.value),
   },
   { field: "CLIENTE", headerName: "Cliente", width: 160 },
@@ -193,10 +146,7 @@ const columnsP = [
   { field: "DESP", headerName: "Desp", width: 100, align: "right" },
   { field: "PEND", headerName: "Pend", width: 100, align: "right" },
   { field: "ESTADO", headerName: "Estado", width: 120 },
-  {
-    field: "AUTORIZADONOM",
-    headerName: "Autortizado",
-    width: 200,
+  { field: "AUTORIZADONOM", headerName: "Autortizado", width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
@@ -216,34 +166,24 @@ const columnsP = [
 const obtenerBodegas = async () => {
   const response = await fetch("/api/productos/bodegas", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
   });
-
   const data = await response.json();
   return data;
 };
 
 const obtenerProductos = async (bodegaSeleccionada) => {
-  const response = await fetch(
-    `/api/productos/listar/${bodegaSeleccionada.BODEGA}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
   return response.json();
 };
 
 const obtenerFacturas = async (articulo) => {
   const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json", },
   });
   if (!response.ok) {
     if (response.status === 404) {
@@ -257,9 +197,7 @@ const obtenerFacturas = async (articulo) => {
 const obtenerPedidos = async (articulo) => {
   const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
   });
   if (!response.ok) {
     if (response.status === 404) {
@@ -268,9 +206,9 @@ const obtenerPedidos = async (articulo) => {
     }
   }
   const data = await response.json();
-  console.log(data);
   return data;
 };
+
 
 function productos() {
   const inputRef = useRef();
@@ -286,20 +224,24 @@ function productos() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [bodegaSeleccionada, setBodegaSeleccionada] = useState(null);
-
-  const conseguirBodegas = async () => {
-    const datos = await obtenerBodegas();
-    try {
-      if (datos) 
-        setBodegas(datos);
-    } catch (error) {
-      conexion();
-    }
+  const handleChanges = (event, newValue) => {
+    setValue(newValue);
   };
 
+
   useEffect(() => {
+    const conseguirBodegas = async () => {
+      const datos = await obtenerBodegas();
+      try {
+        if (datos) 
+          setBodegas(datos);
+      } catch (error) {
+        conexion();
+      }
+    };
     conseguirBodegas();
   }, []);
+
 
   useEffect(() => {
     if (bodegaSeleccionada) {
@@ -307,6 +249,7 @@ function productos() {
       conseguirProductos();
     }
   }, [bodegaSeleccionada]);
+
 
   useEffect(() => {
     setCargando(true);
@@ -394,9 +337,8 @@ function productos() {
     setProductos(resultadosBusqueda);
   };
 
-  const handleSelectionChange = useCallback(
-    (selectionModel) => {
-      setSelectedRows(selectionModel);
+  const handleSelectionChange = useCallback((selectionModel) => {
+    setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaProducto.filter((elemento) => {
           const ARTICULO = elemento.ARTICULO;
@@ -412,53 +354,17 @@ function productos() {
           conseguirPedidos();
         }
       }
-    },
-    [tablaProducto]
-  );
+    }, [tablaProducto]);
 
-  const handleChanges = (event, newValue) => {
-    setValue(newValue);
-  };
 
   return (
     <>
-      <Box>
-        {" "}
-        <Banner />{" "}
-      </Box>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}
-      >
+      <Box>{" "}<Banner />{" "}</Box>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Box sx={{ padding: "20px" }}>
-        <Typography
-          variant="h5"
-          component="h1"
-          gutterBottom
-          sx={{
-            display: "flex",
-            justifyContent: "column",
-            alignItems: "center",
-            width: "auto",
-            margin: 0,
-            color: "#000000",
-          }}
-        >
-          PRODUCTOS
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
+      <h2><strong>PRODUCTOS</strong></h2>
+      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
         <Paper>
           <Autocomplete
             options={bodegas}
@@ -471,50 +377,17 @@ function productos() {
             isOptionEqualToValue={(option, value) =>
               option.NOMBRE === value.NOMBRE
             }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Bodegas"
-                placeholder="Selecciona una bodega"
-                variant="standard"
-              />
-            )}
+            renderInput={(params) => ( <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" /> )}
           />
         </Paper>
 
-        <Box>
-          <Typography
-            variant="h5"
-            component="h1"
-            gutterBottom
-            sx={{
-              display: "flex",
-              justifyContent: "column",
-              alignItems: "center",
-              width: "auto",
-              margin: 0,
-              color: "#920b0d",
-            }}
-          >
-            {articulo.DESCRIPCION}
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-        >
+        <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d" }}>
+          {articulo.DESCRIPCION}
+        </h2>
+ 
+        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
           {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
-
-          <Paper
-            elevation={3}
-            sx={{
-              p: "2px 4px",
-              display: "flex",
-              alignItems: "flex-rigth",
-              width: 400,
-              margin: "10px",
-            }}
-          >
+          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px" }}>
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder="Buscar"
@@ -528,11 +401,7 @@ function productos() {
               onChange={handleChange}
               inputRef={inputRef}
             />
-            <IconButton
-              title="buscar"
-              sx={{ p: "10px" }}
-              aria-label="search"
-            >
+            <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
               <SearchIcon />
             </IconButton>
           </Paper>
@@ -541,73 +410,50 @@ function productos() {
 
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChanges}
-            aria-label="basic tabs example"
-          >
-            <Tab
-              label="Articulos"
-              {...a11yProps(0)}
-            />
-            <Tab
-              label={`Pedidos:${pedidos.length}`}
-              {...a11yProps(1)}
-              onClick={conseguirPedidos}
-            />
-            <Tab
-              label={`Facturas:${facturas.length}`}
-              {...a11yProps(2)}
-              onClick={conseguirFacturas}
-            />
+          <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+            <Tab label="Articulos" {...a11yProps(0)} />
+            <Tab label={`Pedidos:${pedidos.length}`} {...a11yProps(1)} onClick={conseguirPedidos} />
+            <Tab label={`Facturas:${facturas.length}`} {...a11yProps(2)} onClick={conseguirFacturas} />
           </Tabs>
         </Box>
 
-        <CustomTabPanel
-          component={Box}
-          value={value}
-          index={0}
-        >
+        <CustomTabPanel component={Box} value={value} index={0}>
           <Box sx={{ width: "100%", height: 950 }}>
             {productos.length <= 0 ? (
-              <Box
-                sx={{ width: "100%" }}
-                title="Seleccione una bodega en la lista de arriba"
-              >
-                {" "}
-                <HelpOutlineIcon />{" "}
+              <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba">
+                {" "}<HelpOutlineIcon />{" "}
               </Box>
             ) : (
               <DataGrid
                 rows={productos}
                 columns={columns}
+                pageSizeOptions={[5, 16, 20]}
+                onRowSelectionModelChange={handleSelectionChange}
+                rowSelectionModel={selectedRows}
+                getRowId={(row) => row.ARTICULO}
                 initialState={{
                   pagination: {
                     paginationModel: { page: 0, pageSize: 16 },
                   },
                 }}
-                pageSizeOptions={[5, 16, 20]}
-                onRowSelectionModelChange={handleSelectionChange}
-                rowSelectionModel={selectedRows}
-                getRowId={(row) => row.ARTICULO}
-                sx={{ backgroundColor: "#ffffff" }}
+                sx={{
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontWeight: "bold",
+                  },
+                }}
               />
             )}
           </Box>
         </CustomTabPanel>
 
-        <CustomTabPanel
-          component={Box}
-          value={value}
-          index={1}
-        >
+        <CustomTabPanel component={Box} value={value} index={1}>
           {cargando === true ? (
             <Box sx={{ width: "100%" }}>
               <LinearProgress />
             </Box>
-          ) : pedidos.length === 0 ? (
-            <h1>NO HAY PEDIDOS</h1>
-          ) : (
+            ) : pedidos.length === 0 ? (
+              <h2>NO HAY PEDIDOS</h2>
+            ) : (
             <Box sx={{ width: "100%", height: 950 }}>
               <DataGrid
                 rows={pedidos}
@@ -619,24 +465,24 @@ function productos() {
                 }}
                 pageSizeOptions={[5, 16, 20]}
                 getRowId={(row) => row.PEDIDO}
-                sx={{ backgroundColor: "#ffffff" }}
+                sx={{
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontWeight: "bold",
+                  },
+                }}
               />
             </Box>
           )}
         </CustomTabPanel>
 
-        <CustomTabPanel
-          component={Box}
-          value={value}
-          index={2}
-        >
+        <CustomTabPanel component={Box} value={value} index={2}>
           {cargando === true ? (
             <Box sx={{ width: "100%" }}>
               <LinearProgress />
             </Box>
-          ) : facturas && facturas.length <= 0 ? (
-            <h1>NO HAY FACTURAS</h1>
-          ) : (
+            ) : facturas && facturas.length <= 0 ? (
+              <h2>NO HAY FACTURAS</h2>
+            ) : (
             <Box sx={{ width: "100%", height: 950 }}>
               <DataGrid
                 rows={facturas}
@@ -648,7 +494,11 @@ function productos() {
                 }}
                 pageSizeOptions={[5, 16, 20]}
                 getRowId={(row) => row.FACTURA}
-                sx={{ backgroundColor: "#ffffff" }}
+                sx={{
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontWeight: "bold",
+                  },
+                }}
               />
             </Box>
           )}

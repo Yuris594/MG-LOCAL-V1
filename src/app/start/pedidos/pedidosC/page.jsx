@@ -27,17 +27,19 @@ import PropTypes from "prop-types";
 import React from "react";
 
 
-
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  bgcolor: "white",
-  width: "90%",
-  height: "80%",
-  boxShadow: 24,
-  p: 4,
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  backgroundColor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 24
 };
 
 
@@ -861,6 +863,7 @@ export const PedidosC = () => {
 
           <Box sx={{ height: "auto", width: "100%" }}>
             <DataGrid
+              density="compact"
               rows={productos}
               columns={columns}
               getRowId={(row) => row.ARTICULO}

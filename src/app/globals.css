@@ -10,32 +10,30 @@
 }
 
 .containers {
-width: auto;
-height: auto;
-display: auto;
-justify-content: center;
-margin: 10%;
-align-items: center;
-padding: auto;
+  display: flex;
+  justify-content: center;
+  margin: 2%;
+  align-items: center;
+  padding: auto;
 }
 
 .MuiDataGrid-columnHeaders {
-background-color: #e9ecef;
-color: rgb(0, 0, 0);
+  background-color: #e9ecef;
+  color: rgb(0, 0, 0);
 }
 
 
 .MuiDataGrid-footerContainer {
-background-color: #d3d3d300;
+  background-color: #d3d3d300;
 
 }
 
 .navlink {
-font-weight: bold;
+  font-weight: bold;
 }
 
 .color {
-color: #d8e8f7
+  color: #d8e8f7
 }
 
 
