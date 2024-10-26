@@ -65,9 +65,7 @@ const UsuarioActualizar = ({ usuario }) => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
-          <Typography component="h1" variant="h5">
-            Actualizacion de usuario
-          </Typography>
+          <h2>ACTUALIZACIÓN DE USUARIO</h2>
           <Box component="form" onSubmit={Actualizar} noValidate sx={{ mt: 3 }}>
             <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               <Grid size={6}>

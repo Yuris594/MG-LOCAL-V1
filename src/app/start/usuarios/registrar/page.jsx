@@ -72,10 +72,7 @@ const registro = async (form) => {
             : "" }
 
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2, }}>
-            <Typography component="h1" variant="h5">
-                Registro de usuario
-            </Typography>
-
+            <h2>REGISTRO DE USUARIO</h2>
               <Box component="form" noValidate onSubmit={register} sx={{ mt: 3 }}>
                 <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                   <Grid size={6}>

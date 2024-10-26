@@ -145,7 +145,7 @@ const Clientes = () => {
             </Paper>
           </Box>
 
-          <Box sx={{ height: 790, width: "100%" }}>
+          <Box sx={{ height: 799, width: "100%" }}>
             <DataGrid
               rows={clientesFiltrados}
               columns={columns}

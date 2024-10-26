@@ -1,7 +1,7 @@
 "use client";
 
-import { Box, Tabs, Tab, Typography, TextField, Divider, Button, 
-  ButtonGroup, Checkbox, FormControlLabel, Paper, LinearProgress, } from "@mui/material/";
+import { Box, Tabs, Tab, Typography, TextField, Divider, Button, ButtonGroup, 
+  Checkbox, FormControlLabel, Paper, LinearProgress, } from "@mui/material/";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { useEffect, useState } from "react";
@@ -106,7 +106,7 @@ const columnsF = [
     },
   },
   { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
-  { field: "FECHARUT", headerName: "FechaRut", width: 300 },
+  { field: "FECHARUT", headerName: "FechaRut", width: 150 },
   { field: "IDGUIA", headerName: "IdGuia", width: 130 },
   { field: "FECHAGUIA", headerName: "FechaGuia", width: 250,
     valueFormatter: (params) => {
@@ -120,8 +120,8 @@ const columnsF = [
       });
     },
   },
-  { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
-  { field: "RUBRO1", headerName: "Docs2", width: 500 },
+  { field: "OBSERVACIONES", headerName: "Observaciones", width: 400 },
+  { field: "RUBRO1", headerName: "Docs2", width: 300 },
 ];
 
 

@@ -21,13 +21,12 @@ const generarCodigoBarras = (texto) => {
     const generarPDF = () => {
         const pdf = new jsPDF('portrait', 'pt', 'letter');
         const columnsParaPDF = [
-            { field: 'ARTICULO', headerName: 'CODIGO', width: 200 },
-            { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500 },
-            { field: 'PRECIO',  headerName: 'PRECIO', width: 200 },
-            { field: 'CPed', headerName: 'CANT', width: 200, type: 'number' },
-            { field: 'DESP', headerName: 'DESP', width: 250, type: 'number' },
-            { field: 'EMPA', headerName: 'EMPA', width: 200, type: 'number' },
-
+          { field: 'ARTICULO', headerName: 'CODIGO', width: 200 },
+          { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500 },
+          { field: 'PRECIO',  headerName: 'PRECIO', width: 200 },
+          { field: 'CPed', headerName: 'CANT', width: 200, type: 'number' },
+          { field: 'DESP', headerName: 'DESP', width: 250, type: 'number' },
+          { field: 'EMPA', headerName: 'EMPA', width: 200, type: 'number' },
         ];
 
         const styles = {
@@ -58,17 +57,6 @@ const generarCodigoBarras = (texto) => {
             return rowData;
         });
 
-        
-        encabezado()
-          pdf.autoTable({
-            head: [columnsParaPDF.map(column => column.headerName)], 
-            body: dataToPrint, 
-            styles,
-            startY: 150,
-            theme:'plain',
-            columnStyles: { cellWidth: "auto" },
-          });
-
         function encabezado() {
           pdf.setFontSize(20);
           pdf.addImage(`${codigoBarras}`, 220, 10,130,60);
@@ -77,7 +65,7 @@ const generarCodigoBarras = (texto) => {
           pdf.text("PREFACTURA", 12, 30,);
             if(clienteP.IMPRESO === "S"){
           pdf.text("DUPLICADO", 12, 55,);
-            }
+          }
           pdf.setFontSize(13);
           pdf.text("FACTURA N°________", 450, 30,);
           pdf.setFontSize(9);
@@ -96,6 +84,16 @@ const generarCodigoBarras = (texto) => {
           pdf.text(`DIRECCION Y CIDUAD DE DESPACHO:    ${clienteP.PEDIDO}`, 12, 125,);
           pdf.text(`SOLICITA:   ${clienteP.PEDIDO}`, 340, 125,);
         }
+
+        encabezado()
+        pdf.autoTable({
+          head: [columnsParaPDF.map(column => column.headerName)], 
+          body: dataToPrint, 
+          styles,
+          startY: 150,
+          theme:'plain',
+          columnStyles: { cellWidth: "auto" },
+        });
 
         function agregarContenido() {
           pdf.setFontSize(10);

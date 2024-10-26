@@ -2,12 +2,12 @@
 
 import { Box, Button, Card, CardContent, Divider, IconButton, InputBase, Paper, Typography } from "@mui/material"
 import DirectionsIcon from '@mui/icons-material/Directions';
-import useGenerarPDF from "@/app/hooks/useReciboPDF";
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 import { Lora } from "next/font/google";
+import useGenerarPDF from "@/app/hooks/useReciboPDF";
 
 const inter = Lora({ subsets: ['latin'] })
 
