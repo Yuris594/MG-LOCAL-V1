@@ -13,6 +13,8 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { Conexion } from "@/conexion";
+
 
 
 const theme = createTheme({
@@ -58,7 +60,7 @@ export function Copyright(props) {
 }
 
 const Iniciar = async (usuario, clave) => {
-  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
+  const response = await fetch(Conexion.url + `/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

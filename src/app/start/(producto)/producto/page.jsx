@@ -15,6 +15,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useCallback, useRef, useEffect, useState, } from "react";
 import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
+import { Conexion } from "@/conexion";
 
 
 
@@ -164,7 +165,7 @@ const columnsP = [
 
 
 const obtenerProductos = async (bodegaSeleccionada) => {
-  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+  const response = await fetch(Conexion.url + `/productos/listar/${bodegaSeleccionada.BODEGA}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -175,7 +176,7 @@ const obtenerProductos = async (bodegaSeleccionada) => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -192,7 +193,7 @@ const obtenerFacturas = async (articulo) => {
 
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -210,7 +211,7 @@ const obtenerPedidos = async (articulo) => {
 };
 
 const obtenerBodegas = async () => {
-  const response = await fetch('/api/productos/bodegas', {
+  const response = await fetch(Conexion.url + '/productos/bodegas', {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });

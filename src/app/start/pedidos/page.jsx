@@ -8,6 +8,7 @@ import BotonExcel from "../../hooks/useExportoExcel";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
+import { Conexion } from "@/conexion";
 
 const style = {
   position: "absolute",
@@ -63,7 +64,7 @@ const columns = [
 ];
 
 const conseguirPedidos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
+  const response = await fetch(Conexion.url + "/pedidos/listar", {
     next: { revalidate: 60 },
     method: "GET",
     headers: { "Content-Type" : "application/json" }

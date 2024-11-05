@@ -25,6 +25,7 @@ import MuiAlert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import React from "react";
+import { Conexion } from "@/conexion";
 
 
 const style = {
@@ -106,7 +107,7 @@ const columns = [
 
 
 const conseguirProductosP = async (clienteP) => {
-  const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+  const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });
@@ -122,7 +123,7 @@ const conseguirProductosP = async (clienteP) => {
 
 
 const conseguirProductosPendientes = async (clienteP) => {
-  const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+  const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", },
   });
@@ -132,7 +133,7 @@ const conseguirProductosPendientes = async (clienteP) => {
 
 
 const guardarProductos = async (bodyData) => {
-  const response = await fetch("/api/pedido/crear/", {
+  const response = await fetch(Conexion.url + "/pedido/crear/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),
@@ -142,7 +143,7 @@ const guardarProductos = async (bodyData) => {
 };
 
 const guardarProductosP = async (bodyData) => {
-  const response = await fetch("/api/pedido/crear/", {
+  const response = await fetch(Conexion.url + "/pedido/crear/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bodyData),

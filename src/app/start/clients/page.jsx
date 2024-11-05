@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
+import { Conexion } from "@/conexion";
 
 const columns = [
   { field: "CLIENTE", headerName: "NIT", width: 170 },
@@ -32,7 +33,7 @@ const columns = [
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch("/api/clientes/listar", {
+  const response = await fetch(Conexion.url + "/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

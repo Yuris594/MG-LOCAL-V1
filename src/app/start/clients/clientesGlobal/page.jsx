@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import { useAuth } from "@/context/authContext";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
+import { Conexion } from "@/conexion";
 import Box from "@mui/material/Box";
 
   const columns = [
@@ -25,7 +26,7 @@ import Box from "@mui/material/Box";
 
 const conseguirClientes = async () => {
     try {
-        const response = await fetch("/api/clientes/listar", {
+        const response = await fetch(Conexion.url + "/clientes/listar", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         });

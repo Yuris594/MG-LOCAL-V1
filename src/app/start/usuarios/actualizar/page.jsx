@@ -4,9 +4,10 @@ import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typogr
 import Grid from "@mui/material/Grid2";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
+import { Conexion } from "@/conexion";
 
 const actualizar = async (form) => {
-  const response = await fetch("/api/usuarios/actualizar/", {
+  const response = await fetch(Conexion.url + "/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },

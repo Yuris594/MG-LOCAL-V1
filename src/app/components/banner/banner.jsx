@@ -124,7 +124,7 @@ const Banner = () => {
               <Button component={Link} href="/start" color="inherit">
                 <HomeIcon />
               </Button>
-              <Button className={inter.className} color="inherit" sx={{ fontSize: "15px" }} >
+              <Button className={inter.className} color="inherit" sx={{ fontSize: "15px" }}>
                 <PersonIcon />
                 {auth && auth.PER_Nom}
               </Button>

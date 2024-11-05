@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Box, Button, Card, CardContent, Divider, IconButton, InputBase, Paper, Typography } from "@mui/material"
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -30,8 +30,6 @@ const bull = (
         localStorage.removeItem('clientTemp'); 
         localStorage.removeItem('pedidoTemp'); 
     };
-
-
 
     return (
     <>
@@ -82,7 +80,7 @@ const bull = (
                                 ........Miguelgomoz&cia@hotmail.com...........<br />
                                 ........https://www.miguelgomez.com.co/.......<br />
                                 ----------------------------------------------<br />
-                                ........ Servicio -  {/*auth.PER_Nom*/}.......
+                                ........ Servicio -  {auth.PER_Nom}.......
                             </Typography>
                         </CardContent>
 
@@ -139,4 +137,4 @@ const bull = (
   )
 }
 
-export default ReciboCaja;
+export default ReciboCaja; 

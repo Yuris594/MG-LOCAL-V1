@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Lora } from "next/font/google";
+import { Conexion } from "@/conexion";
 
 const inter = Lora({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(Conexion.url + `/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -31,17 +32,16 @@ const obtenerFactura = async (factura_) => {
 };
 
 const Factura = () => {
-  const { form, changed } = useForm({});
   const [fac, setFac] = useState(null);
+  const { form, changed } = useForm({});
+  const [totales, setTotales] = useState({});
   const [productos, setProductos] = useState([]);
   const [fecha] = useState(format(new Date(), "dd/MM/yyyy HH:mm:ss"));
-  const [totales, setTotales] = useState({});
 
   const factura = async (e) => {
     e.preventDefault();
     const factura_ = form.factura;
     const datos = await obtenerFactura(factura_);
-    console.log(datos);
     try {
       if (datos) {
         setFac(datos[0]);
