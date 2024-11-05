@@ -1,14 +1,16 @@
 "use client";
 
 import { AppBar, Box, Button, CssBaseline, IconButton, Menu, Toolbar, Typography } from "@mui/material";
-import WidgetsIcon from '@mui/icons-material/Widgets';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import PersonIcon from '@mui/icons-material/Person';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import WidgetsIcon from '@mui/icons-material/Widgets';
 import { useAuth } from "@/context/authContext";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
+import Link from "next/link";
 import MenuBar from "./bar";
+
 
 const pages = [
   {
@@ -42,24 +44,19 @@ const pages = [
       { title: "Consultar Articulos", url: "/pages/inventario" },
     ],
   },
-
-  {
-    title: "ACTUALIZAR",
-    subPages: [
-      { title: "", url: "" },
-    ],
-  },
 ];
 
-const NavBar = () => {
+const NavBar = (setClientes, setTablaClientes, setCartera, setTablaCartera, setProducto, setTablaProducto) => {
   const [selectedPage, setSelectedPage] = useState(null); 
   const [anchorEl, setAnchorEl] = useState(null);
-  const { auth } = useAuth(); 
+  const { auth } = useAuth();
+  const router = useRouter();
 
   const handlePageClick = (page) => {
-    setSelectedPage(page); 
+    setSelectedPage(page);
     setAnchorEl(null); 
   };
+
 
   const handleBackClick = () => {
     setSelectedPage(null); 
@@ -73,6 +70,40 @@ const NavBar = () => {
     setAnchorEl(null); 
   };
 
+  const handleRefresh = () => {
+    router.push("/pages")
+    
+    setTimeout(() => {
+      Swal.fire({
+        title: "¿Deseas Actualizar?",
+        text: "Se actualizara la base de datos local!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar"
+      }).then((result) => {
+        if(result.isConfirmed) {
+          Swal.fire({
+            text: "Actualizando, este proceso tardara poco tiempo, espere por favor.",
+            icon: "warning",
+            timer: 10000,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          }).then(() => {
+            Swal.fire({
+              text: "Actualización Exitosa!!",
+              icon: "success",
+            }).then(() => {
+              window.location.reload();
+            });
+          });
+        }
+      });
+    }, 500);
+  };
+    
   return (
     <>
       <CssBaseline />
@@ -104,18 +135,18 @@ const NavBar = () => {
                   <Button
                     color="inherit"
                     key={page.title}
-                    onClick={() => handlePageClick(page)}
-                  >
+                    onClick={() => handlePageClick(page)}>
                     {page.title}
                   </Button>
                 ))
               )}
+            <Button onClick={handleRefresh} color="inherit">Actualizar</Button>
             </Box>
             <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
               <Button LinkComponent={Link} href="/pages" color="inherit">
                 <ArrowBackIcon />
               </Button>
-              <Button color="inherit" sx={{ width: "20%" }}>{auth && auth.PER_Nom}</Button>
+              <Button color="inherit" sx={{ width: "15%" }}>{auth && auth.UserFullName}</Button>
               <Button LinkComponent={Link} href="/" color="inherit">Salir</Button>
           </Toolbar>
         </AppBar>

@@ -4,7 +4,6 @@ import Image from "next/image";
 import NavBar from "../components/navbar/nav";
 import { Box, Typography } from "@mui/material";
 
-
 export function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>

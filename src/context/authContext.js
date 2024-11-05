@@ -11,12 +11,16 @@ import Cookies from 'js-cookie';
 
 
   export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState(null); 
-    const [cliente, setCliente] = useState({});
-    const [pedido, setPedido] = useState({}); 
-    const [caja, setCaja] = useState({}); 
     const [loading] = useState(true); 
+    const [caja, setCaja] = useState({}); 
+    const [auth, setAuth] = useState(null); 
+    const [pedido, setPedido] = useState({}); 
+    const [cliente, setCliente] = useState({});
+    const [clienteV, setClienteV] = useState({});
+    const [pedidosV, setPedidosV] = useState({});
+    const [carteraV, setCarteraV] = useState({});
    
+
     const login = useCallback(function (authTokens) {
         Cookies.set("authTokens", JSON.stringify(authTokens));
         localStorage.setItem("auth", JSON.stringify(authTokens))
@@ -34,9 +38,24 @@ import Cookies from 'js-cookie';
     //Guardar los datos del usuario para cuando recargue la pagina
     useEffect(() => {
       const storedAuth = localStorage.getItem('auth');
-      const storedCliente = localStorage.getItem('cliente');
-      const storedPedido = localStorage.getItem('pedido');
       const storedCaja = localStorage.getItem('caja');
+      const storedPedido = localStorage.getItem('pedido');
+      const storePedidos = localStorage.getItem("pedidoV");
+      const storeCartera = localStorage.getItem("cartera");
+      const storedCliente = localStorage.getItem('cliente');
+      const storeCliente = localStorage.getItem("clienteV");
+
+      if (storeCliente) {
+        setClienteV(JSON.parse(storeCliente));
+      }
+
+      if (storePedidos) {
+        setPedidosV(JSON.parse(storePedidos));
+      }
+
+      if (storeCartera) {
+        setCarteraV(JSON.parse(storeCartera));
+      }
       
       if (storedAuth) {
         setAuth(JSON.parse(storedAuth));
@@ -53,19 +72,24 @@ import Cookies from 'js-cookie';
     }, []);
 
 
-    const value = useMemo(
-        () => ({
-            auth,
-            cliente,
-            setCliente,
-            pedido,
-            setPedido,
-            caja,
-            setCaja,
-            loading,
-            login,
-            logout,
-        }), [auth, cliente, pedido, caja, login, logout]);
+    const value = useMemo(() => ({
+        auth,
+        cliente,
+        setCliente,
+        pedido,
+        setPedido,
+        caja,
+        setCaja,
+        clienteV,
+        setClienteV, 
+        pedidosV,
+        setPedidosV, 
+        carteraV,
+        setCarteraV, 
+        loading,
+        login,
+        logout,
+    }), [auth, cliente, pedido, caja, clienteV, pedidosV, carteraV, login, logout]);
 
 
     return (

@@ -52,3 +52,14 @@
     width: 50%;
   }
 }
+
+
+.total-cell {
+  color: red;
+}
+  
+.header-bold {
+  font-weight: bold;
+  font-size: large;
+  font-family: 'Times New Roman', Times, serif;
+}
