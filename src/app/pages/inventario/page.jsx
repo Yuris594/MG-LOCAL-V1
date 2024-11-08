@@ -1,10 +1,11 @@
 "use client";
 
-import { Box, Divider, TextField } from "@mui/material";
+import { Box, Divider, TextField, useMediaQuery } from "@mui/material";
 import { initDB } from "@/app/components/base/db";
 import NavBar from "@/app/components/navbar/nav";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
 
 
@@ -12,6 +13,7 @@ const Articulos = () => {
   const [producto, setProducto] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
 
   useEffect(() => {
@@ -87,42 +89,52 @@ const Articulos = () => {
 
   return (
     <>
-      <NavBar />    
-      <div style={{ height: "70%", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
-          <h2><strong>LISTADO DE ARTICULO</strong></h2>
-        </Box>
-        <Divider />
-        <TextField 
-          id="outlined-basic"
-          label="Digite Codigo o Referencia para Buscar"
-          multiline
-          rows={1}
-          variant="outlined"
-          value={busqueda}
-          onChange={handleChange}
-          sx={{ width: "95%", height: "10%", margin: 2}}
-        />
+      <NavBar />  
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+            <h2><strong>LISTADO DE ARTICULO</strong></h2>
+          </Box>
+          <Divider />
+        </Grid>
 
-        <Box sx={{ width: "auto", height: 1190, margin: 2  }}>
-          <DataGrid 
-            rows={producto}
-            columns={columns}
-            getRowId={(row) => row.PKcodigo}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 20 }
-              }
-            }}
-            pageSizeOptions={[20]}
+        <Grid size={12} sx={{ padding: 2 }}>
+          <TextField 
+            id="outlined-basic"
+            label="Digite Codigo o Referencia para Buscar"
+            multiline
+            rows={1}
+            variant="outlined"
+            value={busqueda}
+            onChange={handleChange}
+            sx={{ width: "100%", marginBottom: 2 }}
           />
-        </Box>
-      </div>
+        </Grid>
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 1170  }}>
+            <DataGrid 
+              rows={producto}
+              columns={columns}
+              getRowId={(row) => row.PKcodigo}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 20 }
+                }
+              }}
+              pageSizeOptions={[20]}
+              sx={{
+                "&.MuiDataGrid-columnHeader": { fontSize: isSmallScreen ? "0.75rem" : "1rem" },
+                "&.MuiDataGrid-cell": { fontSize: isSmallScreen ? "0.75rem" : "0.875rem" },
+              }}
+            />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   )
 }
 
 export default Articulos;
-
 
 

@@ -1,15 +1,18 @@
 "use client";
 
-import { Box, Button, Divider, TextField } from "@mui/material";
+import { Box, Button, Divider, TextField, useMediaQuery } from "@mui/material";
+import { initDB } from "@/app/components/base/db";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { initDB } from "@/app/components/base/db";
+import Grid from "@mui/material/Grid2";
 
 const Articulos = ({ handleClose, onAgregarArticulo }) => {
   const [producto, setProducto] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [cantidades, setCantidades] = useState({});
   const [tablaProducto, setTablaProducto] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+
 
   useEffect(() => {
     const conseguirProducto = async () => {
@@ -78,71 +81,84 @@ const Articulos = ({ handleClose, onAgregarArticulo }) => {
 
   const columns = [
     { field: "PKcodigo", headerName: "Cod", width: 100 },
-    { field: "Nombre", headerName: "Referencia", width: 150 },
+    { field: "Nombre", headerName: "Referencia", width: 280 },
     { field: "Unidad_Empaque", headerName: "Emp", width: 80 },
-    { field: "Precio", headerName: "Precio", width: 90, editable: true },
+    { field: "Precio", headerName: "Precio", width: 90, editable: true, 
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `$${parseFloat(precioRedondeado).toLocaleString()}`;
+      }
+    },
     { field: "Iva", headerName: "Iva", width: 80 },
-    { field: "Descuento", headerName: "Des", width: 90, editable: true },
+    { field: "Descuento", headerName: "Des", width: 80, editable: true },
     { field: "cantped", headerName: "Cant", width: 100,
       renderCell: (params) => (
         <TextField
           size="small"
           value={cantidades[params.id] || ""}
           onChange={(e) => handleCantidadChange(params.id, e.target.value)}
-          sx={{ width: "80px", height: "25px" }}
+          sx={{ width: "70px", height: "20px" }}
         />
       ),
     },
-    { field: "Precio_Neto", headerName: "Neto", width: 80 },
+    { field: "Precio_Neto", headerName: "Neto", width: 80, 
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `$${parseFloat(precioRedondeado).toLocaleString()}`;
+      }
+    },
     { field: "Disp", headerName: "Disp", width: 80 },
   ];
 
   return (
     <>
-      <div style={{ height: "70%", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 0 }}>
-          <h2><strong>SELECCIONAR ARTICULO</strong></h2>
-          <Box>
-            <Button variant="outlined" color="success" sx={{ margin: 1 }} onClick={agregarArticulo}>
-              Agregar
-            </Button>
-            <Button variant="contained" color="error" onClick={handleClose}>
-              Cerrar
-            </Button>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
+            <h2><strong>SELECCIONAR ARTICULO</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2,  marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
+              <Button variant="outlined" color="success" sx={{ margin: 1 }} onClick={agregarArticulo}>Agregar</Button>
+              <Button variant="contained" color="error" onClick={handleClose}>Cerrar</Button>
+            </Box>
           </Box>
-        </Box>
-        <Divider />
-        <TextField
-          id="outlined-basic"
-          label="Digite Codigo o Referencia para Buscar"
-          multiline
-          rows={1}
-          variant="outlined"
-          value={busqueda}
-          onChange={handleChange}
-          sx={{ width: "30%", height: "10%", margin: 1 }}
-        />
+        </Grid>
 
-        <Box sx={{ width: "auto", height: "auto", margin: 2 }}>
-          <DataGrid
-            density="compact"
-            rows={producto}
-            columns={columns}
-            getRowId={(row) => row.PKcodigo}
-            processRowUpdate={handleProcessRowUpdate} 
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 20 },
-              },
-            }}
-            pageSizeOptions={[20]}
+        <Divider />
+
+        <Grid size={12} sx={{ padding: 2 }}>
+          <TextField
+            id="outlined-basic"
+            label="Digite Codigo o Referencia para Buscar"
+            multiline
+            rows={1}
+            variant="outlined"
+            value={busqueda}
+            onChange={handleChange}
+            sx={{ width: "100%" }}
           />
-        </Box>
-      </div>
+        </Grid>
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 820 }}>
+            <DataGrid
+              density="compact"
+              rows={producto}
+              columns={columns}
+              getRowId={(row) => row.PKcodigo}
+              processRowUpdate={handleProcessRowUpdate} 
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 20 },
+                },
+              }}
+              pageSizeOptions={[20]}
+            />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   );
 };
 
 export default Articulos;
 
-//Debo agregar el precio total al array de los articulos

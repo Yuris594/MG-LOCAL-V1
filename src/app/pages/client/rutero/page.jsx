@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, TextField, Checkbox, FormControlLabel, Button, MenuItem, Divider } from '@mui/material';
+import { Box, TextField, Checkbox, FormControlLabel, Button, MenuItem, Divider, useMediaQuery } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -24,6 +24,7 @@ const RealizarRutero = () => {
   const [gestion, setGestion] = useState('');
   const [pedido, setPedido] = useState(false);
   const [Comentario, setComentario] = useState('');
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
 
   const pedidoValue = pedido ? "Si" : "No";
@@ -93,22 +94,24 @@ const RealizarRutero = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ width: 600, heigth: 380, margin: '0 auto', padding: 2, border: "2px solid #000", p: 2, mt: 4 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "left" }}>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+      <Box sx={{ width: isSmallScreen ? "90%" : 600, margin: "0 auto", padding: 2, border: "2px solid #000", p: 2, mt: 4 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: isSmallScreen ? "center" : "flex-start" }}>
+          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
             <strong>Nit: </strong>{clienteV.NIT} 
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
             <strong>Razón Social: </strong>{clienteV.RazonSocial} 
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
             <strong>Usuario: </strong>{auth.UserFullName}
           </Box>
         </Box>
-        <Divider />
-        <Box sx={{ maxWidth: 650, height: 370, margin: '0 auto', padding: 2 }}>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Box sx={{ maxWidth: 650, margin: '0 auto', padding: 2 }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid size={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['TimePicker']}>
                   <TimePicker 
@@ -118,12 +121,13 @@ const RealizarRutero = () => {
                     onChange={(newValue) => setHora(newValue)}
                     minTime={dayjs().hour(7).minute(0)} 
                     maxTime={dayjs().hour(20).minute(0)}
-                    slotProps={{ textField: { variant: "outlined", fullWidth: true, sx:{ width: 100 } } }}
+                    slotProps={{ textField: { variant: "outlined", fullWidth: true, } }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-            <Grid size={6}>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 label="Tipo de Gestión"
                 select
@@ -136,32 +140,34 @@ const RealizarRutero = () => {
               </TextField>
             </Grid>
           </Grid>
-          <Grid container spacing={2} alignItems="center">
-            <Grid size={3}>
+
+          <Grid container spacing={2} alignItems="center" sx={{ mt: 2 }}>
+            <Grid size={{ xs: 6, sm: 3 }}>
               <FormControlLabel
                 control={<Checkbox checked={pedido} onChange={(e) => setPedido(e.target.checked)} />}
                 label="¿Hizo pedido?"
-                sx={{ mb: 2 }}
               />
             </Grid>
-            <Grid size={3}>
+
+            <Grid size={{ xs: 6, sm: 3 }}>
               <FormControlLabel
                 control={<Checkbox checked={cobro} onChange={(e) => setCobro(e.target.checked)} />}
                 label="¿Cobró?"
-                sx={{ mb: 2 }}
               />
             </Grid>
-            <Grid size={6}>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Agendar"
                   value={fecha}
                   onChange={(newValue) => setFecha(newValue)}
-                  slotProps={{ textField: { variant: "outlined", fullWidth: true, sx:{ width: 250 } }  }}
+                  slotProps={{ textField: { variant: "outlined", fullWidth: true } }}
                 />
               </LocalizationProvider>
             </Grid>
           </Grid>
+
           <TextField
             label="Comentarios"
             multiline
@@ -169,9 +175,9 @@ const RealizarRutero = () => {
             fullWidth
             value={Comentario}
             onChange={(e) => setComentario(e.target.value)}
-            sx={{ mb: 2 }}
+            sx={{ mt: 2 }}
           />
-          <Button variant="contained" color="success" onClick={handleSave}>
+          <Button variant="contained" color="success" onClick={handleSave} sx={{ mt: 2, width: "100%" }}>
             Guardar
           </Button>
         </Box>    
@@ -181,4 +187,3 @@ const RealizarRutero = () => {
 }
 
 export default RealizarRutero;
-

@@ -1,8 +1,6 @@
 "use client";
 
-
-import { Box, Button, Divider, Modal, Stack, Typography, TextField, 
-        IconButton, InputBase } from "@mui/material";
+import { Box, Button, Divider, Modal, Stack, Typography, TextField, IconButton, InputBase, useMediaQuery } from "@mui/material";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -42,6 +40,7 @@ const ClienteVendedor = () => {
   const [tablaClientes, setTablaClientes] = useState([]); 
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [correo, setCorreo] = useState(clienteSeleccionado ? clienteSeleccionado.Email : "");
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
 
   const handleOpen = (cliente) => {
@@ -158,30 +157,39 @@ const ClienteVendedor = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-        <h2><strong>LISTADO DE CLIENTES</strong></h2>
-        <InputBase 
-          sx={{ ml: 1, flex: 1, justifyContent: "flex-end", maxWidth: "400px", border: "2px solid black", height: "40px", borderRadius: "4px", p: 1, mb: 1 }}
-          value={busqueda}
-          onChange={handleChange}
-          type="text" 
-          placeholder="Buscar..."
-        />
-      </Box>
-      <Box sx={{ height: 660, width: "auto", margin: 2 }}>
-        <DataGrid
-          rows={clientes}  
-          columns={columns}
-          getRowId={(row) => row.NIT}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 10 }
-            }
-          }}
-          pageSizeOptions={[10]}
-          onRowClick={(params) => handleOpen(params.row)}
-        />
-      </Box>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <h2><strong>LISTADO DE CLIENTES</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <InputBase 
+                value={busqueda}
+                onChange={handleChange}
+                type="text" 
+                placeholder="Buscar..."
+                sx={{ width: isSmallScreen ? 300 : 400, border: "2px solid black" }}
+              />
+            </Box>
+          </Box>
+        </Grid>
+      
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: '100%', height: isSmallScreen ? 500 : 660 }}>
+            <DataGrid
+              rows={clientes}  
+              columns={columns}
+              getRowId={(row) => row.NIT}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 10 }
+                }
+              }}
+              pageSizeOptions={[10]}
+              onRowClick={(params) => handleOpen(params.row)}
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
       <Modal
         open={open}
@@ -196,63 +204,63 @@ const ClienteVendedor = () => {
             </strong></h3>
             <Divider />
             <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-              <Grid size={3}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>NIT</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteSeleccionado.NIT}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Cupo</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteSeleccionado.CupoCreditoCliente}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Debe</strong>
                 <Typography sx={{ mb: 1.5, display: "flex", color: "#f01212" }}>
                   {clienteSeleccionado.TotalCartera}
                 </Typography>
               </Grid>
               
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Teléfono</strong>
                 <Typography sx={{ mb: 1.5, display: "flex"}}>
                 {clienteSeleccionado.Telefono}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Celular</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Celular}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Fax</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Fax}
                 </Typography>
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Dirección</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Direccion}
                 </Typography>
               </Grid>
-              <Grid size={4}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Ciudad</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.CityName}
                 </Typography>
               </Grid>
-              <Grid size={3}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Departamento</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.DepartmentName}
                 </Typography>
               </Grid>
              
-              <Grid size={6}>
+              <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                 <strong>Email</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Email}
@@ -287,7 +295,7 @@ const ClienteVendedor = () => {
           onClose={handleCloseE}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description" >
-          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '550px', margin: 'auto', mt: 4 }}>
+          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '550px', width: "90%", height: "52vh", overflowY: "auto", margin: 'auto', mt: 4 }}>
             <strong>Actualizar Correo Electrónico</strong>
             <Divider />
             <h3 sx={{ p: 2, color: "#fff" }}>{clienteSeleccionado && clienteSeleccionado.RazonSocial}</h3>

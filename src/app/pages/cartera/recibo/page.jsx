@@ -1,7 +1,7 @@
 "use client";
 
 import { Autocomplete, Box, Button, Divider, IconButton, Modal, Paper, styled, Table, 
-        TableBody, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+        TableBody, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from "@mui/material";
 import CheckCircleOutlineIcon  from "@mui/icons-material/CheckCircleOutline";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -17,9 +17,9 @@ import Swal from "sweetalert2";
 import { Global } from "@/conexion";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
-import { DateRangePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useTheme } from "@mui/material/styles";
+
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -41,7 +41,7 @@ const columns = [
   { field: 'TOTAL', headerName: 'Total Recibo', width: 100 },
   { field: 'StateName', headerName: 'Estado', width: 100 },
   { field: 'IsConsigned', headerName: 'Consignado', width: 90 },
-  { field: '..', headerName: 'Consignado Por', width: 150 },
+  { field: 'U3', headerName: 'Consignado Por', width: 120 },
   { field: 'HasChecks', headerName: 'Cheques', width: 100 },
 ];
 
@@ -65,12 +65,14 @@ const ConsultarRecibo = () => {
   const [criterio, setCriterio] = useState("");
   const [verCheque, setVerCheque] = useState([]);
   const [documento, setDocumento] = useState([]);
+  const [fechaFin, setFechaFin] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
   const [consecutivo, setConsecutivo] = useState(null);
   const [valorBusqueda, setValorBusqueda] = useState("");
-  const [rangoFechas, setRangoFechas] = useState([null, null]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
   const [numero, setNumero] = useState(clienteSeleccionado?.ReciboFisico);
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleOpen = async (cliente) => {
     setClienteSeleccionado(cliente); 
@@ -78,45 +80,41 @@ const ConsultarRecibo = () => {
     setNit(cliente.NIT);
     setNumero(cliente.ReciboFisico);
     setOpen(true);
-      try {
-        const response = await fetch(Global.url + `/receipts/receiptdetail/${cliente.CONSECUTIVO}?action=Consult`, {
-          method: "GET",
-          headers: { "Content-Type" : "application/json" }
-        });
-        if (!response.ok) {
-          throw new Error(`Error en la solicitud: ${response.status}`);
-        }
-        const datos = await response.json();
-        setDocumento(datos.receipts);
-      } catch (error) {
-        console.log("Error al obtener los datos del recibo", error)
+    try {
+      const response = await fetch(Global.url + `/receipts/receiptdetail/${cliente.CONSECUTIVO}?action=Consult`, {
+        method: "GET",
+        headers: { "Content-Type" : "application/json" }
+      });
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
       }
+      const datos = await response.json();
+      setDocumento(datos.receipts);
+    } catch (error) {
+      console.log("Error al obtener los datos del recibo", error)
+    }
 
-      if(cliente.HasChecks === "Si") {
-        try {
-          const response = await fetch(Global.url + `/receipts/receiptdetail/${cliente.CONSECUTIVO}?ProfileName=Administrador&action=Gettle&checks=Si`, {
-            method: "GET", 
-            headers: { "Content-Type" : "application/json" },
-          });
-      
-          const datos = await response.json();
-          setVerCheque(datos.checks);
-          console.log(datos.checks);
-        } catch (error) {
-          console.log("Error al obtener los datos del cheque", error);
-        }
-      } else {
-        setVerCheque([]);
+    if(cliente.HasChecks === "Si") {
+      try {
+        const response = await fetch(Global.url + `/receipts/receiptdetail/${cliente.CONSECUTIVO}?ProfileName=Administrador&action=Gettle&checks=Si`, {
+          method: "GET", 
+          headers: { "Content-Type" : "application/json" },
+        });
+    
+        const datos = await response.json();
+        setVerCheque(datos.checks);
+        console.log(datos.checks);
+      } catch (error) {
+        console.log("Error al obtener los datos del cheque", error);
       }
+    } else {
+      setVerCheque([]);
+    }
   };
 
   const handleClose = () => {
     setClienteSeleccionado(null);
     setOpen(false);
-  };
-
-  const filtrar = (terminoBusqueda) => {
-    setValorBusqueda(terminoBusqueda); 
   };
 
   const handleOpenC = () => {
@@ -129,30 +127,40 @@ const ConsultarRecibo = () => {
 
  
   useEffect(() => {
-    const realizarBusqueda = async () => {
-      try {
-        let response;
-        if (criterio === "Fecha" && rangoFechas[0] && rangoFechas[1]) {
-          const fechainicio = rangoFechas[0].format("MM-DD-YYYY");
-          const fechafin = rangoFechas[1].format("MM-DD-YYYY");
-          response = await fetch(Global.url + `/receipts/consult/Fecha?ID=${auth.IDSaler}&fechainicio=${fechainicio}&fechafin=${fechafin}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-          });
-        } else if (criterio && valorBusqueda) {
-          response = await fetch(Global.url + `/receipts/consult/${criterio}?&ID=${auth.IDSaler}&data=${valorBusqueda}`, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-          });
-        }
-        const datos = await response.json();
-        setRecibo(datos);
-      } catch (error) {
-        console.error("Error al realizar la búsqueda", error);
-      }
-    };
     realizarBusqueda();
-  }, [criterio, valorBusqueda, rangoFechas, auth.IDSaler]);
+  }, [criterio, valorBusqueda, auth.IDSaler]);
+
+  const realizarBusqueda = async () => {
+    try {
+      let response; 
+      if (criterio === "Fecha" && fechaInicio && fechaFin) {
+        response = await fetch(Global.url + `/receipts/consult/Fecha?&ProfileName=Vendedor&ID=${auth.ID}&data=${fechaInicio}|${fechaFin}`, {
+          metho: "GET",
+          headers: { "Content-Type" : "application/json" },
+        });
+
+      } else if (criterio && valorBusqueda) {
+        response = await fetch(Global.url + `/receipts/consult/${criterio}?&ID=${auth.ID}&data=${valorBusqueda}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+
+      } else if (criterio === "Todos") {
+        response = await fetch(Global.url + `/receipts/consult/Todos?&ID=${auth.ID}&ProfileName=Vendedor`, {
+          method: "GET",
+          headers: { "Content-Type" : "application/json" }
+        });
+      }
+
+      if (!response) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }
+      const datos = await response.json();
+      setRecibo(datos);
+    } catch (error) {
+      console.error("Error al realizar la búsqueda", error);
+    }
+  };
 
 
   const enviarCorreo = async () => {
@@ -256,24 +264,24 @@ const ConsultarRecibo = () => {
   return (
     <>
       <NavBar />    
-      <div style={{ height: "70%", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
-          <Box>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
             <h2><strong>CONSULTAR RECIBO</strong></h2>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "60%", margin: 2 }}>
+
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
             <strong>Consulta Por: </strong>
             <Autocomplete 
               id="size-small-outlined"
               size="small"
-              sx={{ width: 200, height: 40 }}
+              sx={{ width: 200 }}
               disablePortal
               options={options}
-              onChange={(event, newValue) => setCriterio(newValue.label)} 
+              onChange={(event, newValue) => setCriterio(newValue?.label || "")} 
               renderInput={(params) => <TextField {...params} label="Seleccione el Criterio" />}
-            />
+              />
             {criterio !== "Fecha" ? ( 
-            <TextField 
+              <TextField 
               id="outlined-basic"
               label="Buscar..."
               size="small"
@@ -281,193 +289,201 @@ const ConsultarRecibo = () => {
               variant="outlined"
               value={valorBusqueda}
               onChange={(e) => setValorBusqueda(e.target.value)}
-              sx={{ width: 200, height: 40 }}
-            />
+              sx={{ width: 200 }}
+              />
             ) : ( 
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "50%" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateRangePicker 
-                  startText="Inicio"
-                  endText="Fin"
-                  value={rangoFechas}
-                  onChange={(newValue) => setRangoFechas(newValue)}
-                  renderInput={(startProps, endProps) => (
-                    <>
-                      <TextField {...startProps} size="small" sx={{ marginRight: 0, height: 40 }} />
-                      <TextField {...endProps} size="small" />
-                    </>
-                  )}
+              <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2 }}>
+              <TextField 
+                label="Inicio"
+                type="date"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                size="small"
+                InputLabelProps={{ shrink: true }}
                 />
-              </LocalizationProvider>
+              <TextField 
+                label="Fin"
+                type="date"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                size="small"
+                InputLabelProps={{ shrink: true }}
+                /> 
             </Box>
             )}
-            <IconButton onClick={() => filtrar(valorBusqueda)} > 
+            <IconButton onClick={realizarBusqueda} > 
               <ZoomInIcon sx={{ fontSize: 45 }} color="success" />
+            </IconButton>
+            </Box>
+          </Box>
+        </Grid>
+
+      
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 750 }}>
+            <DataGrid 
+              rows={recibo}
+              columns={columns}
+              getRowId={(row) => row.ID}
+              pageSizeOptions={[10]}
+              onRowClick={(params) => handleOpen(params.row)}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 10 }
+                }
+              }}
+            />
+          </Box>
+        </Grid>
+      </Grid>
+       
+        
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '850px', width: "90%", height: "90vh", overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
+            <>
+            <strong>DETALLE DE RECIBO</strong>
+            <Divider />
+            {clienteSeleccionado && (
+              <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
+                <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+                  <strong>Recibo: </strong>{clienteSeleccionado.CONSECUTIVO}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+                  <strong>Fecha: </strong>{clienteSeleccionado.FECHA}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+                  <strong>Nit: </strong>{clienteSeleccionado.NIT}
+                </Grid>
+                <Grid size={{ xs: 27, sm: 18, md: 9 }}>
+                  <strong>Razón Social: </strong>{clienteSeleccionado.RazonSocial}
+                </Grid>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Registrado Por: </strong>{clienteSeleccionado.U1}
+                </Grid>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Asentado Por: </strong>{clienteSeleccionado.U2}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+                  <strong>Estado: </strong>{clienteSeleccionado.StateName}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+                  <strong>Recibo Fisico: </strong>{clienteSeleccionado.ReciboFisico}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
+                  <strong>Recibo SoftLand: </strong>{clienteSeleccionado.ReciboSoftland}
+                </Grid>
+              </Grid>
+            )}
+            {clienteSeleccionado && (
+              <TextField
+                id="outlined-basic"
+                multiline
+                size="small"
+                defaultValue={clienteSeleccionado.Comentarios}
+                variant="outlined"
+                label="Comentarios"
+                sx={{ width: "100%", mb: 2 }}
+              />
+            )}
+          </>
+          <TableContainer component={Paper}>
+            <Table sx={{ width: "100%", maxHeight: "6ovh", overflowY: "auto" }} size="small" aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Documento</StyledTableCell>
+                  <StyledTableCell>Valor Cancelado</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {Array.isArray(documento) && documento.map((index) => (
+                <TableRow key={index.NumeroDocumento}>
+                  <TableCell>{index.NumeroDocumento}</TableCell>
+                  <TableCell>{index.ValorCancelado}</TableCell>
+                </TableRow>
+              ))}
+                <TableRow>
+                  <TableCell align="right"><strong>TOTAL</strong></TableCell>
+                  <TableCell align="right"><strong>{clienteSeleccionado?.TOTAL}</strong></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            {clienteSeleccionado?.HasChecks === "Si" && (
+              <IconButton onClick={handleOpenC} title="Ver Cheques"><MonetizationOnIcon sx={{ fontSize: 40, color: "#f31919" }} /></IconButton>
+            )}
+            <IconButton onClick={enviarCorreo} title="Reenviar Por Correo"><MailOutlineIcon sx={{ fontSize: 40 }} color="primary" /></IconButton>
+            <IconButton onClick={handleOpenE} title="Editar Recibo"><EditIcon sx={{ fontSize: 40 }} color="secondary" /></IconButton>
+            <IconButton onClick={handleClose} title="Salir"><CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" /></IconButton>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openC}
+        onClose={handleCloseC}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px',  width: "90%", height: "32vh",  overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
+          <>
+          <strong>RELACIÓN DE CHEQUES</strong>
+          <Divider />
+            {Array.isArray(verCheque) && verCheque.map((cheque, index) => (
+              <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }} key={index}>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Banco: </strong>{cheque.bank}
+                </Grid>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Número de Cheque: </strong>{cheque.checkNumber}
+                </Grid>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Fecha: </strong>{cheque.checkDate}
+                </Grid>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
+                  <strong>Valor: </strong>{cheque.value}
+                </Grid>
+              </Grid>
+            ))}
+            <Divider />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button onClick={handleCloseC} color="success">Cerrar</Button>
+            </Box>
+          </>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openE}
+        onClose={handleCloseE}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', margin: 'auto', mt: 4 }}>
+          <strong>Editar Recibo Fisico</strong>
+          <Divider />
+          <Typography>Número de Recibo: </Typography>
+          <TextField
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+          />
+          <Divider />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <IconButton color="success" onClick={actualizarNumero}>
+              <CheckCircleIcon sx={{ fontSize: 40 }} />
+            </IconButton>
+            <IconButton color="error" onClick={handleCloseE}>
+              <CancelIcon sx={{ fontSize: 40 }} />
             </IconButton>
           </Box>
         </Box>
-        <Divider />
-        <Box sx={{ width: "auto", height: "auto", margin: 2  }}>
-          <DataGrid 
-            rows={recibo}
-            columns={columns}
-            getRowId={(row) => row.ID}
-            pageSizeOptions={[20]}
-            onRowClick={(params) => handleOpen(params.row)}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 20 }
-              }
-            }}
-          />
-        </Box>
-
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-            <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '850px', width: "90%", height: "90vh", overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
-              <>
-              <strong>DETALLE DE RECIBO</strong>
-              <Divider />
-              {clienteSeleccionado && (
-                <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-                  <Grid size={3}>
-                    <strong>Recibo: </strong>{clienteSeleccionado.CONSECUTIVO}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Fecha: </strong>{clienteSeleccionado.FECHA}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Nit: </strong>{clienteSeleccionado.NIT}
-                  </Grid>
-                  <Grid size={9}>
-                    <strong>Razón Social: </strong>{clienteSeleccionado.RazonSocial}
-                  </Grid>
-                  <Grid size={6}>
-                    <strong>Registrado Por: </strong>{clienteSeleccionado.U1}
-                  </Grid>
-                  <Grid size={6}>
-                    <strong>Asentado Por: </strong>{clienteSeleccionado.U2}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Estado: </strong>{clienteSeleccionado.StateName}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Recibo Fisico: </strong>{clienteSeleccionado.ReciboFisico}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Recibo SoftLand: </strong>{clienteSeleccionado.ReciboSoftland}
-                  </Grid>
-                </Grid>
-              )}
-              {clienteSeleccionado && (
-                <TextField
-                  id="outlined-basic"
-                  multiline
-                  size="small"
-                  defaultValue={clienteSeleccionado.Comentarios}
-                  variant="outlined"
-                  label="Comentarios"
-                  sx={{ width: "100%", mb: 2 }}
-                />
-              )}
-            </>
-            <TableContainer component={Paper}>
-              <Table sx={{ width: "100%", maxHeight: "6ovh", overflowY: "auto" }} size="small" aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Documento</StyledTableCell>
-                    <StyledTableCell>Valor Cancelado</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                {Array.isArray(documento) && documento.map((index) => (
-                  <TableRow key={index.NumeroDocumento}>
-                    <TableCell>{index.NumeroDocumento}</TableCell>
-                    <TableCell>{index.ValorCancelado}</TableCell>
-                  </TableRow>
-                ))}
-                  <TableRow>
-                    <TableCell align="right"><strong>TOTAL</strong></TableCell>
-                    <TableCell align="right"><strong>{clienteSeleccionado?.TOTAL}</strong></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              {clienteSeleccionado?.HasChecks === "Si" && (
-                <IconButton onClick={handleOpenC}><MonetizationOnIcon sx={{ fontSize: 40, color: "#f31919" }} /></IconButton>
-              )}
-              <IconButton onClick={enviarCorreo}><MailOutlineIcon sx={{ fontSize: 40 }} color="primary" /></IconButton>
-              <IconButton onClick={handleOpenE}><EditIcon sx={{ fontSize: 40 }} color="secondary" /></IconButton>
-              <IconButton onClick={handleClose}><CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" /></IconButton>
-            </Box>
-          </Box>
-        </Modal>
-
-        <Modal
-          open={openC}
-          onClose={handleCloseC}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px', height: "auto", margin: 'auto', mt: 4, p:2 }}>
-            <>
-              <strong>RELACIÓN DE CHEQUES</strong>
-              <Divider />
-                {Array.isArray(verCheque) && verCheque.map((cheque, index) => (
-                  <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }} key={index}>
-                    <Grid size={6}>
-                      <strong>Banco: </strong>{cheque.bank}
-                    </Grid>
-                    <Grid size={6}>
-                      <strong>Número de Cheque: </strong>{cheque.checkNumber}
-                    </Grid>
-                    <Grid size={6}>
-                      <strong>Fecha: </strong>{cheque.checkDate}
-                    </Grid>
-                    <Grid size={6}>
-                      <strong>Valor: </strong>{cheque.value}
-                    </Grid>
-                  </Grid>
-                ))}
-                <Divider />
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button onClick={handleCloseC} color="success">Cerrar</Button>
-                </Box>
-            </>
-          </Box>
-        </Modal>
-
-        <Modal
-          open={openE}
-          onClose={handleCloseE}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', margin: 'auto', mt: 4 }}>
-            <strong>Editar Recibo Fisico</strong>
-            <Divider />
-            <Typography>Número de Recibo: </Typography>
-            <TextField
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={numero}
-              onChange={(e) => setNumero(e.target.value)}
-            />
-            <Divider />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-              <IconButton color="success" onClick={actualizarNumero}>
-                <CheckCircleIcon sx={{ fontSize: 40 }} />
-              </IconButton>
-              <IconButton color="error" onClick={handleCloseE}>
-                <CancelIcon sx={{ fontSize: 40 }} />
-              </IconButton>
-            </Box>
-          </Box>
-        </Modal>
-      </div>
+      </Modal>
     </>
   )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Divider, Modal, Paper, styled, Table, TableBody, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Box, Button, Divider, Modal, Paper, styled, Table, TableBody, TableContainer, TableHead, TableRow, TextField, useMediaQuery } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import NavBar from "@/app/components/navbar/nav";
 import { useAuth } from "@/context/authContext";
@@ -38,6 +38,8 @@ const Consignacion = () => {
   const [busqueda, setBusqueda] = useState("");
   const [montoOriginal, setMOntoOriginal] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState([]); 
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+
 
   const handleOpen = async (cliente) => {
     setClienteSeleccionado(cliente); 
@@ -107,111 +109,116 @@ const Consignacion = () => {
   return (
     <>
       <NavBar />    
-      <div style={{ height: "70%", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
-          <h2><strong>CONSIGNACIONES</strong></h2>
-          <TextField 
-            id="outlined-basic"
-            label="Buscar..."
-            multiline
-            rows={1}
-            variant="outlined"
-            value={busqueda}
-            onChange={handleChange}
-            sx={{ width: "50%", height: "10%", margin: 2}}
-          />
-        </Box>
-        <Divider />
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <h2><strong>CONSIGNACIONES</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <TextField 
+                id="outlined-basic"
+                label="Buscar..."
+                multiline
+                rows={1}
+                variant="outlined"
+                value={busqueda}
+                onChange={handleChange}
+                sx={{ width: isSmallScreen ? 300 : 400 }}
+              />
+            </Box>
+          </Box>
+        </Grid>
 
-        <Box sx={{ width: "auto", height: "auto", margin: 2  }}>
-          <DataGrid 
-            rows={monto}
-            columns={columns}
-            getRowId={(row) => row.ID}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 20 }
-              }
-            }}
-            pageSizeOptions={[20]}
-            onRowClick={(params) => handleOpen(params.row)} 
-          />
-        </Box>
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 755 }}>
+            <DataGrid 
+              rows={monto}
+              columns={columns}
+              getRowId={(row) => row.ID}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 20 }
+                }
+              }}
+              pageSizeOptions={[20]}
+              onRowClick={(params) => handleOpen(params.row)} 
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-            <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '950px', height: "auto", margin: 'auto', mt: 4, p:2 }}>
-            <>
-              <strong>DETALLE DE CONSIGNACIÓN</strong>
-              <Divider />
-              {clienteSeleccionado && (
-                <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-                  <Grid size={6}>
-                    <strong>Banco: </strong>{clienteSeleccionado.BankName}
-                  </Grid>
-                  <Grid size={6}>
-                    <strong>Numero de Consignación: </strong>{clienteSeleccionado.ConsignmentNumber}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Fecha: </strong>{clienteSeleccionado.Date}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Elaborada Por: </strong>{clienteSeleccionado.UserFullName}
-                  </Grid>
-                  <Grid size={4}>
-                    <strong>Total Consignación: </strong>{clienteSeleccionado.Ammount}
-                  </Grid>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '760px', height: "90%", height: "70vh", overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
+          <>
+            <strong>DETALLE DE CONSIGNACIÓN</strong>
+            <Divider />
+            {clienteSeleccionado && (
+              <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
+                <Grid size={{ xs: 10, sm: 8, md: 6 }}>
+                  <strong>Banco: </strong>{clienteSeleccionado.BankName}
                 </Grid>
-              )}
-              {clienteSeleccionado && (
-                <TextField
-                  id="outlined-basic"
-                  multiline
-                  rows={2}
-                  defaultValue={clienteSeleccionado.Comentarios}
-                  variant="outlined"
-                  label="Comentarios"
-                  sx={{ width: "100%", mb: 2 }}
-                />
-              )}
-            </>
-          <TableContainer component={Paper}>
-            <Table sx={{ width: "100%", heigth: "auto" }} size="small" aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>N° Recibo</StyledTableCell>
-                  <StyledTableCell>Nit</StyledTableCell>
-                  <StyledTableCell>Razón Social</StyledTableCell>
-                  <StyledTableCell>Fecha Recibo</StyledTableCell>
-                  <StyledTableCell>Valor Recibo</StyledTableCell>
-                  <StyledTableCell>Registrado Por</StyledTableCell>
-                  <StyledTableCell>Estado</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Array.isArray(recibo) && recibo.map((index) => (
-                <TableRow key={index.ID}>
-                  <TableCell>{index.CONSECUTIVO}</TableCell>
-                  <TableCell>{index.NIT}</TableCell>
-                  <TableCell>{index.RazonSocial}</TableCell>
-                  <TableCell>{index.FECHA}</TableCell>
-                  <TableCell>{index.TOTAL}</TableCell>
-                  <TableCell>{index.U1}</TableCell>
-                  <TableCell>{index.StateName}</TableCell>
-                </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", margin: 2 }}>
-            <Button variant="contained" onClick={handleClose}>Cerrar</Button>
-          </Box>
-          </Box>
-        </Modal>
-      </div>
+                <Grid size={{ xs: 10, sm: 8, md: 6 }}>
+                  <strong>Numero de Consignación: </strong>{clienteSeleccionado.ConsignmentNumber}
+                </Grid>
+                <Grid size={{ xs: 8, sm: 6, md: 4 }}>
+                  <strong>Fecha: </strong>{clienteSeleccionado.Date}
+                </Grid>
+                <Grid size={{ xs: 8, sm: 6, md: 4 }}>
+                  <strong>Elaborada Por: </strong>{clienteSeleccionado.UserFullName}
+                </Grid>
+                <Grid size={{ xs: 8, sm: 6, md: 4 }}>
+                  <strong>Total Consignación: </strong>{clienteSeleccionado.Ammount}
+                </Grid>
+              </Grid>
+            )}
+            {clienteSeleccionado && (
+              <TextField
+                id="outlined-basic"
+                multiline
+                rows={2}
+                defaultValue={clienteSeleccionado.Comentarios}
+                variant="outlined"
+                label="Comentarios"
+                sx={{ width: "100%", mb: 2 }}
+              />
+            )}
+          </>
+        <TableContainer component={Paper}>
+          <Table sx={{ width: "100%", heigth: "auto" }} size="small" aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>N° Recibo</StyledTableCell>
+                <StyledTableCell>Nit</StyledTableCell>
+                <StyledTableCell>Razón Social</StyledTableCell>
+                <StyledTableCell>Fecha Recibo</StyledTableCell>
+                <StyledTableCell>Valor Recibo</StyledTableCell>
+                <StyledTableCell>Registrado Por</StyledTableCell>
+                <StyledTableCell>Estado</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(recibo) && recibo.map((index) => (
+              <TableRow key={index.ID}>
+                <TableCell>{index.CONSECUTIVO}</TableCell>
+                <TableCell>{index.NIT}</TableCell>
+                <TableCell>{index.RazonSocial}</TableCell>
+                <TableCell>{index.FECHA}</TableCell>
+                <TableCell>{index.TOTAL}</TableCell>
+                <TableCell>{index.U1}</TableCell>
+                <TableCell>{index.StateName}</TableCell>
+              </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", margin: 2 }}>
+          <Button variant="contained" onClick={handleClose}>Cerrar</Button>
+        </Box>
+        </Box>
+      </Modal>
     </>
   )
 }

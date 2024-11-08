@@ -1,11 +1,12 @@
 "use client";
 
-import { Autocomplete, Box, Divider, IconButton, TextField } from "@mui/material";
+import { Autocomplete, Box, Divider, IconButton, TextField, useMediaQuery } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import NavBar from "@/app/components/navbar/nav";
 import { useAuth } from "@/context/authContext";
-import { useCallback, useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
 
 
@@ -37,6 +38,7 @@ const ElaborarConsignacion = () => {
   const [selectedBankId, setSelectedBankId] = useState(null);
   const [totalConsignacion, setTotalConsignacion] = useState(0);
   const [numeroConsignacion, setNumeroConsignacion] = useState("");
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   
   useEffect(() => {
@@ -53,21 +55,11 @@ const ElaborarConsignacion = () => {
     opciones();
   }, []);
 
-  const formatearFecha = (fecha) => {
-    const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: true };
-    
-    const fechaFormateada = new Intl.DateTimeFormat('en-US', opcionesFecha).format(fecha);
-    const horaFormateada = new Intl.DateTimeFormat('en-US', opcionesHora).format(fecha);
-    
-    return `${fechaFormateada} - ${horaFormateada.toLowerCase()}`;
-  };
 
   useEffect(() => {
     const obtenerFecha = () => {
-      const fechaActual = new Date();
-      const fechaFormateada = formatearFecha(fechaActual); 
-      setFecha(fechaFormateada); 
+      const fechaActual = new Date().toISOString();
+      setFecha(fechaActual);
     };
     obtenerFecha();
   }, []);
@@ -152,59 +144,64 @@ const ElaborarConsignacion = () => {
         text: "No se pudo crear la consiganción debido a un Problema de Red."
       });
     }
-  }
+  };
   
 
   return (
     <>
       <NavBar /> 
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto" }}>
+      <Box sx={{ padding: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center" }}>
           <h2><strong>ELABORAR CONSIGNACIÓN</strong></h2>
-          <IconButton onClick={crearConsignacion}>
-            <LocalAtmIcon sx={{ fontSize: 55 }} color="primary" />
+          <IconButton onClick={crearConsignacion} title="Generar Consignación">
+            <LocalAtmIcon sx={{ fontSize: 60 }} color="primary" />
           </IconButton>
         </Box>
+
         <Divider />
-        <Box sx={{ display: "flex", flexDirection: "column", width: "auto", margin: 4 }}>          
-          <Box sx={{ display: "flex", flexDirection: "row", mb: 2,  }}>
-            <strong>Banco: </strong>
-            <Autocomplete 
-              id="size-small-outlined"
-              sx={{ width: 550, height: 40, ml: 2, mr: 2  }}
-              size="small"  
-              disablePortal
-              options={bancos}
-              getOptionLabel={(option) => option.BankName || ""}
-              aria-required
-              onChange={(event, newValue) => {setSelectedBankId(newValue ? newValue.ID : null)}}
-              renderInput={(params) => <TextField {...params} label="Seleccione el Banco" />}
-            />
-            <strong>Numero de Consignación: </strong>
-            <TextField 
-              value={numeroConsignacion}
-              onChange={(e) => setNumeroConsignacion(e.target.value)}
-              id="outlined-basic"
-              multiline
-              size="small"  
-              variant="outlined"
-              sx={{ width: 300, height: 40, ml: 2 }}
-            />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", mb: 1, }}>
-            <strong>Comentarios: </strong>
-            <TextField 
-              value={comentarios}
-              onChange={(e) => setComentarios(e.target.value)}
-              id="outlined-basic"
-              multiline
-              size="small"  
-              variant="outlined"
-              sx={{ width: 600, height: 40, ml: 2  }}
-            />
-          </Box>
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}> 
+          <Grid container spacing={2} sx={{ flexDirection: isSmallScreen ? "column" : "row" }}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <strong>Banco: </strong>
+              <Autocomplete 
+                id="bank-selector"
+                fullWidth
+                size="small"  
+                disablePortal
+                options={bancos}
+                getOptionLabel={(option) => option.BankName || ""}
+                aria-required
+                onChange={(event, newValue) => {setSelectedBankId(newValue ? newValue.ID : null)}}
+                renderInput={(params) => <TextField {...params} label="Seleccione el Banco" />}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <strong>Numero de Consignación: </strong>
+              <TextField 
+                value={numeroConsignacion}
+                onChange={(e) => setNumeroConsignacion(e.target.value)}
+                size="small"  
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+          </Grid>         
+         
+          <strong>Comentarios: </strong>
+          <TextField 
+            value={comentarios}
+            onChange={(e) => setComentarios(e.target.value)}
+            id="outlined-basic"
+            multiline
+            size="small"  
+            variant="outlined"
+            fullWidth
+          />
         </Box>
 
-        <Box sx={{ height: 280, width: "98%", margin: 2 }}>
+        <Box sx={{ height: 280, width: "100%", mt: 4 }}>
           <DataGrid 
             rows={pedido}
             columns={columns}
@@ -223,23 +220,20 @@ const ElaborarConsignacion = () => {
             }}
             />
         </Box>
-        <Box sx={{ display: "flex", margin: 2 }}>
+        
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, mt: 4 }}>
           <strong>Total Consignación: </strong>
           <TextField
             value={totalConsignacion}
-            multiline
             variant="outlined"  
-            fullWidth
             size="small"  
-            sx={{ width: 250, height: 40, ml: 2 }}  
+            fullWidth={isSmallScreen}
+            sx={{ width: isSmallScreen ? "100%" : 250 }}  
           />
         </Box>
+      </Box>
     </> 
   )
 }
 
 export default ElaborarConsignacion;
-
-
-
-

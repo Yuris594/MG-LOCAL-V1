@@ -1,15 +1,16 @@
 "use client";
 
 import { Global } from "@/conexion";
+import Grid from "@mui/material/Grid2";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import NavBar from "@/app/components/navbar/nav";
-import { Box, Divider, InputBase } from "@mui/material";
+import { Box, Divider, InputBase, useMediaQuery } from "@mui/material";
 
 
 const columns = [
-  { field: 'TIPO', headerName: 'DESCRIPCIÓN', width: 200, headerClassName: 'header-bold' },
+  { field: 'TIPO', headerName: 'DESCRIPCIÓN', width: 250, headerClassName: 'header-bold' },
   { field: 'VENTA', headerName: 'VENTA REAL', width: 150, 
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
@@ -44,7 +45,7 @@ const columns = [
       return value !== null && value !== undefined ? `${Number(value).toFixed(1)}%` : '0%';
     }, align: "right", headerClassName: 'header-bold'
   },
-  { field: 'NOTAS', headerName: 'OTROS', width: 100, headerClassName: 'header-bold' },
+  { field: 'NOTAS', headerName: 'OTROS', width: 120, headerClassName: 'header-bold' },
 ];
 
 const GestionCartera = () => {
@@ -52,6 +53,7 @@ const GestionCartera = () => {
   const [resumen, setResumen] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [tablaResumen, setTablaResumen] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
   
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -97,19 +99,24 @@ const GestionCartera = () => {
   return (
     <>
       <NavBar />
-        <Box sx={{ margin: 5 }}>
-          <Box sx={{ display: "flex", flexDirection: "row",  justifyContent: "space-between", alignItems: "center" }}>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
             <h2><strong>RESUMEN VENTA ACTUAL</strong></h2>
-            <InputBase sx={{ ml: 1, flex: 1, justifyContent: "flex-end", maxWidth: "400px", border: "2px solid black", 
-            height: "40px", borderRadius: "4px", p: 1, mb: 1 }}
-            type="text"
-            value={busqueda}
-            onChange={handleChange} 
-            placeholder="Buscar..."
-            />
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <InputBase 
+              type="text"
+              value={busqueda}
+              onChange={handleChange} 
+              placeholder="Buscar..."
+              sx={{ width: isSmallScreen ? 300 : 500, border: "2px solid black" }}
+              />
+            </Box>
           </Box>
-          <Divider />
-          <Box sx={{ height: "auto", width: 'auto', margin: 2 }}>
+        </Grid>
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: '100%', heigth: isSmallScreen ? 500 : 750 }}>
             <DataGrid 
               rows={resumen}
               columns={columns}
@@ -122,10 +129,10 @@ const GestionCartera = () => {
               pageSizeOptions={[12]}
             />
           </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </>
   );
 }
 
 export default GestionCartera;
-

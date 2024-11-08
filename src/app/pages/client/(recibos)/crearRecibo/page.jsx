@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Checkbox, Divider, FormControlLabel, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, FormControlLabel, IconButton, TextField, Typography, useMediaQuery } from "@mui/material";
 import CheckCircleIcon  from "@mui/icons-material/CheckCircle";
 import CancelIcon  from "@mui/icons-material/Cancel";
 import NavBar from "@/app/components/navbar/nav";
@@ -33,22 +33,12 @@ const RealizarRecibo = () => {
   const [recibos, setRecibos] = useState("");
   const [cheques, setCheques] = useState("");
   const [comentarios, setComentarios] = useState("");
+  const isSmallScreen = useMediaQuery("(max-width: 600px)")
 
-  const formatearFecha = (fecha) => {
-    const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: true };
-    
-    const fechaFormateada = new Intl.DateTimeFormat('en-US', opcionesFecha).format(fecha);
-    const horaFormateada = new Intl.DateTimeFormat('en-US', opcionesHora).format(fecha);
-    
-    return `${fechaFormateada} - ${horaFormateada.toLowerCase()}`;
-  };
-  
   useEffect(() => {
     const obtenerFecha = () => {
-      const fechaActual = new Date();
-      const fechaFormateada = formatearFecha(fechaActual); 
-      setFecha(fechaFormateada); 
+      const fechaActual = new Date().toISOString();
+      setFecha(fechaActual);
     };
     obtenerFecha();
   }, []);
@@ -254,93 +244,94 @@ const RealizarRecibo = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-        <Box sx={{ margin: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Nit: {clienteV.NIT} </Typography>
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Razón Social: {clienteV.RazonSocial} </Typography>
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>Email: {clienteV.Email} </Typography>
+      <Box sx={{ padding: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <h4><strong>Nit: {clienteV.NIT} </strong></h4>
+            <h4><strong>Razón Social: {clienteV.RazonSocial} </strong></h4>
+            <h4><strong>Email: {clienteV.Email} </strong></h4>
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: "auto" }} container justifyContent={isSmallScreen ? "center" : "flex-end"}>
+            <IconButton onClick={crearRecibo} color="success" disabled={!boton}>
+              <CheckCircleIcon sx={{ fontSize: 40 }} />
+            </IconButton>
+            <IconButton color="error" LinkComponent={Link} href="../client">
+              <CancelIcon sx={{ fontSize: 40 }} />
+            </IconButton>
+          </Grid>
         </Box>
-        <Box sx={{ margin: 2 }}>
-          <IconButton onClick={crearRecibo} color="success" disabled={!boton}>
-            <CheckCircleIcon sx={{ fontSize: 40 }} />
-          </IconButton>
-          <IconButton color="error" LinkComponent={Link} href="../client">
-            <CancelIcon sx={{ fontSize: 40 }} />
-          </IconButton>
-        </Box>
-      </Box>
-      <Divider />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-        <Box sx={{ display: "flex", width: "100%", heigt: "auto" }}>
-          <TextField 
-            id="outlined-basic"
-            label="Escribir Comentario"
-            multiline
-            maxRows={6}
-            variant="outlined"
-            value={comentarios}
-            onChange={(e) => setComentarios(e.target.value)}
-            sx={{ width: "80%", margin: 2 }}
-          />
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center", width: "50%" }}>
-          <TextField 
-            id="standard-multiline-flexible"
-            label="Digite Recibo"
-            multiline
-            size="small"
-            maxRows={2}
-            variant="outlined"
-            value={recibos}
-            onChange={(e) => setRecibos(e.target.value)}
-            sx={{ width: "50%" }}
-          />
-          <TextField 
-            id="standard-multiline-flexible"
-            multiline
-            size="small"
-            maxRows={3}
-            variant="outlined"
-            value={total} 
-            sx={{ width: "50%", bgcolor: "#fff", color: "#ff0000" }}
-          />
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-          <Grid container alignItems="center">
-            <Grid>
-              <FormControlLabel control={<Checkbox name="Efectivo" onChange={handleCheckbox} />} label="Efectivo" />
+
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Grid container spacing={2} sx={{ flexDirection: isSmallScreen ? "column" : "row" }}>
+            <TextField 
+              id="outlined-basic"
+              label="Escribir Comentario"
+              multiline
+              variant="outlined"
+              size="small"  
+              value={comentarios}
+              onChange={(e) => setComentarios(e.target.value)}
+              fullWidth
+            />
+
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField 
+                id="standard-multiline-flexible"
+                label="Digite Recibo"
+                multiline
+                fullWidth
+                size="small"
+                variant="outlined"
+                value={recibos}
+                onChange={(e) => setRecibos(e.target.value)}
+              />
             </Grid>
-            <Grid>
-              <FormControlLabel control={<Checkbox name="Cheque" onChange={handleCheckbox} />} label="Cheque" />
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField 
+                id="standard-multiline-flexible"
+                label="Total"
+                multiline
+                size="small"
+                fullWidth
+                variant="outlined"
+                value={total} 
+                sx={{ bgcolor: "#fff", color: "#ff0000" }}
+              />
             </Grid>
-            <Grid>
-              <FormControlLabel control={<Checkbox name="Consignación" onChange={handleCheckbox} />} label="Consignación" />
+
+            <Grid size={{ xs: 12, sm: 3 }} container spacing={1} sx={{ flexDirection: isSmallScreen ? "column" : "row" }}>
+              <Grid size={{ xs: 4 }}>
+                <FormControlLabel control={<Checkbox name="Efectivo" onChange={handleCheckbox} />} label="Efectivo" />
+              </Grid>
+              <Grid size={{ xs: 4 }}>
+                <FormControlLabel control={<Checkbox name="Cheque" onChange={handleCheckbox} />} label="Cheque" />
+              </Grid>
+              <Grid size={{ xs: 4 }}>
+                <FormControlLabel control={<Checkbox name="Consignación" onChange={handleCheckbox} />} label="Consignación" />
+              </Grid>
             </Grid>
           </Grid>
         </Box>
-      </Box>
 
-      <Divider />
-
-      <Box sx={{  width: "auto", height: 400, margin: 2  }}>
-        <DataGrid 
-          rows={recibo}  
-          columns={columns}
-          getRowId={(row) => row.Documento}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 5 }
-            }
-          }}
-          pageSizeOptions={[5]}
-        />
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", heigth: isSmallScreen ? 300 : 400 }}>
+            <DataGrid 
+              rows={recibo}  
+              columns={columns}
+              getRowId={(row) => row.Documento}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5 }
+                }
+              }}
+              pageSizeOptions={[5]}
+            />
+          </Box>
+        </Grid>
       </Box>
     </>
   )  
 }
 
 export default RealizarRecibo;
-
-
-
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Divider, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import NavBar from "@/app/components/navbar/nav";
 import { useAuth } from "@/context/authContext";
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconButton } from '@mui/material';
 import Articulos from "./articulo/page";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
 import Swal from "sweetalert2";
 import Link from "next/link";
@@ -43,6 +44,7 @@ const CrearPedido = () => {
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
 
   const columns = [
@@ -288,35 +290,40 @@ const CrearPedido = () => {
   return (
     <>
       <NavBar />
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "95%", margin: 1 }}>
+        <Grid container spacing={2} direction={isSmallScreen ? "column" : "row"} alignItems="center" justifyContent="space-between">
           <h2><strong>DIGITAR PEDIDO</strong></h2>
-          <Box>
-            <Button onClick={handleOpen} variant="contained" sx={{ margin: 1, backgroundColor:"#4eeacb", color: "white" }}>Articulos</Button>
-            <Button onClick={guardarPedido} variant="contained" sx={{ margin: 1, backgroundColor: '#8334f0', color: 'white' }}>Guardar</Button>
-            <Button onClick={enviarPedido} variant="contained" sx={{ margin: 1 }} color="success">Enviar</Button>
-            <Button variant="contained" sx={{ ml: 1, mr: 2 }} color="error" LinkComponent={Link} href="../client">Cerrar</Button>
-          </Box>
-        </Box>
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ padding: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
+              <Button onClick={handleOpen} variant="contained" sx={{ margin: 1, backgroundColor:"#4eeacb", color: "white" }}>Articulos</Button>
+              <Button onClick={guardarPedido} variant="contained" sx={{ margin: 1, backgroundColor: '#8334f0', color: 'white' }}>Guardar</Button>
+              <Button onClick={enviarPedido} variant="contained" sx={{ margin: 1 }} color="success">Enviar</Button>
+              <Button variant="contained" sx={{ ml: 1, mr: 2 }} color="error" LinkComponent={Link} href="../client">Cerrar</Button>
+            </Box>
+          </Grid>
+        </Grid>
+
         <Divider />
 
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "auto", margin: 2 }}>
-          <Typography sx={{ marginRight: 25, color:"#1947ee", fontWeight: "bold" }} variant="subtitle2" gutterBottom>{fecha}</Typography>
-          <Typography sx={{ marginRight: 10, color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{clienteV.RazonSocial}</Typography>
-          <Typography sx={{ marginRight: 6, color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{clienteV.NIT}</Typography>
-        </Box>
+        <Grid size={{ xs: 12, sm: 6 }} sx={{ marginRigth: 4, padding: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
+            <Typography sx={{ color:"#1947ee", fontWeight: "bold", marginRigth: 4 }} variant="subtitle2" gutterBottom>{fecha}</Typography>
+            <Typography sx={{ color:"#1947ee", fontWeight: "bold", marginRigth: 4 }} variant="subtitle2" gutterBottom>{clienteV.RazonSocial}</Typography>
+            <Typography sx={{ color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{clienteV.NIT}</Typography>
+          </Box>
+        </Grid>
 
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "auto", margin: 2 }}>
-          <TextField
-            id="standard-multiline-flexible"
-            label="Ingresar Notas"
-            multiline
-            maxRows={8}
-            variant="outlined"
-            value={notas} 
-            onChange={(e) => setNotas(e.target.value)}
-            sx={{ width: "50%", marginRight: 2 }}
-          />
-          <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        <Grid size={{ xs: 12, sm: 6 }} sx={{ padding: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center", gap: 2, width: isSmallScreen ? "100%" : "auto" }}>
+            <TextField
+              id="standard-multiline-flexible"
+              label="Ingresar Notas"
+              multiline
+              maxRows={8}
+              variant="outlined"
+              value={notas} 
+              onChange={(e) => setNotas(e.target.value)}
+              sx={{ width: 200 }}
+            />
             <TextField 
               id="standard-multiline-flexible"
               label="Documento"
@@ -325,10 +332,9 @@ const CrearPedido = () => {
               variant="outlined"
               value={documento}
               onChange={(e) => setDocumento(e.target.value)}
-              sx={{ width: "150px" }}
+              sx={{ width: 200 }}
             />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", marginLeft: 2 }}>
+
             <Typography variant="body1">
               SubTotal: <span style={{ color: "red" }}>${subTotal}</span>
             </Typography>
@@ -336,25 +342,27 @@ const CrearPedido = () => {
               Total: <span style={{ color: "red" }}>${total}</span>
             </Typography>
           </Box>
-        </Box>
+        </Grid>
 
-        <Box sx={{ height: "auto", width: "auto", margin: 2 }}>
-          <DataGrid 
-            rows={articulosSeleccionados} 
-            columns={columns}
-            getRowId={(row) => row.PKcodigo}
-            rowHeight={40}
-            pageSizeOptions={[10]} 
-            initialState={{ 
-              pagination: { 
-                paginationModel: { 
-                  pageSize: 10 
-                }
-              } 
-            }}
-            sx={{ bgColor: "#ffffff" }} 
-          />
-        </Box>
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", heigth: isSmallScreen ? 500 : 750 }}>
+            <DataGrid 
+              rows={articulosSeleccionados} 
+              columns={columns}
+              getRowId={(row) => row.PKcodigo}
+              rowHeight={40}
+              pageSizeOptions={[10]} 
+              initialState={{ 
+                pagination: { 
+                  paginationModel: { 
+                    pageSize: 10 
+                  }
+                } 
+              }}
+              sx={{ bgColor: "#ffffff" }} 
+            />
+          </Box>
+        </Grid>
 
         <Modal 
           open={open} 
@@ -370,5 +378,6 @@ const CrearPedido = () => {
 };
 
 export default CrearPedido;
+
 
 

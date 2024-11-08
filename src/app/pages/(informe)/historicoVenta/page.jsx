@@ -1,10 +1,11 @@
 "use client";
 
-import { Box, Divider, TextField } from "@mui/material";
+import { Box, Divider, TextField, Typography, useMediaQuery } from "@mui/material";
 import NavBar from "@/app/components/navbar/nav";
 import { useAuth } from "@/context/authContext";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
 
 
@@ -29,6 +30,7 @@ const HistoricoVenta = () => {
   const [ventas, setVentas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [tablaVentas, setTablaVentas] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -71,35 +73,51 @@ const HistoricoVenta = () => {
   return (
     <>
       <NavBar />
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", height: 60, margin: 1 }}>
-          <h2><strong>HISTORICO DE VENTAS</strong></h2>
-          <h3><strong>Últimos 6 Meses</strong></h3>
-        </Box>
-        <Divider />
-        <TextField 
-          id="outlined-basic"
-          label="Buscar..."
-          multiline
-          size="small" 
-          variant="outlined"
-          value={busqueda}
-          onChange={handleChange}
-          sx={{ width: "95%", height: "10%", margin: 2}}
-        />
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid container direction={isSmallScreen ? "column" : "row"} alignItems="center">
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: isSmallScreen ? "flex-start" : "space-between", alignItems: "center" }}>
+              <h2><strong>HISTORICO DE VENTAS</strong></h2>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: isSmallScreen ? "flex-start" : "flex-end", alignItems: "center"  }}>
+              <h3><strong>Últimos 6 Meses</strong></h3>
+            </Box>
+          </Grid>
+        </Grid>
 
-        <Box sx={{ height: 755, width: 'auto', margin: 2 }}>
-          <DataGrid 
-            rows={ventas}
-            columns={columns}
-            getRowId={(row) => row.IdArticulo}
-            initialState={{
-                pagination: {
-                    paginationModel: { page: 0, pageSize: 12 }
-                }
-            }}
-            pageSizeOptions={[12]}
+        <Divider sx={{ marginTop: 2 }} />
+
+        <Grid size={12} sx={{ padding: 2 }}>
+          <TextField 
+            id="outlined-basic"
+            label="Buscar..."
+            multiline
+            size="small" 
+            variant="outlined"
+            value={busqueda}
+            onChange={handleChange}
+            sx={{ width: "100%" }}
           />
-        </Box>
+        </Grid>
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: '100%', height: isSmallScreen ? 500 : 755, }}>
+            <DataGrid 
+              rows={ventas}
+              columns={columns}
+              getRowId={(row) => row.IdArticulo}
+              initialState={{
+                  pagination: {
+                      paginationModel: { page: 0, pageSize: 12 }
+                  }
+              }}
+              pageSizeOptions={[12]}
+            />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   );
 }

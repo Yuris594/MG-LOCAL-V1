@@ -1,12 +1,12 @@
 "use client";
 
+import { Box, Modal, TextField, InputBase, useMediaQuery } from "@mui/material";
 import NavBar from "@/app/components/navbar/nav";
-import { Global } from "@/conexion";
 import { useAuth } from "@/context/authContext";
-import { Box, Modal, TextField, InputBase, } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { DataGrid } from "@mui/x-data-grid";
+import Grid from "@mui/material/Grid2";
+import { Global } from "@/conexion";
 
 
 const GestionCartera = () => {
@@ -15,7 +15,8 @@ const GestionCartera = () => {
   const [rutero, setRutero] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [tablaVentas, setTablaVentas] = useState([]);
-  const [clienteSeleccionado, setClienteSeleccionado] = useState(null); 
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -30,7 +31,6 @@ const GestionCartera = () => {
         }
 
         const datos = await response.json();
-        console.log(datos.data);
         setRutero(datos.data);
         setClienteSeleccionado(datos.data);
         setTablaVentas(datos.data);
@@ -44,7 +44,6 @@ const GestionCartera = () => {
   const handleOpen = (cliente) => {
     setClienteSeleccionado(cliente); 
     setOpen(true);
-    console.log(cliente);
   };
 
   const handleClose = () => {
@@ -78,53 +77,64 @@ const GestionCartera = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-        <h2><strong>RUTERO Y GESTIÓN DE CARTERA</strong></h2>
-        <InputBase sx={{ ml: 1, flex: 1, justifyContent: "flex-end", maxWidth: "400px", border: "2px solid black", 
-          height: "40px", borderRadius: "4px", p: 1, mb: 1 }}
-          type="text" 
-          value={busqueda}
-          onChange={handleChange}
-          placeholder="Buscar..."
-        />
-      </Box>
-      <Box sx={{ height: "auto", width: 'auto', margin: 2 }}>
-        <DataGrid 
-          rows={rutero}
-          columns={columns}
-          getRowId={(row) => row.PKid}
-          initialState={{
-              pagination: {
-                  paginationModel: { page: 0, pageSize: 12 }
-              }
-          }}
-          pageSizeOptions={[12]}
-          onRowClick={(params) => handleOpen(params.row)} 
-        />
-      </Box>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <h2><strong>RUTERO Y GESTIÓN DE CARTERA</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <InputBase 
+                type="text" 
+                value={busqueda}
+                onChange={handleChange}
+                placeholder="Buscar..."
+                sx={{ width: isSmallScreen ? 300 : 400, border: "2px solid black" }}
+                />
+            </Box>
+          </Box>
+        </Grid>
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: '100%', height: isSmallScreen ? 500 : 755 }}>
+            <DataGrid 
+              rows={rutero}
+              columns={columns}
+              getRowId={(row) => row.PKid}
+              initialState={{
+                  pagination: {
+                      paginationModel: { page: 0, pageSize: 12 }
+                  }
+              }}
+              pageSizeOptions={[12]}
+              onRowClick={(params) => handleOpen(params.row)} 
+            />
+          </Box>
+        </Grid>
+      </Grid>
+        
+        
 
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px', height: "300px", margin: 'auto', mt: 4, p:2 }}>
+        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px',  width: "90%", height: "50vh", overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
           <>
             {clienteSeleccionado && (
               <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-                <Grid size={12}>
+                <Grid size={{ xs: 36, sm: 24, md: 12 }}>
                   <strong>Razón Social: </strong>{clienteSeleccionado.RazonSocial}
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                   <strong>Realizada Por: </strong>{clienteSeleccionado.FKUsuario}
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                   <strong>Tipo Gestión: </strong>{clienteSeleccionado.Tipo}
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                   <strong>¿Realiza Pedido? </strong>{clienteSeleccionado.Realiza_pedido}
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                   <strong>¿Cobró? </strong>{clienteSeleccionado.Cobro}
                 </Grid>
               </Grid>
@@ -147,3 +157,4 @@ const GestionCartera = () => {
 }
 
 export default GestionCartera;
+

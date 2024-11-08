@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Box, Button, Divider, IconButton, Modal, Snackbar, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, Modal, Snackbar, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -19,7 +19,7 @@ import Grid from "@mui/material/Grid2";
 import Link from "next/link";
 
 const CarteraCliente = () => {
-  const { auth } = useAuth();
+  const { auth, setClienteV } = useAuth();
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const [openA, setOpenA] = useState(false);
@@ -30,6 +30,7 @@ const CarteraCliente = () => {
   const [tablaCartera, setTablaCartera] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState([]);
   const [correo, setCorreo] = useState(clienteSeleccionado ? clienteSeleccionado.Email : "");
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   const handleOpenE = () => {
     setOpenE(true);
@@ -46,6 +47,7 @@ const CarteraCliente = () => {
       setClienteSeleccionado(clienteCompleto);
       setCorreo(clienteCompleto.Email); 
       setOpen(true);
+      setClienteV(clienteCompleto);
     }
   };
 
@@ -171,35 +173,41 @@ const CarteraCliente = () => {
   return (
     <>
       <NavBar />    
-      <div style={{ height: "70%", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
-          <h2><strong>CARTERA CLIENTES</strong></h2>
-          <TextField 
-            id="outlined-basic"
-            label="Buscar..."
-            variant="outlined"
-            value={busqueda}
-            onChange={handleChange}
-            sx={{ width: "50%", margin: 2 }}
-          />
-        </Box>
-        <Divider />
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <h2><strong>CARTERA CLIENTES</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <TextField 
+                id="outlined-basic"
+                label="Buscar..."
+                variant="outlined"
+                value={busqueda}
+                onChange={handleChange}
+                sx={{ width: isSmallScreen ? 300 : 500 }}
+              />
+            </Box>
+          </Box>
+        </Grid>
 
-        <Box sx={{ width: "auto", height: 1170, margin: 2 }}>
-          <DataGrid 
-            rows={cartera}
-            columns={columns}
-            getRowId={(row) => row.Documento}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 20 }
-              }
-            }}
-            pageSizeOptions={[20]}
-            onRowClick={(params) => handleOpen(params.row)}
-          />
-        </Box>
-      </div>
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", height: isSmallScreen ? 800 : 1170 }}>
+            <DataGrid 
+              rows={cartera}
+              columns={columns}
+              getRowId={(row) => row.Documento}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 20 }
+                }
+              }}
+              pageSizeOptions={[20]}
+              onRowClick={(params) => handleOpen(params.row)}
+            />
+          </Box>
+        </Grid>
+      </Grid>
+        
 
       <Modal
         open={open}
@@ -215,62 +223,62 @@ const CarteraCliente = () => {
             </strong></h3>
             <Divider />
             <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-              <Grid size={3}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>NIT</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteSeleccionado.NIT}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Cupo</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteSeleccionado.CupoCreditoCliente}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Debe</strong>
                 <Typography sx={{ mb: 1.5, display: "flex", color: "#f01212" }}>
                   {clienteSeleccionado.TotalCartera}
                 </Typography>
               </Grid>
               
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Teléfono</strong>
                 <Typography sx={{ mb: 1.5, display: "flex"}}>
                 {clienteSeleccionado.Telefono}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Celular</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Celular}
                 </Typography>
               </Grid>
-              <Grid size={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Fax</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Fax}
                 </Typography>
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Dirección</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Direccion}
                 </Typography>
               </Grid>
-              <Grid size={4}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }}>
                 <strong>Ciudad</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.CityName}
                 </Typography>
               </Grid>
-              <Grid size={3}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Departamento</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.DepartmentName}
                 </Typography>
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                 <strong>Email</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                 {clienteSeleccionado.Email}
@@ -306,14 +314,10 @@ const CarteraCliente = () => {
         onClose={handleCloseE}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description" >
-        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', margin: 'auto', mt: 4 }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Actualizar Correo Electrónico
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h5" sx={{ p: 2 }}>
-            {clienteSeleccionado && clienteSeleccionado.RazonSocial}
-          </Typography>
+        <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '550px', width: "90%", height: "52vh", overflowY: "auto", margin: 'auto', mt: 4 }}>
+          <h3>Actualizar Correo Electrónico</h3>
           <Divider />
+          <h3>{clienteSeleccionado && clienteSeleccionado.RazonSocial}</h3>
           <Typography>EMAIL: </Typography>
           <TextField
             label="Correo Electrónico"

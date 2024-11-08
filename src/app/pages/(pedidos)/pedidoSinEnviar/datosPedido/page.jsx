@@ -1,12 +1,13 @@
 "use client";
 
-import { Box, Button, Divider, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import Articulos from "@/app/pages/client/pedidos/articulo/page";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useAuth } from "@/context/authContext";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { IconButton } from '@mui/material';
+import Grid from "@mui/material/Grid2"; 
 import { Global } from "@/conexion";
 import Swal from "sweetalert2";
 
@@ -27,15 +28,19 @@ const style = {
 
 const DatosPedido = ({ pedido, handleClose }) => {
   const { auth } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [fecha, setFecha] = useState("");
-  const [nombre, setNombre] = useState("");
   const [nit, setNit] = useState("");
   const [notas, setNotas] = useState("");
-  const [documento, setDocumento] = useState("");
   const [total, setTotal] = useState("");
+  const [fecha, setFecha] = useState("");
+  const [open, setOpen] = useState(false);
+  const [nombre, setNombre] = useState("");
   const [subTotal, setSubTotal] = useState("");
+  const [documento, setDocumento] = useState("");
+  const [itemDelete, setItemDelete] = useState("");
+  const [openDelete, setOPenDelete] = useState("");
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+
   const handleOpen = () => setOpen(true);
   const handleCloseA = () => setOpen(false);
 
@@ -68,23 +73,23 @@ const DatosPedido = ({ pedido, handleClose }) => {
   }
 
   const columns = [
-    { field: 'PKcodigo', headerName: 'Codigo', width: 150 },
-    { field: 'Nombre', headerName: 'Referencia', width: 350 },
-    { field: 'Unidad_Empaque', headerName: 'Und Empaque', width: 100 },
+    { field: 'PKcodigo', headerName: 'Codigo', width: 100 },
+    { field: 'Nombre', headerName: 'Referencia', width: 320 },
+    { field: 'Unidad_Empaque', headerName: 'Und', width: 80 },
     { field: 'Precio', headerName: 'Precio', width: 100,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString("es-ES")}`;
+        return `$${parseFloat(precioRedondeado).toLocaleString("es-ES")}`;
       }
     },
-    { field: 'Iva', headerName: 'Iva', width: 90 },
-    { field: 'Descuento', headerName: 'Desc', width: 90 },
-    { field: 'cantped', headerName: 'Cant', width: 90 },
-    { field: 'Total', headerName: 'Total', width: 100, 
+    { field: 'Iva', headerName: 'Iva', width: 80 },
+    { field: 'Descuento', headerName: 'Desc', width: 80 },
+    { field: 'cantped', headerName: 'Cant', width: 80 },
+    { field: 'Total', headerName: 'Total', width: 90, 
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString("es-ES")}`;
-      }
+        return `$${parseFloat(precioRedondeado).toLocaleString("es-ES")}`;
+      },
     },
     { field: 'actions', headerName: '', width: 70, 
       renderCell: (params) => (
@@ -169,8 +174,6 @@ const DatosPedido = ({ pedido, handleClose }) => {
         subTotal,
         notas,
         documento,
-        fecha,
-        nombre
       };
 
       pedidosGuardados[pedidoIndex] = updatedPedido; 
@@ -290,33 +293,39 @@ const DatosPedido = ({ pedido, handleClose }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "98%", margin: 1 }}>
+      <Grid container spacing={2} direction={isSmallScreen ? "column" : "row"} alignItems="center" justifyContent="space-between">
         <h3><strong>DIGITAR PEDIDO</strong></h3>
-        <Box>
-          <Button onClick={handleOpen} variant="contained" sx={{ margin: 1, backgroundColor:"#4eeacb", color: "white" }}>Articulos</Button>
-          <Button onClick={enviarPedido} variant="contained" sx={{ margin: 1, backgroundColor:"#25ba25", color: "white" }}>Enviar</Button>
-          <Button onClick={GuardarCambios} variant="contained" sx={{ margin: 1, backgroundColor:"#d92020", color: "white" }}>Guardar y Cerrar</Button>
-        </Box>
-      </Box>
+        <Grid size={{ xs: 12, sm: 6 }} sx={{ padding: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
+            <Button onClick={handleOpen} variant="contained" sx={{ margin: 1, backgroundColor:"#4eeacb", color: "white" }}>Articulos</Button>
+            <Button onClick={enviarPedido} variant="contained" sx={{ margin: 1, backgroundColor:"#25ba25", color: "white" }}>Enviar</Button>
+            <Button onClick={GuardarCambios} variant="contained" sx={{ margin: 1, backgroundColor:"#d92020", color: "white" }}>Guardar y Cerrar</Button>
+          </Box>
+        </Grid>
+      </Grid>
+
       <Divider />
 
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "auto", margin: 2 }}>
-        <Typography sx={{ marginRight: 25, color:"#1947ee", fontWeight: "bold" }} variant="subtitle2" gutterBottom>{fecha}</Typography>
-        <Typography sx={{ marginRight: 10, color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{nombre}</Typography>
-        <Typography sx={{ marginRight: 6, color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{nit}</Typography>
-      </Box>
+      <Grid size={{ xs: 12, sm: 6 }} sx={{ marginRigth: 4, padding: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
+          <Typography sx={{ color:"#1947ee", fontWeight: "bold" }} variant="subtitle2" gutterBottom>{fecha}</Typography>
+          <Typography sx={{ color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{nombre}</Typography>
+          <Typography sx={{ color:"#1947ee", fontWeight: "bold"  }} variant="subtitle2" gutterBottom>{nit}</Typography>
+        </Box>
+      </Grid>
 
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", width: "auto", margin: 2 }}>
-        <TextField
-          id="standard-multiline-flexible"
-          label="Ingresar Notas"
-          multiline
-          maxRows={8}
-          variant="outlined"
-          defaultValue={notas}
-          sx={{ width: "50%", marginRight: 2 }}
-        />
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+      <Grid size={{ xs: 12, sm: 6 }} sx={{ padding: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center", gap: 2, width: isSmallScreen ? "100%" : "auto" }}>
+          <TextField
+            id="standard-multiline-flexible"
+            label="Ingresar Notas"
+            multiline
+            maxRows={8}
+            variant="outlined"
+            defaultValue={notas}
+            sx={{ width: 200 }}
+          />
+        
           <TextField 
             id="standard-multiline-flexible"
             label="Documento"
@@ -324,11 +333,9 @@ const DatosPedido = ({ pedido, handleClose }) => {
             maxRows={2}
             variant="outlined"
             defaultValue={documento}
-            sx={{ width: "150px" }}
+            sx={{ width: 200 }}
           />
-        </Box>
-
-        <Box sx={{ display: "flex", flexDirection: "column", marginLeft: 2 }}>
+    
           <Typography variant="body1">
             SubTotal: <span style={{ color: "red" }}>${subTotal}</span>
           </Typography>
@@ -336,24 +343,26 @@ const DatosPedido = ({ pedido, handleClose }) => {
             Total: <span style={{ color: "red" }}>${total}</span>
           </Typography>
         </Box>
-      </Box>
+      </Grid>
 
-      <Box sx={{ height: "auto", width: "auto" }}>
-        <DataGrid 
-          rows={articulosSeleccionados} 
-          columns={columns}
-          getRowId={(row) => row.PKcodigo}
-          rowHeight={40}
-          pageSizeOptions={[10]} 
-          initialState={{ 
-            pagination: { 
-              paginationModel: { 
-                pageSize: 10 
-              }
-            } 
-          }}
-        />
-      </Box>
+      <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+        <Box sx={{ width: "100%", heigth: isSmallScreen ? 500 : 750 }}>
+          <DataGrid 
+            rows={articulosSeleccionados} 
+            columns={columns}
+            getRowId={(row) => row.PKcodigo}
+            rowHeight={40}
+            pageSizeOptions={[10]} 
+            initialState={{ 
+              pagination: { 
+                paginationModel: { 
+                  pageSize: 10 
+                }
+              } 
+            }}
+          />
+        </Box>
+      </Grid>
 
       <Modal open={open} onClose={handleCloseA}>
         <Box sx={style}>
@@ -365,5 +374,3 @@ const DatosPedido = ({ pedido, handleClose }) => {
 };
 
 export default DatosPedido;
-
-

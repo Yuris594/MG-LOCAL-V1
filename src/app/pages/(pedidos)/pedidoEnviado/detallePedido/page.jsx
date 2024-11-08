@@ -1,32 +1,32 @@
 "use client";
 
-import { Box, Button, Divider } from "@mui/material";
+import { Box, Button, Divider, useMediaQuery } from "@mui/material";
 import NavBar from "@/app/components/navbar/nav";
-import Grid from "@mui/material/Grid2";
+import { useAuth } from "@/context/authContext";
+import FacturaV from "@/app/hooks/useFacturaV";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
-import FacturaV from "@/app/hooks/useFacturaV";
-import { useAuth } from "@/context/authContext";
 
 
 const columns = [
-  { field: "FKcodigo_articles", headerName: "Codigo", width: 150, },
-  { field: "Nombre", headerName: "Referencia", width: 400 },
-  { field: "Cantidad", headerName: "Cantidad", width: 100 },
-  { field: "Precio", headerName: "Precio", width: 150,  
+  { field: "FKcodigo_articles", headerName: "CODIGO", width: 150, },
+  { field: "Nombre", headerName: "REFERENCIA", width: 400 },
+  { field: "Cantidad", headerName: "CANTIDAD", width: 100 },
+  { field: "Precio", headerName: "PRECIO", width: 150,  
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$${parseFloat(precioRedondeado).toLocaleString()}`;
     }
   },
-  { field: "Descuento", headerName: "Descuento", width: 150 },
-  { field: "Iva", headerName: "Iva", width: 150 },
-  { field: "Total", headerName: "Total", width: 150, cellClassName: 'total-cell', 
+  { field: "Descuento", headerName: "DESCUENTO", width: 150 },
+  { field: "Iva", headerName: "IVA", width: 150 },
+  { field: "Total", headerName: "TOTAL", width: 150, cellClassName: 'total-cell', 
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$${parseFloat(precioRedondeado).toLocaleString()}`;
     }
   },
 ];
@@ -49,12 +49,13 @@ const obtenerDatos = async(clienteD) => {
 const DetallePedido = () => {
   const router = useRouter();
   const { auth } = useAuth();
+  const [total, setTotal] = useState("");
   const [fecha, setFecha] = useState("");
+  const [subTotal, setSubTotal] = useState("");
   const [articulos, setArticulos] = useState([]);
   const [clienteD, setClienteD] = useState(null);
-  const [total, setTotal] = useState("");
-  const [subTotal, setSubTotal] = useState("");
   const { generarPDF } = FacturaV(clienteD, auth, articulos, total, subTotal);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
  
   useEffect(() => {
     if (clienteD) {
@@ -91,7 +92,6 @@ const DetallePedido = () => {
       if (datos) {
         setArticulos(datos);
       }
-      console.log(datos)
     } catch (error) {
       console.log(error)
     }
@@ -129,12 +129,12 @@ const DetallePedido = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
+      <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 2 }}>
         <Grid container rowSpacing={2} columnSpacing={70}>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 12 }}>
             <strong>MIGUEL GÓMEZ Y COMPAÑÍA S.A.S</strong>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 12 }}>
             <strong>Nombre Vendedor: </strong>{auth.UserFullName}
           </Grid>
         </Grid>
@@ -146,31 +146,31 @@ const DetallePedido = () => {
       <Divider />
       <Box sx={{ display: "flex", margin: 2 }}>
         <Grid container rowSpacing={2} columnSpacing={14}>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>No. Pedido: </strong>{clienteD?.NUMPED || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>Fecha Pedido: </strong>{fecha || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>Nit: </strong>{clienteD?.FKId_clientes || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 8 }}>
             <strong>R. Social: </strong>{clienteD?.RazonSocial || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>Fecha Factura: </strong>{clienteD?.Fecha_Factura || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>SubTotal: </strong><span style={{ color: "red" }}>${subTotal}</span>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>Total: </strong><span style={{ color: "red" }}>${total}</span>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 4 }}>
             <strong>Documento1: </strong>{clienteD?.Documento1 || ""}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid size={{ xs: 12, sm: 8, md: 6 }}>
             <strong>Notas: </strong>{clienteD?.Notas || ""}
           </Grid>
         </Grid>
@@ -195,4 +195,3 @@ const DetallePedido = () => {
 };
 
 export default DetallePedido;
-

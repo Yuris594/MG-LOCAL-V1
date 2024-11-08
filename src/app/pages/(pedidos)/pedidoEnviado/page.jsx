@@ -1,12 +1,13 @@
 "use client";
 
-import { Box, InputBase, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { Box, InputBase, Typography, useMediaQuery  } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useCallback, useEffect, useState } from "react";
 import NavBar from "@/app/components/navbar/nav";
 import { useAuth } from "@/context/authContext";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
+import Grid from "@mui/material/Grid2";
 import { Global } from "@/conexion";
 
 
@@ -38,6 +39,7 @@ const PedidoEnviado = () => {
   const [cargando, setCargando] = useState(true); 
   const [tablaPedido, setTablaPedido] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
 
   const conseguirDatos = async () => {
@@ -111,29 +113,36 @@ const PedidoEnviado = () => {
         </Box>
       ) : (
       <Box>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-          <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 1, p: 2 }}>
-            PEDIDOS ENVIADOS
-          </h2>
-          <InputBase
-            sx={{ ml: 1, flex: 1, justifyContent: "flex-end", maxWidth: "400px", border: "2px solid black", height: "40px", borderRadius: "4px", p: 1, mb: 1 }}
-            type="text"
-            value={busqueda}
-            onChange={handleChange}
-            placeholder="Buscar..."
-          />
-        </Box>
-        <Box sx={{ height: "auto", width: "auto", margin: 2 }}> 
-          <DataGrid
-            rows={pedido}
-            columns={columns}
-            getRowId={(row) => row.PKId}
-            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-            pageSizeOptions={[10, 20]}
-            onRowSelectionModelChange={handleSelection}
-            rowSelectionModel={selectedRows}
-          />
-        </Box>
+        <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+          <Grid size={12}>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+              <h2><strong>PEDIDOS ENVIADOS</strong></h2>
+              <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+                <InputBase
+                  type="text"
+                  value={busqueda}
+                  onChange={handleChange}
+                  placeholder="Buscar..."
+                  sx={{ width: 300, border: "2px solid black" }}
+                />
+              </Box>
+            </Box>
+          </Grid>
+
+          <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+            <Box sx={{ width: "100%", heigth: isSmallScreen ? 500 : 750 }}> 
+              <DataGrid
+                rows={pedido}
+                columns={columns}
+                getRowId={(row) => row.PKId}
+                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+                pageSizeOptions={[10, 20]}
+                onRowSelectionModelChange={handleSelection}
+                rowSelectionModel={selectedRows}
+              />
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
       )}
     </>
@@ -141,5 +150,4 @@ const PedidoEnviado = () => {
 }
 
 export default PedidoEnviado;
-
 

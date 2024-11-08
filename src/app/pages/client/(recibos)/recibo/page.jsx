@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button, Divider, IconButton, Modal, Paper, styled, Table, TableBody, 
-  TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+  TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from "@mui/material";
 import CheckCircleOutlineIcon  from "@mui/icons-material/CheckCircleOutline";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
@@ -70,6 +70,7 @@ const VerRecibo = () => {
   const [consecutivo, setConsecutivo] = useState(null);
   const [recibosCliente, setRecibosCliente] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const conseguirDatos = async () => {
@@ -254,32 +255,38 @@ const VerRecibo = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-        <Box sx={{ margin: 2 }}>
-          <strong>Recibos de </strong>{clienteV.RazonSocial}, 
-          <strong> Nit: </strong>{clienteV.NIT} 
-        </Box>
-        <Box sx={{ margin: 2 }}>
-          <Button onClick={regresar} startIcon={<ArrowBackIcon />} variant="outlined"color="secondary">Regresar</Button>
-        </Box>
-      </Box>
-      <Divider />
-      <Box sx={{  height: 660, width: "auto", margin: 2  }}>
-      {recibosCliente.length > 0 && (
-        <DataGrid 
-          rows={recibos}  
-          columns={columns}
-          getRowId={(row) => row.CONSECUTIVO}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 10 }
-            }
-          }}
-          pageSizeOptions={[10]}
-          onRowClick={(params) => handleOpen(params.row)}
-        />
-      )}
-      </Box>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <strong>Recibos de </strong> {clienteV.RazonSocial}, 
+              <strong> Nit: </strong> {clienteV.NIT} 
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <Button onClick={regresar} startIcon={<ArrowBackIcon />} variant="outlined"color="secondary">Regresar</Button>
+            </Box>
+          </Box>
+        </Grid>      
+
+        <Divider />
+
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: '100%', height: isSmallScreen ? 500 : 660 }}>
+          {recibosCliente.length > 0 && (
+            <DataGrid 
+              rows={recibos}  
+              columns={columns}
+              getRowId={(row) => row.CONSECUTIVO}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 10 }
+                }
+              }}
+              pageSizeOptions={[10]}
+              onRowClick={(params) => handleOpen(params.row)}
+            />
+          )}
+          </Box>
+        </Grid>
+      </Grid>
 
       <Modal
         open={open}
@@ -292,31 +299,31 @@ const VerRecibo = () => {
               <Divider />
               {clienteSeleccionado && (
                 <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-                  <Grid size={3}>
+                  <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                     <strong>Recibo: </strong>{clienteSeleccionado.CONSECUTIVO}
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                     <strong>Fecha: </strong>{clienteSeleccionado.FECHA}
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                     <strong>Nit: </strong>{clienteSeleccionado.NIT}
                   </Grid>
-                  <Grid size={9}>
+                  <Grid size={{ xs: 27, sm: 18, md: 9 }}>
                     <strong>Razón Social: </strong>{clienteSeleccionado.RazonSocial}
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Registrado Por: </strong>{clienteSeleccionado.U1}
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Asentado Por: </strong>{clienteSeleccionado.U2}
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                     <strong>Estado: </strong>{clienteSeleccionado.StateName}
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                     <strong>Recibo Fisico: </strong>{clienteSeleccionado.ReciboFisico}
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                     <strong>Recibo SoftLand: </strong>{clienteSeleccionado.ReciboSoftland}
                   </Grid>
                 </Grid>
@@ -357,11 +364,11 @@ const VerRecibo = () => {
             </TableContainer>
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               {clienteSeleccionado?.HasChecks === "Si" && (
-                <IconButton onClick={handleOpenC}><MonetizationOnIcon sx={{ fontSize: 40, color: "#f31919" }} /></IconButton>
+                <IconButton onClick={handleOpenC} title="Ver Cheques"><MonetizationOnIcon sx={{ fontSize: 40, color: "#f31919" }} /></IconButton>
               )}
-              <IconButton onClick={enviarCorreo}><MailOutlineIcon sx={{ fontSize: 40 }} color="primary" /></IconButton>
-              <IconButton onClick={handleOpenE}><EditIcon sx={{ fontSize: 40 }} color="secondary" /></IconButton>
-              <IconButton onClick={handleClose}><CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" /></IconButton>
+              <IconButton onClick={enviarCorreo} title="Reenviar Por Correo"><MailOutlineIcon sx={{ fontSize: 40 }} color="primary" /></IconButton>
+              <IconButton onClick={handleOpenE} title="Editar Recibo"><EditIcon sx={{ fontSize: 40 }} color="secondary" /></IconButton>
+              <IconButton onClick={handleClose} title="Salir"><CheckCircleOutlineIcon sx={{ fontSize: 40 }} color="success" /></IconButton>
             </Box>
           </Box>
         </Modal>
@@ -371,22 +378,22 @@ const VerRecibo = () => {
           onClose={handleCloseC}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description">
-          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px', height: "auto", margin: 'auto', mt: 4, p:2 }}>
+          <Box sx={{ p: 4, backgroundColor: 'white', borderRadius: '8px', maxWidth: '650px',  width: "90%", height: "32vh",  overflowY: "auto", margin: 'auto', mt: 4, p:2 }}>
             <>
               <strong>RELACIÓN DE CHEQUES</strong>
               <Divider />
               {Array.isArray(verCheque) && verCheque.map((cheque, index) => (
                   <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }} key={index}>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Banco: </strong>{cheque.bank}
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Número de Cheque: </strong>{cheque.checkNumber}
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Fecha: </strong>{cheque.checkDate}
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ xs: 18, sm: 12, md: 6 }}>
                     <strong>Valor: </strong>{cheque.value}
                   </Grid>
                 </Grid>

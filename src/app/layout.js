@@ -8,7 +8,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 const inter = Lora({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "MG - MG-MOVIL",
+  title: "MG-",
   description: "...",
 };
 

@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, IconButton, InputBase, Modal } from "@mui/material";
+import { Box, IconButton, InputBase, Modal, useMediaQuery } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import NavBar from "@/app/components/navbar/nav";
 import { DataGrid } from "@mui/x-data-grid";
+import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 import DatosPedido from "./datosPedido/page";
 import { useAuth } from "@/context/authContext";
@@ -29,6 +30,7 @@ const PedidoSinEnviar = () => {
   const [busqueda, setBusqueda] = useState([]);
   const [tablaPedido, setTablaPedido] = useState([]);
   const [seleccionarPedido, setSeleccionarPedido] = useState(null);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   const handleOpen = (pedido) => {
     setSeleccionarPedido(pedido); 
@@ -105,42 +107,41 @@ const PedidoSinEnviar = () => {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-        <h2><strong>PEDIDOS SIN ENVIAR</strong></h2>
-        <InputBase 
-          sx={{ 
-            ml: 1, 
-            flex: 1, 
-            justifyContent: "flex-end", 
-            maxWidth: "400px", 
-            border: "2px solid black", 
-            height: "40px", 
-            borderRadius: "4px", 
-            p: 1, 
-            mb: 1 
-          }} 
-          value={busqueda}
-          onChange={handleChange}
-          placeholder="Buscar..." 
-        />
-      </Box>
+      <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <h2><strong>PEDIDOS SIN ENVIAR</strong></h2>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", padding: 2  }}>
+              <InputBase 
+                value={busqueda}
+                onChange={handleChange}
+                placeholder="Buscar..." 
+                sx={{ width: 300,  border: "2px solid black" }} 
+              />
+            </Box>
+          </Box>
+        </Grid>
+          
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ width: "100%", heigth: isSmallScreen ? 500 : 750 }}>
+            <DataGrid
+              rows={pedidos}
+              columns={columns}
+              getRowId={(row) => row.PKId}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              onRowDoubleClick={(params) => handleOpen(params.row)} 
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
-      <Box sx={{ height: "auto", width: "auto", margin: 2 }}>
-        <DataGrid
-          rows={pedidos}
-          columns={columns}
-          getRowId={(row) => row.PKId}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-          onRowDoubleClick={(params) => handleOpen(params.row)} 
-        />
-      </Box>
 
       <Modal 
         open={open} 
