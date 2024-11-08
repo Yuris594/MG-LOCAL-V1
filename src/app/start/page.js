@@ -45,7 +45,7 @@ const style = {
     const [productos, setProductos] = useState(false);
 
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm", "md"));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
       const handleClick = (event) => {
         setProductos(true);
@@ -99,13 +99,13 @@ const style = {
 
   return (
       <>
-        <Box sx={{ display: { flexGrow: 1 } }}>
+        <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" sx={{ bgcolor: "#262626" }}>
             <Toolbar>
               <Image
                 src="/logo2.png"
-                width={80}
-                height={40}
+                width={isSmallScreen ? 70 : 80}
+                height={isSmallScreen ? 35 : 40}
                 alt="imagenmg"
                 priority={true}
               />
@@ -140,9 +140,9 @@ const style = {
           </Box>
         </Modal>
 
-        <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: isSmallScreen ? "column" : "row", padding: isSmallScreen ? 2 : 0 }}>
-          <Paper id="wave" sx={{ width: isSmallScreen ? "70%" : "40%", height: 490, border: 6, overflow: "auto",}}> 
-            <CardContent sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", justifyContent: "space-between", bgcolor: "#262626", borderColor: "#262626", }}>
+        <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: isSmallScreen ? "column" : "row", padding: isSmallScreen ? 2 : 0, mt: isSmallScreen ? 2 : 0 }}>
+          <Paper id="wave" sx={{ width: isSmallScreen ? "90%" : "40%", maxWidth: "600px", height: isSmallScreen ? 600 : 750, border: 6, overflow: "auto",}}> 
+            <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: "#262626", borderColor: "#262626", padding: 2 }}>
               <Image
                 src="/logo2.png"
                 width={isSmallScreen ? 100 : 200}
@@ -153,44 +153,44 @@ const style = {
               <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
-            <CardActions sx={{ display: "flex", justifyContent: "center", textDecoration: "none", marginTop: 2, flexDirection: isSmallScreen ? "column" : "row" }}>
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Image
-                  src="/truperLogo.png"
-                  width={isSmallScreen ? 100 : 150}
-                  height={isSmallScreen ? 55 : 110}
-                  alt="imagentru"
-                  priority={true} 
-                />
-              </Box>
-              {!isSmallScreen && <Divider orientation="vertical" flexItem sx={{ margin: 2 }}/>}
-              <List>
-                {page.map((link) => (
-                  <ListItem disablePadding key={link.title}>
-                    <ListItemButton LinkComponent={Link} href={link.url} onClick={link.onClick}>
-                      <ListItemIcon sx={{ fontSize: 20 }}>
-                        {link.icon}
-                      </ListItemIcon>
-                      <ListItemText primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium', letterSpacing: 0 }}>
-                        {link.title}
-                      </ListItemText>
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </CardActions>
-          </Paper>
-        </Box>
+            <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
+              <Image
+                src="/truperLogo.png"
+                width={isSmallScreen ? 100 : 150}
+                height={isSmallScreen ? 55 : 110}
+                alt="imagentru"
+                priority={true} 
+              />
+              
+            <Divider sx={{ width: "80%", my: 2 }} />
 
-        <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby": "basic-button", }}>
-          <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
-            Productos Por Bodega
-          </MenuItem>
-          <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
-            Productos-MG
-          </MenuItem>
-        </Menu>
-  </>
+            <List sx={{ width: "100%", padding: 0 }}>
+              {page.map((link) => (
+                <ListItem disablePadding key={link.title}>
+                  <ListItemButton LinkComponent={Link} href={link.url} onClick={link.onClick}>
+                    <ListItemIcon sx={{ fontSize: 20 }}>
+                      {link.icon}
+                    </ListItemIcon>
+                    <ListItemText primaryTypographyProps={{ fontSize: 15, fontWeight: 'medium', textAlign: "center" }}>
+                      {link.title}
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </CardActions>
+        </Paper>
+      </Box>
+
+      <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby" : "basic-button", }}>
+        <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
+          Productos Por Bodega
+        </MenuItem>
+        <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
+          Productos-MG
+        </MenuItem>
+      </Menu>
+    </>
   );
 };
 

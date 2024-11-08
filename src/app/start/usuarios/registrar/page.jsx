@@ -1,12 +1,12 @@
 'use client';
 
 import { Conexion } from "@/conexion";
-import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 
 const registro = async (form) => {
-  const response =  await fetch(Conexion.url + "/usuarios/nuevo", {
+  const response =  await fetch( "/api/usuarios/nuevo", {
     method: "POST",
     body: JSON.stringify(form), 
     headers: { "Content-Type": "application/json" }
@@ -18,6 +18,8 @@ const registro = async (form) => {
   const [form, setForm] = useState({});
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -72,11 +74,11 @@ const registro = async (form) => {
               </Snackbar>
             : "" }
 
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2, }}>
-            <h2>REGISTRO DE USUARIO</h2>
-              <Box component="form" noValidate onSubmit={register} sx={{ mt: 3 }}>
-                <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                  <Grid size={6}>
+          <Box sx={{ backgroundColor: 'white', maxWidth: '100%', width: "100%", height: "75vh", overflowY: "auto", padding: 2, mt: 2, boxShadow: 1, borderRadius: 1 }}>
+            <h2 style={{ textAlign: "center" }}>REGISTRO DE USUARIO</h2>
+              <Box component="form" onSubmit={register}>
+                <Grid container spacing={2}>
+                  <Grid size={{ sx: 12, md: 6 }}>
                       <TextField
                         autoComplete="given-name"
                         name="PER_Nom"
@@ -89,7 +91,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ sx: 12, md: 6 }}>
                       <TextField
                         required
                         fullWidth
@@ -114,7 +116,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ sx: 12, md: 6 }}>
                       <TextField
                         required
                         fullWidth
@@ -127,7 +129,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={6}>
+                  <Grid size={{ sx: 12, md: 6 }}>
                       <TextField
                         fullWidth
                         id="PERAUTOPED"
@@ -139,7 +141,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ sx: 12, md: 4 }}>
                       <TextField
                         fullWidth
                         id="CODVEND"
@@ -150,7 +152,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ sx: 12, md: 4 }}>
                       <TextField
                         fullWidth
                         id="PREFIJO"
@@ -161,7 +163,7 @@ const registro = async (form) => {
                         onChange={handleChange}
                       />
                   </Grid>
-                  <Grid size={4}>
+                  <Grid size={{ sx: 12, md: 4 }}>
                       <TextField
                         fullWidth
                         id="CONSECUTIVOPED"

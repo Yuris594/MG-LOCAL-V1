@@ -22,7 +22,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(Conexion.url + `/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -165,7 +165,7 @@ const Factura = () => {
       pdf.text(` ${fac.FECHA_DESPACHO}`, 500, 65);
       pdf.setFontSize(11);
       pdf.text("FECHA", 460, 65);
-      pdf.text("NIT.830.900.137-1", 50, 65);
+      pdf.text("NIT: 830.900.137-1", 50, 65);
       pdf.setFontSize(13);
       pdf.text("_____________________________________________________________________________", 12, 20);
       pdf.setFontSize(9);
@@ -188,6 +188,8 @@ const Factura = () => {
       theme: "plain",
       columnStyles: { cellWidth: "auto" },
       styles,
+      tableWidth: pdf.internal.pageSize.width - 30,
+      margin: { left: 12, right: 16 },
     });
 
     function agregarContenido() {

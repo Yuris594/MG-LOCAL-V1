@@ -107,7 +107,7 @@ const columns = [
 
 
 const conseguirProductosP = async (clienteP) => {
-  const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+  const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });
@@ -123,7 +123,7 @@ const conseguirProductosP = async (clienteP) => {
 
 
 const conseguirProductosPendientes = async (clienteP) => {
-  const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+  const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", },
   });

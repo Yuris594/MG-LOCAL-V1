@@ -102,7 +102,7 @@ const columns = [
 ];
 
 const conseguirProductos = async () => {
-  const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

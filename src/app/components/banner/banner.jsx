@@ -156,8 +156,8 @@ const Banner = () => {
           anchorEl={anchorEl}
           open={productos}
           onClose={handleCloseM}
-          MenuListProps={{ "aria-labelledby": "basic-button", }}>
-
+          MenuListProps={{ "aria-labelledby": "basic-button" }}
+          >
           <MenuItem onClick={handleCloseM} component={Link} href="/start/productos">
             Productos Por Bodega
           </MenuItem>

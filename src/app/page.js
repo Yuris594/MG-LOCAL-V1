@@ -1,13 +1,14 @@
 'use client';
 
 import { AppBar, Box, Button, Container, createTheme, CssBaseline, Slide, Snackbar, 
-        TextField, ThemeProvider, Toolbar, Typography, Zoom } from "@mui/material";
+        TextField, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import MuiAlert from "@mui/material/Alert";
+import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as React from "react";
 import Image from "next/image";
@@ -86,6 +87,8 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState('');
   const [checked, setChecked] = useState(false);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
 
   useEffect(() => {
@@ -138,9 +141,7 @@ export default function Login() {
           <Slide direction="down" in={checked} mountOnEnter unmountOnExit>
             <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
               <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                  {" "}
-                </Typography>
+                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
                 <Button component={Link} href="/components/ingresos" sx={{ color: "white" }}
                   title="Control de entredas y salidas de los empleados">
                   <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
@@ -151,13 +152,13 @@ export default function Login() {
 
           <CssBaseline />
             <ThemeProvider theme={theme}>
-              <Container component="main" maxWidth="xs" sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: 6, mb: 2 }}>
+              <Container component="main" maxWidth={isSmallScreen ? "sm" : "xs"} sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: isSmallScreen ? 3 : 6, mb: 2 }}>
                 <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", height: 350 }}>
                   <Image
                     className="logo"
                     src="/logo_miguelgomez.png"
-                    width={250}
-                    height={150}
+                    width={isSmallScreen ? 200 : 250}
+                    height={isSmallScreen ? 120 : 150}
                     alt="Logo"
                     priority={true}
                   />
@@ -172,37 +173,34 @@ export default function Login() {
                     ""
                   )}
                   
-                  <Box sx={{ margin: 1, display: "flex", flexDirection: "column", alignItems: "center", }}></Box>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                      
-                      <TextField
-                        error={error}
-                        id="usuario"
-                        label="Usuario"
-                        margin="normal"
-                        fullWidth
-                        name="PER_Usuario"
-                        value={usuario}
-                        onChange={(e) => setUsuario(e.target.value)}
-                      />
+                  
+                  <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <TextField
+                      error={error}
+                      id="usuario"
+                      label="Usuario"
+                      margin="normal"
+                      fullWidth
+                      name="PER_Usuario"
+                      value={usuario}
+                      onChange={(e) => setUsuario(e.target.value)}
+                    />
 
-                      <Typography component="h1" variant="h6"></Typography>
-
-                      <TextField
-                        error={error}
-                        margin="normal"
-                        required
-                        fullWidth
-                        type="password"
-                        name="PER_Clave"
-                        id="contraseña"
-                        label="Contraseña"
-                        value={clave}
-                        onChange={(e) => setClave(e.target.value)}
-                      />
+                    <TextField
+                      error={error}
+                      margin="normal"
+                      required
+                      fullWidth
+                      type="password"
+                      name="PER_Clave"
+                      id="contraseña"
+                      label="Contraseña"
+                      value={clave}
+                      onChange={(e) => setClave(e.target.value)}
+                    />
 
                       <Button type="submit" variant="contained" color="success" 
-                          sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: 380,}}>
+                          sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: isSmallScreen ? "100%" : 380 }}>
                             Iniciar sesión
                       </Button>
                     </Box>

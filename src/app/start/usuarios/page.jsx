@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, Typography } from "@mui/material";
+import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, TextField, useMediaQuery } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
@@ -8,6 +8,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Registro from "./registrar/page";
 import UsuarioActualizar from "./actualizar/page";
 import Swal from "sweetalert2";
+import Grid from "@mui/material/Grid2";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import { Conexion } from "@/conexion";
@@ -45,7 +46,7 @@ const columns = [
 
 
 const obtenerUsuario = async () => {
-  const response = await fetch(Conexion.url + '/usuarios/listar', {
+  const response = await fetch('/api/usuarios/listar', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -71,6 +72,7 @@ function Usuarios() {
   const [tablaUsuario, setTablaUsuario] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const isSmallScreen = useMediaQuery("(max-width : 600px)");
 
   useEffect(() => {
     conseguirUsuarios();
@@ -177,53 +179,53 @@ function Usuarios() {
               </Box>
             </Modal>
 
-            <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", color: "#000000", margin: 0 }}>
-                USUARIOS
-            </h2>
+            <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+              <Grid size={12}>
+                <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
+                  <h2><strong>USUARIOS</strong></h2>
+                  <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
+                    <Button variant="outlined" onClick={handleOpen} sx={{ margin: 1 }} color="primary">Nuevo Usuario</Button>
+                  </Box>
+                  </Box>
+                </Grid>
 
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1 }}>
-            <Button variant="outlined" onClick={handleOpen} sx={{ margin: "10px" }} color="primary">
-              Nuevo Usuario
-            </Button>
-
-            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 900, margin: "10px" }}>
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Buscar..."
-                inputProps={{ "aria-label": "search google maps" }}
-                autoFocus
-                value={busqueda}
-                onChange={handleChange}
-              />
-              <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
-            </Paper>
+                <Grid size={12} sx={{ padding: 2 }}>
+                  <TextField
+                    id="outlined-basic"
+                    placeholder="Buscar..."
+                    value={busqueda}
+                    onChange={handleChange}
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                  />
+                </Grid>
+          
+                <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2}}>
+                  <Box sx={{ height: isSmallScreen ? 500 : 779, width: "100%" }}>
+                    <DataGrid
+                      rows={usuarios}
+                      columns={columns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 12 },
+                        },
+                      }}
+                      pageSizeOptions={[12]}
+                      getRowId={(row) => row.IdPer}
+                      onRowSelectionModelChange={handleSelection}
+                      rowSelectionModel={selectedRows}
+                      slots={{ toolbar: GridToolbar }}
+                      sx={{
+                        "& .MuiDataGrid-columnHeaderTitle": {
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                  </Box>
+                </Grid>
+            </Grid>
           </Box>
-
-          <Box sx={{ height: 772, width: "100%" }}>
-            <DataGrid
-              rows={usuarios}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 12 },
-                },
-              }}
-              pageSizeOptions={[12]}
-              getRowId={(row) => row.IdPer}
-              onRowSelectionModelChange={handleSelection}
-              rowSelectionModel={selectedRows}
-              slots={{ toolbar: GridToolbar }}
-              sx={{
-                "& .MuiDataGrid-columnHeaderTitle": {
-                  fontWeight: "bold",
-                },
-              }}
-            />
-          </Box>
-        </Box>
-       )}
+        )}
       </Box>
     </>
   );

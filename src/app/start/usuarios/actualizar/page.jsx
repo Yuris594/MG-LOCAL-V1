@@ -1,13 +1,13 @@
 "use client";
 
-import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useForm } from "@/app/hooks/useForm";
 import { useEffect, useState } from "react";
 import { Conexion } from "@/conexion";
 
 const actualizar = async (form) => {
-  const response = await fetch(Conexion.url + "/usuarios/actualizar/", {
+  const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
@@ -19,6 +19,9 @@ const UsuarioActualizar = ({ usuario }) => {
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const { form, setForm, changed } = useForm();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
 
   useEffect(() => {
     if (usuario && usuario.length > 0) {
@@ -63,13 +66,13 @@ const UsuarioActualizar = ({ usuario }) => {
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="md">
         <CssBaseline />
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 2 }}>
-          <h2>ACTUALIZACIÓN DE USUARIO</h2>
-          <Box component="form" onSubmit={Actualizar} noValidate sx={{ mt: 3 }}>
-            <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <Grid size={6}>
+        <Box sx={{ backgroundColor: 'white', maxWidth: '100%', width: "100%", height: "75vh", overflowY: "auto", padding: 2, mt: 2, boxShadow: 1, borderRadius: 1 }}>
+          <h2 style={{ textAlign: "center" }}>ACTUALIZACIÓN DE USUARIO</h2>
+          <Box component="form" onSubmit={Actualizar}>
+            <Grid container spacing={2}>
+              <Grid size={{ sx: 12, md: 6 }}>
                 <TextField
                   required
                   fullWidth
@@ -81,7 +84,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ sx: 12, md: 6 }}>
                 <TextField
                   required
                   fullWidth
@@ -104,7 +107,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ sx: 12, md: 6 }}>
                 <TextField
                   required
                   fullWidth
@@ -116,7 +119,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={6}>
+              <Grid size={{ sx: 12, md: 6 }}>
                 <TextField
                   required
                   fullWidth
@@ -128,7 +131,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={4}>
+              <Grid size={{ sx: 12, md: 4 }}>
                 <TextField
                   fullWidth
                   id="CODVEND"
@@ -138,7 +141,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={4}>
+              <Grid size={{ sx: 12, md: 4 }}>
                 <TextField
                   fullWidth
                   id="PREFIJO"
@@ -148,7 +151,7 @@ const UsuarioActualizar = ({ usuario }) => {
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={4}>
+              <Grid size={{ sx: 12, md: 4 }}>
                 <TextField
                   fullWidth
                   id="CONSECUTIVOPED"

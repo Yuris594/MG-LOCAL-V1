@@ -1,21 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import IconButton from "@mui/material/IconButton";
-import { LinearProgress } from "@mui/material";
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Box from "@mui/material/Box";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import { useRouter } from "next/navigation";
+import InputBase from "@mui/material/InputBase";
+import { useAuth } from "@/context/authContext";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
-import { Conexion } from "@/conexion";
+import { useCallback, useEffect, useState } from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { LinearProgress, TextField, useMediaQuery } from "@mui/material";
+
 
 const columns = [
   { field: "CLIENTE", headerName: "NIT", width: 170 },
@@ -33,7 +34,7 @@ const columns = [
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch(Conexion.url + "/clientes/listar", {
+  const response = await fetch("/api/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -47,10 +48,11 @@ const Clientes = () => {
   const router = useRouter();
   const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
+  const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaClientes, setTablaClientes] = useState();
-  const [cargando, setCargando] = useState(true);
   const [clientesFiltrados, setClientesFiltrados] = useState();
+  const isSmallScreen = useMediaQuery("(max-width: 600px)")
 
   useEffect(() => {
     const obtenerClientes = async () => {
@@ -119,55 +121,54 @@ const Clientes = () => {
             <LinearProgress />
           </Box>
         ) : (
-        <Box>
-          <h2><strong>CLIENTES</strong></h2>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
-            <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <Link href="">
-                <Button variant="outlined" sx={{ margin: "2px" }}>
-                  Nuevo
-                </Button>
-              </Link>
-              <BotonExcel datos={clientesFiltrados} />
-            </Box>
-            
-            <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 1100, margin: "10px" }}>
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
+          <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
+            <Grid size={12}>
+              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
+                <h2><strong>CLIENTES</strong></h2>
+                <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2,  marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
+                  <Link href=""><Button variant="outlined" sx={{ margin: "2px" }}>Nuevo</Button></Link>
+                  <BotonExcel datos={clientesFiltrados} />
+                </Box>
+              </Box>
+            </Grid>
+
+            <Grid size={12} sx={{ padding: 2 }}>
+              <TextField
+                id="outlined-basic"
+                multiline
+                rows={1}
+                variant="outlined"
                 placeholder="Buscar..."
-                inputProps={{ "aria-label": "search google maps" }}
-                autoFocus
                 value={busqueda}
                 onChange={handleChange}
+                sx={{ width: "100%" }}
               />
-              <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
-            </Paper>
-          </Box>
+            </Grid>
 
-          <Box sx={{ height: 799, width: "100%" }}>
-            <DataGrid
-              rows={clientesFiltrados}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 12 },
-                },
-              }}
-              pageSizeOptions={[12]}
-              onRowSelectionModelChange={handleSelection}
-              rowSelectionModel={selectedRows}
-              getRowId={(row) => row.CLIENTE}
-              slots={{ toolbar: GridToolbar }}
-              sx={{
-                "& .MuiDataGrid-columnHeaderTitle": {
-                  fontWeight: "bold",
-                },
-              }}
-            />
-          </Box>
-        </Box>
+            <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+              <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 799 }}>
+                <DataGrid
+                  rows={clientesFiltrados}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 12 },
+                    },
+                  }}
+                  pageSizeOptions={[12]}
+                  onRowSelectionModelChange={handleSelection}
+                  rowSelectionModel={selectedRows}
+                  getRowId={(row) => row.CLIENTE}
+                  slots={{ toolbar: GridToolbar }}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         )}
       </Box>
     </>
