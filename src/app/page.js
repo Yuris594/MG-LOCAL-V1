@@ -62,9 +62,7 @@ export function Copyright(props) {
 const Iniciar = async (usuario, clave) => {
   const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
   });
 
   if (!response.ok) {
@@ -142,7 +140,7 @@ export default function Login() {
             <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
               <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
                 <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
-                <Button component={Link} href="/components/ingresos" sx={{ color: "white" }}
+                <Button component={Link} href="" sx={{ color: "white" }}
                   title="Control de entredas y salidas de los empleados">
                   <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
                 </Button>
