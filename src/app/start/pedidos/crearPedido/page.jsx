@@ -80,10 +80,10 @@ const CrearPedido = () => {
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
       }, editable: true
     },
-    { field: "cantped", headerName: "CANT", width: 80, editable: true, editable: true, type: "number"
+    { field: "cantped", headerName: "CANT", width: 100, editable: true, editable: true, type: "number"
     },
-    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40, editable: true, type: "number" },
-    { field: "PORC_DCTO", headerName: "D1", width: 40, editable: true, type: "number" },
+    { field: "PORC_IMPUESTO", headerName: "IVA", width: 70, editable: true, type: "number" },
+    { field: "PORC_DCTO", headerName: "D1", width: 70, editable: true, type: "number" },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
@@ -144,7 +144,7 @@ const CrearPedido = () => {
   };
 
   const handleDeleteClick = (id) => () => {
-    setProductosP(productos.filter((row) => row.ARTICULO !== id));
+    setProductos(productos.filter((row) => row.ARTICULO !== id));
   };
 
   const handleCancelClick = (id) => () => {
@@ -155,7 +155,7 @@ const CrearPedido = () => {
 
     const editedRow = productos.find((row) => row.ARTICULO === id);
     if (editedRow.isNew) {
-      setProductosP(productos.filter((row) => row.ARTICULO !== id));
+      setProductos(productos.filter((row) => row.ARTICULO !== id));
     }
   };
 
@@ -184,12 +184,12 @@ const CrearPedido = () => {
     articulos.forEach((art) => {
       const precioBase = parseFloat(art.PRECIO);
       const cantidad = parseFloat(art.cantped);
-      const descuento = parseFloat(art.PORC_DCTO);
-      const iva = parseFloat(art.PORC_IMPUESTO);
+      const descuento = parseFloat(art.PORC_DCTO) / 100;
+      const iva = parseFloat(art.PORC_IMPUESTO) / 100;
 
       const subTotalArticulo = precioBase * cantidad;
       const totalConDescuento = subTotalArticulo * (1 - descuento);
-      const totalArticulo = totalConDescuento * (1 - iva);
+      const totalArticulo = totalConDescuento * (1 + iva);
 
       nuevoSubTotal += subTotalArticulo;
       nuevoTotal += totalArticulo;
