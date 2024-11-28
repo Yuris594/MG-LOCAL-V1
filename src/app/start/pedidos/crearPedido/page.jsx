@@ -2,6 +2,7 @@
 
 
 import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, useMediaQuery } from "@mui/material";
+import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
 import { useCallback, useEffect, useRef, useState } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -14,11 +15,8 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import { useAuth } from "@/context/authContext";
-import { DataGrid } from "@mui/x-data-grid";
 import Grid from "@mui/material/Grid2";
 import Link from "next/link";
-import { GridRowModes } from "@mui/x-data-grid";
-import { GridActionsCellItem } from "@mui/x-data-grid";
 
 
 const style = {
