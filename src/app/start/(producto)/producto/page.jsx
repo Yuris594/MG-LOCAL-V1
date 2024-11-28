@@ -1,171 +1,17 @@
 "use client";
 
-import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Paper from "@mui/material/Paper";
+import { Conexion } from "@/conexion";
 import { DataGrid } from "@mui/x-data-grid";
-import InputBase from "@mui/material/InputBase";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
-import BotonExcel from "@/app/hooks/useExportoExcel";
 import Autocomplete from "@mui/material/Autocomplete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useCallback, useRef, useEffect, useState, } from "react";
-import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
-import { Conexion } from "@/conexion";
-
-
-
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-const fDate = (dateString) => {
-  const options = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return new Date(dateString).toLocaleDateString('es-ES', options);
-}
-
-const columns = [
-  { field: "ARTICULO", headerName: "Cod", width: 130 },
-  { field: "DESCRIPCION", headerName: "Referencia", width: 700 },
-  { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  { field: "TOTAL_DISP", headerName: "Disp", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PRECIO", headerName: "Precio", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
-  {field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PORC_DCTO", headerName: "D1", width: 130 },
-  { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 130 },
-  { field: "EXIST_REAL", headerName: "Existreal", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-]
-
-const columnsF = [
-  { field: "FACTURA", headerName: "Factura", width: 130 },
-  { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190,
-    renderCell: (params) => fDate(params.value)
-  },
-  { field: "ANULADA", headerName: "AN", width: 50 },
-  { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },align: "right",
-  },
-  { field: "PEDIDO", headerName: "Pedido", width: 130 },
-  { field: "ARTICULO", headerName: "Articulo", width: 130 },
-  { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
-  { field: "CANTIDAD", headerName: "Cant", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(1);
-      return precioRedondeado;
-    }, align: "right",
-  },
-  { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PORCIVA", headerName: "IVA", width: 130, align: "right" },
-  { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
-  { field: "VDESC", headerName: "VDesc", width: 130 },
-  { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
-  { field: "FECHARUT", headerName: "FechaRut", width: 300 },
-  { field: "IDGUIA", headerName: "IdGuia", width: 130 },
-  { field: "FECHAGUIA", headerName: "FechaGuia", width: 250,
-    renderCell: (params) => fDate(params.value)
-  },
-  { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
-  { field: "RUBRO1", headerName: "Docs2", width: 500 },
-];
-
-const columnsP = [
-  { field: "FECHA", headerName: "Fecha", width: 250,
-    renderCell: (params) => fDate(params.value)
-  },
-  { field: "CLIENTE", headerName: "Cliente", width: 160 },
-  { field: "PEDIDO", headerName: "Pedido", width: 100 },
-  { field: "VE", headerName: "VEND", width: 80, align: "right" },
-  { field: "PED", headerName: "Ped", width: 100, align: "right" },
-  { field: "DESP", headerName: "Desp", width: 100, align: "right" },
-  { field: "PEND", headerName: "Pend", width: 100, align: "right" },
-  { field: "ESTADO", headerName: "Estado", width: 120 },
-  { field: "AUTORIZADONOM", headerName: "Autortizado", width: 200,
-    renderCell: (params) => {
-      const AUTORIZADONOM = params.row.AUTORIZADONOM;
-      const cellStyle = {
-        color:
-          AUTORIZADONOM === "APROBADO"
-            ? "#00FC00"
-            : AUTORIZADONOM === "RETENIDO"
-            ? "#FF1507"
-            : "#000000",
-        backgroundColor: "transparent",
-      };
-      return <Typography style={cellStyle}>{AUTORIZADONOM}</Typography>;
-    },
-  },
-];
+import { Backdrop, Button, CircularProgress, useMediaQuery } from "@mui/material";
 
 
 const obtenerProductos = async (bodegaSeleccionada) => {
-  const response = await fetch(Conexion.url + `/productos/listar/${bodegaSeleccionada.BODEGA}`, {
+  const response = await fetch(`/api/productos/listar/${bodegaSeleccionada.BODEGA}`, {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"
@@ -175,43 +21,9 @@ const obtenerProductos = async (bodegaSeleccionada) => {
   
 };
 
-const obtenerFacturas = async (articulo) => {
-  const response = await fetch(Conexion.url + `/productos/facturas/${articulo.ARTICULO}`, {
-    method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
-  });
-  if (!response.ok) {
-    if (response.status === 404) {
-      console.log("No hay facturas para este producto.");
-      return [];
-    }
-  }
-  return response.json()
-};
-
-
-const obtenerPedidos = async (articulo) => {
-  const response = await fetch(Conexion.url + `/productos/pedidos/${articulo.ARTICULO}`, {
-    method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
-  });
-  if (!response.ok) {
-    if (response.status === 404) {
-      console.log("No hay pedidos para este producto.");
-      return [];
-    }
-  }
-  const data = await response.json() 
-  console.log(data)
-  return data
-};
 
 const obtenerBodegas = async () => {
-  const response = await fetch(Conexion.url + '/productos/bodegas', {
+  const response = await fetch('/api/productos/bodegas', {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });
@@ -219,20 +31,18 @@ const obtenerBodegas = async () => {
 };
 
 
-function Producto() {
+function Producto({ handleCloseB, onAgregarArticulo }) {
   const inputRef = useRef();
-  const [value, setValue] = useState(0);
   const [open, setOpen] = useState(false);
   const [bodegas, setBodegas] = useState([]);
-  const [pedidos, setPedidos] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
-  const [facturas, setFacturas] = useState([]);
   const [articulo, setArticulo] = useState("");
   const [productos, setProductos] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const [cantidades, setCantidades] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [bodegaSeleccionada, setBodegaSeleccionada] = useState();
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   
   useEffect(() => {
@@ -257,11 +67,6 @@ function Producto() {
   }, [bodegaSeleccionada]);
 
 
-  useEffect(() => {
-    setCargando(true)
-  }, [value]);
-
-
   const handleBodega = (event, newValue) => {
     if (newValue) {
       setBodegaSeleccionada(null);
@@ -274,60 +79,20 @@ function Producto() {
     if (bodegaSeleccionada) {
       setOpen(true);
     const datos = await obtenerProductos(bodegaSeleccionada)
-    try {
-        if (datos) {
-          setOpen(false)
-          setProductos(datos);
-          setTablaProducto(datos);
-          setCargando(false)
-         
-        } else {
-          setOpen(false);
-          setProductos([]);
-          setCargando(false);
-        }
+      try {
+          if (datos) {
+            setOpen(false)
+            setProductos(datos);
+            setTablaProducto(datos);
+          } else {
+            setOpen(false);
+            setProductos([]);
+          }
       } catch (error) {
-      setOpen(false);
-    }
-  }
-};
-
-  const conseguirFacturas = async () => {
-    const datos = await obtenerFacturas(articulo)
-    setFacturas([]);
-    try {
-      if (bodegaSeleccionada) {
-        if (datos) {
-          setFacturas(datos);
-          setCargando(false);
-        } else {
-          setFacturas([]);
-          setCargando(false);
-        }
+        setOpen(false);
       }
-    } catch (error) {
-      setOpen(false);
     }
   };
-
-  const conseguirPedidos = async () => {
-    const datos = await obtenerPedidos(articulo)
-    setPedidos([]);
-    try {
-      if (bodegaSeleccionada) {
-        if (datos) {
-          setPedidos(datos);
-          setCargando(false);
-        } else {
-          setPedidos([]);
-          setCargando(false);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -346,179 +111,156 @@ function Producto() {
     setProductos(resultadosBusqueda);
   };
 
-  const handleSelectionChange = useCallback(
-    (selectionModel) => {
-      setSelectedRows(selectionModel);
-      if (selectionModel.length > 0) {
-        const resultadosFiltrados = tablaProducto.filter((elemento) => {
-          const ARTICULO = elemento.ARTICULO;
-          if (ARTICULO) {
-            const productoString = ARTICULO.toString();
-            return productoString.includes(selectionModel[0]);
-          }
-          return false;
-        });
-        setArticulo(resultadosFiltrados[0]);
-      }
-    },
-    [productos]
-  );
+  const handleSelectionChange = useCallback((selectionModel) => {
+    setSelectedRows(selectionModel);
+    if (selectionModel.length > 0) {
+      const resultadosFiltrados = tablaProducto.filter((elemento) => {
+        const ARTICULO = elemento.ARTICULO;
+        if (ARTICULO) {
+          const productoString = ARTICULO.toString();
+          return productoString.includes(selectionModel[0]);
+        }
+        return false;
+      });
+      setArticulo(resultadosFiltrados[0]);
+    }
+  }, [productos]);
 
-  const handleChanges = (event, newValue) => {
-    setValue(newValue);
+  const handleProcessRowUpdate = (newRow) => {
+    const updatedRows = productos.map((prod) => 
+      prod.ARTICULO === newRow.ARTICULO ? { ...prod, ...newRow } : prod
+    );
+    setProductos(updatedRows);
+    setTablaProducto(updatedRows);
+    return newRow;
   };
 
+  const handleCantidad = (ARTICULO, value) => {
+    setCantidades({
+      ...cantidades,
+      [ARTICULO] : value,
+    });
+  };
+
+  const agregarArticulo = () => {
+    const articulosSeleccionados = productos.filter((prod) => cantidades[prod.ARTICULO]);
+    onAgregarArticulo(
+      articulosSeleccionados.map((art) => ({
+        ...art,
+        cantped: cantidades[art.ARTICULO]
+      }))
+    );
+    handleCloseB();
+  }
+
+  const columns = [
+    { field: "ARTICULO", headerName: "CODIGO", width: 130 },
+    { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
+    { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
+    { field: "PRECIO", headerName: "PRECIO", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },
+    },
+    { field: "cantped", headerName: "CANT", width: 100,
+      renderCell: (params) => {
+        return (
+          <TextField 
+            value={cantidades[params.id] || ""}
+            onChange={(e) => handleCantidad(params.id, e.target.value)}
+            sx={{ width: "70px" }}
+            variant="outlined"
+            size="small"
+          />
+        )
+      }
+    },
+    { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
+    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
+    },
+    { field: "PORC_DCTO", headerName: "D1", width: 130, editable: true },
+    { field: "TOTAL_DISP", headerName: "DISP", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
+    },
+    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, 
+    },
+  ]
 
   return (
     <>
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
-        <h2><strong>PRODUCTOS</strong></h2>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-            <Paper>
-              <Autocomplete
-                options={bodegas}
-                value={bodegaSeleccionada}
-                onChange={handleBodega}
-                getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
-                disablePortal
-                id="clear-on-escape"
-                sx={{ width: 350 }}
-                isOptionEqualToValue={(option, value) =>
-                  option.NOMBRE === value.NOMBRE
-                }
-                renderInput={(params) => (
-                  <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" />
-                )}
-                disableClearable
-              />
-            </Paper>
-
-            <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d", }}>
-              {articulo.DESCRIPCION}
-            </h2>
-            
-              <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
-
-                <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px", }}>
-                  <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="Buscar"
-                    inputProps={{ "aria-label": "search google maps" }}
-                    autoFocus
-                    value={busqueda}
-                    onChange={handleChange}
-                    inputRef={inputRef}
-                  />
-                  <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                </Paper>
-              </Box>
-            </Box>
-         
-
-          <Box sx={{ width: "100%" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
-                <Tab label="Articulos" {...a11yProps(0)} />
-                <Tab label={`Pedidos:${pedidos.length}`} {...a11yProps(1)} onClick={conseguirPedidos} />
-                <Tab label={`Facturas:${facturas.length}`} {...a11yProps(2)} onClick={conseguirFacturas} />
-              </Tabs>
-            </Box>
-
-            <CustomTabPanel component={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: "auto" }}>
-                {productos.length <= 0 ? (
-                  <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba" >
-                    {" "}<HelpOutlineIcon />{" "}
-                  </Box>
-                ) : (
-                  <DataGrid
-                    density="compact"
-                    rows={productos}
-                    columns={columns}
-                    pageSizeOptions={[5, 11, 20]}
-                    onRowSelectionModelChange={handleSelectionChange}
-                    rowSelectionModel={selectedRows}
-                    getRowId={(row) => row.ARTICULO}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 11 },
-                      },
-                    }}
-                    sx={{
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                )}
-              </Box>
-            </CustomTabPanel>
-
-            <CustomTabPanel component={Box} value={value} index={1}>
-              {cargando === true ? (
-                <Box sx={{ width: "100%" }}>
-                  <LinearProgress />
-                </Box>
-                ) : pedidos.length === 0 ? (
-                  <h1>NO HAY PEDIDOS</h1>
-                ) : (
-                <Box sx={{ width: "100%", height: "auto" }}>
-                  <DataGrid
-                    density="compact"
-                    rows={pedidos}
-                    columns={columnsP}
-                    pageSizeOptions={[5, 11, 20]}
-                    getRowId={(row) => row.PEDIDO}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 11 },
-                      },
-                    }}
-                    sx={{
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        fontWeight: "bold",
-                      },
-                    }}
-                    />
-                </Box>
-              )}
-            </CustomTabPanel>
-
-            <CustomTabPanel component={Box} value={value} index={2}>
-              {cargando === true ? (
-                <Box sx={{ width: "100%" }}>
-                  <LinearProgress />
-                </Box>
-                ) : facturas && facturas.length <= 0 ? (
-                  <h1>NO HAY FACTURAS</h1>
-                ) : (
-                <Box sx={{ width: "100%", height: "auto", }}>
-                  <DataGrid
-                    density="compact"
-                    rows={facturas}
-                    columns={columnsF}
-                    pageSizeOptions={[5, 11, 20]}
-                    getRowId={(row) => row.FACTURA}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 11 },
-                      },
-                    }}
-                    sx={{
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              )}
-            </CustomTabPanel>
+      <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
+          <h2><strong>PRODUCTOS</strong></h2>
+          <Box display="flex" gap={1}>
+            <Button variant="contained" color="success" onClick={agregarArticulo}>Agregar</Button>
+            <Button variant="contained" color="error" onClick={handleCloseB}>Cerrar</Button>
           </Box>
+        </Box>
+
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2, alignItems: "center" }}>
+          <Autocomplete
+            options={bodegas}
+            value={bodegaSeleccionada}
+            onChange={handleBodega}
+            getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
+            renderInput={(params) => (
+              <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="outlined" />
+            )}
+            isOptionEqualToValue={(option, value) =>
+              option.NOMBRE === value.NOMBRE
+            }
+            sx={{ width: isSmallScreen ? "100%" : 350 }}
+          />
+      
+          <TextField
+            id="outlined-basic"
+            placeholder="Buscar Producto"
+            value={busqueda}
+            onChange={handleChange}
+            inputRef={inputRef}
+            sx={{ width: isSmallScreen ? "100%" : 300, marginLeft: "auto" }}
+          />
+        </Box>
+
+        <Box sx={{ width: "100%", height: 480 }}>
+          {productos.length ? (
+            <DataGrid
+              density="compact"
+              rows={productos}
+              columns={columns}
+              pageSize={10}
+              getRowId={(row) => row.ARTICULO}
+              rowSelectionModel={selectedRows}
+              processRowUpdate={handleProcessRowUpdate}
+              onRowSelectionModelChange={handleSelectionChange}
+              sx={{
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          ) : (
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              {" "}<HelpOutlineIcon />  Seleccione una bodega para visualizar los productos {" "}
+            </Box>
+          )}
+        </Box>
+      </Box>
     </>
   );
 }

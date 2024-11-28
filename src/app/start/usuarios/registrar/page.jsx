@@ -74,7 +74,7 @@ const registro = async (form) => {
               </Snackbar>
             : "" }
 
-          <Box sx={{ backgroundColor: 'white', maxWidth: '100%', width: "100%", height: "75vh", overflowY: "auto", padding: 2, mt: 2, boxShadow: 1, borderRadius: 1 }}>
+          <Box sx={{ backgroundColor: 'white', maxWidth: '100%', width: "100%", height: "40vh", overflowY: "auto", padding: 2, mt: 2, boxShadow: 1, borderRadius: 1 }}>
             <h2 style={{ textAlign: "center" }}>REGISTRO DE USUARIO</h2>
               <Box component="form" onSubmit={register}>
                 <Grid container spacing={2}>

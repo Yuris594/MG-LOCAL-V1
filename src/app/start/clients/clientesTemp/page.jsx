@@ -307,8 +307,11 @@ const ClientesTemp = () => {
                 <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#ffa28a", color: "white" }} onClick={cerrar}>
                   {" "}Cerrar{" "}
                 </Button>
-                <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#6cff5d", color: "white" }} LinkComponent={Link} href=".././pedidos/pedidosG/">
+                <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#6cff5d", color: "white" }} LinkComponent={Link} href=".././pedidos/pedidosG">
                   {" "}Pedido{" "}
+                </Button>
+                <Button variant="outlined" sx={{ margi: "2px", bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href=".././pedidos/crearPedido">
+                  Crear Pedido
                 </Button>
               </Box>
               <Divider sx={{}} orientation="horizontal" />

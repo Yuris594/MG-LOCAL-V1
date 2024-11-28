@@ -77,8 +77,7 @@ function a11yProps(index) {
 }
 
 const columns = [
-  { field: "DESCRIPCION", headerName: "Referencia", width: 500, editable: true,
-  },
+  { field: "DESCRIPCION", headerName: "Referencia", width: 500, editable: true },
   { field: "SUBLINEA", headerName: "Sublinea", width: 250 },
   { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
   { field: "PRECIO", headerName: "Precio", width: 130,
