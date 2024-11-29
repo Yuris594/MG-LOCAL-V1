@@ -20,35 +20,35 @@ const fDate = (dateString) => {
 };
 
 const columns = [
-  { field: "ARTICULO", headerName: "Cod", width: 130 },
-  { field: "DESCRIPCION", headerName: "Referencia", width: 700 },
-  { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  { field: "TOTAL_DISP", headerName: "Disp", width: 130,
+  { field: "ARTICULO", headerName: "COD", width: 130 },
+  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300 },
+  { field: "TOTAL_DISP", headerName: "DISP", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  { field: "PRECIO", headerName: "Precio", width: 130,
+  { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    },
   },
-  { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
-  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
+  { field: "PORC_IMPUESTO", headerName: "IVA", width: 100 },
+  { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
-  { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 130 },
-  { field: "EXIST_REAL", headerName: "Existreal", width: 130,
+  { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
 ];
 
@@ -56,14 +56,14 @@ const columnsP = [
   { field: "FECHA", headerName: "Fecha", width: 250,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "CLIENTE", headerName: "Cliente", width: 180 },
-  { field: "PEDIDO", headerName: "Pedido", width: 150 },
-  { field: "VE", headerName: "VEND", width: 80, align: "right" },
-  { field: "PED", headerName: "Ped", width: 50, align: "right" },
-  { field: "DESP", headerName: "Desp", width: 100, align: "right" },
-  { field: "PEND", headerName: "Pend", width: 100, align: "right" },
-  { field: "ESTADO", headerName: "Estado", width: 160 },
-  { field: "AUTORIZADONOM", headerName: "Autortizado", width: 200,
+  { field: "CLIENTE", headerName: "CLIENTE", width: 180 },
+  { field: "PEDIDO", headerName: "PEDIDO", width: 150, cellClassName: 'pedido-cell' },
+  { field: "VE", headerName: "VEND", width: 100 },
+  { field: "PED", headerName: "PED", width: 100,  },
+  { field: "DESP", headerName: "DESP", width: 120, },
+  { field: "PEND", headerName: "PEND", width: 130, },
+  { field: "ESTADO", headerName: "ESTADO", width: 160 },
+  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 200,
     renderCell: (params) => {
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
@@ -81,49 +81,40 @@ const columnsP = [
 ];
 
 const columnsF = [
-  { field: "FACTURA", headerName: "Factura", width: 130 },
-  { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190,
+  { field: "FACTURA", headerName: "FACTURA", width: 130 },
+  { field: "FECHA_DESPACHO", headerName: "FECHA", width: 190,
     renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 50 },
-  { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130,
+  { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "PEDIDO", headerName: "Pedido", width: 130 },
-  { field: "ARTICULO", headerName: "Articulo", width: 130 },
-  { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
-  { field: "CANTIDAD", headerName: "Cant", width: 130,
+  { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: 'pedido-cell' },
+  { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
+  { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
+  { field: "CANTIDAD", headerName: "CANT", width: 130 },
+  { field: "PRECIO_UNITARIO", headerName: "PRECION UNI.", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PORCIVA", headerName: "IVA", width: 130, align: "right" },
-  { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
-  { field: "VDESC", headerName: "VDesc", width: 130 },
+  { field: "PORCIVA", headerName: "IVA", width: 100 },
+  { field: "PORDESC", headerName: "DESC", width: 100, },
+  { field: "VDESC", headerName: "V DESC", width: 130 },
   { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
-  { field: "FECHARUT", headerName: "FechaRut", width: 300 },
-  { field: "IDGUIA", headerName: "IdGuia", width: 130 },
-  { field: "FECHAGUIA", headerName: "FechaGuia", width: 250,
-    renderCell: (params) => fDate(params.value),
-  },
-  { field: "OBSERVACIONES", headerName: "Observaciones", width: 800 },
-  { field: "RUBRO1", headerName: "Docs2", width: 500 },
+  { field: "IDRUTERO", headerName: "ID RUTERO", width: 130 },
+  { field: "IDGUIA", headerName: "ID GUIA", width: 130 },
+  { field: "OBSERVACIONES", headerName: "OBSERVACIONES", width: 800 },
+  { field: "RUBRO1", headerName: "DOCS 2", width: 500 },
 ];
 
 function CustomTabPanel(props) {
@@ -289,8 +280,7 @@ const productosMG = () => {
     setProductos(resultadosBusqueda);
   };
 
-  const handleSelection = useCallback(
-    (selectionModel) => {
+  const handleSelection = useCallback((selectionModel) => {
       setSelectedRows(selectionModel);
       if (selectionModel.length > 0) {
         const resultadosFiltrados = tablaProducto.filter((elemento) => {
@@ -353,19 +343,19 @@ const productosMG = () => {
             </Box>
 
             <CustomTabPanel componente={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: 850 }}>
+              <Box sx={{ width: "100%", height: 860 }}>
                 <DataGrid
                   rows={productos}
                   columns={columns}
                   getRowId={(row) => row.ARTICULO}
                   initialState={{
                     pagination: {
-                      paginationModel: { page: 0, pageSize: 18 },
+                      paginationModel: { page: 0, pageSize: 14 },
                     },
                   }}
                   rowSelectionModel={selectedRows}
                   onRowSelectionModelChange={handleSelection}
-                  pageSizeOptions={[5, 18, 20]}
+                  pageSizeOptions={[5, 14, 20]}
                   sx={{
                     "& .MuiDataGrid-columnHeaderTitle": {
                       fontWeight: "bold",
@@ -383,17 +373,17 @@ const productosMG = () => {
                 ) : pedidos.length <= 0 ? (
                   <h2>NO HAY PEDIDOS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 850 }}>
+                <Box sx={{ width: "100%", height: 860 }}>
                   <DataGrid
                     rows={pedidos}
                     columns={columnsP}
                     getRowId={(row) => row.PEDIDO}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 18 },
+                        paginationModel: { page: 0, pageSize: 14 },
                       },
                     }}
-                    pageSizeOptions={[5, 18, 20]}
+                    pageSizeOptions={[5, 14, 20]}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
                         fontWeight: "bold",
@@ -412,17 +402,17 @@ const productosMG = () => {
                 ) : facturas.length <= 0 ? (
                   <h2>NO HAY FACTURAS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 850 }}>
+                <Box sx={{ width: "100%", height: 860 }}>
                   <DataGrid
                     rows={facturas}
                     columns={columnsF}
                     getRowId={(row) => row.ID}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 18 },
+                        paginationModel: { page: 0, pageSize: 14 },
                       },
                     }}
-                    pageSizeOptions={[5, 18, 20]}
+                    pageSizeOptions={[5, 14, 20]}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
                         fontWeight: "bold",

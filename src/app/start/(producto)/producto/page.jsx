@@ -41,7 +41,7 @@ function Producto({ handleCloseB, onAgregarArticulo }) {
   const [cantidades, setCantidades] = useState({});
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
-  const [bodegaSeleccionada, setBodegaSeleccionada] = useState();
+  const [bodegaSeleccionada, setBodegaSeleccionada] = useState(null);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   
@@ -122,7 +122,7 @@ function Producto({ handleCloseB, onAgregarArticulo }) {
         }
         return false;
       });
-      setArticulo(resultadosFiltrados[0]);
+      setTablaProducto(resultadosFiltrados[0]);
     }
   }, [productos]);
 

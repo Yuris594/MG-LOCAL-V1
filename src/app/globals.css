@@ -57,6 +57,18 @@
 .total-cell {
   color: red;
 }
+
+.pedido-cell {
+  color: rgb(0, 109, 128)
+}
+
+.autor-cell {
+  color: green
+}
+
+.plazo-cell {
+  color: rgb(255, 0, 149)
+}
   
 .header-bold {
   font-weight: bold;

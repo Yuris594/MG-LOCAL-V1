@@ -1,31 +1,31 @@
 "use client";
 
-import { Box, Tabs, Tab, OutlinedInput, Button, Typography, Zoom, Paper, InputBase, IconButton,
-        TextField, FormControl, InputLabel, Snackbar, ButtonGroup, Modal } from "@mui/material";
+
+import { Box, Tabs, Tab, OutlinedInput, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery } from "@mui/material";
 import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import Producto from "../../(producto)/producto/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-import SearchIcon from '@mui/icons-material/Search';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Banner from "@/app/components/banner/banner";
 import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
 import EditIcon from '@mui/icons-material/Edit';
-import LockIcon from '@mui/icons-material/Lock';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAuth } from "@/context/authContext";
 import { useForm } from "@/app/hooks/useForm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MuiAlert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import React from "react";
 import { Conexion } from "@/conexion";
+import StarIcon from '@mui/icons-material/Star';
 
 
 const style = {
@@ -39,7 +39,7 @@ const style = {
   overflowX: "hidden",
   padding: "16px",
   backgroundColor: "#fff",
-  borderRadius: "8px",
+  border: "2px solid #000",
   boxShadow: 24
 };
 
@@ -65,122 +65,64 @@ function CustomTabPanel(props) {
   );
 }
 
-
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
   value: PropTypes.number.isRequired,
 };
 
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
-
-const columns = [
-  { field: "DESCRIPCION", headerName: "Referencia", width: 500, editable: true,
-  },
-  { field: "SUBLINEA", headerName: "Sublinea", width: 300 },
-  { field: "TOTAL_DISP", headerName: "Disp", width: 70 },
-  { field: "PRECIO", headerName: "Precio", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right", editable: true,
-  },
-  { field: "CANTIDAD", headerName: "Cant", width: 80, type: "number", editable: true,
-  },
-  { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-  { field: "PRECIOMASIVA", headerName: "Masiva", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
-  },
-  { field: "PORC_DCTO", headerName: "D1", width: 40 },
-  { field: "UNIDAD_EMPAQUE", headerName: "Emp", width: 80 },
-  { field: "EXIST_REAL", headerName: "Existreal", width: 90 },
-];
-
-
-const conseguirProductosP = async (clienteP) => {
-  const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
-    method: "GET",
-    headers: { "Content-Type" : "application/json" }
-  });
-  if (!response.ok) {
-    if (response.status === 400) {
-      console.log("No hay articulos para este cliente");
-      return [];
-    }
-  }
-  const datos = await response.json();
-  return datos;
 };
 
-
-const conseguirProductosPendientes = async (clienteP) => {
-  const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json", },
-  });
-  const data = await response.json();
-  return data;
-};
-
-
-const guardarProductos = async (bodyData) => {
-  const response = await fetch(Conexion.url + "/pedido/crear/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bodyData),
-  });
-  const data = await response.json();
-  return data;
-};
-
-const guardarProductosP = async (bodyData) => {
-  const response = await fetch(Conexion.url + "/pedido/crear/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bodyData),
-  });
-  const data = await response.json();
-  return data;
-};
 
 
 export const PedidosC = () => {
+  const inputRef = useRef();
   const { form, changed } = useForm({});
   const [value, setValue] = useState(0);
   const [fecha, setFecha] = useState("");
-  const [open, setOpen] = useState(false);
   const { pedido, setPedido } = useAuth();
-  const [openP, setOpenP] = useState(false);
+  
+  const [openM, setOpenM] = useState(false);
+  const [openB, setOpenB] = useState(false);
   const [openS, setOpenS] = useState(false);
   const [openE, setOpenE] = useState(false);
+
   const [busqueda, setBusqueda] = useState("");
   const [checked, setChecked] = useState(false);
   const [productos, setProductos] = useState([]);
-  const [productosP, setProductosP] = useState([]);
   const [clienteP, setClienteP] = useState(null);
-
+  const [cantidades, setCantidades] = useState("");
+  const [productosP, setProductosP] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [productosConDISP0, setProductosConDIPS0] = useState([]);
-
+  const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
   const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo( productosP, productosConDISP0, value );
   const { generarPDF } = useGenerarPDF( clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
-  const handleChanges = (event, newValue) => {
-    setValue(newValue); 
+  const handleChanges = (event, newValue) => { setValue(newValue) };
+
+  const handleOpenM = () => setOpenM(true);
+  const handleCloseM = () => { 
+    setOpenM(false);
+    setSelectedRows([]);
+    localStorage.removeItem("pedidosTemp");
   };
-  
-  
+
+  const handleOpenB = () => setOpenB(true);
+  const handleCloseB = () => { 
+    setOpenB(false);
+    setSelectedRows([]);
+    localStorage.removeItem("pedidosTemp");
+  };
+
   useEffect(() => {
     if(clienteP) {
       obtenerProductos();
@@ -197,6 +139,14 @@ export const PedidosC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      filtrar(checked);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [checked]);
+
 
   useEffect(() => {
     if (clienteP?.FECHA_PEDIDO) {
@@ -212,8 +162,8 @@ export const PedidosC = () => {
       fechaActual(); 
     }
   }, [clienteP]);
- 
 
+  //Traer los datos de productos MG de la base de datos 
   const obtenerProductos = async () => {
     try {
       const response = await fetch("/api/productos/listar_solo_para_mg", {
@@ -232,7 +182,11 @@ export const PedidosC = () => {
 
   const obtenerProductosP = async () => {
     try {
-      const datos = await conseguirProductosP(clienteP);
+      const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+        method: "GET",
+        headers: { "Content-Type" : "application/json" }
+      });
+      const datos = await response.json();
       if (datos) {
         setProductosP(datos);
       } else {
@@ -245,14 +199,22 @@ export const PedidosC = () => {
 
   const obtenerProductosPendientes = async () => {
     try {
-      const datos = await conseguirProductosPendientes(clienteP);
-      if (datos) {
+      const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", },
+      });
+      const datos = await response.json();
+      if (Array.isArray(datos)) {
         setProductosConDIPS0(datos);
+      } else {
+        console.log("La respuesta no es un array", datos);
       }
     } catch (error) {
       console.log("Error al obtener los datos de Articulos Pendientes", error);
     }
   };
+
+
 
   const productosGuardar = async (e) => {
     e.preventDefault();
@@ -261,8 +223,14 @@ export const PedidosC = () => {
       ARTICULOS: productosP,
       OBSERVACIONES: form.OBSERVACIONES,
     };
-    const data = await guardarProductos(bodyData);
     try {
+      const response = await fetch(Conexion.url + "/pedido/crear/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+      
+      const data = await response.json();
       if (data) {
         console.log("Crear");
         setOpenS(true);
@@ -282,8 +250,15 @@ export const PedidosC = () => {
       ...clienteP,
       ARTICULOS: productosConDISP0,
     };
-    const data = await guardarProductosP(bodyData);
     try {
+      const response = await fetch(Conexion.url + "/pedido/crear/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+
+      const data = await response.json();
+
       if (data) {
         setOpenS(true);
         console.log("Crear x2")
@@ -296,95 +271,91 @@ export const PedidosC = () => {
     }
   };
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleOpenP = () => setOpenP(true);
-  const handleCloseP = () => setOpenP(false);
-  const handleSelectionChange = (newSelection) => {
-    setSelectedRows(newSelection);
+
+  //Cerrar la pagina 
+  const cerrarP = () => {
+    window.history.back();
+    localStorage.removeItem("pedidoTemp");
   };
 
-  setTimeout(() => {
-    setChecked(true);
-  }, 100);
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    setBusqueda(e.target.value);
-    filtrar(e.target.value);
-  };
-
-
-  const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = tablaProducto.filter((elemento) => {
-      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
-      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
-      if (
-        ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
-        DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
-      ) {
-        return elemento;
-      }
-      return null;
-    });
-    const resultadosFiltrados = resultadosBusqueda.filter(
-      (elemento) => elemento !== null
-    );
-    setProductos(resultadosFiltrados);
+  //Definir a un cliente como especial
+  const especial = () => {
+    const estado = pedido.U_COMPESPECIAL === "SI" ? null : "SI";
+    const body = {
+      ...clienteP,
+      U_COMPESPECIAL: estado,
+    };
+    setPedido(body);
+    setClienteP(body);
   };
 
 
 
-  const filasSelecciondas = {};
-  selectedRows.forEach((id, index) => {
-    const fila = productos.find((producto) => producto.ARTICULO === id);
-    filasSelecciondas[index] = fila;
-  });
+  // Tabla de los Productos de la pagina principal
+  const columnsP = [
+    { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
+    { field: "DISP", headerName: "DISP", width: 70 },
+    { field: "PRECIO", headerName: "PRECIO", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },
+    },
+    { field: "CPed", headerName: "CANT", width: 80, type: "number", editable: true,
+    },
+    { field: "PORC_DCTO", headerName: "D1", width: 70,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      },
+    },
+    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
+    { field: "Em", headerName: "EMP", width: 80 },
+    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
+    { field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{ color: "primary.main" }}
+              onClick={handleSaveClick(id)}
+            />,
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const datosActuales =
-        JSON.parse(localStorage.getItem("pedidoTempG")) || {};
-      const datosActualizados = { ...datosActuales, ...filasSelecciondas };
-      localStorage.setItem("pedidoTempG", JSON.stringify(datosActualizados));
-    }
-  }, [filasSelecciondas]);
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
 
-  const guardar = () => {
-    const pedido = JSON.parse(localStorage.getItem("pedidoTempG")) || {};
-    const valores = Object.values(pedido);
-    const productoExistente = productosP.some(
-      (producto) => producto.ARTICULO === valores[0].ARTICULO
-    );
-    if (productoExistente) {
-      const productosActuales = [...productosP];
-      setProductosP(productosActuales);
-      setSelectedRows([]);
-      localStorage.removeItem("pedidoTempG");
-      alert("ya tienes este producto en el pedido");
-    } else {
-      const productosActuales = [...productosP];
-      const nuevosProductos = [...productosActuales, ...valores];
-      const productosActualesP = [...productosConDISP0];
-      const nuevosProductosP = [...productosActualesP, ...valores];
-      if (value === 0) {
-        setProductosP(nuevosProductos);
-      }
-      if (value === 1) {
-        setProductosConDIPS0(nuevosProductosP);
-      }
-      setOpen(false);
-      setSelectedRows([]);
-      localStorage.removeItem("pedidoTempG");
-    }
-  };
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
 
-  const cerrar = () => {
-    setOpen(false);
-    setSelectedRows([]);
-    localStorage.removeItem("pedidoTempG");
-  };
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            className="textPrimary"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
 
+  //Funcionalidades de ediccion
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
@@ -429,239 +400,273 @@ export const PedidosC = () => {
     setRowModesModel(newRowModesModel);
   };
 
-  const columnsP = [
-    { field: "DESCRIPCION", headerName: "Referencia", width: 500 },
-    { field: "DISP", headerName: "Disp", width: 70 },
-    { field: "PRECIO", headerName: "Precio", width: 130,
+
+  //Filtrar y Busqueda de los productos
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setBusqueda(e.target.value)
+    filtrar(e.target.value);
+}
+
+  const filtrar = (terminoBusqueda) => {
+    const resultadosBusqueda = tablaProducto.filter((elemento) => {
+      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
+      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
+        if (
+            ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
+            DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
+        ) {
+            return elemento;
+        }
+        return null; 
+      });
+    const resultadosFiltrados = resultadosBusqueda.filter((elemento) => elemento !== null);
+    setProductos(resultadosFiltrados);
+  };
+
+  const handleSelectionChange = useCallback((selectionModel) => {
+    setSelectedRows(selectionModel);
+    if (selectionModel.length > 0) {
+      const resultadosFiltrados = tablaProducto.filter((elemento) => {
+        const ARTICULO = elemento.ARTICULO;
+        if (ARTICULO) {
+          const productoString = ARTICULO.toString();
+          return productoString.includes(selectionModel[0]);
+        }
+        return false;
+      });
+      setTablaProducto(resultadosFiltrados[0]);
+    }
+  }, [productos]);
+
+
+  //////////////////////////////////////////////////////////////////
+
+
+
+
+  const agregarArticulo = (nuevosArticulos) => {
+    const articulosConTotal = nuevosArticulos.map((art) => {
+      const precioUnitario = art.PRECIO * (1 + art.PORC_IMPUESTO / 100);
+      const cantidad = parseFloat(art.cantped);
+      const descuento = parseFloat(art.PORC_DCTO) / 100;
+      const total = precioUnitario * cantidad * (1 - descuento);
+      return {
+        ...art,
+        Total: total.toFixed(0),
+      };
+    });
+    const articulosActualizados = [...articulosSeleccionados, ...articulosConTotal];
+    setArticulosSeleccionados(articulosActualizados);
+  };
+
+  const handleProcessRowUpdate = (newRow) => {
+    const updatedRows = productos.map((prod) => 
+      prod.ARTICULO === newRow.ARTICULO ? { ...prod, ...newRow } : prod
+    );
+    setProductosP(updatedRows);
+    setTablaProducto(updatedRows);
+    return newRow;
+  };
+
+
+  const handleCantidad = (ARTICULO, value) => {
+    setCantidades({
+      ...cantidades,
+      [ARTICULO] : value,
+    });
+  };
+
+  const agregarArticulos = () => {
+    const articulosSeleccionados = productos.filter((prod) => cantidades[prod.ARTICULO]);
+    agregarArticulo(
+      articulosSeleccionados.map((art) => ({
+        ...art,
+        CANTIDAD: cantidades[art.ARTICULO]
+      }))
+    );
+    handleCloseM();
+  }
+
+  const columnsM = [
+    { field: "ARTICULO", headerName: "CODIGO", width: 130 },
+    { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
+    { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
+    { field: "PRECIO", headerName: "PRECIO", width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
       },
     },
-    { field: "CPed", headerName: "Cant", width: 80, type: "number", editable: true,
-    },
-    { field: "PORC_DCTO", headerName: "D1", width: 70,
-      valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },
+    { field: "CANTIDAD", headerName: "CANT", width: 80, 
+      renderCell: (params) => {
+        return (
+          <TextField 
+            value={cantidades[params.id] || ""}
+            onChange={(e) => handleCantidad(params.id, e.target.value)}
+            sx={{ width: "70px" }}
+            variant="outlined"
+            size="small"
+          />
+        )
+      }
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-    { field: "Em", headerName: "Emp", width: 80 },
-    { field: "EXIST_REAL", headerName: "Existreal", width: 90 },
-    { field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{ color: "primary.main" }}
-              onClick={handleSaveClick(id)}
-            />,
-
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            className="textPrimary"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
+    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, align: "right",
     },
+    { field: "PORC_DCTO", headerName: "D1", width: 40 },
+    { field: "TOTAL_DISP", headerName: "DISP", width: 70 },
+    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
   ];
-
-  const cerrarP = () => {
-    window.history.back();
-    localStorage.removeItem("pedidoTemp");
-  };
-
-  const handleCloses = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenE(false);
-    setOpenS(false);
-  };
-  const especial = () => {
-    const estado = pedido.U_COMPESPECIAL === "SI" ? null : "SI";
-    const body = {
-      ...clienteP,
-      U_COMPESPECIAL: estado,
-    };
-    setPedido(body);
-    setClienteP(body);
-  };
 
   return (
     <>
       <Box> {" "} <Banner />{" "} </Box>
       <Box sx={{ padding: "20px" }}>
-      <h2 style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", margin: 6 }}><strong>PEDIDOS</strong></h2>
-      <Paper style={{ width: "100%", p: 2, boxShadow: 3 }}>
-        <Box style={{ width: "100%", mb: 2 }}>
-          <Paper sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              p: 1,
-              gap: 2,
-              boxShadow: 2,
-              backgroundColor: "#f5f5f5",
-            }}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+          <Grid size={{ xs: 12 }}>
+            <h2 style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", margin: 6 }}><strong>PEDIDOS</strong></h2>
+          </Grid>
 
-            <Box sx={{ display: "flex" }}>
-              {clienteP?.AUTORIZADONOM === "APROBADO" ? (
-                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
-                  {" "}<PrintIcon />{" "}
-                </Button>
-              ) : (
-                <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled> 
-                {" "}<PrintIcon />{" "}
-                </Button>
-              )}
+          <Grid size={{ xs: 12 }}>
+            <Paper sx={{ p: 2, display: "flex", flexWrap: "wrap", gap: 2, boxShadow: 3 }}>
+              <Box sx={{ display: "flex", gap: 1, width: "100%", justifyContent: "space-between" }}>
+                
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  {clienteP?.AUTORIZADONOM === "APROBADO" ? (
+                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
+                      {" "}<PrintIcon />{" "}
+                    </Button>
+                  ) : (
+                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled>
+                      {" "}<PrintIcon />{" "}
+                    </Button>
+                  )}
 
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}> 
-                {" "}<SaveAsIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenP}>
-                {" "}<LocalShippingIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}>
-                {" "}<LockIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}>
-                {" "}<HighlightOffIcon />{" "}
-              </Button>
-            </Box>
-
-
-            <Paper elevation={3} sx={{ display: "flex", alignItems: "center", p: "2px 4px", boxShadow: 2, backgroundColor: "#fff", width: "100%" }}>
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Buscar"
-                inputProps={{ "aria-label": "search google maps" }}
-                autoFocus
-                value={busqueda}
-                onChange={handleChange}
-              />
-              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}>
+                    {" "}<StarIcon />{" "}
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenB}>
+                    {" "}<LocalShippingIcon />{" "}
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpenM}>
+                    MG
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#f145af" }}>
+                    {" "}<CheckCircleIcon />{" "}
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}>
+                    {" "}<SaveAsIcon />{" "}
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
+                    <ControlPointIcon />
+                  </Button>
+                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}>
+                    {" "}<HighlightOffIcon />{" "}
+                  </Button>
+                </Box>
+                
+                <Box sx={{ display: "flex", justifyContent: "flex-end", flexGrow: 1 }}>
+                  <TextField
+                    id="outlined-basic"
+                    placeholder="Buscar Producto"
+                    value={busqueda}
+                    onChange={handleChange}
+                    inputRef={inputRef}
+                    sx={{ width: "100%", maxWidth: 300 }} 
+                  />
+                </Box>
+              </Box>
             </Paper>
-          </Paper>
+          </Grid>
 
 
-
-          <Box sx={{ display: "flex", alignItems: "center",  alignContent: "center", justifyContent: "center", zoom: 0.8, margin: 1 }}>
-            <Paper sx={{ width: "65%", height: "65%", padding: 2 }}>
-              <Grid container spacing={1}>
-                <Grid size={{ xs: 12, sm: 3, md: 3, lg: 3 }}>
-                  <FormControl sx={{ margin: 0.5 }}>
-                    <InputLabel htmlFor="component-">Estado</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.ESTADO || ''} label="Estado" />
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
+            <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Estado</InputLabel>
+                    <OutlinedInput value={clienteP?.ESTADO || ''} label="Estado" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Authorizacion{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.AUTORIZADONOM || ""} label="Authorizacion" />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>{" "}Authorizacion{" "}</InputLabel>
+                    <OutlinedInput value={clienteP?.AUTORIZADONOM || ""} label="Authorizacion" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor=""> </InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue="" label="" />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>{" "}Impreso{" "}</InputLabel>
+                    <OutlinedInput value={clienteP?.IMPRESO || ""} label="Impreso" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Impreso{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.IMPRESO || ""} label="Impreso" />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Nro</InputLabel>
+                    <OutlinedInput value={clienteP?.PEDIDO || ""} label="Nro" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 3, md: 3, lg: 3 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">Nro</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.PEDIDO || ""} label="Nro" />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>{" "}Cliente{" "}</InputLabel>
+                    <OutlinedInput value={clienteP?.CLIENTE || ""} label="Cliente" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Cliente{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.CLIENTE || ""} label="Cliente" />
+                <Grid size={{ xs: 12, sm: 9 }}>
+                  <FormControl fullWidth>
+                    <InputLabel></InputLabel>
+                    <OutlinedInput value={clienteP?.NOMBRE_RAZON || ""} />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 8, md: 8, lg: 8 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled"></InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.NOMBRE_RAZON || ""} />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Fecha</InputLabel>
+                    <OutlinedInput value={fecha} label="Fecha" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">Fecha</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={fecha} label="Fecha" />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>{" "}Direccion de Envio{" "}</InputLabel>
+                    <OutlinedInput value={clienteP?.DEPTO || ""} label="Direccion Envio" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 5, md: 5, lg: 5 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Direccion envio{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.DEPTO || ""} label="Direccion Envio" />
+                <Grid size={{ xs: 12, sm: 3}}>
+                  <FormControl fullWidth>
+                    <InputLabel></InputLabel>
+                    <OutlinedInput value={clienteP?.CIUDAD || ""} />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 5, md: 5, lg: 5 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled"></InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.CIUDAD || ""} />
+                <Grid size={{ xs: 12, sm: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Vend</InputLabel>
+                    <OutlinedInput value={clienteP?.VENDEDOR || ""} label="Vend" />
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 1, md: 1, lg: 1 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">Vend</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue={clienteP?.VENDEDOR || ""} label="Vend" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 1, md: 1, lg: 1 }}>
+                <Grid size={{ xs: 12, sm: 1 }}>
                   <Paper>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
                     <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
                   </Paper>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 6.3, md: 6.3, lg: 6.3 }}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <FormControl sx={{ margin: 0.5, display: "flex" }}>
                     <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
                     <OutlinedInput
@@ -676,249 +681,210 @@ export const PedidosC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 0.9, md: 0.9, lg: 0.9 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Finac %/Dias{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Finac %/Dias" />
-                  </FormControl>
-                </Grid>
-                
-                <Grid size={{ xs: 12, sm: 0.9, md: 0.9, lg: 0.9 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">D'UNA</InputLabel>
-                    <OutlinedInput
-                      defaultValue="Composed TextField"
-                      label="D'UNA"
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Ped.Origen{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Ped.Origen"  />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 1.9, md: 1.9, lg: 1.9 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Pendiente{" "}</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Pendiente" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 10, md: 10, lg: 10 }}>
-                  <FormControl sx={{ margin: 0.5 }}>
+                <Grid size={{ xs: 12, sm: 5}}>
+                  <FormControl sx={{ margin: 0.5, display: "flex"  }}>
                     <InputLabel htmlFor="component-disabled"></InputLabel>
                     <TextField
                       id="outlined-multiline-static"
                       label="Multiline"
                       multiline
-                      rows={1.0}
+                      rows={1}
                       defaultValue={clienteP?.OBSERVACIONES || ""}
-                      sx={{ width: 600 }}
                     />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 2, md: 2, lg: 2 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">Plazo</InputLabel>
-                    <OutlinedInput id="component-disabled" defaultValue="Composed TextField" label="Plazo" />
                   </FormControl>
                 </Grid>
               </Grid>
             </Paper>
           </Box>
 
-          <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpen}>
-            <ControlPointIcon />
-          </Button>
-        </Box>
-
-        <Paper sx={{ width: "100%" }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example" >
-              <Tab label="Detalles Lineas" {...a11yProps(0)} />
-              <Tab label="Articulos Pendientes" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-
-          <CustomTabPanel value={value} index={0}>
-            <Zoom in={checked}>
-              <Box sx={{ height: "auto", width: "100%",
-                  "& .MuiDataGrid-cell--editable": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                    },
-                  },
-                }}>
-                <Box sx={{ height: "auto", width: "100%" }}>
-                  <DataGrid
-                    density="compact"
-                    rows={productosP}
-                    columns={columnsP}
-                    getRowId={(row) => row.ARTICULO}
-                    editMode="row"
-                    onRowModesModelChange={handleRowModesModelChange}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
+          <Grid size={{ xs: 12 }}>
+            <Paper sx={{ width: "100%" }}>
+              <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+                <Tab label="Detalles Lineas" {...a11yProps(0)} />
+                <Tab label="Articulos Pendientes" {...a11yProps(1)} />
+              </Tabs>
+          
+              <CustomTabPanel value={value} index={0}>
+                <Box sx={{ height: "auto", width: "100%", 
+                    "& .MuiDataGrid-cell--editable": {
+                      bgcolor: (theme) =>
+                        theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                      "&:hover": {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                       },
-                    }}
-                    pageSizeOptions={[10]}
-                  />
-                </Box>
-              </Box>
-            </Zoom>
-          </CustomTabPanel>
-
-          <CustomTabPanel value={value} index={1}>
-            <Zoom in={checked}>
-              <Box sx={{ height: "auto", width: "100%",
-                  "& .MuiDataGrid-cell--editable": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                     },
-                  },
-                }}>
-                <Box sx={{ height: "auto", width: "100%" }}>
-                  <DataGrid
-                    density="compact"
-                    rows={productosConDISP0}
-                    columns={columnsP}
-                    getRowId={(row) => row.ARTICULO}
-                    onRowSelectionModelChange={handleRowModesModelChange}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    slotProps={{
-                      toolbar: { setProductosP, setRowModesModel },
-                    }}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
+                  }}>
+                  <Box sx={{ height: "auto", width: "100%" }}>
+                    <DataGrid
+                      density="compact"
+                      rows={productosP}
+                      columns={columnsP}
+                      getRowId={(row) => row.ARTICULO}
+                      editMode="row"
+                      onRowModesModelChange={handleRowModesModelChange}
+                      onRowEditStop={handleRowEditStop}
+                      processRowUpdate={processRowUpdate}
+                      slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 10 },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
+                    />
+                  </Box>
+                </Box>
+              </CustomTabPanel>
+
+              <CustomTabPanel value={value} index={1}>
+                <Box sx={{ height: "auto", width: "100%",
+                    "& .MuiDataGrid-cell--editable": {
+                      bgcolor: (theme) =>
+                        theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                      "&:hover": {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                       },
-                    }}
-                    pageSizeOptions={[10]}
-                  />
+                    },
+                  }}>
+                  <Box sx={{ height: "auto", width: "100%" }}>
+                    <DataGrid
+                      density="compact"
+                      rows={productosConDISP0}
+                      columns={columnsP}
+                      getRowId={(row) => row.ARTICULO}
+                      onRowSelectionModelChange={handleRowModesModelChange}
+                      onRowEditStop={handleRowEditStop}
+                      processRowUpdate={processRowUpdate}
+                      slotProps={{
+                        toolbar: { setProductosP, setRowModesModel },
+                      }}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { page: 0, pageSize: 10 },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
+                    />
+                  </Box>
                 </Box>
-
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
-                    <ControlPointIcon />
-                  </Button>
-                </Box>
-              </Box>
-            </Zoom>
-          </CustomTabPanel>
-        </Paper>
-      </Paper>
-
-      <Modal
-        open={openP}
-        onClose={handleCloseP}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
-        <Box sx={style}>{" "}<Producto />{" "}</Box>
-      </Modal>
-
-      <Modal
-        open={open}
-        onClose={guardar}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        BackdropProps={{ style: { pointerEvents: "none" } }}>
-        <Box sx={style}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 5, flexDirection: "row", width: "100%", gap: "70px"  }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={guardar}>
-                {" "}Agregar{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrar}>
-                {" "}<HighlightOffIcon />{" "}
-              </Button>
-            </Box>
-
-            <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 500, margin: "0%", }}>
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Buscar"
-                inputProps={{ "aria-label": "search google maps" }}
-                autoFocus
-                value={busqueda}
-                onChange={handleChange}
-              />
-              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-              </IconButton>
+              </CustomTabPanel>
             </Paper>
-          </Box>
+          </Grid>
+        </Grid>
+      </Box>
 
-          <Box sx={{ height: "auto", width: "100%" }}>
-            <DataGrid
-              density="compact"
-              rows={productos}
-              columns={columns}
-              getRowId={(row) => row.ARTICULO}
-              pageSizeOptions={[15]}
-              onRowSelectionModelChange={handleSelectionChange}
-              rowSelectionModel={selectedRows}
-              onSelectionModelChange={(newSelection) =>
-                setSelectedRows(newSelection)
-              }
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 15 },
-                },
-              }}
-            />
-          </Box>
+      <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3}}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
+            <Button sx={{ flexDirection: "column" }}>
+              <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotal}{" "}</Typography>
+              <strong>{" "}SUB-TOTAL{" "}</strong>
+            </Button>
+            <Button sx={{ flexDirection: "column" }}>
+              <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotalDESC}{" "}</Typography>
+              <strong>{" "}TOTAL{" "}</strong>
+            </Button>
+          </ButtonGroup>
         </Box>
-      </Modal>
-
-
-      <Paper sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", }}>
-        <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
-          <Button sx={{ flexDirection: "column" }}>
-            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-              {" "}{sumaSaldoTotal}{" "}
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {" "}Sub-Total{" "}
-            </Typography>
-          </Button>
-
-          <Button sx={{ flexDirection: "column" }}>
-            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-              {" "}{sumaSaldoTotalDESC}{" "}
-            </Typography>
-            <Typography variant="body2" color="text.primary">
-              {" "}Total-Pedido{" "}
-            </Typography>
-          </Button>
-        </ButtonGroup>
       </Paper>
 
-
-      <Box sx={{ flexDirection: "row", display: "flex" }}>
-        <Typography variant="body2" color="text.primary">
-          {" "}Editado por:{" "}
-        </Typography>
+      <Box sx={{ flexDirection: "row", display: "flex", justifyContent: "flex-end" }}>
+        <strong>{" "}Editado por:{" "}</strong>
         <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
           {" "}{clienteP?.createdBy || ""}{" "}
         </Typography>
       </Box>
-      </Box>
 
-      {openS ? (
+
+      <Modal
+        open={openB}
+        onClose={handleCloseB}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB}  />{" "}</Box>
+      </Modal>
+
+         
+      <Modal
+        open={openM}
+        onClose={handleCloseM}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        >
+        <Box sx={style}>
+          <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
+              <h2><strong>PRODUCTOS</strong></h2>
+              <Box display="flex" gap={1}>
+                <Button variant="contained" color="success" onClick={agregarArticulos}>Agregar</Button>
+                <Button variant="contained" color="error" onClick={handleCloseM}>Cerrar</Button>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2, alignItems: "center" }}>
+              <TextField
+                id="outlined-basic"
+                placeholder="Buscar Producto"
+                value={busqueda}
+                onChange={handleChange}
+                inputRef={inputRef}
+                sx={{ width: "100%" }}
+              />
+            </Box> 
+
+            <Box sx={{ width: "100%", height: 480 }}>
+              <DataGrid
+                density="compact"
+                rows={productos}
+                columns={columnsM}
+                getRowId={(row) => row.ARTICULO}
+                pageSize={10}
+                rowSelectionModel={selectedRows}
+                processRowUpdate={handleProcessRowUpdate}
+                onRowSelectionModelChange={handleSelectionChange}
+                sx={{
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    fontWeight: "bold",
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+    </>
+  );
+};
+
+export default PedidosC;
+
+
+
+
+
+
+
+/*
+
+
+
+  const handleCloses = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenE(false);
+    setOpenS(false);
+  };
+  
+
+
+
+
+  Alertas
+
+  {openS ? (
         <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
           <Alert onClose={handleCloses} severity="success" sx={{ width: "400px", height: "100px" }}>
             Guardado exitosamente
@@ -933,8 +899,9 @@ export const PedidosC = () => {
           </Alert>
         </Snackbar>
       ) : ( "" )}
-    </>
-  );
-};
 
-export default PedidosC;
+
+
+
+          
+*/

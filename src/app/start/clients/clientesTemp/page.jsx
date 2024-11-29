@@ -1,15 +1,15 @@
 "use client";
 
 import { Box, Tabs, Tab, Typography, TextField, Divider, Button, ButtonGroup, 
-  Checkbox, FormControlLabel, Paper, LinearProgress, } from "@mui/material/";
+  Checkbox, FormControlLabel, Paper, LinearProgress, useMediaQuery } from "@mui/material/";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import { useRouter } from "next/navigation";
 import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Conexion } from "@/conexion";
 
 
@@ -51,122 +51,104 @@ const fDate = (dateString) => {
 };
 
 const columnsP = [
-  { field: "FECHA_PEDIDO", headerName: "Fecha", width: 250,
+  { field: "FECHA_PEDIDO", headerName: "FECHA", width: 150,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "PEDIDO", headerName: "Pedido", width: 130 },
-  { field: "ESTADO", headerName: "Estado", width: 130 },
-  { field: "AUTORIZADONOM", headerName: "Autorizado", width: 130 },
-  { field: "TOTAL_A_FACTURAR", headerName: "Total a facturar", width: 130,
+  { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
+  { field: "ESTADO", headerName: "ESTADO", width: 130 },
+  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 130, cellClassName: "autor-cell" },
+  { field: "TOTAL_A_FACTURAR", headerName: "TOTAL A FACTURAR", width: 200,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "CreatedBy", headerName: "Creado por", width: 230 },
-  { field: "U_EDITADOPOR", headerName: "Editado por", width: 130 },
-  { field: "OBSERVACIONES", headerName: "Notas ", width: 130 },
-  { field: "COMENTARIO_CXC", headerName: "Comentarios CL", width: 300 },
+  { field: "CreatedBy", headerName: "CREADO POR", width: 150 },
+  { field: "U_EDITADOPOR", headerName: "EDITADO POR ", width: 150 },
+  { field: "OBSERVACIONES", headerName: "NOTAS", width: 200 },
+  { field: "COMENTARIO_CXC", headerName: "COMENTARIOS CL", width: 200 },
 ];
 
 
 const columnsF = [
-  { field: "FACTURA", headerName: "Factura", width: 130 },
-  { field: "FECHA_DESPACHO", headerName: "Fecha", width: 190,
+  { field: "FACTURA", headerName: "FACTURA", width: 130 },
+  { field: "FECHA_DESPACHO", headerName: "FECHA", width: 190,
     renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 130 },
-  { field: "PRECIO_TOTAL", headerName: "V.fact", width: 130,
+  { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  { field: "PEDIDO", headerName: "Pedido", width: 130 },
-  { field: "ARTICULO", headerName: "Articulo", width: 130 },
-  { field: "DESCRIPCION", headerName: "Descripcion", width: 700 },
-  { field: "CANTIDAD", headerName: "Cant", width: 130,
+  { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
+  { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
+  { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
+  { field: "CANTIDAD", headerName: "CANT", width: 130, },
+  { field: "PRECIO_UNITARIO", headerName: "PRECIO UNI.", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  { field: "PRECIO_UNITARIO", headerName: "PrecioUni", width: 130,
+  { field: "PORCIVA", headerName: "IVA", width: 100, },
+  { field: "PORDESC", headerName: "DESC", width: 130, },
+  { field: "VDESC", headerName: "V DESC", width: 130 },
+  { field: "TOTAL_MERCADERIA", headerName: "V. TOTAL ", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
     },
   },
-  { field: "PORCIVA", headerName: "IVA", width: 100, align: "right" },
-  { field: "PORDESC", headerName: "Desc", width: 130, align: "right" },
-  { field: "VDESC", headerName: "VDesc", width: 130 },
-  { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
-    valueFormatter: (value) => {
-      const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-  },
-  { field: "IDRUTERO", headerName: "IdRutero", width: 130 },
-  { field: "FECHARUT", headerName: "FechaRut", width: 150 },
-  { field: "IDGUIA", headerName: "IdGuia", width: 130 },
-  { field: "FECHAGUIA", headerName: "FechaGuia", width: 250,
-    valueFormatter: (params) => {
-      const FECHAGUIA = params.value;
-      const fecha = new Date(FECHAGUIA);
-
-      return fecha.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    },
-  },
-  { field: "OBSERVACIONES", headerName: "Observaciones", width: 400 },
-  { field: "RUBRO1", headerName: "Docs2", width: 300 },
+  { field: "IDRUTERO", headerName: "ID RUTERO", width: 100 },
+  { field: "IDGUIA", headerName: "ID GUIA", width: 100 },
+  { field: "OBSERVACIONES", headerName: "OBSERVACIONES", width: 400 },
+  { field: "RUBRO1", headerName: "DOCS 2", width: 200 },
 ];
 
 
 const columnsC = [
   { field: "DOC", headerName: "DOC", width: 130 },
-  { field: "FECHADOC",  headerName: "FechaDoc", width: 190,
+  { field: "FECHADOC",  headerName: "FECHA DOC", width: 190,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "FECHAVENC", headerName: "FechaVenc", width: 190,
+  { field: "FECHAVENC", headerName: "FECHA VENC", width: 190,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "NUMDOC", headerName: "NumDoc", width: 130 },
-  { field: "DIASVENC", headerName: "Venc", width: 130, align: "right" },
-  { field: "MONTO", headerName: "Monto", width: 130,
+  { field: "NUMDOC", headerName: "NUM DOC", width: 130, cellClassName: "autor-cell" },
+  { field: "DIASVENC", headerName: "VENC", width: 130, },
+  { field: "MONTO", headerName: "MONTO", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "SALDO", headerName: "Saldo", width: 130,
+  { field: "SALDO", headerName: "SALDO", width: 130,  cellClassName: "plazo-cell",
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "SMenorA30", headerName: "Venc < 30", width: 130,
+  { field: "SMenorA30", headerName: "VENC < 30", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    },
   },
-  { field: "SMayorA60", headerName: "Venc < 60", width: 130,
+  { field: "SMayorA60", headerName: "VENC < 60", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "SMenorA60", headerName: "Venc > 60", width: 130,
+  { field: "SMenorA60", headerName: "VENC > 60", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
-      return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, align: "right",
+      return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, 
   },
-  { field: "PLAZO", headerName: "Plazo", width: 130, align: "right" },
+  { field: "PLAZO", headerName: "PLAZO", width: 130, cellClassName: "plazo-cell" },
   { field: "VENDEDOR", headerName: "VENDEDOR", width: 130 },
 ];
 
@@ -227,6 +209,7 @@ const ClientesTemp = () => {
   const [clienteT, setClienteT] = useState(cliente[0]);
   const [sumaSaldoTotal, setSumaSaldoTotal] = useState(0);
   const [sumaSaldo60Total, setSumaSaldo60Total] = useState(0);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const handleChange = (e, newValue) => {
     setValue(newValue);
   };
@@ -299,214 +282,209 @@ const ClientesTemp = () => {
   return (
     <>
       <Box><Banner /></Box>
-      <Box className="container" sx={{ paddingTop: 1, display: "flex", alignContent: "center", alignItems: "center", }}>
-        <Box style={{ backgroundColor: "#eaeaea", width: "65%", height: "auto", paddingTop: 0, }}>
-          <Paper sx={{ padding: 1 }}>
-            <Box>
-              <Box>
-                <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#ffa28a", color: "white" }} onClick={cerrar}>
-                  {" "}Cerrar{" "}
-                </Button>
-                <Button variant="outlined" sx={{ margin: "2px", bgcolor: "#6cff5d", color: "white" }} LinkComponent={Link} href=".././pedidos/pedidosG">
-                  {" "}Pedido{" "}
-                </Button>
-                <Button variant="outlined" sx={{ margi: "2px", bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href=".././pedidos/crearPedido">
-                  Crear Pedido
-                </Button>
-              </Box>
-              <Divider sx={{}} orientation="horizontal" />
+      
+      <Box>
+        <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
+              <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} onClick={cerrar}>
+                {" "}Cerrar{" "}
+              </Button>
+              <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href=".././pedidos/crearPedido">
+                Crear Pedido
+              </Button>
+            </Box>
 
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", }}>
+            <Divider />
+
+            <Box sx={{ dispĺay: "flex", justifyContent: "space-around", alignItems: "center", gap: 2, flexWrap: isSmallScreen ? "wrap" : "nowrap" }}>
+              <Box sx={{ dispĺay: "flex", alignItems: "center", gap: 1 }}>
+                <FormControlLabel label="INDIVIDUAL" control={<Checkbox />} />
+                <FormControlLabel label="COMPAÑIA" control={<Checkbox />} />
+              </Box>
+
+              <Box sx={{ display: "flex", justifyContent: "flex-end", }}>
                 <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
                   <Button sx={{ flexDirection: "column" }}>
                     <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
-                      {sumaSaldoTotal}
+                      ${sumaSaldoTotal}
                     </Typography>
-                    <Typography variant="body2" color="text.primary">Saldo</Typography>
+                    <strong>Saldo</strong>
                   </Button>
 
                   <Button sx={{ flexDirection: "column" }}>
                     <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-                      {sumaSaldo60Total}
+                      ${sumaSaldo60Total}
                     </Typography>
-                    <Typography variant="body2" color="text.primary">Saldo Mayor a 60</Typography>
+                    <strong>Saldo Mayor a 60</strong>
                   </Button>
                 </ButtonGroup>
               </Box>
             </Box>
+          </Box>
 
-            <Divider orientation="horizontal" />
+          <Divider orientation="horizontal" />
 
-            <FormControlLabel label="Individual" control={<Checkbox />} />
-            <FormControlLabel label="Compañia" control={<Checkbox />} />
+          <h3><strong style={{ fontSize: 20, color: "#6d32f7" }}>{clienteT?.NOMBREALIAS || ""}</strong></h3>
 
-            <h3 sx={{ fontSize: 35 }}>{clienteT?.NOMBREALIAS || ""}</h3>
-
-            <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <Grid size={{ xs: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+            <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>NIT</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.CLIENTE || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Cupo</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
-                  {Number(clienteT?.CUPO || "").toFixed(0)}
+                <Typography sx={{ mb: 1.5, display: "flex", color: "#16f50f" }}> 
+                  ${Number(clienteT?.CUPO || "0").toLocaleString("es-ES")} 
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Debe</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
-                  {Number(clienteT?.SALDO || "").toFixed(0)}
+                <Typography sx={{ mb: 1.5, display: "flex", color: "#f50f0f" }}>
+                  ${Number(clienteT?.SALDO || "0").toLocaleString("es-ES")}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Dirección</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.DIRECCION || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
-                <strong>Telefono</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+                <strong>Teléfono</strong>
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.TELEFONO1 || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Celular</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.TELEFONO1 || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 2 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Ciudad</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.CIUDAD || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 3 }}>
+              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
                 <strong>Departamento</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.DEPARTAMENTO || ""}
                 </Typography>
               </Grid>
 
-              <Grid size={{ sx: 4 }}>
+              <Grid size={{ xs: 12, sm: 8, md: 6}}>
                 <strong>Email</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }} color="text.secondary">
+                <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.E_MAIL || ""}
                 </Typography>
               </Grid>
             </Grid>
+          </Box>
 
-            <TextField
-              id="filled-multiline-static"
-              label="Notas"
-              multiline
-              rows={3}
-              defaultValue={clienteT?.NOTAS || ""}
-              variant="filled"
-              sx={{ width: "100%" }}
-            />
+          <TextField
+            id="outlined-basic"
+            multiline
+            rows={3}
+            defaultValue={clienteT?.NOTAS || ""}
+            variant="outlined"
+            sx={{ width: "100%", border: "2px solid #13ace9" }}
+          />
 
-            <Paper sx={{ width: "100%" }}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                  <Tab label="Pedidos" {...a11yProps(0)} onClick={obtenerPedidos} />
-                  <Tab label="Facturas" {...a11yProps(1)} onClick={obtenerFacturas} />
-                  <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
-                  <Tab label="" {...a11yProps(3)}  />
-                </Tabs>
+          <Box sx={{ width: "100%", mt: 3 }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="Pedidos" {...a11yProps(0)} onClick={obtenerPedidos} />
+              <Tab label="Facturas" {...a11yProps(1)} onClick={obtenerFacturas} />
+              <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
+              <Tab label="" {...a11yProps(3)}  />
+            </Tabs>
+        
+            <CustomTabPanel value={value} index={0}>
+              <Box sx={{ width: "100%", height: 350 }}>
+                {cargando === true ? (
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgress />
+                  </Box>
+                ) : pedidos.length <= 0 ? (
+                  <h2>NO HAY PEDIDOS</h2>
+                ) : (
+                  <DataGrid
+                    density="compact"
+                    rows={pedidos}
+                    columns={columnsP}
+                    pageSizeOptions={[5]}
+                    rowSelectionModel={selectedRows}
+                    getRowId={(row) => row.PEDIDO}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
+                    />
+                )}
               </Box>
+            </CustomTabPanel>
 
-              <CustomTabPanel value={value} index={0}>
-                <Box sx={{ width: "100%", height: "auto" }}>
-                  {cargando === true ? (
-                    <Box sx={{ width: "100%" }}>
-                      <LinearProgress />
-                    </Box>
-                  ) : pedidos.length <= 0 ? (
-                    <h2>NO HAY PEDIDOS</h2>
-                  ) : (
-                    <DataGrid
-                      density="compact"
-                      rows={pedidos}
-                      columns={columnsP}
-                      pageSizeOptions={[5, 10]}
-                      rowSelectionModel={selectedRows}
-                      getRowId={(row) => row.PEDIDO}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 10 },
-                        },
-                      }}
-                      />
-                  )}
-                </Box>
-              </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              <Box sx={{ width: "100%", height: 350 }}>
+                {cargando === true ? (
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgress />
+                  </Box>
+                ) : facturas.length <= 0 ? (
+                  <h2>NO HAY FACTURAS</h2>
+                ) : (
+                  <DataGrid
+                    density="compact"
+                    rows={facturas}
+                    columns={columnsF}
+                    pageSize={[5]}
+                    rowSelectionModel={selectedRows}
+                    getRowId={(row) => row.ID}
+                  />
+                )}
+              </Box>
+            </CustomTabPanel>
 
-              <CustomTabPanel value={value} index={1}>
-                <Box sx={{ width: "100%", height: "auto" }}>
-                  {cargando === true ? (
-                    <Box sx={{ width: "100%" }}>
-                      <LinearProgress />
-                    </Box>
-                  ) : facturas.length <= 0 ? (
-                    <h2>NO HAY FACTURAS</h2>
-                  ) : (
-                    <DataGrid
-                      density="compact"
-                      rows={facturas}
-                      columns={columnsF}
-                      pageSizeOptions={[5, 10]}
-                      rowSelectionModel={selectedRows}
-                      getRowId={(row) => row.ID}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 10 },
-                        },
-                      }}
-                    />
-                  )}
-                </Box>
-              </CustomTabPanel>
-
-              <CustomTabPanel value={value} index={2}>
-                <Box sx={{ width: "100%", height: "auto" }}>
-                  {cargando === true ? (
-                    <Box sx={{ width: "100%" }}>
-                      <LinearProgress />
-                    </Box>
-                  ) : cartera.length <= 0 ? (
-                    <h2>NO HAY CARTERA</h2>
-                  ) : (
-                    <DataGrid
-                      density="compact"
-                      rows={cartera}
-                      columns={columnsC}
-                      pageSizeOptions={[5, 10]}
-                      rowSelectionModel={selectedRows}
-                      getRowId={(row) => row.NUMDOC}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 10 },
-                        },
-                      }}
-                    />
-                  )}
-                </Box>
-              </CustomTabPanel>
-            </Paper>
-          </Paper>
-        </Box>
+            <CustomTabPanel value={value} index={2}>
+              <Box sx={{ width: "100%", height: 350 }}>
+                {cargando === true ? (
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgress />
+                  </Box>
+                ) : cartera.length <= 0 ? (
+                  <h2>NO HAY CARTERA</h2>
+                ) : (
+                  <DataGrid
+                    density="compact"
+                    rows={cartera}
+                    columns={columnsC}
+                    pageSizeOptions={[5]}
+                    rowSelectionModel={selectedRows}
+                    getRowId={(row) => row.NUMDOC}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
+                  />
+                )}
+              </Box>
+            </CustomTabPanel>
+          </Box>
+        </Paper>
       </Box>
     </>
   );

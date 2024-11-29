@@ -46,10 +46,10 @@ const conseguirProductos = async () => {
 const CrearPedido = () => {
   const inputRef = useRef();
   const { cliente } = useAuth();
+  const [notas, setNotas] = useState("");
   const [openB, setOPenB] = useState("");
   const [openM, setOpenM] = useState("");
   const [total, setTotal] = useState("");
-  const [articulo, setArticulo] = useState("");
   const [subTotal, setSubTotal] = useState("");
   const [busqueda, setBusqueda] = useState("");
   const [productos, setProductos] = useState([]);
@@ -69,6 +69,7 @@ const CrearPedido = () => {
 
 
   const columns = [
+    { field: "ARTICULO", headerName: "CODIGO", width: 100 },
     { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
     { field: "SUBLINEA", headerName: "SUBLINEA", width: 250 },
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
@@ -216,6 +217,7 @@ const CrearPedido = () => {
       Fecha: new Date().toISOString(),
       Nombre: clienteP.NOMBREALIAS,
       Nit: clienteP.CLIENTE,
+      notas,
       total,
       subTotal,
       articulos: articulosSeleccionados.map(art => ({
@@ -273,7 +275,7 @@ const CrearPedido = () => {
         }
         return false;
       });
-      setArticulo(resultadosFiltrados[0]);
+      setTablaProducto(resultadosFiltrados[0]);
     }
   }, [productos]);
 
@@ -355,7 +357,7 @@ const CrearPedido = () => {
           Productos-Bodega
         </Button>
         <Button variant="filled" sx={{ bgcolor: "#ffa28a", "&:hover": { bgcolor: "#e98c74" }, }}>
-          PDF
+          Crear PDF
         </Button>
         <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#f36fad", "&:hover": { bgcolor: "#e6228e" }, }}>
           Guardar Pedido
@@ -405,6 +407,16 @@ const CrearPedido = () => {
               </Box>
             </Grid>
           </Grid>
+
+          <TextField
+            id="outlined-basic"
+            multiline
+            rows={3}
+            value={notas}
+            onChange={(e) => setNotas(e.target.value)}
+            variant="outlined"
+            sx={{ width: "100%", border: "2px solid #13e95a", marginTop: 2 }}
+          />
         </Paper>
       </Box>
 

@@ -1,7 +1,7 @@
 "use client";
 
+import { Backdrop, CircularProgress, LinearProgress, Tab, useMediaQuery } from "@mui/material";
 import { useCallback, useRef, useEffect, useState } from "react";
-import { Backdrop, CircularProgress, LinearProgress, Tab } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
@@ -225,6 +225,7 @@ function productos() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [bodegaSeleccionada, setBodegaSeleccionada] = useState(null);
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const handleChanges = (event, newValue) => {
     setValue(newValue);
   };
@@ -364,50 +365,41 @@ function productos() {
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <h2><strong>PRODUCTOS</strong></h2>
-      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-        <Paper>
-          <Autocomplete
+      <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
+          <h2><strong>PRODUCTOS</strong></h2>
+        </Box>
+
+        <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2, alignItems: "center" }}>
+        <Autocomplete
             options={bodegas}
             value={bodegaSeleccionada}
             onChange={handleBodega}
             getOptionLabel={(option) => option.NOMBRE || "Bodegas"}
-            disablePortal
-            id="combo-box-demo"
-            sx={{ width: 350 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="outlined" />
+            )}
             isOptionEqualToValue={(option, value) =>
               option.NOMBRE === value.NOMBRE
             }
-            renderInput={(params) => ( <TextField {...params} label="Bodegas" placeholder="Selecciona una bodega" variant="standard" /> )}
+            sx={{ width: isSmallScreen ? "100%" : 500 }}
           />
-        </Paper>
 
-        <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d" }}>
-          {articulo.DESCRIPCION}
-        </h2>
- 
-        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-          {productos.length > 0 ? <BotonExcel datos={productos} /> : ""}
-          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 400, margin: "10px" }}>
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Buscar"
-              inputProps={{ "aria-label": "search google maps" }}
-              id="usuario"
-              label="Usuario"
-              name="PER_usuario"
-              autoComplete="usuario"
-              autoFocus
-              value={busqueda}
-              onChange={handleChange}
-              inputRef={inputRef}
-            />
-            <IconButton title="buscar" sx={{ p: "10px" }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
-          </Paper>
+          <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d" }}>
+            {articulo.DESCRIPCION}
+          </h2>
+
+          {productos.length > 0 ? <BotonExcel datos={productos}  sx={{ marginLeft: "auto" }}/> : ""}
+
+          <TextField
+            id="outlined-basic"
+            placeholder="Buscar Producto"
+            value={busqueda}
+            onChange={handleChange}
+            inputRef={inputRef}
+            sx={{ width: isSmallScreen ? "100%" : 600, marginLeft: "auto" }}
+          />
         </Box>
-      </Box>
 
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -418,92 +410,93 @@ function productos() {
           </Tabs>
         </Box>
 
-        <CustomTabPanel component={Box} value={value} index={0}>
-          <Box sx={{ width: "100%", height: 950 }}>
-            {productos.length <= 0 ? (
-              <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba">
-                {" "}<HelpOutlineIcon />{" "}
+          <CustomTabPanel component={Box} value={value} index={0}>
+            <Box sx={{ width: "100%", height: 950 }}>
+              {productos.length <= 0 ? (
+                <Box sx={{ width: "100%" }} title="Seleccione una bodega en la lista de arriba">
+                  {" "}<HelpOutlineIcon />{" "}
+                </Box>
+              ) : (
+                <DataGrid
+                  rows={productos}
+                  columns={columns}
+                  pageSizeOptions={[5, 16, 20]}
+                  onRowSelectionModelChange={handleSelectionChange}
+                  rowSelectionModel={selectedRows}
+                  getRowId={(row) => row.ARTICULO}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 16 },
+                    },
+                  }}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          </CustomTabPanel>
+
+          <CustomTabPanel component={Box} value={value} index={1}>
+            {cargando === true ? (
+              <Box sx={{ width: "100%" }}>
+                <LinearProgress />
               </Box>
-            ) : (
-              <DataGrid
-                rows={productos}
-                columns={columns}
-                pageSizeOptions={[5, 16, 20]}
-                onRowSelectionModelChange={handleSelectionChange}
-                rowSelectionModel={selectedRows}
-                getRowId={(row) => row.ARTICULO}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 16 },
-                  },
-                }}
-                sx={{
-                  "& .MuiDataGrid-columnHeaderTitle": {
-                    fontWeight: "bold",
-                  },
-                }}
-              />
+              ) : pedidos.length === 0 ? (
+                <h2>NO HAY PEDIDOS</h2>
+              ) : (
+              <Box sx={{ width: "100%", height: 950 }}>
+                <DataGrid
+                  rows={pedidos}
+                  columns={columnsP}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 16 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 16, 20]}
+                  getRowId={(row) => row.PEDIDO}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              </Box>
             )}
-          </Box>
-        </CustomTabPanel>
+          </CustomTabPanel>
 
-        <CustomTabPanel component={Box} value={value} index={1}>
-          {cargando === true ? (
-            <Box sx={{ width: "100%" }}>
-              <LinearProgress />
-            </Box>
-            ) : pedidos.length === 0 ? (
-              <h2>NO HAY PEDIDOS</h2>
-            ) : (
-            <Box sx={{ width: "100%", height: 950 }}>
-              <DataGrid
-                rows={pedidos}
-                columns={columnsP}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 16 },
-                  },
-                }}
-                pageSizeOptions={[5, 16, 20]}
-                getRowId={(row) => row.PEDIDO}
-                sx={{
-                  "& .MuiDataGrid-columnHeaderTitle": {
-                    fontWeight: "bold",
-                  },
-                }}
-              />
-            </Box>
-          )}
-        </CustomTabPanel>
-
-        <CustomTabPanel component={Box} value={value} index={2}>
-          {cargando === true ? (
-            <Box sx={{ width: "100%" }}>
-              <LinearProgress />
-            </Box>
-            ) : facturas && facturas.length <= 0 ? (
-              <h2>NO HAY FACTURAS</h2>
-            ) : (
-            <Box sx={{ width: "100%", height: 950 }}>
-              <DataGrid
-                rows={facturas}
-                columns={columnsF}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 16 },
-                  },
-                }}
-                pageSizeOptions={[5, 16, 20]}
-                getRowId={(row) => row.FACTURA}
-                sx={{
-                  "& .MuiDataGrid-columnHeaderTitle": {
-                    fontWeight: "bold",
-                  },
-                }}
-              />
-            </Box>
-          )}
-        </CustomTabPanel>
+          <CustomTabPanel component={Box} value={value} index={2}>
+            {cargando === true ? (
+              <Box sx={{ width: "100%" }}>
+                <LinearProgress />
+              </Box>
+              ) : facturas && facturas.length <= 0 ? (
+                <h2>NO HAY FACTURAS</h2>
+              ) : (
+              <Box sx={{ width: "100%", height: 950 }}>
+                <DataGrid
+                  rows={facturas}
+                  columns={columnsF}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 16 },
+                    },
+                  }}
+                  pageSizeOptions={[5, 16, 20]}
+                  getRowId={(row) => row.FACTURA}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              </Box>
+            )}
+          </CustomTabPanel>
+        </Box>
       </Box>
     </>
   );
