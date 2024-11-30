@@ -14,7 +14,7 @@
 
 # production
 /build
-
+conexion.js
 
 # misc
 .DS_Store
