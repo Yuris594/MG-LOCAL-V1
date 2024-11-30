@@ -58,7 +58,6 @@ const columnsP = [
   },
   { field: "CLIENTE", headerName: "CLIENTE", width: 180 },
   { field: "PEDIDO", headerName: "PEDIDO", width: 150, cellClassName: 'pedido-cell' },
-  { field: "VE", headerName: "VEND", width: 100 },
   { field: "PED", headerName: "PED", width: 100,  },
   { field: "DESP", headerName: "DESP", width: 120, },
   { field: "PEND", headerName: "PEND", width: 130, },
@@ -68,20 +67,21 @@ const columnsP = [
       const AUTORIZADONOM = params.row.AUTORIZADONOM;
       const cellStyle = {
         color:
-          AUTORIZADONOM === "APROBADO"
-            ? "#00FC00"
-            : AUTORIZADONOM === "RETENIDO"
-            ? "#FF1507"
-            : "#000000",
+        AUTORIZADONOM === "APROBADO"
+        ? "#00FC00"
+        : AUTORIZADONOM === "RETENIDO"
+        ? "#FF1507"
+        : "#000000",
         backgroundColor: "transparent",
       };
       return <Typography style={cellStyle}>{AUTORIZADONOM}</Typography>;
     },
   },
+  { field: "VE", headerName: "VEND", width: 100, cellClassName: "autor-cell" },
 ];
 
 const columnsF = [
-  { field: "FACTURA", headerName: "FACTURA", width: 130 },
+  { field: "FACTURA", headerName: "FACTURA", width: 130, cellClassName: "plazo-cell" },
   { field: "FECHA_DESPACHO", headerName: "FECHA", width: 190,
     renderCell: (params) => fDate(params.value),
   },
@@ -109,7 +109,7 @@ const columnsF = [
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `$ ${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, 
+    }, cellClassName: "autor-cell",
   },
   { field: "IDRUTERO", headerName: "ID RUTERO", width: 130 },
   { field: "IDGUIA", headerName: "ID GUIA", width: 130 },

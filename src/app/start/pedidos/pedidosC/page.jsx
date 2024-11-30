@@ -137,7 +137,7 @@ export const PedidosC = () => {
         setTablaProducto(datos)
       };
     } catch (error) {
-      conexion()
+      console.log("error")
     }
   };
 
@@ -154,7 +154,7 @@ export const PedidosC = () => {
         setProductosP(datos);
       }
     } catch (error) {
-      conexion()
+      console.log("error")
     }
   };
 
@@ -171,7 +171,7 @@ export const PedidosC = () => {
         setProductosConDIPS0(datos);
       }
     } catch (error) {
-      conexion()
+      console.log("error")
     }
   }
 
@@ -220,7 +220,7 @@ export const PedidosC = () => {
         console.error("Error al enviar la solicitud:", response.statusText);
       }
     } catch (error) {
-        conexion()
+        console.log("error")
         console.error("Error de red:", error);
     }
   };
@@ -247,41 +247,6 @@ export const PedidosC = () => {
     const resultadosFiltrados = resultadosBusqueda.filter((elemento) => elemento !== null);
     setProductos(resultadosFiltrados);
   };
-
-
-  const handleSelectionChange = (newSelection) => {
-      setSelectedRows(newSelection);
-  };
-
-  const filasSeleccionadas = {};
-  selectedRows.forEach((id, index) => {
-    const fila = productos.find((producto) => producto.ARTICULO === id);
-    filasSeleccionadas[index] = fila;
-  });
-
-  const datosActuales = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
-  const datosActualizados = { ...datosActuales, ...filasSeleccionadas };
-  localStorage.setItem('pedidoTempG', JSON.stringify(datosActualizados));
-
-  const guardar = () => {
-    const pedido = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
-    const productosActuales = [...productosP];
-  
-
-  Object.keys(cantidades).forEach((id) => {
-    const producto = productos.find((prod) => prod.ARTICULO === id);
-    if (producto) {
-      producto.CANTIDAD = cantidades[id]; 
-      productosActuales.push(producto); 
-    }
-  });
-
-    setProductosP(productosActuales);
-    setSelectedRows([]);
-    localStorage.removeItem('pedidoTempG');
-    alert("Productos agregados al pedido");
-  };
-  
 
 
   const handleRowEditStop = (params, event) => {
@@ -328,6 +293,7 @@ export const PedidosC = () => {
 
 
   const columnsP = [
+    { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
     { field: 'DESCRIPCION', headerName: 'Referencia', width: 500 },
     { field: 'PRECIO', headerName: 'Precio', width: 130,
       valueFormatter: (value) => {
@@ -407,31 +373,52 @@ export const PedidosC = () => {
   };
 
   /////////////////////////////////////////////////////////////////////////////////
-  const handleCantidad = (id, value) => {
-    setCantidades((prev) => ({
-      ...prev,
-      [id]: value
-    }));
+  const handleCantidad = (ARTICULO, value) => {
+    setCantidades({
+      ...cantidades,
+      [ARTICULO] : value,
+    });
   };
 
   const handleProducto = () => {
-    const productosConCantidades = selectedRows.map((id) => {
-      const producto = productos.find((prod) => prod.ARTICULO === id);
-      if (producto && cantidades[id]) {
-        return { ...producto, CANTIDAD: cantidades[id] }; 
+    const productosConCantidades = selectedRows.map((ARTICULO) => {
+      const producto = productos.find((prod) => prod.ARTICULO === ARTICULO);
+      if (producto && cantidades[ARTICULO]) {
+        return { ...producto, CANTIDAD: cantidades[ARTICULO] }; 
       }
       return null;
     }).filter(Boolean);
 
-    setProductosP((prevProductos) => [...prevProductos, ...productosConCantidades]);
+    setProductosP((prevProductos) => {
+      const productosActualizados = [...prevProductos];
+  
+      productosConCantidades.forEach((producto) => {
+        const productoExistente = productosActualizados.find(
+          (prod) => prod.ARTICULO === producto.ARTICULO
+        );
+  
+        if (productoExistente) {
+          productoExistente.CANTIDAD += producto.CANTIDAD;
+        } else {
+          productosActualizados.push(producto);
+        }
+      });
+  
+      return productosActualizados;
+    });
+
     setSelectedRows([]);
     setCantidades({});
-
     handleCloseM();
+  };
+
+  const handleSelectionChange = (newSelection) => {
+    setSelectedRows(newSelection);
   };
 
 
   const columnsM = [
+    { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
     { field: 'DESCRIPCION', headerName: 'Referencia', width: 500, editable: true },
     { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
     { field: 'PRECIO', headerName: 'Precio', width: 130,
@@ -746,7 +733,7 @@ export const PedidosC = () => {
         onClose={handleCloseB}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB} onAgregarArticulo={guardar} />{" "}</Box>
+        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB}  />{" "}</Box>
       </Modal>
 
          
@@ -785,6 +772,7 @@ export const PedidosC = () => {
                 getRowId={(row) => row.ARTICULO}
                 pageSize={10}
                 rowSelectionModel={selectedRows}
+                processRowUpdate={processRowUpdate}
                 onRowSelectionModelChange={handleSelectionChange}
                 sx={{
                   "& .MuiDataGrid-columnHeaderTitle": {

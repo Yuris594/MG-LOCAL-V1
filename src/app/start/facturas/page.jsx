@@ -171,10 +171,10 @@ const Factura = () => {
       pdf.setFontSize(9);
       pdf.text(`CLIENTE:    ${fac.CLIENTE}`, 12, 85);
       pdf.text(`NIT/CEDULA:    ${fac.CreatedBy}`, 12, 98);
-      pdf.text(`TEL:    ${fac.CreatedBy}`, 330, 98);
+      pdf.text(`TEL:    ${fac.CreatedBy}`, 300, 98);
       pdf.text(`VENDEDOR:    ${fac.CreatedBy}`, 440, 98);
       pdf.text(`MUNICIPIO:    ${fac.CreatedBy}-${fac.CreatedBy}`, 12, 112);
-      pdf.text(`PEDIDO:    ${fac.PEDIDO}`, 330, 112);
+      pdf.text(`PEDIDO:    ${fac.PEDIDO}`, 300, 112);
       pdf.text(`CREADO:    ${fac.CreatedBy}`, 440, 112);
       pdf.text(`DIRECCION:    ${fac.CreatedBy}`, 12, 125);
       pdf.text(`NOTA:   ${fac.OBSERVACIONES}`, 12, 139);
