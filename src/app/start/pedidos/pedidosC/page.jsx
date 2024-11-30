@@ -1,30 +1,32 @@
 "use client";
 
 
-import { Box, Tabs, Tab, OutlinedInput, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery } from "@mui/material";
-import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
+import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from "@mui/x-data-grid";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/context/authContext";
+import { useForm } from "@/app/hooks/useForm";
+import MuiAlert from "@mui/material/Alert";
+import Grid from "@mui/material/Grid2";
+import { Conexion } from "@/conexion";
+
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import Producto from "../../(producto)/producto/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
+import Banner from "@/app/components/banner/banner";
+import PropTypes from "prop-types";
+import React from "react";
+
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Banner from "@/app/components/banner/banner";
 import DeleteIcon from '@mui/icons-material/Delete';
+import StoreIcon from '@mui/icons-material/Store';
 import PrintIcon from '@mui/icons-material/Print';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
-import { useAuth } from "@/context/authContext";
-import { useForm } from "@/app/hooks/useForm";
-import { useCallback, useEffect, useRef, useState } from "react";
-import MuiAlert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid2";
-import PropTypes from "prop-types";
-import React from "react";
-import { Conexion } from "@/conexion";
 import StarIcon from '@mui/icons-material/Star';
 
 
@@ -83,285 +85,212 @@ function a11yProps(index) {
 export const PedidosC = () => {
   const inputRef = useRef();
   const { form, changed } = useForm({});
-  const [value, setValue] = useState(0);
-  const [fecha, setFecha] = useState("");
   const { pedido, setPedido } = useAuth();
-  
-  const [openM, setOpenM] = useState(false);
-  const [openB, setOpenB] = useState(false);
-  const [openS, setOpenS] = useState(false);
-  const [openE, setOpenE] = useState(false);
-
-  const [busqueda, setBusqueda] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [busqueda, setBusqueda] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [clienteP, setClienteP] = useState(null);
-  const [cantidades, setCantidades] = useState("");
   const [productosP, setProductosP] = useState([]);
+  const [clienteP, setClienteP] = useState(pedido[0]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [tablaProducto, setTablaProducto] = useState([]);
+  const [cantidades, setCantidades] = useState({});
   const [productosConDISP0, setProductosConDIPS0] = useState([]);
-  const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
+  
+  const [openB, setOpenB] = useState(false);
+  const [openM, setOpenM] = useState(false);
+  const [openS, setOpenS] = useState(false);
+  const [openE, setOpenE] = useState(false); 
+  const [value, setValue] = useState(0);
+  
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
-  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo( productosP, productosConDISP0, value );
-  const { generarPDF } = useGenerarPDF( clienteP, argumentoPDF, sumaSaldoTotalDESC, productosP );
-  const handleChanges = (event, newValue) => { setValue(newValue) };
-
-  const handleOpenM = () => setOpenM(true);
-  const handleCloseM = () => { 
-    setOpenM(false);
-    setSelectedRows([]);
-    localStorage.removeItem("pedidosTemp");
+  const { sumaSaldoTotal, sumaSaldoTotalDESC } = useCalculoSumaSaldo(productosP, productosConDISP0, value);
+  const { generarPDF } = useGenerarPDF(clienteP, argumentoPDF, sumaSaldoTotalDESC);
+  const handleChanges = (event, newValue) => {
+      setValue(newValue);
   };
 
   const handleOpenB = () => setOpenB(true);
-  const handleCloseB = () => { 
-    setOpenB(false);
-    setSelectedRows([]);
-    localStorage.removeItem("pedidosTemp");
-  };
+  const handleCloseB = () => setOpenB(false);
+  const handleOpenM = () => setOpenM(true);
+  const handleCloseM = () => setOpenM(false);
 
-  useEffect(() => {
-    if(clienteP) {
-      obtenerProductos();
-      obtenerProductosP(clienteP.PEDIDO);
-      obtenerProductosPendientes(clienteP.PEDIDO);
-    }
-  }, [clienteP]);
 
 
   useEffect(() => {
-    const datos = localStorage.getItem("pedidoTemp");
-    if (datos) {
-      setClienteP(JSON.parse(datos)[0]);
-    }
-  }, []);
+      conseguirProductos()
+      conseguirProductosP()
+      conseguirProductosPendientes()
+  }, [])
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      filtrar(checked);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [checked]);
-
-
-  useEffect(() => {
-    if (clienteP?.FECHA_PEDIDO) {
-      const fechaActual = () => {
-        const fechaPedido = new Date(clienteP.FECHA_PEDIDO);
-        const dias = fechaPedido.getDate().toString().padStart(2, '0');
-        const mes = (fechaPedido.getMonth() + 1).toString().padStart(2, '0');
-        const anio = fechaPedido.getFullYear();
-
-        const fechaFormateada = `${dias}/${mes}/${anio}`;
-        setFecha(fechaFormateada);
-      };
-      fechaActual(); 
-    }
-  }, [clienteP]);
-
-  //Traer los datos de productos MG de la base de datos 
-  const obtenerProductos = async () => {
+  const conseguirProductos = async () => {
     try {
       const response = await fetch("/api/productos/listar_solo_para_mg", {
         method: "GET",
-        headers: { "Content-Type" : "application/json" }
+        headers: { "Content-Type" : "application/json" },
       });
+
       const datos = await response.json();
+
       if (datos) {
         setProductos(datos);
-        setTablaProducto(datos);
-      }
+        setTablaProducto(datos)
+      };
     } catch (error) {
-      console.log("Error al obtener los datos de Productos", error);
+      conexion()
     }
   };
 
-  const obtenerProductosP = async () => {
+  const conseguirProductosP = async () => {
     try {
       const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
         method: "GET",
-        headers: { "Content-Type" : "application/json" }
+        headers: { "Content-Type" : "application" },
       });
+
       const datos = await response.json();
+
       if (datos) {
         setProductosP(datos);
-      } else {
-        console.log("Error.....")
       }
     } catch (error) {
-      console.log("Error al obtener los datos de Detalles de Lineas", error);
+      conexion()
     }
   };
 
-  const obtenerProductosPendientes = async () => {
+  const conseguirProductosPendientes = async () => {
     try {
       const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json", },
+        headers: { "Content-Type" : "application/json" }
       });
+
       const datos = await response.json();
-      if (Array.isArray(datos)) {
+
+      if (datos) {
         setProductosConDIPS0(datos);
-      } else {
-        console.log("La respuesta no es un array", datos);
       }
     } catch (error) {
-      console.log("Error al obtener los datos de Articulos Pendientes", error);
+      conexion()
     }
-  };
-
-
+  }
 
   const productosGuardar = async (e) => {
     e.preventDefault();
     const bodyData = {
-      ...clienteP,
-      ARTICULOS: productosP,
-      OBSERVACIONES: form.OBSERVACIONES,
+        ...clienteP,
+        ARTICULOS: productosP,
+        OBSERVACIONES: form.OBSERVACIONES
     };
+
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
+      const response = await fetch("/api/pedido/crear/", {
+          method: "POST",
+          body: JSON.stringify(bodyData), 
+          headers: { "Content-Type": "application/json" }
       });
-      
-      const data = await response.json();
-      if (data) {
-        console.log("Crear");
-        setOpenS(true);
+
+      if (response.ok) {
+          setOpenS(true)
       } else {
-        setOpenE(true);
-        console.error("Error de red: ", error);
+          console.error("Error al enviar la solicitud:", response.statusText);
+          setOpenE(true)
       }
     } catch (error) {
-      setOpenE(true);
-      console.error("Error de red: ", error);
+        console.error("Error de red:", error);
+        setOpenE(true)
     }
   };
-
 
   const productosguardarP = async () => {
     const bodyData = {
-      ...clienteP,
-      ARTICULOS: productosConDISP0,
+        ...clienteP,
+        ARTICULOS: productosConDISP0,
     };
+
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
+      const response = await fetch("/api/pedido/crear/", {
+          method: "POST",
+          body: JSON.stringify(bodyData), 
+          headers: { "Content-Type": "application/json" }
       });
+      if (response.ok) {
 
-      const data = await response.json();
-
-      if (data) {
-        setOpenS(true);
-        console.log("Crear x2")
       } else {
-        console.error("Error de reed: ", error);
+        console.error("Error al enviar la solicitud:", response.statusText);
       }
     } catch (error) {
-      setOpenE(true);
-      console.error("Error de reed: ", error);
+        conexion()
+        console.error("Error de red:", error);
     }
   };
 
-
-  //Cerrar la pagina 
-  const cerrarP = () => {
-    window.history.back();
-    localStorage.removeItem("pedidoTemp");
+  
+  const handleChange = (e) => {
+    e.preventDefault();
+    setBusqueda(e.target.value)
+    filtrar(e.target.value);
   };
 
-  //Definir a un cliente como especial
-  const especial = () => {
-    const estado = pedido.U_COMPESPECIAL === "SI" ? null : "SI";
-    const body = {
-      ...clienteP,
-      U_COMPESPECIAL: estado,
-    };
-    setPedido(body);
-    setClienteP(body);
+  const filtrar = (terminoBusqueda) => {
+    const resultadosBusqueda = tablaProducto.filter((elemento) => {
+    const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
+    const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
+      if (
+          ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
+          DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
+      ) {
+          return elemento;
+      }
+      return null; 
+    });
+    const resultadosFiltrados = resultadosBusqueda.filter((elemento) => elemento !== null);
+    setProductos(resultadosFiltrados);
   };
 
 
+  const handleSelectionChange = (newSelection) => {
+      setSelectedRows(newSelection);
+  };
 
-  // Tabla de los Productos de la pagina principal
-  const columnsP = [
-    { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
-    { field: "DISP", headerName: "DISP", width: 70 },
-    { field: "PRECIO", headerName: "PRECIO", width: 130,
-      valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },
-    },
-    { field: "CPed", headerName: "CANT", width: 80, type: "number", editable: true,
-    },
-    { field: "PORC_DCTO", headerName: "D1", width: 70,
-      valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      },
-    },
-    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-    { field: "Em", headerName: "EMP", width: 80 },
-    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
-    { field: "actions", type: "actions", headerName: "Actions", width: 100, cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{ color: "primary.main" }}
-              onClick={handleSaveClick(id)}
-            />,
+  const filasSeleccionadas = {};
+  selectedRows.forEach((id, index) => {
+    const fila = productos.find((producto) => producto.ARTICULO === id);
+    filasSeleccionadas[index] = fila;
+  });
 
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
+  const datosActuales = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
+  const datosActualizados = { ...datosActuales, ...filasSeleccionadas };
+  localStorage.setItem('pedidoTempG', JSON.stringify(datosActualizados));
 
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
+  const guardar = () => {
+    const pedido = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
+    const productosActuales = [...productosP];
+  
 
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            className="textPrimary"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ];
+  Object.keys(cantidades).forEach((id) => {
+    const producto = productos.find((prod) => prod.ARTICULO === id);
+    if (producto) {
+      producto.CANTIDAD = cantidades[id]; 
+      productosActuales.push(producto); 
+    }
+  });
 
-  //Funcionalidades de ediccion
+    setProductosP(productosActuales);
+    setSelectedRows([]);
+    localStorage.removeItem('pedidoTempG');
+    alert("Productos agregados al pedido");
+  };
+  
+
+
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
   };
 
+ 
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -374,154 +303,167 @@ export const PedidosC = () => {
     setProductosP(productosP.filter((row) => row.ARTICULO !== id));
   };
 
+
   const handleCancelClick = (id) => () => {
     setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        ...rowModesModel,
+        [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
     const editedRow = productosP.find((row) => row.ARTICULO === id);
     if (editedRow.isNew) {
-      setProductosP(productosP.filter((row) => row.ARTICULO !== id));
+        setProductosP(productosP.filter((row) => row.ARTICULO !== id));
     }
   };
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setProductosP(
-      productosP.map((row) =>
-        row.ARTICULO === newRow.ARTICULO ? updatedRow : row
-      )
-    );
+    setProductosP(productosP.map((row) => (row.ARTICULO === newRow.ARTICULO ? updatedRow : row)));
     return updatedRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
+      setRowModesModel(newRowModesModel);
   };
 
 
-  //Filtrar y Busqueda de los productos
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    setBusqueda(e.target.value)
-    filtrar(e.target.value);
-}
-
-  const filtrar = (terminoBusqueda) => {
-    const resultadosBusqueda = tablaProducto.filter((elemento) => {
-      const ARTICULO = elemento.ARTICULO && elemento.ARTICULO.toString().toLowerCase();
-      const DESCRIPCION = elemento.DESCRIPCION && elemento.DESCRIPCION.toString().toLowerCase();
-        if (
-            ARTICULO?.includes(terminoBusqueda.toLowerCase()) ||
-            DESCRIPCION?.includes(terminoBusqueda.toLowerCase())
-        ) {
-            return elemento;
-        }
-        return null; 
-      });
-    const resultadosFiltrados = resultadosBusqueda.filter((elemento) => elemento !== null);
-    setProductos(resultadosFiltrados);
-  };
-
-  const handleSelectionChange = useCallback((selectionModel) => {
-    setSelectedRows(selectionModel);
-    if (selectionModel.length > 0) {
-      const resultadosFiltrados = tablaProducto.filter((elemento) => {
-        const ARTICULO = elemento.ARTICULO;
-        if (ARTICULO) {
-          const productoString = ARTICULO.toString();
-          return productoString.includes(selectionModel[0]);
-        }
-        return false;
-      });
-      setTablaProducto(resultadosFiltrados[0]);
-    }
-  }, [productos]);
-
-
-  //////////////////////////////////////////////////////////////////
-
-
-
-
-  const agregarArticulo = (nuevosArticulos) => {
-    const articulosConTotal = nuevosArticulos.map((art) => {
-      const precioUnitario = art.PRECIO * (1 + art.PORC_IMPUESTO / 100);
-      const cantidad = parseFloat(art.cantped);
-      const descuento = parseFloat(art.PORC_DCTO) / 100;
-      const total = precioUnitario * cantidad * (1 - descuento);
-      return {
-        ...art,
-        Total: total.toFixed(0),
-      };
-    });
-    const articulosActualizados = [...articulosSeleccionados, ...articulosConTotal];
-    setArticulosSeleccionados(articulosActualizados);
-  };
-
-  const handleProcessRowUpdate = (newRow) => {
-    const updatedRows = productos.map((prod) => 
-      prod.ARTICULO === newRow.ARTICULO ? { ...prod, ...newRow } : prod
-    );
-    setProductosP(updatedRows);
-    setTablaProducto(updatedRows);
-    return newRow;
-  };
-
-
-  const handleCantidad = (ARTICULO, value) => {
-    setCantidades({
-      ...cantidades,
-      [ARTICULO] : value,
-    });
-  };
-
-  const agregarArticulos = () => {
-    const articulosSeleccionados = productos.filter((prod) => cantidades[prod.ARTICULO]);
-    agregarArticulo(
-      articulosSeleccionados.map((art) => ({
-        ...art,
-        CANTIDAD: cantidades[art.ARTICULO]
-      }))
-    );
-    handleCloseM();
-  }
-
-  const columnsM = [
-    { field: "ARTICULO", headerName: "CODIGO", width: 130 },
-    { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
-    { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
-    { field: "PRECIO", headerName: "PRECIO", width: 130,
+  const columnsP = [
+    { field: 'DESCRIPCION', headerName: 'Referencia', width: 500 },
+    { field: 'PRECIO', headerName: 'Precio', width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, editable: true, type: 'number'
+    },
+    { field: 'CPed', headerName: 'Cant', width: 80, type: 'number', editable: true },
+    { field: 'PORC_DCTO', headerName: 'D1', width: 70,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, editable: true, type: "number"
+    },
+    { field: 'DISP', headerName: 'Disp', width: 70, 
+      cellClassName: (params) => params.value === 0 ? 'red-text' : '' 
+    },
+    { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40, },
+    { field: 'Em', headerName: 'Emp', width: 80 },
+    { field: 'EXIST_REAL', headerName: 'Existreal', width: 90 },
+    { field: 'actions', type: 'actions', headerName: 'Actions', width: 100, cellClassName: 'actions',
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                  color: 'primary.main',
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+              <GridActionsCellItem
+                icon={<CancelIcon />}
+                label="Cancel"
+                className="textPrimary"
+                onClick={handleCancelClick(id)}
+                color="inherit"
+              />,
+            ];
+          }
+
+          return [
+            <GridActionsCellItem
+              icon={<EditIcon />}
+              label="Edit"
+              className="textPrimary"
+              onClick={handleEditClick(id)}
+              color="inherit"
+            />,
+
+            <GridActionsCellItem
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={handleDeleteClick(id)}
+              color="inherit"
+            />,
+        ];
       },
     },
-    { field: "CANTIDAD", headerName: "CANT", width: 80, 
+  ];
+
+  const cerrarP = () => {
+    window.history.back();
+    localStorage.removeItem('pedidoTemp');
+  };
+  
+  const especial = () => {
+    const estado = pedido.U_COMPESPECIAL === "SI" ? null : "SI";
+    const body = {
+        ...clienteP,
+        U_COMPESPECIAL: estado
+    };
+    setPedido(body);
+    setClienteP(body);
+  };
+
+  /////////////////////////////////////////////////////////////////////////////////
+  const handleCantidad = (id, value) => {
+    setCantidades((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleProducto = () => {
+    const productosConCantidades = selectedRows.map((id) => {
+      const producto = productos.find((prod) => prod.ARTICULO === id);
+      if (producto && cantidades[id]) {
+        return { ...producto, CANTIDAD: cantidades[id] }; 
+      }
+      return null;
+    }).filter(Boolean);
+
+    setProductosP((prevProductos) => [...prevProductos, ...productosConCantidades]);
+    setSelectedRows([]);
+    setCantidades({});
+
+    handleCloseM();
+  };
+
+
+  const columnsM = [
+    { field: 'DESCRIPCION', headerName: 'Referencia', width: 500, editable: true },
+    { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
+    { field: 'PRECIO', headerName: 'Precio', width: 130,
+      valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+      }, editable: true
+    },
+    { field: 'CANTIDAD', headerName: 'Cant', width: 80, type: 'number', editable: true,
       renderCell: (params) => {
         return (
           <TextField 
-            value={cantidades[params.id] || ""}
-            onChange={(e) => handleCantidad(params.id, e.target.value)}
             sx={{ width: "70px" }}
             variant="outlined"
             size="small"
+            value={cantidades[params.id] || ""}
+            onChange={(e) => handleCantidad(params.id, e.target.value)}
           />
         )
-      }
+      },
     },
-    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
+    { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
+    { field: 'PRECIOMASIVA', headerName: 'Masiva', width: 130,
       valueFormatter: (value) => {
         const precioRedondeado = Number(value).toFixed(0);
         return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      }, align: "right",
+      }, editable: true
     },
-    { field: "PORC_DCTO", headerName: "D1", width: 40 },
-    { field: "TOTAL_DISP", headerName: "DISP", width: 70 },
-    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
+    { field: 'PORC_DCTO', headerName: 'D1', width: 40 },
+    { field: 'TOTAL_DISP', headerName: 'Disp', width: 70, },
+    { field: 'UNIDAD_EMPAQUE', headerName: 'Emp', width: 80 },
+    { field: 'EXIST_REAL', headerName: 'Existreal', width: 90 },
   ];
 
   return (
@@ -539,7 +481,7 @@ export const PedidosC = () => {
                 
                 <Box sx={{ display: "flex", gap: 1 }}>
                   {clienteP?.AUTORIZADONOM === "APROBADO" ? (
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={generarPDF}>
+                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fa4f4f" }} onClick={generarPDF}>
                       {" "}<PrintIcon />{" "}
                     </Button>
                   ) : (
@@ -552,7 +494,7 @@ export const PedidosC = () => {
                     {" "}<StarIcon />{" "}
                   </Button>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenB}>
-                    {" "}<LocalShippingIcon />{" "}
+                    {" "}<StoreIcon />{" "}
                   </Button>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpenM}>
                     MG
@@ -564,7 +506,7 @@ export const PedidosC = () => {
                     {" "}<SaveAsIcon />{" "}
                   </Button>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
-                    <ControlPointIcon />
+                    <SaveAltIcon  />
                   </Button>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}>
                     {" "}<HighlightOffIcon />{" "}
@@ -585,7 +527,7 @@ export const PedidosC = () => {
             </Paper>
           </Grid>
 
-
+          
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
             <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
               <Grid container spacing={2}>
@@ -634,7 +576,7 @@ export const PedidosC = () => {
                 <Grid size={{ xs: 12, sm: 3 }}>
                   <FormControl fullWidth>
                     <InputLabel>Fecha</InputLabel>
-                    <OutlinedInput value={fecha} label="Fecha" />
+                    <OutlinedInput  label="Fecha" />
                   </FormControl>
                 </Grid>
 
@@ -697,6 +639,7 @@ export const PedidosC = () => {
             </Paper>
           </Box>
 
+          
           <Grid size={{ xs: 12 }}>
             <Paper sx={{ width: "100%" }}>
               <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
@@ -803,7 +746,7 @@ export const PedidosC = () => {
         onClose={handleCloseB}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB}  />{" "}</Box>
+        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB} onAgregarArticulo={guardar} />{" "}</Box>
       </Modal>
 
          
@@ -818,7 +761,7 @@ export const PedidosC = () => {
             <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
               <h2><strong>PRODUCTOS</strong></h2>
               <Box display="flex" gap={1}>
-                <Button variant="contained" color="success" onClick={agregarArticulos}>Agregar</Button>
+                <Button variant="contained" color="success" onClick={handleProducto}>Agregar</Button>
                 <Button variant="contained" color="error" onClick={handleCloseM}>Cerrar</Button>
               </Box>
             </Box>
@@ -842,7 +785,6 @@ export const PedidosC = () => {
                 getRowId={(row) => row.ARTICULO}
                 pageSize={10}
                 rowSelectionModel={selectedRows}
-                processRowUpdate={handleProcessRowUpdate}
                 onRowSelectionModelChange={handleSelectionChange}
                 sx={{
                   "& .MuiDataGrid-columnHeaderTitle": {
@@ -902,6 +844,47 @@ export default PedidosC;
 
 
 
+  const guardar = () => {
+    const pedido = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
+    const valores = Object.values(pedido);
+  
+    if (valores.length === 0) {
+      alert("No hay productos en el pedido");
+      return;
+    }
+  
+    const productoExistente = productosP.some((producto) => producto.ARTICULO === valores[0].ARTICULO);
+  
+    if (productoExistente) {
 
-          
+      const productosActuales = [...productosP];
+      setProductosP(productosActuales);
+      setSelectedRows([]);
+      localStorage.removeItem('pedidoTempG');
+      alert("ya tienes este producto en el pedido");
+
+    } else {
+      const productosActuales = [...productosP];
+      const nuevosProductos = [...productosActuales, ...valores];
+      const productosActualesP = Array.isArray(productosConDISP0) ? [...productosConDISP0] : [];
+      const nuevosProductosP = [...productosActualesP, ...valores];
+  
+      if (value === 0) {
+        setProductosP(nuevosProductos); 
+      }
+
+      if (value === 1) {
+        setProductosConDIPS0(nuevosProductosP);
+      }
+  
+      setOpenM(false);
+      setSelectedRows([]);
+      localStorage.removeItem('pedidoTempG');
+    }
+  };
+
+
+  
+    
+
 */

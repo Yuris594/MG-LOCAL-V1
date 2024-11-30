@@ -34,14 +34,6 @@ const style = {
   boxShadow: 24
 };
 
-const conseguirProductos = async () => {
-  const response = await fetch("/api/productos/listar_solo_para_mg", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  return response.json();
-};
-
 
 const CrearPedido = () => {
   const inputRef = useRef();
@@ -235,7 +227,13 @@ const CrearPedido = () => {
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
-        const datos = await conseguirProductos();
+        const response = await fetch("/api/productos/listar_solo_para_mg", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const datos = await response.json();
+
         if (datos) {
           setProductos(datos);
           setTablaProducto(datos);
@@ -255,12 +253,13 @@ const CrearPedido = () => {
 
   const filtrar = (terminoBusqueda) => {
     const termino = terminoBusqueda.toLowerCase();
-    const resultadosBusqueda = tablaProducto.filter((elemento) => {
+    const resultadosBusqueda = Array.isArray(tablaProducto) ? tablaProducto.filter((elemento) => {
       const valores = Object.values(elemento).map((value) =>
         value ? value.toString().toLowerCase() : ""
       );
       return valores.some((valor) => valor.includes(termino));
-    });
+    })
+    : [];
     setProductos(resultadosBusqueda);
   };
 
