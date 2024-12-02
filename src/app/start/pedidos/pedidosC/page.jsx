@@ -282,8 +282,15 @@ export const PedidosC = () => {
   };
 
   const processRowUpdate = (newRow) => {
+    const index = productosP.findIndex((row) => row.ARTICULO === newRow.ARTICULO);
+      if (index === -1) {
+        console.error("ARTICULO NO ENCONTRADO");
+        return newRow;
+      }
     const updatedRow = { ...newRow, isNew: false };
-    setProductosP(productosP.map((row) => (row.ARTICULO === newRow.ARTICULO ? updatedRow : row)));
+    const newProductosP = [...productosP];
+    newProductosP[index] = updatedRow;
+    setProductosP(newProductosP);
     return updatedRow;
   };
 
@@ -297,15 +304,15 @@ export const PedidosC = () => {
     { field: 'DESCRIPCION', headerName: 'Referencia', width: 500 },
     { field: 'PRECIO', headerName: 'Precio', width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true, type: 'number'
     },
     { field: 'CPed', headerName: 'Cant', width: 80, type: 'number', editable: true },
     { field: 'PORC_DCTO', headerName: 'D1', width: 70,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true, type: "number"
     },
     { field: 'DISP', headerName: 'Disp', width: 70, 
@@ -423,8 +430,8 @@ export const PedidosC = () => {
     { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
     { field: 'PRECIO', headerName: 'Precio', width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: 'CANTIDAD', headerName: 'Cant', width: 80, type: 'number', editable: true,
@@ -443,8 +450,8 @@ export const PedidosC = () => {
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
     { field: 'PRECIOMASIVA', headerName: 'Masiva', width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: 'PORC_DCTO', headerName: 'D1', width: 40 },

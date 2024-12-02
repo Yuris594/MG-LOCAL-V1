@@ -4,6 +4,7 @@
 import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, useMediaQuery } from "@mui/material";
 import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
 import { useCallback, useEffect, useRef, useState } from "react";
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BusinessIcon from "@mui/icons-material/Business";
 import Producto from "../../(producto)/producto/page";
@@ -67,8 +68,8 @@ const CrearPedido = () => {
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
     { field: "PRECIO", headerName: "PRECIO", width: 130, editable: true, type: "number",
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: "cantped", headerName: "CANT", width: 100, editable: true, editable: true, type: "number"
@@ -77,8 +78,8 @@ const CrearPedido = () => {
     { field: "PORC_DCTO", headerName: "D1", width: 70, editable: true, type: "number" },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, align: "right",
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70 },
@@ -311,8 +312,8 @@ const CrearPedido = () => {
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
     { field: "PRECIO", headerName: "PRECIO", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       },
     },
     { field: "CANTIDAD", headerName: "CANT", width: 80, 
@@ -331,8 +332,8 @@ const CrearPedido = () => {
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, align: "right",
     },
     { field: "PORC_DCTO", headerName: "D1", width: 40 },
@@ -397,6 +398,12 @@ const CrearPedido = () => {
               <Box display="flex" alignItems="center">
                 <BusinessIcon color="primary" sx={{ marginRight: 1 }} />
                 <Typography variant="body1">{clienteP?.CIUDAD}</Typography>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <Box display="flex" alignItems="center">
+                <EmojiPeopleIcon color="primary" sx={{ marginRight: 1 }} />
+                <Typography variant="body1">{clienteP?.VENDEDOR}</Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>

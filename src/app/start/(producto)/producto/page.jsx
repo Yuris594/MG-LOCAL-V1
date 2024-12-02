@@ -159,8 +159,8 @@ function Producto({ handleCloseB, onAgregarArticulo }) {
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
     { field: "PRECIO", headerName: "PRECIO", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       },
     },
     { field: "cantped", headerName: "CANT", width: 100,
@@ -179,21 +179,21 @@ function Producto({ handleCloseB, onAgregarArticulo }) {
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, 
     },
     { field: "PORC_DCTO", headerName: "D1", width: 130, editable: true },
     { field: "TOTAL_DISP", headerName: "DISP", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, 
     },
     { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130,
       valueFormatter: (value) => {
-        const precioRedondeado = Number(value).toFixed(0);
-        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+        const precio = parseFloat(value).toFixed(0);
+        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, 
     },
   ]
