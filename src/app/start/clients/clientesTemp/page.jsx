@@ -432,7 +432,7 @@ const ClientesTemp = () => {
                         paginationModel: { page: 0, pageSize: 10 },
                       },
                     }}
-                    />
+                  />
                 )}
               </Box>
             </CustomTabPanel>
@@ -450,9 +450,14 @@ const ClientesTemp = () => {
                     density="compact"
                     rows={facturas}
                     columns={columnsF}
+                    getRowId={(row) => row.ID}
                     pageSize={[5]}
                     rowSelectionModel={selectedRows}
-                    getRowId={(row) => row.ID}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
                   />
                 )}
               </Box>
