@@ -209,7 +209,7 @@ function Usuarios() {
                           paginationModel: { page: 0, pageSize: 12 },
                         },
                       }}
-                      pageSizeOptions={[12]}
+                      pageSizeOptions={[12, 36]}
                       getRowId={(row) => row.IdPer}
                       onRowSelectionModelChange={handleSelection}
                       rowSelectionModel={selectedRows}
