@@ -374,7 +374,6 @@ export const PedidosC = () => {
     setClienteP(body);
   };
 
-  /////////////////////////////////////////////////////////////////////////////////
   const handleCantidad = (ARTICULO, value) => {
     setCantidades({
       ...cantidades,
@@ -782,87 +781,3 @@ export default PedidosC;
 
 
 
-
-
-
-
-/*
-
-
-
-  const handleCloses = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenE(false);
-    setOpenS(false);
-  };
-  
-
-
-
-
-  Alertas
-
-  {openS ? (
-        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
-          <Alert onClose={handleCloses} severity="success" sx={{ width: "400px", height: "100px" }}>
-            Guardado exitosamente
-          </Alert>
-        </Snackbar>
-      ) : ( "" )}
-
-      {openE ? (
-        <Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} open={openS} autoHideDuration={2000} onClose={handleCloses}>
-          <Alert onClose={handleCloses} severity="error" sx={{ width: "400px", height: "100px" }}>
-            No se pudo guardar
-          </Alert>
-        </Snackbar>
-      ) : ( "" )}
-
-
-
-  const guardar = () => {
-    const pedido = JSON.parse(localStorage.getItem('pedidoTempG')) || {};
-    const valores = Object.values(pedido);
-  
-    if (valores.length === 0) {
-      alert("No hay productos en el pedido");
-      return;
-    }
-  
-    const productoExistente = productosP.some((producto) => producto.ARTICULO === valores[0].ARTICULO);
-  
-    if (productoExistente) {
-
-      const productosActuales = [...productosP];
-      setProductosP(productosActuales);
-      setSelectedRows([]);
-      localStorage.removeItem('pedidoTempG');
-      alert("ya tienes este producto en el pedido");
-
-    } else {
-      const productosActuales = [...productosP];
-      const nuevosProductos = [...productosActuales, ...valores];
-      const productosActualesP = Array.isArray(productosConDISP0) ? [...productosConDISP0] : [];
-      const nuevosProductosP = [...productosActualesP, ...valores];
-  
-      if (value === 0) {
-        setProductosP(nuevosProductos); 
-      }
-
-      if (value === 1) {
-        setProductosConDIPS0(nuevosProductosP);
-      }
-  
-      setOpenM(false);
-      setSelectedRows([]);
-      localStorage.removeItem('pedidoTempG');
-    }
-  };
-
-
-  
-    
-
-*/

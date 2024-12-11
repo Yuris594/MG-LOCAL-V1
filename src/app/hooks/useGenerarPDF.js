@@ -7,18 +7,22 @@ import 'jspdf-autotable';
 import { format } from 'date-fns';
 
 
-const generarCodigoBarras = (texto) => {
-    const canvas = document.createElement('canvas');
-    JsBarcode(canvas, texto, { format: "CODE128" });
-    return canvas.toDataURL("image/png"); 
+  const generarCodigoBarras = (texto) => {
+    if (typeof window !== 'undefined') {
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, texto, { format: "CODE128" });
+      return canvas.toDataURL("image/png"); 
+    }
+    return null;
   };
 
   const useGenerarPDF = (clienteP = {}, productosP = [], sumaSaldoTotalDESC = {}) => {
-    const [pdfDataUrl, ] = useState(null);
     const [fecha] = useState(format(new Date(), 'dd/MM/yyyy HH:mm:ss'));
     const codigoBarras = generarCodigoBarras(clienteP?.PEDIDO); 
 
     const generarPDF = () => {
+        if (typeof window === 'undefined') return;
+
         const pdf = new jsPDF('portrait', 'pt', 'letter');
         const columnsParaPDF = [
           { field: 'ARTICULO', headerName: 'CODIGO', width: 200 },
@@ -115,7 +119,7 @@ const generarCodigoBarras = (texto) => {
 
         pdf.output('dataurlnewwindow');
     }
-  return { generarPDF, pdfDataUrl };
+  return { generarPDF };
 }
 
 
