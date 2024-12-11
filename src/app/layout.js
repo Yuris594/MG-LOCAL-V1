@@ -1,6 +1,7 @@
 
 import "./globals.css";
 import theme from "./style";
+import Internet from "./internet";
 import { Inter, Lora } from "next/font/google"
 import { AuthProvider } from "@/context/authContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <AuthProvider> 
           <ThemeProvider theme={theme}>
+            <Internet />
             <CssBaseline />
               {children} 
           </ThemeProvider>

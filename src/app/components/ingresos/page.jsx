@@ -77,10 +77,7 @@ const registro = async (cedula) => {
 const Ingresos = () => {
   const inputRef = useRef(null);
   const [cedula, setCedula] = useState('');
-  const [checked, setChecked] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
-
-
 
 
   useEffect(() => {
