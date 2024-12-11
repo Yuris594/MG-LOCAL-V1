@@ -17,6 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { useAuth } from "@/context/authContext";
 import Grid from "@mui/material/Grid2";
 import Link from "next/link";
+import { Conexion } from "@/conexion";
 
 
 const style = {
@@ -223,7 +224,7 @@ const CrearPedido = () => {
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
-        const response = await fetch("/api/productos/listar_solo_para_mg", {
+        const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

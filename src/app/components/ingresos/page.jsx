@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Swal from "sweetalert2";
-import Image from "next/image";
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
 const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
-import { AppBar, Box, Button, ButtonGroup, Container, createTheme, CssBaseline, Paper, Slide, TextField, ThemeProvider, Toolbar, Typography, Zoom } from "@mui/material";
+import { AppBar, Box, Button, ButtonGroup, CssBaseline, Paper, TextField, Toolbar } from "@mui/material";
+import { Conexion } from "@/conexion";
 
 
 
@@ -60,7 +60,7 @@ const noExiste = () => {
 
 const registro = async (cedula) => {
   try {
-    const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
+    const response = await fetch(Conexion.url + `/control_entradas/documento/${cedula}`, {
       method: "POST",
       body: JSON.stringify(cedula), 
       headers: { "Content-Type": "application/json" }
@@ -163,7 +163,8 @@ const ingreso = async (e) => {
   };
 
   return (
-      <Box sx={{ height: "110vh", display: "flex", flexDirection: "column" }}>
+    <>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
         <AppBar position="static" sx={{ bgcolor: "#262626", height: "80px" }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
             <Button component={Link} href="/" sx={{ color: "white" }}>
@@ -171,9 +172,10 @@ const ingreso = async (e) => {
             </Button>
           </Toolbar>
         </AppBar>
+      </Box>
       
       <CssBaseline />
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh", backgroundColor: "#f4f4f4",  }}>     
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", mt: 5 }}>     
           <Box sx={{  display: "flex", height: "530px", boxShadow: 3, borderRadius: "15px", backgroundColor: "white"  }}>
               <Paper className="" component="main">
                 <Box sx={{ padding: 2 }}>
@@ -252,7 +254,7 @@ const ingreso = async (e) => {
               </Paper>
           </Box>
         </Box> 
-      </Box>
+    </>
   );
 };
 

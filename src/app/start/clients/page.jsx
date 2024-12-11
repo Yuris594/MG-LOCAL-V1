@@ -4,13 +4,9 @@ import Link from "next/link";
 import Box from "@mui/material/Box";
 import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
-import InputBase from "@mui/material/InputBase";
 import { useAuth } from "@/context/authContext";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { useCallback, useEffect, useState } from "react";
@@ -34,7 +30,7 @@ const columns = [
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch("/api/clientes/listar", {
+  const response = await fetch(Conexion.url + "/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

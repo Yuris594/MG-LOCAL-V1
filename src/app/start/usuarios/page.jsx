@@ -1,17 +1,16 @@
 "use client";
 
-import { Box, Button, IconButton, InputBase, LinearProgress, Modal, Paper, TextField, useMediaQuery } from "@mui/material";
+import { Box, Button, LinearProgress, Modal, TextField, useMediaQuery } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import Banner from "@/app/components/banner/banner";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Registro from "./registrar/page";
+import Banner from "@/app/components/banner/banner";
 import UsuarioActualizar from "./actualizar/page";
-import Swal from "sweetalert2";
-import Grid from "@mui/material/Grid2";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+import Registro from "./registrar/page";
+import Grid from "@mui/material/Grid2";
 import { Conexion } from "@/conexion";
+import Swal from "sweetalert2";
 
 const styles = {
   position: "absolute",
@@ -46,7 +45,7 @@ const columns = [
 
 
 const obtenerUsuario = async () => {
-  const response = await fetch('/api/usuarios/listar', {
+  const response = await fetch(Conexion.url + '/usuarios/listar', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

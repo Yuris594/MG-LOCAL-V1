@@ -5,11 +5,12 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid2";
 import { DataGrid } from "@mui/x-data-grid";
 import Banner from "@/app/components/banner/banner";
+import CheckIcon from '@mui/icons-material/Check';
 import SearchIcon from '@mui/icons-material/Search';
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
- useMediaQuery, useTheme, LinearProgress, 
- Typography} from "@mui/material";
+ useMediaQuery, useTheme, LinearProgress, Typography} from "@mui/material";
+import { Conexion } from "@/conexion";
 
 
 function CustomTabPanel(props) {
@@ -146,23 +147,27 @@ const columnsP = [
 
 
 const obtenerFacturas = async (seleccionarArticulo) => {
-  const response = await fetch(`/api/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json", },
   });
   if (!response.ok) {
     if (response.status === 404) {
       console.log("No hay facturas para este producto.");
       return [];
     }
+    throw new Error(`Error en la solicitud: ${response.status}`);
   }
-  return response.json();
+  try {
+    return await response.json();
+  } catch (error) {
+    console.error("Error al analizar JSON:", error);
+    throw new Error("La respuesta no tiene un formato JSON válido.");
+  }
 };
 
 const obtenerPedidos = async (seleccionarArticulo) => {
-  const response = await fetch(`/api/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -174,7 +179,12 @@ const obtenerPedidos = async (seleccionarArticulo) => {
       return [];
     }
   }
-  return response.json();
+  try {
+    return await response.json();
+  } catch (error) {
+    console.error("Error al analizar JSON:", error);
+    throw new Error("La respuesta no tiene un formato JSON válido.");
+  }
 };
 
 
@@ -196,7 +206,7 @@ const BuscarReferencia = () => {
       try {
         let response;
         if (criterio === "ARTICULO") {
-          response = await fetch(`/api/productos/${valorBusqueda}`, {
+          response = await fetch(Conexion.url + `/productos/${valorBusqueda}`, {
             method: "GET",
             headers: { "Content-Type" : "application/json" }
           });
@@ -270,7 +280,7 @@ const BuscarReferencia = () => {
 
         <Grid size={12}>
           <Box display= "flex" flexDirection= {isSmallScreen ? "column" : "row"} alignItems= "center" gap={2} sx={{ width: "100%" }}>
-            <h3 style={{ margin: 0, color: "#920b0d" }}>
+            <h3 style={{ margin: 0, color: "#db2093" }}>
               {seleccionarArticulo.DESCRIPCION}
             </h3>
             <Box display="flex" alignItems="center" gap={2} sx={{ marginLeft: isSmallScreen ? 0 : "auto" }}>
@@ -293,7 +303,7 @@ const BuscarReferencia = () => {
               />
 
               <IconButton onClick={consultarArticulo}>
-                <SearchIcon sx={{ fontSize: 45 }} color="success" />
+                <CheckIcon sx={{ fontSize: 45 }} color="success" />
               </IconButton>
             </Box>
           </Box>
@@ -302,14 +312,14 @@ const BuscarReferencia = () => {
         <Grid size={12}>
           <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+              <Tabs value={value} onChange={handleChanges} variant="fullWidth" aria-label="full width tabs example">
                 <Tab label="Articulos" {...a11yProps(0)} />
                 <Tab label={`Pedidos: ${pedidos.length}`} {...a11yProps(1)} onClick={conseguirPedidos} />
                 <Tab label={`Facturas: ${facturas.length}`} {...a11yProps(2)} onClick={conseguirFacturas} />
               </Tabs>
             </Box>
 
-            <CustomTabPanel component={Box} value={value} index={0}>
+            <CustomTabPanel component={Box} value={value} index={0} dir={theme.direction}>
               <Box sx={{ width: "100%", height: 950 }}>
                 <DataGrid
                   rows={productos}
@@ -331,7 +341,7 @@ const BuscarReferencia = () => {
               </Box>
             </CustomTabPanel>
 
-            <CustomTabPanel component={Box} value={value} index={1}>
+            <CustomTabPanel component={Box} value={value} index={1} dir={theme.direction}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
@@ -360,7 +370,7 @@ const BuscarReferencia = () => {
               )}
             </CustomTabPanel>
 
-            <CustomTabPanel component={Box} value={value} index={2}>
+            <CustomTabPanel component={Box} value={value} index={2} dir={theme.direction}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />

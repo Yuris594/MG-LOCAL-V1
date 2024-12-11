@@ -22,7 +22,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import StoreIcon from '@mui/icons-material/Store';
+import PrintIcon from '@mui/icons-material/Print';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import StarIcon from '@mui/icons-material/Star';
@@ -120,7 +120,7 @@ export const PedidosC = () => {
 
   const conseguirProductos = async () => {
     try {
-      const response = await fetch("/api/productos/listar_solo_para_mg", {
+      const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type" : "application/json" },
       });
@@ -138,7 +138,7 @@ export const PedidosC = () => {
 
   const conseguirProductosP = async () => {
     try {
-      const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+      const response = await fetch(Conexion.url +`/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application" },
       });
@@ -155,7 +155,7 @@ export const PedidosC = () => {
 
   const conseguirProductosPendientes = async () => {
     try {
-      const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+      const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
       });
@@ -179,7 +179,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch("/api/pedido/crear/", {
+      const response = await fetch(Conexion.url + "/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }
@@ -204,7 +204,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch("/api/pedido/crear/", {
+      const response = await fetch(Conexion.url + "/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }

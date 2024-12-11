@@ -65,7 +65,7 @@ const columns = [
 ];
 
 const conseguirPedidos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
+  const response = await fetch(Conexion.url + "/pedidos/listar", {
     next: { revalidate: 60 },
     method: "GET",
     headers: { "Content-Type" : "application/json" }

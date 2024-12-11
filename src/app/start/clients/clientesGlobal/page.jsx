@@ -26,7 +26,7 @@ import Box from "@mui/material/Box";
 
 const conseguirClientes = async () => {
     try {
-        const response = await fetch("/api/clientes/listar", {
+        const response = await fetch(Conexion.url + "/clientes/listar", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         });

@@ -1,47 +1,16 @@
 'use client';
 
-import { AppBar, Box, Button, Container, createTheme, CssBaseline, Paper, Snackbar, 
-        TextField, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, Box, Button, Paper, Snackbar, TextField, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { useAuth } from "@/context/authContext";
+import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import MuiAlert from "@mui/material/Alert";
-import { useTheme } from "@mui/material/styles";
+import { Conexion } from "@/conexion";
 import { useState } from "react";
 import * as React from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
-import { Global } from "@/conexion";
 
-
-const theme = createTheme({
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          boxShadow: "0px, 3px, 5px rgba(0,0,0,0.2)",
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          boxShadow: "0px 3px 5px rgba(0,0,0,0.2)",
-          transition: "0.3s",
-          "&:hover": {
-            boxShadow: "0px 5px 10px rgba(0,0,0,0.4)",
-            backgroundColor: "#388e3c",
-          },
-        },
-      },
-    },
-  },
-});
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return (
@@ -60,7 +29,7 @@ export function Copyright(props) {
 }
 
 const Iniciar = async (usuario, clave) => {
-  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
+  const response = await fetch(Conexion.url + `/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -117,7 +86,7 @@ function Login() {
 
   return (
       <>
-        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
             <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
               <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
@@ -127,47 +96,47 @@ function Login() {
               </Button>
             </Toolbar>
           </AppBar>
-
-          <CssBaseline />
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh", backgroundColor: "#f4f4f4" }}>
-              <Paper component="main" elevation={3} sx={{ width: "380px", padding: "20px", borderRadius: "15px", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: "white", boxShadow: 3 }}>
-                <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "100px", sm: "200px", md: "300px" }, height: "auto" }}>
-                  <img src="/logo_miguelgomez.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
-                </Box>
-                
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                  <TextField
-                    error={error}
-                    id="usuario"
-                    label="Usuario"
-                    margin="normal"
-                    fullWidth
-                    name="PER_Usuario"
-                    value={usuario}
-                    onChange={(e) => setUsuario(e.target.value)}
-                  />
-
-                  <TextField
-                    error={error}
-                    margin="normal"
-                    required
-                    fullWidth
-                    type="password"
-                    name="PER_Clave"
-                    id="contraseña"
-                    label="Contraseña"
-                    value={clave}
-                    onChange={(e) => setClave(e.target.value)}
-                  />
-
-                  <Button type="submit" fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
-                    Iniciar sesión
-                  </Button>
-                </Box>
-              <Copyright sx={{ mt: 3, mb: 1 }} />
-            </Paper>
-          </Box>
         </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%",  mt: 5 }}>
+          <Paper component="main" elevation={3} sx={{ width: "380px", padding: "20px", borderRadius: "15px", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: "white", boxShadow: 3 }}>
+            <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "100px", sm: "200px", md: "300px" }, height: "auto" }}>
+              <img src="/logo_miguelgomez.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+            </Box>
+            
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <TextField
+                error={error}
+                id="usuario"
+                label="Usuario"
+                margin="normal"
+                fullWidth
+                name="PER_Usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+              />
+
+              <TextField
+                error={error}
+                margin="normal"
+                required
+                fullWidth
+                type="password"
+                name="PER_Clave"
+                id="contraseña"
+                label="Contraseña"
+                value={clave}
+                onChange={(e) => setClave(e.target.value)}
+              />
+
+              <Button type="submit" fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
+                Iniciar sesión
+              </Button>
+            </Box>
+          <Copyright sx={{ mt: 3, mb: 1 }} />
+        </Paper>
+      </Box>
+      
 
         {open ? (
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

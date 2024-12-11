@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 
 const registro = async (form) => {
-  const response =  await fetch( "/api/usuarios/nuevo", {
+  const response =  await fetch(Conexion.url + "/usuarios/nuevo", {
     method: "POST",
     body: JSON.stringify(form), 
     headers: { "Content-Type": "application/json" }
