@@ -80,7 +80,7 @@ const bull = (
                                 ........Miguelgomoz&cia@hotmail.com...........<br />
                                 ........https://www.miguelgomez.com.co/.......<br />
                                 ----------------------------------------------<br />
-                                ........ Servicio -  .......
+                                ........ Servicio -  {auth?.PER_Nom}.......
                             </Typography>
                         </CardContent>
 
