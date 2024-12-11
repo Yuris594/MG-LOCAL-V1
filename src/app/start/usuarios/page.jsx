@@ -45,7 +45,7 @@ const columns = [
 
 
 const obtenerUsuario = async () => {
-  const response = await fetch(Conexion.url + '/usuarios/listar', {
+  const response = await fetch('/api/usuarios/listar', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -132,6 +132,11 @@ function Usuarios() {
       setAuthLoading(false);
         if (!auth || auth.IdDiv !== 8) {
           router.push('/start');
+          Swal.fire({
+            tite: "No Autorizado.",
+            text: "Usted No Tiene Autorización Para Visualizar Esta Pagina!!",
+            icon: "info",
+          })
           }
         }
       }, [auth, router]);

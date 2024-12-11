@@ -1,12 +1,12 @@
 'use client';
 
-import { Conexion } from "@/conexion";
 import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { Conexion } from "@/conexion";
 import { useState } from "react";
 
 const registro = async (form) => {
-  const response =  await fetch(Conexion.url + "/usuarios/nuevo", {
+  const response =  await fetch("/api/usuarios/nuevo", {
     method: "POST",
     body: JSON.stringify(form), 
     headers: { "Content-Type": "application/json" }

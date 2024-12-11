@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Conexion } from "@/conexion";
 
 const actualizar = async (form) => {
-  const response = await fetch(Conexion.url + "/usuarios/actualizar/", {
+  const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
