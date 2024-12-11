@@ -133,7 +133,7 @@ function Usuarios() {
         if (!auth || auth.IdDiv !== 8) {
           router.push('/start');
           Swal.fire({
-            tite: "No Autorizado.",
+            title: "No Autorizado.",
             text: "Usted No Tiene Autorización Para Visualizar Esta Pagina!!",
             icon: "info",
           })
