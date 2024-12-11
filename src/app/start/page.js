@@ -183,11 +183,11 @@ const style = {
       </Box>
 
       <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby" : "basic-button", }}>
-        <MenuItem onClick={handleCloseM} component={Link} href="/start/productos" variant="body1" sx={{ fontSize: "15px" }}>
-          Productos Por Bodega
-        </MenuItem>
         <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
-          Productos-MG
+          Productos
+        </MenuItem>
+        <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" variant="body1" sx={{ fontSize: "15px" }}>
+          Buscar Referencias
         </MenuItem>
       </Menu>
     </>

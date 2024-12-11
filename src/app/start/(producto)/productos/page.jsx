@@ -4,13 +4,9 @@ import { Backdrop, CircularProgress, LinearProgress, Tab, useMediaQuery } from "
 import { useCallback, useRef, useEffect, useState } from "react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Autocomplete from "@mui/material/Autocomplete";
-import SearchIcon from "@mui/icons-material/Search";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import InputBase from "@mui/material/InputBase";
 import { DataGrid } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 import Tabs from "@mui/material/Tabs";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";

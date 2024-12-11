@@ -1,6 +1,6 @@
 'use client';
 
-import { AppBar, Box, Button, Container, createTheme, CssBaseline, Slide, Snackbar, 
+import { AppBar, Box, Button, Container, createTheme, CssBaseline, Snackbar, 
         TextField, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -76,26 +76,15 @@ const Iniciar = async (usuario, clave) => {
 };
 
 export default function Login() {
+  const theme = useTheme();
   const router = useRouter();
   const { login, auth } = useAuth();
-  const [saved, setSaved] = useState();
   const [clave, setClave] = useState('');
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState('');
-  const [checked, setChecked] = useState(false);
-  const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setChecked(true);
-    }, 500);
-    return () => clearTimeout(timer)
-  }, []);
-
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,19 +92,12 @@ export default function Login() {
       const resultado = await Iniciar(usuario, clave);
         if (resultado.error) {
           setError(true);
-          setSaved(false);
           setOpenE(true);
-          
         } else {
           setOpen(true);
           const tokens = resultado;
           login(tokens);
-          
-          if(tokens.IdDiv === 8) {  //En caso de ingresar los demas usuarios pasara de ser IdDiv a Roles
-            router.push("../start");
-          } else {
-            router.push("../pages");
-          }
+          router.push("../start");
         }
     } catch (error) {
           setError(true);
@@ -130,103 +112,85 @@ export default function Login() {
       return;
     }
     setOpen(false);
-    setError(false);
+    setOpenE(false);
   };
 
   return (
       <>
         <Box sx={{ height: "90vh", display: "flex", flexDirection: "column" }}>
-          <Slide direction="down" in={checked} mountOnEnter unmountOnExit>
-            <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
-              <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
-                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
-                <Button component={Link} href="" sx={{ color: "white" }}
-                  title="Control de entredas y salidas de los empleados">
-                  <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
-                </Button>
-              </Toolbar>
-            </AppBar>
-          </Slide>
+          <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
+              <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
+              <Button component={Link} href="" sx={{ color: "white" }}
+                title="Control de entredas y salidas de los empleados">
+                <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
+              </Button>
+            </Toolbar>
+          </AppBar>
 
           <CssBaseline />
-            <ThemeProvider theme={theme}>
-              <Container component="main" maxWidth={isSmallScreen ? "sm" : "xs"} sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: isSmallScreen ? 3 : 6, mb: 2 }}>
-                <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", height: 350 }}>
-                  <Image
-                    className="logo"
-                    src="/logo_miguelgomez.png"
-                    width={isSmallScreen ? 200 : 250}
-                    height={isSmallScreen ? 120 : 150}
-                    alt="Logo"
-                    priority={true}
+          <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth={isSmallScreen ? "sm" : "xs"} sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: isSmallScreen ? 3 : 6, mb: 2 }}>
+              <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", height: 350 }}>
+                <Image
+                  className="logo"
+                  src="/logo_miguelgomez.png"
+                  width={isSmallScreen ? 200 : 250}
+                  height={isSmallScreen ? 120 : 150}
+                  alt="Logo"
+                  priority={true}
+                />
+                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                  <TextField
+                    error={error}
+                    id="usuario"
+                    label="Usuario"
+                    margin="normal"
+                    fullWidth
+                    name="PER_Usuario"
+                    value={usuario}
+                    onChange={(e) => setUsuario(e.target.value)}
                   />
-                  {saved == "saved" ? (
-                    <HowToRegIcon sx={{ color: "green" }}></HowToRegIcon>
-                  ) : (
-                    ""
-                  )}
-                  {saved == "error" ? (
-                    <HighlightOffIcon sx={{ color: "red" }}></HighlightOffIcon>
-                  ) : (
-                    ""
-                  )}
-                  
-                  
-                  <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                    <TextField
-                      error={error}
-                      id="usuario"
-                      label="Usuario"
-                      margin="normal"
-                      fullWidth
-                      name="PER_Usuario"
-                      value={usuario}
-                      onChange={(e) => setUsuario(e.target.value)}
-                    />
 
-                    <TextField
-                      error={error}
-                      margin="normal"
-                      required
-                      fullWidth
-                      type="password"
-                      name="PER_Clave"
-                      id="contraseña"
-                      label="Contraseña"
-                      value={clave}
-                      onChange={(e) => setClave(e.target.value)}
-                    />
+                  <TextField
+                    error={error}
+                    margin="normal"
+                    required
+                    fullWidth
+                    type="password"
+                    name="PER_Clave"
+                    id="contraseña"
+                    label="Contraseña"
+                    value={clave}
+                    onChange={(e) => setClave(e.target.value)}
+                  />
 
-                      <Button type="submit" variant="contained" color="success" 
-                          sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: isSmallScreen ? "100%" : 380 }}>
-                            Iniciar sesión
-                      </Button>
-                    </Box>
-                  </Box>
-                  
-                  <Copyright sx={{ mt: 3, mb: 1 }} />
-
-                    {/* Snackbar para mostrar mensajes */}
-                    {open ? (
-                      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                        <Alert onClose={handleClose} variant="outlined" severity="success" sx={{ width: "100%" }}>
-                          Usuario identificado.
-                        </Alert>
-                      </Snackbar>
-                    ) : ( "" )}
-
-                    {openE ? ( 
-                      <Snackbar open={openE} autoHideDuration={6000} onClose={handleClose}>
-                        <Alert onClose={handleClose} variant="outlined" severity="error" sx={{ width: "100%" }}>
-                          El usuario o la contraseña son incorrectos.
-                        </Alert>
-                      </Snackbar>
-                    ) : ( "" )}
-              
+                  <Button type="submit" variant="contained" color="success" sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: isSmallScreen ? "100%" : 380 }}>
+                    Iniciar sesión
+                  </Button>
+                </Box>
+              </Box>
+              <Copyright sx={{ mt: 3, mb: 1 }} />
             </Container>
           </ThemeProvider>
         </Box>
-      </>
+
+        {open ? (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} variant="outlined" severity="success" sx={{ width: "100%" }}>
+              {`¡Hola, ${auth.PER_Nom}! Tu sesión ha comenzado.`}
+            </Alert>
+          </Snackbar>
+        ) : ( "" )}
+
+        {openE ? ( 
+          <Snackbar open={openE} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} variant="outlined" severity="error" sx={{ width: "100%" }}>
+              {'No se pudo iniciar sesión. Verifica tus credenciales.'}
+            </Alert>
+          </Snackbar>
+        ) : ( "" )}
+    </>
   );
 }
 

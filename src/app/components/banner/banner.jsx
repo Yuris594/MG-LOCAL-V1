@@ -158,11 +158,11 @@ const Banner = () => {
           onClose={handleCloseM}
           MenuListProps={{ "aria-labelledby": "basic-button" }}
           >
-          <MenuItem onClick={handleCloseM} component={Link} href="/start/productos">
-            Productos Por Bodega
-          </MenuItem>
           <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG">
-            Productos-MG
+            Productos
+          </MenuItem>
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" >
+            Buscar Referencias
           </MenuItem>
         </Menu>
 
