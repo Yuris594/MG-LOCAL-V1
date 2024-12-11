@@ -11,7 +11,6 @@ import Grid from "@mui/material/Grid2";
 import { Conexion } from "@/conexion";
 
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import Producto from "../../(producto)/producto/page";
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
 import Banner from "@/app/components/banner/banner";
 import PropTypes from "prop-types";
@@ -24,7 +23,6 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StoreIcon from '@mui/icons-material/Store';
-import PrintIcon from '@mui/icons-material/Print';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import StarIcon from '@mui/icons-material/Star';
@@ -97,7 +95,6 @@ export const PedidosC = () => {
   const [productosConDISP0, setProductosConDIPS0] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   
-  const [openB, setOpenB] = useState(false);
   const [openM, setOpenM] = useState(false);
   const [openS, setOpenS] = useState(false);
   const [openE, setOpenE] = useState(false); 
@@ -110,8 +107,6 @@ export const PedidosC = () => {
       setValue(newValue);
   };
 
-  const handleOpenB = () => setOpenB(true);
-  const handleCloseB = () => setOpenB(false);
   const handleOpenM = () => setOpenM(true);
   const handleCloseM = () => setOpenM(false);
 
@@ -426,15 +421,15 @@ export const PedidosC = () => {
 
   const columnsM = [
     { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
-    { field: 'DESCRIPCION', headerName: 'Referencia', width: 500, editable: true },
-    { field: 'SUBLINEA', headerName: 'Sublinea', width: 300 },
-    { field: 'PRECIO', headerName: 'Precio', width: 130,
+    { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500, editable: true },
+    { field: 'SUBLINEA', headerName: 'SUBLINEA', width: 300 },
+    { field: 'PRECIO', headerName: 'PRECIO', width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
-    { field: 'CANTIDAD', headerName: 'Cant', width: 80, type: 'number', editable: true,
+    { field: 'CANTIDAD', headerName: 'CANT', width: 80, type: 'number', editable: true,
       renderCell: (params) => {
         return (
           <TextField 
@@ -448,16 +443,16 @@ export const PedidosC = () => {
       },
     },
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
-    { field: 'PRECIOMASIVA', headerName: 'Masiva', width: 130,
+    { field: 'PRECIOMASIVA', headerName: 'MASIVA', width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `$${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: 'PORC_DCTO', headerName: 'D1', width: 40 },
-    { field: 'TOTAL_DISP', headerName: 'Disp', width: 70, },
-    { field: 'UNIDAD_EMPAQUE', headerName: 'Emp', width: 80 },
-    { field: 'EXIST_REAL', headerName: 'Existreal', width: 90 },
+    { field: 'TOTAL_DISP', headerName: 'DISP', width: 70, },
+    { field: 'UNIDAD_EMPAQUE', headerName: 'EMP', width: 80 },
+    { field: 'EXIST_REAL', headerName: 'EXISTREAL', width: 90 },
   ];
 
   return (
@@ -486,9 +481,6 @@ export const PedidosC = () => {
 
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}>
                     {" "}<StarIcon />{" "}
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#aeefff" }} onClick={handleOpenB}>
-                    {" "}<StoreIcon />{" "}
                   </Button>
                   <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpenM}>
                     MG
@@ -735,15 +727,6 @@ export const PedidosC = () => {
       </Box>
 
 
-      <Modal
-        open={openB}
-        onClose={handleCloseB}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
-        <Box sx={style}>{" "}<Producto  handleCloseB={handleCloseB}  />{" "}</Box>
-      </Modal>
-
-         
       <Modal
         open={openM}
         onClose={handleCloseM}

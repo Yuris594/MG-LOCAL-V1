@@ -424,7 +424,7 @@ const ClientesTemp = () => {
                     density="compact"
                     rows={pedidos}
                     columns={columnsP}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[5, 10]}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.PEDIDO}
                     initialState={{
@@ -451,7 +451,7 @@ const ClientesTemp = () => {
                     rows={facturas}
                     columns={columnsF}
                     getRowId={(row) => row.ID}
-                    pageSize={[5]}
+                    pageSize={[5, 10]}
                     rowSelectionModel={selectedRows}
                     initialState={{
                       pagination: {
@@ -476,7 +476,7 @@ const ClientesTemp = () => {
                     density="compact"
                     rows={cartera}
                     columns={columnsC}
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[5, 10]}
                     rowSelectionModel={selectedRows}
                     getRowId={(row) => row.NUMDOC}
                     initialState={{

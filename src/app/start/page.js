@@ -7,60 +7,46 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth }  from "@/context/authContext";
 import HomeIcon from "@mui/icons-material/Home";
-import { useRouter } from "next/navigation";
+import { Lora } from "next/font/google";
 import { useState } from "react";
 import Image from "next/image";
+import Swal from "sweetalert2";
 import Link from "next/link";
-import { Lora } from "next/font/google";
 
-const inter = Lora({ subsets: ['latin'] })
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxHeight: "90vh",
-  maxWidth: "80vw",
-  overflowY: "auto",
-  overflowX: "hidden",
-  padding: "16px",
-  bgcolor: "#ffffff",
-  borderRadius: "8px",
-  boxShadow: 24,
-  textAlign: "center",
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
-
+  const inter = Lora({ subsets: ['latin'] })
 
   const Inicio = () => {
-    const router = useRouter();
     const { auth, logout } = useAuth();
-    const handleOpen = () => setOpen(true);
-    const [open, setOpen] = useState(false);
-    const handleClose = () => setOpen(false);
     const [anchor, setAnchor] = useState(null);
     const [productos, setProductos] = useState(false);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-      const handleClick = (event) => {
-        setProductos(true);
-        setAnchor(event.currentTarget);
-      };
+    const handleClick = (event) => {
+      setProductos(true);
+      setAnchor(event.currentTarget);
+    };
 
-      const handleCloseM = () => {
-        setProductos(false);
-        setAnchor(null);
-      };
+    const handleCloseM = () => {
+      setProductos(false);
+      setAnchor(null);
+    };
 
-      const cerrarSesion = () => {
-        logout()
-        router.push("/")
-      };
+    const cerrarSesion = () => {
+      Swal.fire({
+        title: "¿Quieres Terminar La Sesión?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#28ee32",
+        cancelButtonColor: "#f12260",
+        confirmButtonText: "Aceptar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          logout();
+        }
+      })
+    };
 
 
   const page = [
@@ -102,14 +88,10 @@ const style = {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" sx={{ bgcolor: "#262626" }}>
             <Toolbar>
-              <Image
-                src="/logo2.png"
-                width={isSmallScreen ? 70 : 80}
-                height={isSmallScreen ? 35 : 40}
-                alt="imagenmg"
-                priority={true}
-              />
-
+              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "50px", sm: "80px", md: "100px" }, height: "auto" }}>
+                <img src="/logo2.png" alt="imagenmg" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+              </Box>
+              
               <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
 
               <Button component={Link} href="../start" color="inherit">
@@ -120,50 +102,27 @@ const style = {
                 <PersonIcon fontSize="large" /> {auth && auth.PER_Nom}
               </Button>
 
-              <Button color="inherit" onClick={handleOpen}>
+              <Button color="inherit" onClick={cerrarSesion}>
                 <LogoutIcon fontSize="large" />
               </Button>
             </Toolbar>
           </AppBar>
         </Box>
 
-          <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-            <Box sx={style}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                ¿Estas seguro que quiere salir?
-              </Typography>
-            <Box>
-              <Button sx={{ bgcolor: "red" }} variant="contained" onClick={cerrarSesion}>
-                SALIR
-              </Button>
-            </Box>
-          </Box>
-        </Modal>
-
         <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: isSmallScreen ? "column" : "row", padding: isSmallScreen ? 2 : 0, mt: isSmallScreen ? 2 : 0 }}>
           <Paper id="wave" sx={{ width: isSmallScreen ? "90%" : "40%", maxWidth: "600px", height: isSmallScreen ? 600 : 750, border: 6, overflow: "auto",}}> 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: "#262626", borderColor: "#262626", padding: 2 }}>
-              <Image
-                src="/logo2.png"
-                width={isSmallScreen ? 100 : 200}
-                height={isSmallScreen ? 55 : 110}
-                alt="imagenmg"
-                priority={true}
-              />
+              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "100px", sm: "150px", md: "230px" }, height: "auto" }}>
+                <img src="/logo2.png" alt="imagenmg" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+              </Box>
               <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
             <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
-              <Image
-                src="/truperLogo.png"
-                width={isSmallScreen ? 100 : 150}
-                height={isSmallScreen ? 55 : 110}
-                alt="imagentru"
-                priority={true} 
-              />
-              
-            <Divider sx={{ width: "80%", my: 2 }} />
-
+              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "100px", sm: "150px", md: "200px" }, height: "auto" }}>
+                <img src="/truperLogo.png" alt="imagenmg" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+              </Box>
+              <Divider sx={{ width: "80%", my: 2 }} />
             <List sx={{ width: "100%", padding: 0 }}>
               {page.map((link) => (
                 <ListItem disablePadding key={link.title}>

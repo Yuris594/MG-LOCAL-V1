@@ -11,6 +11,7 @@ import { useAuth } from "@/context/authContext";
 import { useState } from "react";
 import Navbar from "./navbar";
 import Link from "next/link";
+import Swal from "sweetalert2";
 import { Lora } from "next/font/google";
 
 const inter = Lora({ subsets: ['latin'] })
@@ -33,11 +34,7 @@ const style = {
 };
 
 const Banner = () => {
-  const router = useRouter();
   const { auth, logout } = useAuth();
-  const handleOpen = () => setOpen(true);
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [productos, setProductos] = useState(false);
 
@@ -61,9 +58,19 @@ const Banner = () => {
   };
 
   const cerrarSesion = () => {
-    logout()
-    router.push("/")
-  }
+    Swal.fire({
+      title: "¿Quieres Terminar La Sesión?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#28ee32",
+      cancelButtonColor: "#f12260",
+      confirmButtonText: "Aceptar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    })
+  };
 
   const page = [
     {
@@ -128,28 +135,11 @@ const Banner = () => {
                 <PersonIcon />
                 {auth && auth.PER_Nom}
               </Button>
-              <Button color="inherit" onClick={handleOpen}>
+              <Button color="inherit" onClick={cerrarSesion}>
                 <LogoutIcon />
               </Button>
           </Toolbar>
         </AppBar>
-
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description" >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              ¿Estas seguro que quiere salir?
-            </Typography>
-            <Box>
-              <Button sx={{ bgcolor: "red" }} variant="contained" onClick={cerrarSesion}>
-                SALIR
-              </Button>
-            </Box>
-          </Box>
-        </Modal>
 
         <Menu
           id="basic-menu"

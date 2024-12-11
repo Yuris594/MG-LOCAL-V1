@@ -1,6 +1,6 @@
 'use client';
 
-import { AppBar, Box, Button, Container, createTheme, CssBaseline, Snackbar, 
+import { AppBar, Box, Button, Container, createTheme, CssBaseline, Paper, Snackbar, 
         TextField, ThemeProvider, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -75,7 +75,7 @@ const Iniciar = async (usuario, clave) => {
   return response.json();
 };
 
-export default function Login() {
+function Login() {
   const theme = useTheme();
   const router = useRouter();
   const { login, auth } = useAuth();
@@ -117,11 +117,11 @@ export default function Login() {
 
   return (
       <>
-        <Box sx={{ height: "90vh", display: "flex", flexDirection: "column" }}>
+        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
           <AppBar position="static" sx={{ bgcolor: "#262626", height: "70px" }}>
             <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", }}>
               <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}></Typography>
-              <Button component={Link} href="" sx={{ color: "white" }}
+              <Button component={Link} href="./components/ingresos" sx={{ color: "white" }}
                 title="Control de entredas y salidas de los empleados">
                 <TransferWithinAStationIcon sx={{ fontSize: 40 }} />
               </Button>
@@ -129,18 +129,13 @@ export default function Login() {
           </AppBar>
 
           <CssBaseline />
-          <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth={isSmallScreen ? "sm" : "xs"} sx={{ backgroundColor: "#ffffff", padding: 4, borderRadius: 2, boxShadow: "0px 5px 15px rgba(0,0,0,0.3)", marginTop: isSmallScreen ? 3 : 6, mb: 2 }}>
-              <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center", height: 350 }}>
-                <Image
-                  className="logo"
-                  src="/logo_miguelgomez.png"
-                  width={isSmallScreen ? 200 : 250}
-                  height={isSmallScreen ? 120 : 150}
-                  alt="Logo"
-                  priority={true}
-                />
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh", backgroundColor: "#f4f4f4" }}>
+              <Paper component="main" elevation={3} sx={{ width: "380px", padding: "20px", borderRadius: "15px", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: "white", boxShadow: 3 }}>
+                <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "100px", sm: "200px", md: "300px" }, height: "auto" }}>
+                  <img src="/logo_miguelgomez.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+                </Box>
+                
+                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
                   <TextField
                     error={error}
                     id="usuario"
@@ -165,14 +160,13 @@ export default function Login() {
                     onChange={(e) => setClave(e.target.value)}
                   />
 
-                  <Button type="submit" variant="contained" color="success" sx={{ marginTop: 2, display: "flex", justifyContent: "center", alignItems: "center", minWidth: isSmallScreen ? "100%" : 380 }}>
+                  <Button type="submit" fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
                     Iniciar sesión
                   </Button>
                 </Box>
-              </Box>
               <Copyright sx={{ mt: 3, mb: 1 }} />
-            </Container>
-          </ThemeProvider>
+            </Paper>
+          </Box>
         </Box>
 
         {open ? (
@@ -194,6 +188,5 @@ export default function Login() {
   );
 }
 
-
-
+export default Login;
 

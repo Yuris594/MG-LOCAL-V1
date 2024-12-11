@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BusinessIcon from "@mui/icons-material/Business";
-import Producto from "../../(producto)/producto/page";
 import Banner from "@/app/components/banner/banner";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -40,7 +39,6 @@ const CrearPedido = () => {
   const inputRef = useRef();
   const { cliente } = useAuth();
   const [notas, setNotas] = useState("");
-  const [openB, setOPenB] = useState("");
   const [openM, setOpenM] = useState("");
   const [total, setTotal] = useState("");
   const [subTotal, setSubTotal] = useState("");
@@ -54,9 +52,6 @@ const CrearPedido = () => {
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
-
-  const handleOpenB = () => setOPenB(true);
-  const handleCloseB = () => setOPenB(false);
   const handleOpenM = () => setOpenM(true);
   const handleCloseM = () => setOpenM(false);
 
@@ -353,9 +348,6 @@ const CrearPedido = () => {
         <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#91d9e9" },}}>
           Productos-MG
         </Button>
-        <Button onClick={handleOpenB} variant="filled" sx={{ bgcolor: "#fff694", "&:hover": { bgcolor: "#e5df85" }, }}>
-          Productos-Bodega
-        </Button>
         <Button variant="filled" sx={{ bgcolor: "#ffa28a", "&:hover": { bgcolor: "#e98c74" }, }}>
           Crear PDF
         </Button>
@@ -455,19 +447,6 @@ const CrearPedido = () => {
           </ButtonGroup>
         </Box>
       </Paper>
-      
-
-
-      <Modal
-        open={openB}
-        onClose={handleCloseB}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {" "}<Producto handleCloseB={handleCloseB} onAgregarArticulo={agregarArticulo} />{" "}
-        </Box>
-      </Modal>
 
       <Modal
         open={openM}

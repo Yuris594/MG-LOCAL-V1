@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 
@@ -11,6 +12,7 @@ import Cookies from 'js-cookie';
 
 
   export const AuthProvider = ({ children }) => {
+    const router = useRouter();
     const [loading] = useState(true); 
     const [caja, setCaja] = useState({}); 
     const [auth, setAuth] = useState(null); 
@@ -32,6 +34,7 @@ import Cookies from 'js-cookie';
      localStorage.removeItem('auth');
 
      setAuth(null)
+     router.push("/");
     }, []);
 
   

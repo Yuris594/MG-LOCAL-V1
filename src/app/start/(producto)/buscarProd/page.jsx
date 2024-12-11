@@ -60,12 +60,7 @@ const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300 },
-  { field: "TOTAL_DISP", headerName: "DISP", width: 130,
-    valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
-    },
-  },
+  { field: "TOTAL_DISP", headerName: "DISP", width: 130 },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
@@ -81,12 +76,7 @@ const columns = [
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
   { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130,
-    valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
-    },
-  },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130 },
 ];
 
 const columnsF = [
@@ -155,6 +145,39 @@ const columnsP = [
 ];
 
 
+const obtenerFacturas = async (seleccionarArticulo) => {
+  const response = await fetch(`/api/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay facturas para este producto.");
+      return [];
+    }
+  }
+  return response.json();
+};
+
+const obtenerPedidos = async (seleccionarArticulo) => {
+  const response = await fetch(`/api/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    if (response.status === 404) {
+      console.log("No hay pedidos para este producto.");
+      return [];
+    }
+  }
+  return response.json();
+};
+
+
 const BuscarReferencia = () => {
   const [value, setValue] = useState(0);
   const [pedidos, setPedidos] = useState([]);
@@ -178,7 +201,7 @@ const BuscarReferencia = () => {
             headers: { "Content-Type" : "application/json" }
           });
         } else {
-          response = await fetch(`/api/productos/${valorBusqueda}`, {
+          response = await fetch(`/api/productos/descripcion/${valorBusqueda}`, {
             method: "GET",
             headers: { "Content-Type" : "application/json" }  
           })
@@ -186,7 +209,6 @@ const BuscarReferencia = () => {
   
         const datos = await response.json();
         setProductos(datos);        
-        console.log("Resultado de la busqueda", datos)
       } catch (error) {
         console.log("Error al momento de realizar la busqueda", error);
       }
@@ -202,48 +224,35 @@ const BuscarReferencia = () => {
   };
 
 
-  const obtenerFacturas = async () => {
-    setFacturas([]); 
+  const conseguirFacturas = async () => {
+    const datos = await obtenerFacturas(seleccionarArticulo);
+    setFacturas([]);
     try {
-      const response = await fetch(`/api/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
-        method: "GET",
-        headers: { "Content-Type" : "application/json", },
-      });
-
-      if (response.status === 404) {
-        console.log("No hay facturas para este producto.");
-        return [];
+      if (datos) {
+        setFacturas(datos);
+        setCargando(false);
+      } else {
+        setFacturas([]);
+        setCargando(false);
       }
-
-      const datos = await response.json();
-      setFacturas(datos);
-      setCargando(false);
     } catch (error) {
       console.log("Este articulo no tiene facturas", error);
-      setFacturas([]);
     }
-   
   };
 
-  const obtenerPedidos = async () => {
+  const conseguirPedidos = async () => {
+    const datos = await obtenerPedidos(seleccionarArticulo);
     setPedidos([]);
     try {
-      const response = await fetch(`/api/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
-        method: "GET",
-        headers: { "Content-Type" : "application/json" },
-      });
-      
-      if (response.status === 404) {
-        console.log("No hay pedidos para este producto.");
-        return [];
+      if (datos) {
+        setPedidos(datos);
+        setCargando(false);
+      } else {
+        setPedidos([]);
+        setCargando(false);
       }
-      
-      const datos = await response.json();
-      setPedidos(datos);
-      setCargando(false);
     } catch (error) {
       console.log("Este articulo no tiene pedidos", error);
-      setPedidos([]);
     }
   };
 
@@ -295,8 +304,8 @@ const BuscarReferencia = () => {
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
                 <Tab label="Articulos" {...a11yProps(0)} />
-                <Tab label={`Pedidos: ${pedidos.length}`} {...a11yProps(1)} onClick={obtenerPedidos} />
-                <Tab label={`Facturas: ${facturas.length}`} {...a11yProps(2)} onClick={obtenerFacturas} />
+                <Tab label={`Pedidos: ${pedidos.length}`} {...a11yProps(1)} onClick={conseguirPedidos} />
+                <Tab label={`Facturas: ${facturas.length}`} {...a11yProps(2)} onClick={conseguirFacturas} />
               </Tabs>
             </Box>
 
@@ -305,12 +314,12 @@ const BuscarReferencia = () => {
                 <DataGrid
                   rows={productos}
                   columns={columns}
-                  pageSizeOptions={[5, 16, 20]}
+                  pageSizeOptions={[5, 15, 20]}
                   getRowId={(row) => row.ARTICULO}
                   onRowClick={handleRowClick}
                   initialState={{
                     pagination: {
-                      paginationModel: { page: 0, pageSize: 16 },
+                      paginationModel: { page: 0, pageSize: 15 },
                     },
                   }}
                   sx={{
@@ -336,10 +345,10 @@ const BuscarReferencia = () => {
                     columns={columnsP}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 16 },
+                        paginationModel: { page: 0, pageSize: 15 },
                       },
                     }}
-                    pageSizeOptions={[5, 16, 20]}
+                    pageSizeOptions={[5, 15, 20]}
                     getRowId={(row) => row.PEDIDO}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
@@ -365,10 +374,10 @@ const BuscarReferencia = () => {
                     columns={columnsF}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 16 },
+                        paginationModel: { page: 0, pageSize: 15 },
                       },
                     }}
-                    pageSizeOptions={[5, 16, 20]}
+                    pageSizeOptions={[5, 15, 20]}
                     getRowId={(row) => row.FACTURA}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
