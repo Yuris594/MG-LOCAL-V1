@@ -6,7 +6,7 @@ import { Inter, Lora } from "next/font/google"
 import { AuthProvider } from "@/context/authContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
-const inter = Lora({ 
+const inter = Inter({ 
   subsets: ["latin"],
   weight: ['400', '700'], 
 });
