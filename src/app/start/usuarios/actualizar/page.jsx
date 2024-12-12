@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Conexion } from "@/conexion";
 
 const actualizar = async (form) => {
-  const response = await fetch("/api/usuarios/actualizar/", {
+  const response = await fetch(Conexion.url + "/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
@@ -15,7 +15,7 @@ const actualizar = async (form) => {
   return response.json();
 };
 
-const UsuarioActualizar = ({ usuario }) => {
+const UsuarioActualizar = ({ usuario, onClose }) => {
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
   const { form, setForm, changed } = useForm();
@@ -44,6 +44,8 @@ const UsuarioActualizar = ({ usuario }) => {
     try {
       const datos = await actualizar(form);
       if (datos.ok) {
+        onclose();
+        
         setOpen(true);
         setTimeout(() => {
           window.location.reload();

@@ -2,7 +2,7 @@
 
 import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
 import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, 
-  ListItemIcon, ListItemText, Menu, MenuItem, Modal, Paper, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+  ListItemIcon, ListItemText, Menu, MenuItem, Paper, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAuth }  from "@/context/authContext";
@@ -112,14 +112,14 @@ import Link from "next/link";
         <Box className="containers" sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: isSmallScreen ? "column" : "row", padding: isSmallScreen ? 2 : 0, mt: isSmallScreen ? 2 : 0 }}>
           <Paper id="wave" sx={{ width: isSmallScreen ? "90%" : "40%", maxWidth: "600px", height: isSmallScreen ? 600 : 750, border: 6, overflow: "auto",}}> 
             <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: "#262626", borderColor: "#262626", padding: 2 }}>
-              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "100px", sm: "150px", md: "230px" }, height: "auto" }}>
+              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "220px", sm: "200px", md: "250px" }, height: "auto" }}>
                 <img src="/logo2.png" alt="imagenmg" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
               </Box>
               <Typography className={inter.className} variant="h6" sx={{  marginTop: 4, marginBottom: 2 }} color="white">{auth && auth.PER_Nom}</Typography> 
             </CardContent>
 
             <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
-              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "100px", sm: "150px", md: "200px" }, height: "auto" }}>
+              <Box sx={{ alignItems: "center", marginBottom: "20px", width: { xs: "150px", sm: "150px", md: "180px" }, height: "auto" }}>
                 <img src="/truperLogo.png" alt="imagenmg" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
               </Box>
               <Divider sx={{ width: "80%", my: 2 }} />
@@ -142,11 +142,11 @@ import Link from "next/link";
       </Box>
 
       <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby" : "basic-button", }}>
-        <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
-          Productos
-        </MenuItem>
         <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" variant="body1" sx={{ fontSize: "15px" }}>
-          Buscar Referencias
+          Buscar Por Referencias
+        </MenuItem>
+        <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
+          Lista De Todos Los Productos
         </MenuItem>
       </Menu>
     </>

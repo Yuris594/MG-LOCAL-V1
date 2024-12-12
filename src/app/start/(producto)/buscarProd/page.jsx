@@ -6,10 +6,10 @@ import Grid from "@mui/material/Grid2";
 import { DataGrid } from "@mui/x-data-grid";
 import Banner from "@/app/components/banner/banner";
 import CheckIcon from '@mui/icons-material/Check';
-import SearchIcon from '@mui/icons-material/Search';
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
- useMediaQuery, useTheme, LinearProgress, Typography} from "@mui/material";
+ useMediaQuery, useTheme, LinearProgress, Typography,
+ CircularProgress} from "@mui/material";
 import { Conexion } from "@/conexion";
 
 
@@ -41,11 +41,6 @@ function a11yProps(index) {
   };
 }
 
-
-const options = [
-  {label: "ARTICULO"},
-  {label: "REFERENCIA"}
-];
 
 
 const fDate = (dateString) => {
@@ -192,38 +187,67 @@ const BuscarReferencia = () => {
   const [value, setValue] = useState(0);
   const [pedidos, setPedidos] = useState([]);
   const [facturas, setFacturas] = useState([]);
-  const [criterio, setCriterio] = useState('');
+  const [criterio, setCriterio] = useState(null);
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [valorBusqueda, setValorBusqueda] = useState("");
   const [seleccionarArticulo, setSeleccionarArticulo] = useState('');
+  const [errorCriterio, setErrorCriterio] = useState(false);
+  const [errorBusqueda, setErrorBusqueda] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const options = [
+    {label: "ARTICULO"},
+    {label: "REFERENCIA"}
+  ];
 
   const consultarArticulo = async () => {
-    if (valorBusqueda) {
-      try {
-        let response;
-        if (criterio === "ARTICULO") {
-          response = await fetch(Conexion.url + `/productos/${valorBusqueda}`, {
-            method: "GET",
-            headers: { "Content-Type" : "application/json" }
-          });
-        } else {
-          response = await fetch(`/api/productos/descripcion/${valorBusqueda}`, {
-            method: "GET",
-            headers: { "Content-Type" : "application/json" }  
-          })
-        };
-  
+
+    if (!criterio) {
+      setErrorCriterio(true);
+    } else {
+      setErrorCriterio(false);
+    }
+
+    if (!valorBusqueda.trim()) {
+      setErrorBusqueda(true);
+    } else {
+      setErrorBusqueda(false);
+    }
+
+    setCargando(true);
+    try {
+      const endpoint =
+      criterio === "ARTICULO" 
+        ? Conexion.url + `/productos/${valorBusqueda}`
+        : Conexion.url + `/productos/descripcion/${valorBusqueda}`;
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: { "Content-Type" : "application/json" }
+      });
+        
+      if (response.ok) {
         const datos = await response.json();
         setProductos(datos);        
-      } catch (error) {
-        console.log("Error al momento de realizar la busqueda", error);
+      } else {
+        console.log("Error en la busqueda:", response.statusText);
+        setProductos([]);
       }
+    } catch (error) {
+      console.log("Error al momento de realizar la busqueda", error);
+      setProductos([]);
+    } finally {
+      setCargando(false);
     }
   };
+  
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      consultarArticulo();
+    }
+  }
 
   const handleChanges = (event, newValue) => {
     setValue(newValue);
@@ -232,7 +256,6 @@ const BuscarReferencia = () => {
   const handleRowClick = (params) => {
     setSeleccionarArticulo(params.row);
   };
-
 
   const conseguirFacturas = async () => {
     const datos = await obtenerFacturas(seleccionarArticulo);
@@ -270,28 +293,26 @@ const BuscarReferencia = () => {
   return (
     <>
       <Banner />
-      <Grid container direction="column" sx={{ minHeight: "100vh", backgroundColor: "#ffffff", padding: 2 }}>
+      <Grid container direction="column" sx={{ minHeight: "90vh", backgroundColor: "#ffffff", padding: 2 }}>
         <Grid size={12}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
-            <h2><strong>BUSCADOR DE REFERENCIAS</strong></h2>
-            <BotonExcel datos={productos} />
-          </Box>
-        </Grid>
-
-        <Grid size={12}>
-          <Box display= "flex" flexDirection= {isSmallScreen ? "column" : "row"} alignItems= "center" gap={2} sx={{ width: "100%" }}>
-            <h3 style={{ margin: 0, color: "#db2093" }}>
-              {seleccionarArticulo.DESCRIPCION}
-            </h3>
-            <Box display="flex" alignItems="center" gap={2} sx={{ marginLeft: isSmallScreen ? 0 : "auto" }}>
+            <Box display="flex" alignItems="center" gap={2}>
+            <h2><strong>Buscar Por Referencias</strong></h2>
               <Autocomplete 
                 id="size-small-outlined"
                 size="small"
                 disablePortal
-                sx={{ width: 190 }}
                 options={options}
+                value={criterio}
                 onChange={(event, newValue) => { setCriterio(newValue?.label || ""); }}
-                renderInput={(params) => <TextField {...params} label="Tipo de Referencia" />}
+                renderInput={(params) => <TextField 
+                  {...params} 
+                  label="Criterio de Busqueda" 
+                  variant="outlined"
+                  error={errorCriterio}
+                  helperText={errorCriterio ? "El criterio es requerido" : ""}
+                />}
+                sx={{ width: 190 }}
               />
 
               <TextField 
@@ -299,6 +320,9 @@ const BuscarReferencia = () => {
                 size="small"
                 value={valorBusqueda}
                 onChange={(e) => setValorBusqueda(e.target.value)}
+                onKeyPress={handleKeyPress}
+                error={errorBusqueda}
+                helperText={errorBusqueda ? "Este valor es requerido" : ""}
                 sx={{ width: 190 }}
               />
 
@@ -306,9 +330,17 @@ const BuscarReferencia = () => {
                 <CheckIcon sx={{ fontSize: 45 }} color="success" />
               </IconButton>
             </Box>
+
+            <Box>
+              <h3 style={{ margin: 0, color: "#db2093" }}>
+                {seleccionarArticulo.DESCRIPCION}
+              </h3>
+            </Box>
+            <BotonExcel datos={productos} />
           </Box>
         </Grid>
 
+    
         <Grid size={12}>
           <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -320,25 +352,31 @@ const BuscarReferencia = () => {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0} dir={theme.direction}>
-              <Box sx={{ width: "100%", height: 950 }}>
-                <DataGrid
-                  rows={productos}
-                  columns={columns}
-                  pageSizeOptions={[5, 15, 20]}
-                  getRowId={(row) => row.ARTICULO}
-                  onRowClick={handleRowClick}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 15 },
-                    },
-                  }}
-                  sx={{
-                    "& .MuiDataGrid-columnHeaderTitle": {
-                      fontWeight: "bold",
-                    },
-                  }}
-                />
-              </Box>
+              {cargando === true ? (
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Box sx={{ width: "100%", height: 750 }}>
+                  <DataGrid
+                    rows={productos}
+                    columns={columns}
+                    pageSizeOptions={[5, 12, 20]}
+                    getRowId={(row) => row.ARTICULO}
+                    onRowClick={handleRowClick}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 12 },
+                      },
+                    }}
+                    sx={{
+                      "& .MuiDataGrid-columnHeaderTitle": {
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                </Box>
+              )}
             </CustomTabPanel>
 
             <CustomTabPanel component={Box} value={value} index={1} dir={theme.direction}>
@@ -349,16 +387,16 @@ const BuscarReferencia = () => {
                 ) : pedidos.length <= 0 ? (
                   <h2>NO HAY PEDIDOS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 950 }}>
+                <Box sx={{ width: "100%", height: 750 }}>
                   <DataGrid
                     rows={pedidos}
                     columns={columnsP}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 15 },
+                        paginationModel: { page: 0, pageSize: 12 },
                       },
                     }}
-                    pageSizeOptions={[5, 15, 20]}
+                    pageSizeOptions={[5, 12, 20]}
                     getRowId={(row) => row.PEDIDO}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
@@ -378,16 +416,16 @@ const BuscarReferencia = () => {
                 ) : facturas.length <= 0 ? (
                   <h2>NO HAY FACTURAS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 950 }}>
+                <Box sx={{ width: "100%", height: 750 }}>
                   <DataGrid
                     rows={facturas}
                     columns={columnsF}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 15 },
+                        paginationModel: { page: 0, pageSize: 12 },
                       },
                     }}
-                    pageSizeOptions={[5, 15, 20]}
+                    pageSizeOptions={[5, 12, 20]}
                     getRowId={(row) => row.FACTURA}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {

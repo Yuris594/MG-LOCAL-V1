@@ -65,8 +65,9 @@ const registro = async (cedula) => {
       body: JSON.stringify(cedula), 
       headers: { "Content-Type": "application/json" }
     });
-    if (!response.ok) throw new Error("Error en la respuesta del servidor", error);
-    
+    if (!response.ok) {
+      throw new Error("Error en la respuesta del servidor");
+    }
     return response.json();
   } catch(error) {
     console.error("Error al realizar la peticion", error);

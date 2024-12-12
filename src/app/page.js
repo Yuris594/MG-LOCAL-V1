@@ -1,6 +1,6 @@
 'use client';
 
-import { AppBar, Box, Button, Paper, Snackbar, TextField, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, Box, Button, Paper, Snackbar, TextField, Toolbar, Typography } from "@mui/material";
 import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStation";
 import { useAuth } from "@/context/authContext";
 import { useTheme } from "@mui/material/styles";
@@ -53,20 +53,26 @@ function Login() {
   const [openE, setOpenE] = useState(false);
   const [error, setError] = useState(false);
   const [usuario, setUsuario] = useState('');
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!usuario || !clave) {
+      setError(true);
+      setOpenE(true);
+      return;
+    }
+
     try {
       const resultado = await Iniciar(usuario, clave);
         if (resultado.error) {
           setError(true);
           setOpenE(true);
         } else {
-          setOpen(true);
           const tokens = resultado;
           login(tokens);
           router.push("../start");
+          setOpen(true);
         }
     } catch (error) {
           setError(true);
@@ -100,11 +106,11 @@ function Login() {
 
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%",  mt: 5 }}>
           <Paper component="main" elevation={3} sx={{ width: "380px", padding: "20px", borderRadius: "15px", display: "flex", flexDirection: "column", alignItems: "center", backgroundColor: "white", boxShadow: 3 }}>
-            <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "100px", sm: "200px", md: "300px" }, height: "auto" }}>
+            <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "250px", sm: "280px", md: "320px" }, height: "auto" }}>
               <img src="/logo_miguelgomez.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
             </Box>
             
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+            <Box component="form" noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
               <TextField
                 error={error}
                 id="usuario"
@@ -129,7 +135,7 @@ function Login() {
                 onChange={(e) => setClave(e.target.value)}
               />
 
-              <Button type="submit" fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
+              <Button onClick={handleSubmit} fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
                 Iniciar sesión
               </Button>
             </Box>

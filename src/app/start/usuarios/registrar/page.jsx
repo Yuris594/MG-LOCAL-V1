@@ -6,7 +6,7 @@ import { Conexion } from "@/conexion";
 import { useState } from "react";
 
 const registro = async (form) => {
-  const response =  await fetch("/api/usuarios/nuevo", {
+  const response =  await fetch(Conexion.url + "/usuarios/nuevo", {
     method: "POST",
     body: JSON.stringify(form), 
     headers: { "Content-Type": "application/json" }
@@ -14,7 +14,7 @@ const registro = async (form) => {
   return response.json()
 }
 
-  const Registro = () => {
+  const Registro = ({ onClose }) => {
   const [form, setForm] = useState({});
   const [open, setOpen] = useState(false);
   const [openE, setOpenE] = useState(false);
@@ -35,6 +35,8 @@ const registro = async (form) => {
       try {
         const response = await registro(form)
           if (response.ok) {
+            onClose();
+
             setOpen(true)
             console.log("Salida exitosa");
             window.location.reload();

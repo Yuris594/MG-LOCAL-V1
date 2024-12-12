@@ -169,7 +169,7 @@ function Usuarios() {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={styles}>
-                <Registro />
+                <Registro onClose={handleClose} />
               </Box>
             </Modal>
 
@@ -179,7 +179,7 @@ function Usuarios() {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={styles}>
-                <UsuarioActualizar usuario={usuario} />
+                <UsuarioActualizar usuario={usuario} onClose={handleCloseA} />
               </Box>
             </Modal>
 
