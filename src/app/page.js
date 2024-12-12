@@ -110,7 +110,7 @@ function Login() {
               <img src="/logo_miguelgomez.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
             </Box>
             
-            <Box component="form" noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
               <TextField
                 error={error}
                 id="usuario"
@@ -135,7 +135,7 @@ function Login() {
                 onChange={(e) => setClave(e.target.value)}
               />
 
-              <Button onClick={handleSubmit} fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
+              <Button type="submit" fullWidth  sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
                 Iniciar sesión
               </Button>
             </Box>
