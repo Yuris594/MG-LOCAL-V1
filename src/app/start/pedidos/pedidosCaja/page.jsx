@@ -375,7 +375,7 @@ const PedidosCaja = () => {
 
       <Box sx={{ display: "flex", flexDirection: "row", height: "100%", justifyContent: "space-between", }}>
         <Box sx={{ width: "30%", display: "flex", flexDirection: "column", gap: 2, }}>
-          <Box sx={{ mb: 1, height: 700, width: "100%",
+          <Box sx={{ mb: 1, height: 600, width: "100%",
               "& .MuiDataGrid-cell--editable": {
                 bgcolor: (theme) =>
                   theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",

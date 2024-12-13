@@ -1,7 +1,7 @@
 "use client";
 
 
-import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
+import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput, Divider } from "@mui/material";
 import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/authContext";
@@ -457,62 +457,45 @@ export const PedidosC = () => {
   return (
     <>
       <Box> {" "} <Banner />{" "} </Box>
-      <Box sx={{ padding: "20px" }}>
+      <Box sx={{ padding: "20px" }}> 
+      <Paper elevation={3} sx={{ padding: 1, marginBottom: 1 }}>
         <Grid container spacing={2} justifyContent="center" alignItems="center">
-          <Grid size={{ xs: 12 }}>
-            <h2 style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", margin: 6 }}><strong>PEDIDOS</strong></h2>
+            <Grid size={{ xs: 12, sm: 8, md: 6}}> 
+              <h2 style={{ margin: 0 }}><strong>PEDIDOS</strong></h2>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 8, md: 6}}>
+                {clienteP?.AUTORIZADONOM === "APROBADO" ? (
+                  <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
+                    {" "}<PrintIcon />{" "}
+                  </Button>
+                ) : (
+                  <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff64" }} disabled>
+                    {" "}<PrintIcon />{" "}
+                  </Button>
+                )}
+
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff694" }} onClick={especial}>
+                  {" "}<StarIcon />{" "}
+                </Button>
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
+                  MG
+                </Button>
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }}>
+                  {" "}<CheckCircleIcon />{" "}
+                </Button>
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#eabafe" }} onClick={productosGuardar}>
+                  {" "}<SaveAsIcon />{" "}
+                </Button>
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#84D8F4" }} onClick={productosguardarP}>
+                  <SaveAltIcon  />
+                </Button>
+                <Button variant="filled" sx={{ bgcolor: "#ffa28a" }} onClick={cerrarP}>
+                  {" "}<HighlightOffIcon />{" "}
+                </Button>
+            </Grid>
           </Grid>
+        </Paper>
 
-          <Grid size={{ xs: 12 }}>
-            <Paper sx={{ p: 2, display: "flex", flexWrap: "wrap", gap: 2, boxShadow: 3 }}>
-              <Box sx={{ display: "flex", gap: 1, width: "100%", justifyContent: "space-between" }}>
-                
-                <Box sx={{ display: "flex", gap: 1 }}>
-                  {clienteP?.AUTORIZADONOM === "APROBADO" ? (
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fa4f4f" }} onClick={generarPDF}>
-                      {" "}<PrintIcon />{" "}
-                    </Button>
-                  ) : (
-                    <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff64" }} disabled>
-                      {" "}<PrintIcon />{" "}
-                    </Button>
-                  )}
-
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#fff694" }} onClick={especial}>
-                    {" "}<StarIcon />{" "}
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#b6ff91" }} onClick={handleOpenM}>
-                    MG
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#f145af" }}>
-                    {" "}<CheckCircleIcon />{" "}
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#eabafe" }} onClick={productosGuardar}>
-                    {" "}<SaveAsIcon />{" "}
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#84D8F4" }} onClick={productosguardarP}>
-                    <SaveAltIcon  />
-                  </Button>
-                  <Button variant="filled" sx={{ margin: "2px", bgcolor: "#ffa28a" }} onClick={cerrarP}>
-                    {" "}<HighlightOffIcon />{" "}
-                  </Button>
-                </Box>
-                
-                <Box sx={{ display: "flex", justifyContent: "flex-end", flexGrow: 1 }}>
-                  <TextField
-                    id="outlined-basic"
-                    placeholder="Buscar Producto"
-                    value={busqueda}
-                    onChange={handleChange}
-                    inputRef={inputRef}
-                    sx={{ width: "100%", maxWidth: 300 }} 
-                  />
-                </Box>
-              </Box>
-            </Paper>
-          </Grid>
-
-          
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
             <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
               <Grid container spacing={2}>
@@ -700,8 +683,7 @@ export const PedidosC = () => {
               </CustomTabPanel>
             </Paper>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
 
       <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3}}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

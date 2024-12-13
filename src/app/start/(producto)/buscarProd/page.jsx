@@ -9,7 +9,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
  useMediaQuery, useTheme, LinearProgress, Typography,
- CircularProgress} from "@mui/material";
+ CircularProgress } from "@mui/material";
 import { Conexion } from "@/conexion";
 
 
@@ -42,7 +42,6 @@ function a11yProps(index) {
 }
 
 
-
 const fDate = (dateString) => {
   const options = {
     year: "numeric",
@@ -56,7 +55,8 @@ const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300 },
-  { field: "TOTAL_DISP", headerName: "DISP", width: 130 },
+  { field: "TOTAL_DISP", headerName: "DISP-MG", width: 130 },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130 },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
@@ -72,7 +72,6 @@ const columns = [
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
   { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130 },
 ];
 
 const columnsF = [
@@ -352,11 +351,6 @@ const BuscarReferencia = () => {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0} dir={theme.direction}>
-              {cargando === true ? (
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
                 <Box sx={{ width: "100%", height: 750 }}>
                   <DataGrid
                     rows={productos}
@@ -376,7 +370,7 @@ const BuscarReferencia = () => {
                     }}
                   />
                 </Box>
-              )}
+              
             </CustomTabPanel>
 
             <CustomTabPanel component={Box} value={value} index={1} dir={theme.direction}>

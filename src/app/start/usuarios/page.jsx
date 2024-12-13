@@ -183,17 +183,14 @@ function Usuarios() {
               </Box>
             </Modal>
 
-            <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
-              <Grid size={12}>
-                <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
+            <Grid container direction="column" sx={{ minHeight: "90vh", backfroundColor: "#ffffff", padding: 2 }}>
+              <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
+                <Grid size={{ xs: 12, sm: 8, md: 6}}>
                   <h2><strong>USUARIOS</strong></h2>
-                  <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
-                    <Button variant="outlined" onClick={handleOpen} sx={{ margin: 1 }} color="primary">Nuevo Usuario</Button>
-                  </Box>
-                  </Box>
                 </Grid>
-
-                <Grid size={12} sx={{ padding: 2 }}>
+                
+                  <Button variant="outlined" onClick={handleOpen} sx={{ margin: 1 }} color="primary">Nuevo Usuario</Button>
+                <Grid size={{ xs: 12, sm: 8, md: 6}}>
                   <TextField
                     id="outlined-basic"
                     placeholder="Buscar..."
@@ -203,7 +200,8 @@ function Usuarios() {
                     sx={{ width: "100%" }}
                   />
                 </Grid>
-          
+              </Box>
+
                 <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2}}>
                   <Box sx={{ height: isSmallScreen ? 500 : 779, width: "100%" }}>
                     <DataGrid

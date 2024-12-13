@@ -300,11 +300,11 @@ const productosMG = () => {
         ) : (
           <Box>
             <Box>
-            <h2><strong>PRODUCTOS MG</strong></h2>
             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "auto", margin: 1, }}>
-                <BotonExcel datos={productos} />
-              </Box>
+              <h2><strong>PRODUCTOS MG</strong></h2>
+              
+              <BotonExcel datos={productos} />
+             
               <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#920b0d", }}>
                 {articulo.DESCRIPCION}
               </h2>
@@ -334,19 +334,19 @@ const productosMG = () => {
             </Box>
 
             <CustomTabPanel componente={Box} value={value} index={0}>
-              <Box sx={{ width: "100%", height: 860 }}>
+              <Box sx={{ width: "100%", height: 750 }}>
                 <DataGrid
                   rows={productos}
                   columns={columns}
                   getRowId={(row) => row.ARTICULO}
                   initialState={{
                     pagination: {
-                      paginationModel: { page: 0, pageSize: 14 },
+                      paginationModel: { page: 0, pageSize: 12 },
                     },
                   }}
                   rowSelectionModel={selectedRows}
                   onRowSelectionModelChange={handleSelection}
-                  pageSizeOptions={[5, 14, 20]}
+                  pageSizeOptions={[5, 12, 20]}
                   sx={{
                     "& .MuiDataGrid-columnHeaderTitle": {
                       fontWeight: "bold",
@@ -364,17 +364,17 @@ const productosMG = () => {
                 ) : pedidos.length <= 0 ? (
                   <h2>NO HAY PEDIDOS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 860 }}>
+                <Box sx={{ width: "100%", height: 750 }}>
                   <DataGrid
                     rows={pedidos}
                     columns={columnsP}
                     getRowId={(row) => row.PEDIDO}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 14 },
+                        paginationModel: { page: 0, pageSize: 12 },
                       },
                     }}
-                    pageSizeOptions={[5, 14, 20]}
+                    pageSizeOptions={[5, 12, 20]}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
                         fontWeight: "bold",
@@ -393,17 +393,17 @@ const productosMG = () => {
                 ) : facturas.length <= 0 ? (
                   <h2>NO HAY FACTURAS</h2>
                 ) : (
-                <Box sx={{ width: "100%", height: 860 }}>
+                <Box sx={{ width: "100%", height: 750 }}>
                   <DataGrid
                     rows={facturas}
                     columns={columnsF}
                     getRowId={(row) => row.ID}
                     initialState={{
                       pagination: {
-                        paginationModel: { page: 0, pageSize: 14 },
+                        paginationModel: { page: 0, pageSize: 12 },
                       },
                     }}
-                    pageSizeOptions={[5, 14, 20]}
+                    pageSizeOptions={[5, 12, 20]}
                     sx={{
                       "& .MuiDataGrid-columnHeaderTitle": {
                         fontWeight: "bold",

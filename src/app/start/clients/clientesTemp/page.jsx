@@ -295,34 +295,6 @@ const ClientesTemp = () => {
               </Button>
             </Box>
 
-            <Divider />
-
-            <Box sx={{ dispĺay: "flex", justifyContent: "space-around", alignItems: "center", gap: 2, flexWrap: isSmallScreen ? "wrap" : "nowrap" }}>
-              <Box sx={{ dispĺay: "flex", alignItems: "center", gap: 1 }}>
-                <FormControlLabel label="INDIVIDUAL" control={<Checkbox />} />
-                <FormControlLabel label="COMPAÑIA" control={<Checkbox />} />
-              </Box>
-
-              <Box sx={{ display: "flex", justifyContent: "flex-end", }}>
-                <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
-                  <Button sx={{ flexDirection: "column" }}>
-                    <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
-                      ${sumaSaldoTotal}
-                    </Typography>
-                    <strong>Saldo</strong>
-                  </Button>
-
-                  <Button sx={{ flexDirection: "column" }}>
-                    <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-                      ${sumaSaldo60Total}
-                    </Typography>
-                    <strong>Saldo Mayor a 60</strong>
-                  </Button>
-                </ButtonGroup>
-              </Box>
-            </Box>
-          </Box>
-
           <Divider orientation="horizontal" />
 
           <h3><strong style={{ fontSize: 20, color: "#6d32f7" }}>{clienteT?.NOMBREALIAS || ""}</strong></h3>
@@ -385,23 +357,49 @@ const ClientesTemp = () => {
                 </Typography>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 8, md: 6}}>
+              <Grid size={{ xs: 12, sm: 8, md: 8}}>
                 <strong>Email</strong>
                 <Typography sx={{ mb: 1.5, display: "flex" }}>
                   {clienteT?.E_MAIL || ""}
                 </Typography>
               </Grid>
+
+              <Grid size={{ xs: 12, sm: 8, md: 8}}>
+                <TextField
+                  id="outlined-basic"
+                  multiline
+                  rows={3}
+                  defaultValue={clienteT?.NOTAS || ""}
+                  variant="outlined"
+                  sx={{ width: "100%", border: "2px solid #13ace9" }}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 8, md: 4}}>
+                <Box sx={{ dispĺay: "flex", justifyContent: "space-around", alignItems: "center", gap: 2, flexWrap: isSmallScreen ? "wrap" : "nowrap" }}>
+                  <Box sx={{ display: "flex", justifyContent: "flex-end", }}>
+                    <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
+                      <Button sx={{ flexDirection: "column" }}>
+                        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
+                          ${sumaSaldoTotal}
+                        </Typography>
+                        <strong>Saldo</strong>
+                      </Button>
+
+                      <Button sx={{ flexDirection: "column" }}>
+                        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+                          ${sumaSaldo60Total}
+                        </Typography>
+                        <strong>Saldo Mayor a 60</strong>
+                      </Button>
+                    </ButtonGroup>
+                  </Box>
+                </Box>
+              </Grid>
             </Grid>
           </Box>
+        </Box>
 
-          <TextField
-            id="outlined-basic"
-            multiline
-            rows={3}
-            defaultValue={clienteT?.NOTAS || ""}
-            variant="outlined"
-            sx={{ width: "100%", border: "2px solid #13ace9" }}
-          />
 
           <Box sx={{ width: "100%", mt: 3 }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

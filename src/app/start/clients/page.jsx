@@ -117,29 +117,28 @@ const Clientes = () => {
             <LinearProgress />
           </Box>
         ) : (
-          <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
-            <Grid size={12}>
-              <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
+          <Grid container direction="column" sx={{ minHeight: "90vh", backfroundColor: "#ffffff", padding: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <Grid size={{ xs: 12, sm: 8, md: 6}}>
                 <h2><strong>CLIENTES</strong></h2>
-                <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2,  marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
-                  <Link href=""><Button variant="outlined" sx={{ margin: "2px" }}>Nuevo</Button></Link>
-                  <BotonExcel datos={clientesFiltrados} />
-                </Box>
-              </Box>
-            </Grid>
+              </Grid>
+               
+              <Link href=""><Button variant="outlined" sx={{ margin: "2px" }}>Nuevo</Button></Link>
+              <BotonExcel datos={clientesFiltrados} />
 
-            <Grid size={12} sx={{ padding: 2 }}>
-              <TextField
-                id="outlined-basic"
-                multiline
-                rows={1}
-                variant="outlined"
-                placeholder="Buscar..."
-                value={busqueda}
-                onChange={handleChange}
-                sx={{ width: "100%" }}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 8, md: 6}} sx={{ padding: 2 }}>
+                <TextField
+                  id="outlined-basic"
+                  multiline
+                  rows={1}
+                  variant="outlined"
+                  placeholder="Buscar..."
+                  value={busqueda}
+                  onChange={handleChange}
+                  sx={{ width: "100%" }}
+                />
+              </Grid>
+            </Box>
 
             <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
               <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 799 }}>
@@ -151,7 +150,7 @@ const Clientes = () => {
                       paginationModel: { page: 0, pageSize: 12 },
                     },
                   }}
-                  pageSizeOptions={[12]}
+                  pageSizeOptions={[12, 20, 30]}
                   onRowSelectionModelChange={handleSelection}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.CLIENTE}

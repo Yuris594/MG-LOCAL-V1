@@ -145,29 +145,26 @@ const Pedidos = () => {
           </Box>
         ) : (
           <Box>
-            <Grid container direction="column" sx={{ minHeight: "100vh", backfroundColor: "#ffffff", padding: 2 }}>
-              <Grid size={12}>
+            <Grid container direction="column" sx={{ minHeight: "90vh", backfroundColor: "#ffffff", padding: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
-                  <h2><strong>PEDIDOS</strong></h2>
-                  <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2,  marginLeft: isSmallScreen ? 0 : "auto", width: isSmallScreen ? "100%" : "auto" }}>
+                  <Grid size={{ xs: 12, sm: 8, md: 6}}>
+                    <h2><strong>PEDIDOS</strong></h2>
+                  </Grid>
                     <Button variant="outlined" sx={{ margin: "10px" }}>{" "}Nuevo{" "}</Button>
                     <BotonExcel datos={pedidosFiltrados} />
-                  </Box>
+                  <Grid size={{ xs: 12, sm: 8, md: 6}}>
+                    <TextField
+                      id="outlined-basic"
+                      placeholder="Buscar..."
+                      multiline
+                      rows={1}
+                      variant="outlined"
+                      value={busqueda}
+                      onChange={handleChange}
+                      sx={{ width: "100%" }}
+                    />
+                  </Grid>
                 </Box>
-              </Grid>
-
-              <Grid size={12} sx={{ padding: 2 }}>
-                <TextField
-                  id="outlined-basic"
-                  placeholder="Buscar..."
-                  multiline
-                  rows={1}
-                  variant="outlined"
-                  value={busqueda}
-                  onChange={handleChange}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
 
               <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
                 <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 795 }}>

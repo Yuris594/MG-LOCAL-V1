@@ -342,22 +342,25 @@ const CrearPedido = () => {
   return (
     <>
       <Banner />
-      <Box sx={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", margin: 3 }}>
-        <h3>CREACIÓN DE PEDIDOS</h3>
-      </Box>
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center", justifyContent: "flex-end", p: 1 }}>
-        <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#91d9e9" },}}>
-          Productos-MG
-        </Button>
-        <Button variant="filled" sx={{ bgcolor: "#ffa28a", "&:hover": { bgcolor: "#e98c74" }, }}>
-          Crear PDF
-        </Button>
-        <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#f36fad", "&:hover": { bgcolor: "#e6228e" }, }}>
-          Guardar Pedido
-        </Button>
-        <Button variant="filled" sx={{ bgcolor: "#eb85eb", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../start/clients">
-          Cerrar
-        </Button>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", margin: 3 }}>
+          <h3>CREACIÓN DE PEDIDOS</h3>
+        </Box>
+        
+        <Box sx={{ padding: 2 }}>
+          <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#91d9e9" },}}>
+            Productos-MG
+          </Button>
+          <Button variant="filled" sx={{ bgcolor: "#ffa28a", "&:hover": { bgcolor: "#e98c74" }, m: 2 }}>
+            Crear PDF
+          </Button>
+          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#f36fad", "&:hover": { bgcolor: "#e6228e" }, mr: 2 }}>
+            Guardar Pedido
+          </Button>
+          <Button variant="filled" sx={{ bgcolor: "#eb85eb", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../start/clients">
+            Cerrar
+          </Button>
+        </Box>
       </Box>
 
       <Box>
