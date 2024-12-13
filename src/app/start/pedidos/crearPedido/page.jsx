@@ -364,7 +364,7 @@ const CrearPedido = () => {
       </Box>
 
       <Box>
-        <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3 }}>
+        <Paper elevation={3} sx={{ padding: 3, margin: "0 auto", marginTop: 3, maxWidth: 1100, width: "100%" }}>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
               <Box display="flex" alignItems="center">

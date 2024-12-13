@@ -199,6 +199,8 @@ const BuscarReferencia = () => {
   const options = [
     {label: "ARTICULO"},
     {label: "REFERENCIA"}
+
+    
   ];
 
   const consultarArticulo = async () => {

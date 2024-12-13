@@ -45,23 +45,23 @@ const style = {
   overflowY: "auto",
   overflowX: "hidden",
   padding: "16px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
+  bgcolor: "#ffffff",
+  border: "2px solid #000",
   boxShadow: 24
 };
 
 const columns = [
-  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, headerClassName: "super-app-theme--header", },
-  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, headerClassName: "super-app-theme--header", },
-  { field: "TOTAL_DISP", headerName: "DISP", width: 70, headerClassName: "super-app-theme--header", },
+  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, headerClassName: 'header-bold' },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, headerClassName: 'header-bold' },
+  { field: "TOTAL_DISP", headerName: "DISP", width: 70, headerClassName: 'header-bold'  },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, editable: true, headerClassName: "super-app-theme--header",
+    }, editable: true,  headerClassName: 'header-bold'
   },
-  { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: "super-app-theme--header",},
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, headerClassName: "super-app-theme--header", },
+  { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: 'header-bold' },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, headerClassName: 'header-bold'  },
 ];
 
 const conseguirProductos = async () => {
