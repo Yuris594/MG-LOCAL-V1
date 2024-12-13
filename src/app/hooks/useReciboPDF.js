@@ -49,7 +49,7 @@ import "jspdf-autotable";
     pdf.setFont("times", "italic");
     pdf.text("Miguel Gomez & Cia", 10, 10);
     pdf.text("Tel: 777777", 10, 15);
-    pdf.text("Email: miguelgomoz&cia@hotmail.com", 10, 20);
+    pdf.text("Email: miguelgomez&cia@hotmail.com", 10, 20);
     pdf.text("Website: https://www.miguelgomez.com.co", 10, 25);
     pdf.text("-----------------------------------------------------------------------------------------------------------------------------------------------------------------", 10, 30);
     pdf.setFontSize(8);
@@ -81,7 +81,7 @@ import "jspdf-autotable";
     }  
     pdf.text(`CAMBIO: $${caja.cambio}`, 12, pdf.autoTable.previous.finalY + 40);
     pdf.setFontSize(8);
-    pdf.text("______________________________________________________________________________________________________________________", 12, pdf.autoTable.previous.finalY + 55);
+    pdf.text("_________________________________________________________________________________________________________________________________________________________________", 12, pdf.autoTable.previous.finalY + 55);
     pdf.text(`${fecha}`, 12, pdf.autoTable.previous.finalY + 65);
   }
 
