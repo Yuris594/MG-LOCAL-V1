@@ -30,7 +30,7 @@ const columns = [
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch(Conexion.url + "/clientes/listar", {
+  const response = await fetch("/api/clientes/listar", {
     method: "GET",
     headers: {
       "Content-Type" : "application/json"

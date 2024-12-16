@@ -9,7 +9,6 @@ import { useAuth }  from "@/context/authContext";
 import HomeIcon from "@mui/icons-material/Home";
 import { Lora } from "next/font/google";
 import { useState } from "react";
-import Image from "next/image";
 import Swal from "sweetalert2";
 import Link from "next/link";
 
@@ -52,17 +51,17 @@ import Link from "next/link";
   const page = [
     {
       title: "USUARIOS",
-      url: "../start/usuarios",
+      url: "./start/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "../start/pedidos",
+      url: "./start/pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "../start/clients",
+      url: "./start/clients",
       icon: <Person />,
     },
     
@@ -73,12 +72,12 @@ import Link from "next/link";
     },
     {
       title: "FACTURAS",
-      url: "../start/facturas",
+      url: "./start/facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "../start/pedidos/pedidosCaja",
+      url: "./start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];

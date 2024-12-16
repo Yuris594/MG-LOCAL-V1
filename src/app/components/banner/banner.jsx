@@ -75,17 +75,17 @@ const Banner = () => {
   const page = [
     {
       title: "USUARIOS ",
-      url: "/start/usuarios",
+      url: "./usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "/start/pedidos",
+      url: "./pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "/start/clients",
+      url: "./clients",
       icon: <Person />,
     },
     {
@@ -95,12 +95,12 @@ const Banner = () => {
     },
     {
       title: "FACTURAS",
-      url: "/start/facturas",
+      url: "./facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "/start/pedidos/pedidosCaja",
+      url: "./pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];
@@ -148,10 +148,10 @@ const Banner = () => {
           onClose={handleCloseM}
           MenuListProps={{ "aria-labelledby": "basic-button" }}
           >
-          <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" >
+          <MenuItem onClick={handleCloseM} component={Link} href="./buscarProd" >
             Buscar Por Referencias
           </MenuItem>
-          <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG">
+          <MenuItem onClick={handleCloseM} component={Link} href="./productosMG">
             Lista de Todos Los Productos
           </MenuItem>
         </Menu>
