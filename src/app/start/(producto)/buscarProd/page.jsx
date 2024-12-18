@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid2";
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,8 +8,7 @@ import Banner from "@/app/components/banner/banner";
 import CheckIcon from '@mui/icons-material/Check';
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
- useMediaQuery, useTheme, LinearProgress, Typography,
- CircularProgress } from "@mui/material";
+ useMediaQuery, useTheme, LinearProgress, Typography, } from "@mui/material";
 import { Conexion } from "@/conexion";
 
 
@@ -55,19 +54,34 @@ const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300 },
-  { field: "TOTAL_DISP", headerName: "DISP-MG", width: 130 },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130 },
+  { field: "TOTAL_DISP", headerName: "DISP-MG", width: 130, 
+    valueFormatter: (value) => {
+      const disponible = parseFloat(value).toFixed(0);
+      return `${parseFloat(disponible).toLocaleString('es-CO')}`
+    }
+  },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130, 
+    valueFormatter: (value) => {
+      const existe = parseFloat(value).toFixed(0);
+      return `${parseFloat(existe).toLocaleString('es-CO')}`;
+    }
+  },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+      return `${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
-  { field: "PORC_IMPUESTO", headerName: "IVA", width: 130 },
+  { field: "PORC_IMPUESTO", headerName: "IVA", width: 130, 
+    valueFormatter: (value) => {
+      const impuesto = parseFloat(value).toFixed(1);
+      return `${parseFloat(impuesto).toLocaleString()}`
+    }
+  },
   { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+      return `${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130 },
@@ -83,26 +97,41 @@ const columnsF = [
   { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+      return `${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
   { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
   { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
   { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
-  { field: "CANTIDAD", headerName: "CANT", width: 130 },
+  { field: "CANTIDAD", headerName: "CANT", width: 130, 
+    valueFormatter: (value) => {
+      const cantidad = parseFloat(value).toFixed(0);
+      return `${parseFloat(cantidad).toLocaleString()}`;
+    }
+  },
   { field: "PRECIO_UNITARIO", headerName: "PRECIO UNI.", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+      return `${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
-  { field: "PORCIVA", headerName: "IVA", width: 130, },
-  { field: "PORDESC", headerName: "DESC", width: 130, },
+  { field: "PORCIVA", headerName: "IVA", width: 130, 
+    valueFormatter: (value) => {
+      const iva = parseFloat(value).toFixed(1);
+      return `${parseFloat(iva).toLocaleString()}`;
+    }
+  },
+  { field: "PORDESC", headerName: "DESC", width: 130, 
+    valueFormatter: (value) => {
+      const desc = parseFloat(value).toFixed(0);
+      return `${parseFloat(desc).toLocaleString()}`;
+    }
+  },
   { field: "VDESC", headerName: "V. DESC", width: 130 },
   { field: "TOTAL_MERCADERIA", headerName: "V. TOTAL", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+      return `${parseFloat(precio).toLocaleString('es-CO')}`;
     }, cellClassName: "autor-cell",
   },
   { field: "IDRUTERO", headerName: "ID RUTERO", width: 130 },
@@ -117,9 +146,24 @@ const columnsP = [
   },
   { field: "CLIENTE", headerName: "CLIENTE", width: 160 },
   { field: "PEDIDO", headerName: "PEDIDO", width: 100, cellClassName: "pedido-cell" },
-  { field: "PED", headerName: "PED", width: 100, },
-  { field: "DESP", headerName: "DESP", width: 100, },
-  { field: "PEND", headerName: "PEND", width: 100, },
+  { field: "PED", headerName: "PED", width: 100, 
+    valueFormatter: (value) => {
+      const ped = parseFloat(value).toFixed(0);
+      return `${parseFloat(ped).toLocaleString()}`;
+    }
+  },
+  { field: "DESP", headerName: "DESP", width: 100, 
+    valueFormatter: (value) => {
+      const desp = parseFloat(value).toFixed(0);
+      return `${parseFloat(desp).toLocaleString()}`
+    }
+  },
+  { field: "PEND", headerName: "PEND", width: 100, 
+    valueFormatter: (value) => {
+      const pend = parseFloat(value).toFixed(0);
+      return `${parseFloat(pend).toLocaleString()}`;
+    }
+  },
   { field: "ESTADO", headerName: "ESTADO", width: 120 },
   { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 200,
     renderCell: (params) => {
@@ -186,7 +230,7 @@ const BuscarReferencia = () => {
   const [value, setValue] = useState(0);
   const [pedidos, setPedidos] = useState([]);
   const [facturas, setFacturas] = useState([]);
-  const [criterio, setCriterio] = useState(null);
+  const [criterio, setCriterio] = useState("ARTICULO");
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [valorBusqueda, setValorBusqueda] = useState("");
@@ -195,13 +239,23 @@ const BuscarReferencia = () => {
   const [errorBusqueda, setErrorBusqueda] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const textFieldRef = useRef(null);
 
   const options = [
     {label: "ARTICULO"},
     {label: "REFERENCIA"}
-
-    
   ];
+
+  const handleCriterioChange = (event, newValue) => {
+    setCriterio(newValue?.label || "");
+    if (newValue) {
+      textFieldRef.current.focus();
+    }
+  }
+
+  const handleValorChange = (event) => {
+    setValorBusqueda(event.target.value);
+  }
 
   const consultarArticulo = async () => {
 
@@ -221,8 +275,8 @@ const BuscarReferencia = () => {
     try {
       const endpoint =
       criterio === "ARTICULO" 
-        ? Conexion.url + `/productos/${valorBusqueda}`
-        : Conexion.url + `/productos/descripcion/${valorBusqueda}`;
+        ?  Conexion.url + `/productos/${valorBusqueda}`
+        :  Conexion.url + `/productos/descripcion/${valorBusqueda}`;
       const response = await fetch(endpoint, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
@@ -230,7 +284,12 @@ const BuscarReferencia = () => {
         
       if (response.ok) {
         const datos = await response.json();
-        setProductos(datos);        
+        setProductos(datos); 
+
+        if (datos.length > 0) {
+          setSeleccionarArticulo(datos[0]);
+        }       
+
       } else {
         console.log("Error en la busqueda:", response.statusText);
         setProductos([]);
@@ -305,7 +364,7 @@ const BuscarReferencia = () => {
                 disablePortal
                 options={options}
                 value={criterio}
-                onChange={(event, newValue) => { setCriterio(newValue?.label || ""); }}
+                onChange={handleCriterioChange}
                 renderInput={(params) => <TextField 
                   {...params} 
                   label="Criterio de Busqueda" 
@@ -317,10 +376,11 @@ const BuscarReferencia = () => {
               />
 
               <TextField 
+                inputRef={textFieldRef}
                 id="outlined-basic"
                 size="small"
                 value={valorBusqueda}
-                onChange={(e) => setValorBusqueda(e.target.value)}
+                onChange={handleValorChange}
                 onKeyPress={handleKeyPress}
                 error={errorBusqueda}
                 helperText={errorBusqueda ? "Este valor es requerido" : ""}

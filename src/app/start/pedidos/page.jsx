@@ -6,7 +6,6 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import Grid from "@mui/material/Grid2";
 import BotonExcel from "../../hooks/useExportoExcel";
-import SearchIcon from "@mui/icons-material/Search";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { Conexion } from "@/conexion";
@@ -57,7 +56,12 @@ const columns = [
   { field: "U_COMPESPECIAL", headerName: "ESP", width: 190 },
   { field: "VENDEDOR", headerName: "VEND", width: 100 },
   { field: "COMENTARIO_CXC", headerName: "AUT. SISTEMA", width: 250 },
-  { field: "TOTAL_A_FACTURAR", headerName: "A FACT", width: 120 },
+  { field: "TOTAL_A_FACTURAR", headerName: "A FACT", width: 120, 
+    valueFormart: (value) => {
+      const precio = parseFloat(value).toFixed(0);
+      return `${parseFloat(precio).toLocaleString()}`;
+    }
+  },
   { field: "NOMBRE_RAZON", headerName: "CLIENTE", width: 400 },
   { field: "U_EDITADOPOR", headerName: "USUARIO MG", width: 100 },
   { field: "DEPTO", headerName: "DEPARTAMENTO", width: 130 },

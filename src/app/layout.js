@@ -2,11 +2,11 @@
 import "./globals.css";
 import theme from "./style";
 import Internet from "./internet";
-import { Roboto } from "next/font/google"
+import { Montserrat } from "next/font/google"
 import { AuthProvider } from "@/context/authContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
-const inter = Roboto({ 
+const inter = Montserrat({ 
   subsets: ["latin"],
   weight: ['400', '700'], 
 });

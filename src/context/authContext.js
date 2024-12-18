@@ -15,9 +15,9 @@ import Cookies from 'js-cookie';
     const router = useRouter();
     const [loading] = useState(true); 
     const [auth, setAuth] = useState(null); 
-    const [clienteV, setClienteV] = useState({});
-    const [pedidosV, setPedidosV] = useState({});
-    const [carteraV, setCarteraV] = useState({});
+    const [cliente, setCliente] = useState({});
+    const [pedidos, setPedidos] = useState({});
+    const [caja, setCaja] = useState({});
    
 
     const login = useCallback(function (authTokens) {
@@ -38,20 +38,20 @@ import Cookies from 'js-cookie';
     //Guardar los datos del usuario para cuando recargue la pagina
     useEffect(() => {
       const storedAuth = localStorage.getItem('auth') || Cookies.get('authTokens');
-      const storePedidos = localStorage.getItem("pedidoV");
-      const storeCartera = localStorage.getItem("cartera");
-      const storeCliente = localStorage.getItem("clienteV");
+      const storePedidos = localStorage.getItem("pedido");
+      const storeCartera = localStorage.getItem("caja");
+      const storeCliente = localStorage.getItem("cliente");
 
       if (storeCliente) {
-        setClienteV(JSON.parse(storeCliente));
+        setCliente(JSON.parse(storeCliente));
       }
 
       if (storePedidos) {
-        setPedidosV(JSON.parse(storePedidos));
+        setPedidos(JSON.parse(storePedidos));
       }
 
       if (storeCartera) {
-        setCarteraV(JSON.parse(storeCartera));
+        setCaja(JSON.parse(storeCartera));
       }
       
       if (storedAuth) {
@@ -62,16 +62,16 @@ import Cookies from 'js-cookie';
 
     const value = useMemo(() => ({
         auth,
-        clienteV,
-        setClienteV, 
-        pedidosV,
-        setPedidosV, 
-        carteraV,
-        setCarteraV, 
+        cliente,
+        setCliente, 
+        pedidos,
+        setPedidos, 
+        caja,
+        setCaja, 
         loading,
         login,
         logout,
-    }), [auth, clienteV, pedidosV, carteraV, login, logout]);
+    }), [auth, cliente, pedidos, caja, login, logout]);
 
 
     return (

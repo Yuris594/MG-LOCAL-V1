@@ -65,21 +65,41 @@ const CrearPedido = () => {
     { field: "PRECIO", headerName: "PRECIO", width: 130, editable: true, type: "number",
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: "cantped", headerName: "CANT", width: 100, editable: true, editable: true, type: "number"
     },
-    { field: "PORC_IMPUESTO", headerName: "IVA", width: 70, editable: true, type: "number" },
-    { field: "PORC_DCTO", headerName: "D1", width: 70, editable: true, type: "number" },
+    { field: "PORC_IMPUESTO", headerName: "IVA", width: 70,
+      valueFormatter: (value) => {
+        const precio = parseFloat(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }, editable: true, type: "number" 
+    },
+    { field: "PORC_DCTO", headerName: "D1", width: 70,
+      valueFormatter: (value) => {
+        const precio = parseFloat(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }, editable: true, type: "number" 
+    },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString('es-CO')}`;
       }, align: "right",
     },
-    { field: "TOTAL_DISP", headerName: "DISP", width: 70 },
-    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
+    { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
+      valueFormatter: (value) => {
+        const precio = parseFloat(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }
+    },
+    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, 
+      valueFormatter: (value) => {
+        const precio = parseFloat(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }
+    },
     { field: "actions", type: "actions", headerName: "", width: 100, cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
