@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
     const [loading] = useState(true); 
     const [auth, setAuth] = useState(null); 
     const [cliente, setCliente] = useState({});
-    const [pedidos, setPedidos] = useState({});
+    const [pedido, setPedido] = useState({});
     const [caja, setCaja] = useState({});
    
 
@@ -47,7 +47,7 @@ import Cookies from 'js-cookie';
       }
 
       if (storePedidos) {
-        setPedidos(JSON.parse(storePedidos));
+        setPedido(JSON.parse(storePedidos));
       }
 
       if (storeCartera) {
@@ -64,14 +64,14 @@ import Cookies from 'js-cookie';
         auth,
         cliente,
         setCliente, 
-        pedidos,
-        setPedidos, 
+        pedido,
+        setPedido, 
         caja,
         setCaja, 
         loading,
         login,
         logout,
-    }), [auth, cliente, pedidos, caja, login, logout]);
+    }), [auth, cliente, pedido, caja, login, logout]);
 
 
     return (

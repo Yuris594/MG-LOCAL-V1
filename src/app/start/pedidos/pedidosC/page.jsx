@@ -138,7 +138,7 @@ export const PedidosC = () => {
 
   const conseguirProductosP = async () => {
     try {
-      const response = await fetch(Conexion.url +`/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+      const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application" },
       });
