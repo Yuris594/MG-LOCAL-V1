@@ -23,48 +23,43 @@ const fDate = (dateString) => {
 const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
-  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300,  
-    valueFormatter: (value) => {
-      const linea = parseFloat(value).toFixed(0);
-      return `${parseFloat(linea).toLocaleString()}`;
-    }
-  },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, },
   { field: "TOTAL_DISP", headerName: "DISP", width: 130, 
     valueFormatter: (value) => {
       const dispo = parseFloat(value).toFixed(0);
       return `${parseFloat(dispo).toLocaleString()}`;
-    }
+    }, type: "number"
   },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString('es-CO')}`;
-    },
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 100, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(1);
-      return `${parseFloat(precio).toLocaleString()}`;
-    }
+      const precio = parseFloat(value).toLocaleString();
+      return `${parseFloat(precio).toFixed(1)}`;
+    }, type: "number"
   },
   { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString('es-CO')}`;
-    }, 
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString()}`;
-    }
+      const precio = parseFloat(value).toLocaleString();
+      return `${parseFloat(precio).toFixed(1)}`;
+    }, type: "number"
   },
   { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130, 
+  { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 130, 
     valueFormatter: (value) => {
       const existe = parseFloat(value).toFixed(0);
       return `${parseFloat(existe).toLocaleString()}`;
-    }
+    }, type: "number"
   },
 ];
 
@@ -78,7 +73,7 @@ const columnsP = [
     valueFormatter: (value) => {
       const ped = parseFloat(value).toFixed(0);
       return `${parseFloat(ped).toLocaleString()}`;
-    }
+    }, 
   },
   { field: "DESP", headerName: "DESP", width: 120, 
     valueFormatter: (value) => {
@@ -120,8 +115,8 @@ const columnsF = [
   { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString('es-CO')}`;
-    },
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
   },
   { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: 'pedido-cell' },
   { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
@@ -130,32 +125,37 @@ const columnsF = [
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
-    }
+    }, type: "number"
   },
   { field: "PRECIO_UNITARIO", headerName: "PRECION UNI.", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString('es-CO')}`;
-    }, 
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
   },
   { field: "PORCIVA", headerName: "IVA", width: 100, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(1);
-      return `${parseFloat(precio).toLocaleString()}`;
-    }
+      const precio = parseFloat(value).toLocaleString();
+      return `${parseFloat(precio).toFixed(1)}`;
+    }, type: "number"
   },
   { field: "PORDESC", headerName: "DESC", width: 100, 
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
+  },
+  { field: "VDESC", headerName: "V DESC", width: 130, 
+    valueFormatter: (value) => {
+      const precio = parseFloat(value).toFixed(0);
+      RETURN `${parseFloat(precio).toLocaleString()}`;
     }
   },
-  { field: "VDESC", headerName: "V DESC", width: 130 },
   { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
-      return `${parseFloat(precio).toLocaleString('es-CO')}`;
-    }, cellClassName: "autor-cell",
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number", cellClassName: "autor-cell",
   },
   { field: "IDRUTERO", headerName: "ID RUTERO", width: 130 },
   { field: "IDGUIA", headerName: "ID GUIA", width: 130 },

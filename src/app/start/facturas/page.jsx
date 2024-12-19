@@ -115,7 +115,7 @@ const Factura = () => {
   const generarPDF = () => {
     const pdf = new jsPDF("portrait", "pt", "letter");
     const columnsParaPDF = [
-      { field: "ARTICULO", headerName: "Ref.", width: 200 },
+      { field: "ARTICULO", headerName: "REF.", width: 200 },
       { field: "CANTIDAD", headerName: "CANT", width: 200, align: "right" },
       { field: "CPed", headerName: "UND", width: 200, type: "number", align: "right", },
       { field: "DESCRIPCION", headerName: "DESCRIPCIÓN", width: 1000 },

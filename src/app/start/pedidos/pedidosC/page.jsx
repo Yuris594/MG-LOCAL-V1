@@ -296,27 +296,41 @@ export const PedidosC = () => {
 
   const columnsP = [
     { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
-    { field: 'DESCRIPCION', headerName: 'Referencia', width: 500 },
-    { field: 'PRECIO', headerName: 'Precio', width: 130,
+    { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500 },
+    { field: 'PRECIO', headerName: 'PRECIO', width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: 'number'
     },
-    { field: 'CPed', headerName: 'Cant', width: 80, type: 'number', editable: true },
+    { field: 'CPed', headerName: 'CANT', width: 80, type: 'number', editable: true },
     { field: 'PORC_DCTO', headerName: 'D1', width: 70,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        const precio = parseFloat(value).toLocaleString();
+        return `${parseFloat(precio).toFixed(1)}`;
       }, editable: true, type: "number"
     },
-    { field: 'DISP', headerName: 'Disp', width: 70, 
+    { field: 'DISP', headerName: 'DISP', width: 70, 
+      valueFormatter: (value) => {
+        const precio = parseFloat(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }, type: "number",
       cellClassName: (params) => params.value === 0 ? 'red-text' : '' 
     },
-    { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40, },
-    { field: 'Em', headerName: 'Emp', width: 80 },
-    { field: 'EXIST_REAL', headerName: 'Existreal', width: 90 },
-    { field: 'actions', type: 'actions', headerName: 'Actions', width: 100, cellClassName: 'actions',
+    { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40, 
+      valueFormatter: (value) => {
+        const iva = parseFloat(value).toLocaleString();
+        return `${parseFloat(iva).toFixed(1)}`;
+      }, type: "number"
+    },
+    { field: 'Em', headerName: 'EMP', width: 80 },
+    { field: 'EXIST_REAL', headerName: 'EXIST-REAL', width: 90, 
+      valueFormatter: (value) => {
+        const real = parseFloat(value).toFixed(0);
+        return `${parseFloat(real).toLocaleString()}`;
+      }, type: "number"
+    },
+    { field: 'actions', type: 'actions', headerName: 'ACTIONS', width: 100, cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -425,8 +439,8 @@ export const PedidosC = () => {
     { field: 'PRECIO', headerName: 'PRECIO', width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
-      }, editable: true
+        return `${parseFloat(precio).toLocaleString('es-CO')}`;
+      }, editable: true, type: "number"
     },
     { field: 'CANTIDAD', headerName: 'CANT', width: 80, type: 'number', editable: true,
       renderCell: (params) => {
@@ -445,7 +459,7 @@ export const PedidosC = () => {
     { field: 'PRECIOMASIVA', headerName: 'MASIVA', width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true
     },
     { field: 'PORC_DCTO', headerName: 'D1', width: 40 },

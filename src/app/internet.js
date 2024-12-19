@@ -1,7 +1,7 @@
 "use client";
 
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import React, { useEffect, useState } from 'react'
+import Swal from 'sweetalert2';
 
 const Internet = () => {
     const [online, setOnline] = useState(undefined);
@@ -22,15 +22,17 @@ const Internet = () => {
 
     if (online === undefined) return null;
 
+    const Internet = () => {
+      Swal.fire({
+        icon: "error",
+        title: "No Tiene Conexión.",
+        text: "Verifique la Conexión de Internet."
+      })
+    }
+
   return (
     <>
-        <Snackbar open={!online} anchorOrigin={{ vertical: 'top', horizontal: "center" }}>
-            <Alert severity='error'>
-                <AlertTitle>No Tiene Conexion</AlertTitle>
-                    Verifique La Conexion De Internet
-            </Alert>
-        </Snackbar>
-
+      <Internet />
     </>
   )
 }

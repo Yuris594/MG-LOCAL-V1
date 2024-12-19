@@ -94,7 +94,7 @@ const CrearPedido = () => {
         return `${parseFloat(precio).toLocaleString()}`;
       }
     },
-    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, 
+    { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 90, 
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;

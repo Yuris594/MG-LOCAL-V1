@@ -53,15 +53,24 @@ const style = {
 const columns = [
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, headerClassName: 'header-bold' },
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, headerClassName: 'header-bold' },
-  { field: "TOTAL_DISP", headerName: "DISP", width: 70, headerClassName: 'header-bold'  },
+  { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
+    valueFormatter: (value) => {
+      const total = parseFloat(value).toFixed(0);
+      return `${parseFloat(total).toLocaleString()}`;
+    }, type: "number", headerClassName: 'header-bold'  
+  },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    }, editable: true,  headerClassName: 'header-bold'
+    }, editable: true, type: "number", headerClassName: 'header-bold'
   },
   { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: 'header-bold' },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90, headerClassName: 'header-bold'  },
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90,
+    valueFormatter: (value) => {
+      const real = parseFloat(value).toFixed(0);
+      return `${parseFloat(real).toLocaleString()}`;
+    }, type: "number", headerClassName: 'header-bold'  },
 ];
 
 const conseguirProductos = async () => {
