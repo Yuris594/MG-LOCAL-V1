@@ -298,6 +298,7 @@ const BuscarReferencia = () => {
 
         if (datos.length > 0) {
           setSeleccionarArticulo(datos[0]);
+          setValue(0);
         }       
 
       } else {
