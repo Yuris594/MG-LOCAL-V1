@@ -281,7 +281,7 @@ const ClientesTemp = () => {
         <Paper elevation={3} sx={{ padding: 3, margin: "0 auto", marginTop: 3, maxWidth: 1000, width: "100%" }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
-              <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} LinkComponent={Link} href="./">
+              <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} LinkComponent={Link} href="../clients">
                 Cerrar
               </Button>
               <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href=".././pedidos/crearPedido">
