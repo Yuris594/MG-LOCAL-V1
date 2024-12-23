@@ -1,6 +1,6 @@
 'use client';
 
-import { createTheme, responsiveFontSizes } from "@mui/material"
+import { createTheme } from "@mui/material"
 
 const theme = createTheme({
     breakpoints: {
