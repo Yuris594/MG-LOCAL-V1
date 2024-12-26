@@ -285,8 +285,8 @@ const BuscarReferencia = () => {
     try {
       const endpoint =
       criterio === "ARTICULO" 
-        ?  `/api/productos/${valorBusqueda}`
-        :  `/api/productos/descripcion/${valorBusqueda}`;
+        ?  Conexion.url + `/productos/${valorBusqueda}`
+        :  Conexion.url + `/productos/descripcion/${valorBusqueda}`;
       const response = await fetch(endpoint, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
@@ -405,7 +405,7 @@ const BuscarReferencia = () => {
 
             <Box>
               <h3 style={{ margin: 0, color: "#db2093" }}>
-                {seleccionarArticulo.ARTICULO - seleccionarArticulo.DESCRIPCION}
+                {seleccionarArticulo.ARTICULO} {seleccionarArticulo.DESCRIPCION}
               </h3>
             </Box>
             <BotonExcel datos={productos} />
