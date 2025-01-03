@@ -195,7 +195,7 @@ const columnsP = [
 
 
 const obtenerFacturas = async (seleccionarArticulo) => {
-  const response = await fetch(`/api/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", },
   });
@@ -215,7 +215,7 @@ const obtenerFacturas = async (seleccionarArticulo) => {
 };
 
 const obtenerPedidos = async (seleccionarArticulo) => {
-  const response = await fetch(`/api/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(Conexion.url + `/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -285,8 +285,8 @@ const BuscarReferencia = () => {
     try {
       const endpoint =
       criterio === "ARTICULO" 
-        ?  `/api/productos/${valorBusqueda}`
-        :  `/api/productos/descripcion/${valorBusqueda}`;
+        ?  Conexion.url + `/productos/${valorBusqueda}`
+        :  Conexion.url + `/productos/descripcion/${valorBusqueda}`;
       const response = await fetch(endpoint, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }

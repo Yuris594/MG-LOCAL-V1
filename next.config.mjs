@@ -4,16 +4,16 @@
       unoptimized: true,
     },
     
-    //output: 'export',
+    output: 'export',
 
-    async rewrites() {
+    /*async rewrites() {
       return [
         {
           source: '/api/:path*',
           destination: 'http://172.20.20.3:8001/:path*',
         },
       ]
-    },
+    },*/
   }
 
   export default nextConfig;

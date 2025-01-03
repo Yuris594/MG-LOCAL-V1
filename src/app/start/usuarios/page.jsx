@@ -49,7 +49,7 @@ const columns = [
 
 
 const obtenerUsuario = async () => {
-  const response = await fetch('/api/usuarios/listar', {
+  const response = await fetch(Conexion.url + '/usuarios/listar', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -26,7 +26,7 @@ const columns = [
 
 const conseguirClientes = async () => {
   try {
-      const response = await fetch("/api/clientes/listar", {
+      const response = await fetch(Conexion.url + "/clientes/listar", {
           method: "GET",
           headers: { "Content-Type": "application/json" }
       });
@@ -101,22 +101,22 @@ const ClientesGlobal = ({ setOpen }) => {
   return (
     <>
       <div style={{ height: "auto", width: "100%", backgroundColor: "#ffffff" }}>
-          <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
-            <h2><strong>CLIENTES</strong></h2>
-              <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 600, margin: "0%" }}>
-                  <InputBase
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder="Buscar"
-                      inputProps={{ "aria-label": "search google maps" }}
-                      autoComplete="usuario"
-                      autoFocus
-                      value={busqueda}
-                      onChange={handleChange}
-                  />
-                  <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
-                      <SearchIcon />
-                  </IconButton>
-              </Paper>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
+          <h2><strong>CLIENTES</strong></h2>
+          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 600, margin: "0%" }}>
+              <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="Buscar"
+                  inputProps={{ "aria-label": "search google maps" }}
+                  autoComplete="usuario"
+                  autoFocus
+                  value={busqueda}
+                  onChange={handleChange}
+              />
+              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
+                  <SearchIcon />
+              </IconButton>
+            </Paper>
           </Box>
           <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#00796b', color: '#000000' } }}>
               <DataGrid
