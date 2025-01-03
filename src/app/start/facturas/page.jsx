@@ -22,7 +22,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(Conexion.url + `/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

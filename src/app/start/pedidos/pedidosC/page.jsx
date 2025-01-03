@@ -1,7 +1,7 @@
 "use client";
 
 
-import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput, Divider } from "@mui/material";
+import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
 import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/context/authContext";
@@ -120,7 +120,7 @@ export const PedidosC = () => {
 
   const conseguirProductos = async () => {
     try {
-      const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
+      const response = await fetch("/api/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type" : "application/json" },
       });
@@ -138,7 +138,7 @@ export const PedidosC = () => {
 
   const conseguirProductosP = async () => {
     try {
-      const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+      const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application" },
       });
@@ -155,7 +155,7 @@ export const PedidosC = () => {
 
   const conseguirProductosPendientes = async () => {
     try {
-      const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+      const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
       });
@@ -179,7 +179,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
+      const response = await fetch("/api/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }
@@ -204,7 +204,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
+      const response = await fetch("/api/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }
@@ -310,13 +310,7 @@ export const PedidosC = () => {
         return `${parseFloat(precio).toFixed(1)}`;
       }, editable: true, type: "number"
     },
-    { field: 'DISP', headerName: 'DISP', width: 70, 
-      valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString()}`;
-      }, type: "number",
-      cellClassName: (params) => params.value === 0 ? 'red-text' : '' 
-    },
+    { field: 'DISP', headerName: 'DISP', width: 70,  },
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40, 
       valueFormatter: (value) => {
         const iva = parseFloat(value).toLocaleString();
@@ -324,12 +318,6 @@ export const PedidosC = () => {
       }, type: "number"
     },
     { field: 'Em', headerName: 'EMP', width: 80 },
-    { field: 'EXIST_REAL', headerName: 'EXIST-REAL', width: 90, 
-      valueFormatter: (value) => {
-        const real = parseFloat(value).toFixed(0);
-        return `${parseFloat(real).toLocaleString()}`;
-      }, type: "number"
-    },
     { field: 'actions', type: 'actions', headerName: 'ACTIONS', width: 100, cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -471,233 +459,232 @@ export const PedidosC = () => {
   return (
     <>
       <Box> {" "} <Banner />{" "} </Box>
-      <Box sx={{ padding: "20px" }}> 
-      <Paper elevation={3} sx={{ padding: 1, marginBottom: 1 }}>
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Grid size={{ xs: 12, sm: 8, md: 6}}> 
-              <h2 style={{ margin: 0 }}><strong>PEDIDOS</strong></h2>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 8, md: 6}}>
-                {clienteP?.AUTORIZADONOM === "APROBADO" ? (
-                  <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
-                    {" "}<PrintIcon />{" "}
-                  </Button>
-                ) : (
-                  <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff64" }} disabled>
-                    {" "}<PrintIcon />{" "}
-                  </Button>
-                )}
+        <Grid container spacing={2} direction={isSmallScreen ? "column" : "row"} alignItems="center" justifyContent="space-between">
+          <h2 style={{ margin: 4 }}>PEDIDOS</h2>
+          
+          <Grid size={{ xs: 12, sm: 6, md: 6 }} sx={{ padding: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
+              {clienteP?.AUTORIZADONOM === "APROBADO" ? (
+                <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
+                  {" "}<PrintIcon />{" "}
+                </Button>
+              ) : (
+                <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff64" }} disabled>
+                  {" "}<PrintIcon />{" "}
+                </Button>
+              )}
 
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff694" }} onClick={especial}>
-                  {" "}<StarIcon />{" "}
-                </Button>
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
-                  MG
-                </Button>
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }}>
-                  {" "}<CheckCircleIcon />{" "}
-                </Button>
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#eabafe" }} onClick={productosGuardar}>
-                  {" "}<SaveAsIcon />{" "}
-                </Button>
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#84D8F4" }} onClick={productosguardarP}>
-                  <SaveAltIcon  />
-                </Button>
-                <Button variant="filled" sx={{ bgcolor: "#ffa28a" }} onClick={cerrarP}>
-                  {" "}<HighlightOffIcon />{" "}
-                </Button>
-            </Grid>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff694" }} onClick={especial}>
+                {" "}<StarIcon />{" "}
+              </Button>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
+                MG
+              </Button>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }}>
+                {" "}<CheckCircleIcon />{" "}
+              </Button>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#eabafe" }} onClick={productosGuardar}>
+                {" "}<SaveAsIcon />{" "}
+              </Button>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#84D8F4" }} onClick={productosguardarP}>
+                <SaveAltIcon  />
+              </Button>
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#ffa28a" }} onClick={cerrarP}>
+                {" "}<HighlightOffIcon />{" "}
+              </Button>
+            </Box>
           </Grid>
-        </Paper>
+        </Grid>
+        
 
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
-            <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Estado</InputLabel>
-                    <OutlinedInput value={clienteP?.ESTADO || ''} label="Estado" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>{" "}Authorizacion{" "}</InputLabel>
-                    <OutlinedInput value={clienteP?.AUTORIZADONOM || ""} label="Authorizacion" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>{" "}Impreso{" "}</InputLabel>
-                    <OutlinedInput value={clienteP?.IMPRESO || ""} label="Impreso" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Nro</InputLabel>
-                    <OutlinedInput value={clienteP?.PEDIDO || ""} label="Nro" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>{" "}Cliente{" "}</InputLabel>
-                    <OutlinedInput value={clienteP?.CLIENTE || ""} label="Cliente" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 9 }}>
-                  <FormControl fullWidth>
-                    <InputLabel></InputLabel>
-                    <OutlinedInput value={clienteP?.NOMBRE_RAZON || ""} />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Fecha</InputLabel>
-                    <OutlinedInput  label="Fecha" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>{" "}Direccion de Envio{" "}</InputLabel>
-                    <OutlinedInput value={clienteP?.DEPTO || ""} label="Direccion Envio" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3}}>
-                  <FormControl fullWidth>
-                    <InputLabel></InputLabel>
-                    <OutlinedInput value={clienteP?.CIUDAD || ""} />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 3 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>Vend</InputLabel>
-                    <OutlinedInput value={clienteP?.VENDEDOR || ""} label="Vend" />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 1 }}>
-                  <Paper>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
-                    <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
-                  </Paper>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                    <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
-                    <OutlinedInput
-                      label="Nota Factura (Doc2)"
-                      id="OBSERVACIONES"
-                      name="OBSERVACIONES"
-                      autoComplete="OBSERVACIONES"
-                      autoFocus
-                      value={form.OBSERVACIONES || ""}
-                      onChange={changed}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid size={{ xs: 12, sm: 5}}>
-                  <FormControl sx={{ margin: 0.5, display: "flex"  }}>
-                    <InputLabel htmlFor="component-disabled"></InputLabel>
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="Multiline"
-                      multiline
-                      rows={1}
-                      defaultValue={clienteP?.OBSERVACIONES || ""}
-                    />
-                  </FormControl>
-                </Grid>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
+          <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Estado</InputLabel>
+                  <OutlinedInput value={clienteP?.ESTADO || ''} label="Estado" />
+                </FormControl>
               </Grid>
-            </Paper>
-          </Box>
 
-          
-          <Grid size={{ xs: 12 }}>
-            <Paper sx={{ width: "100%" }}>
-              <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
-                <Tab label="Detalles Lineas" {...a11yProps(0)} />
-                <Tab label="Articulos Pendientes" {...a11yProps(1)} />
-              </Tabs>
-          
-              <CustomTabPanel value={value} index={0}>
-                <Box sx={{ height: "auto", width: "100%", 
-                    "& .MuiDataGrid-cell--editable": {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                      "&:hover": {
-                        backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                      },
-                    },
-                  }}>
-                  <Box sx={{ height: "auto", width: "100%" }}>
-                    <DataGrid
-                      density="compact"
-                      rows={productosP}
-                      columns={columnsP}
-                      getRowId={(row) => row.ARTICULO}
-                      editMode="row"
-                      onRowModesModelChange={handleRowModesModelChange}
-                      onRowEditStop={handleRowEditStop}
-                      processRowUpdate={processRowUpdate}
-                      slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 10 },
-                        },
-                      }}
-                      pageSizeOptions={[10]}
-                    />
-                  </Box>
-                </Box>
-              </CustomTabPanel>
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>{" "}Autorizacion{" "}</InputLabel>
+                  <OutlinedInput value={clienteP?.AUTORIZADONOM || ""} label="Autorizacion" />
+                </FormControl>
+              </Grid>
 
-              <CustomTabPanel value={value} index={1}>
-                <Box sx={{ height: "auto", width: "100%",
-                    "& .MuiDataGrid-cell--editable": {
-                      bgcolor: (theme) =>
-                        theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                      "&:hover": {
-                        backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                      },
-                    },
-                  }}>
-                  <Box sx={{ height: "auto", width: "100%" }}>
-                    <DataGrid
-                      density="compact"
-                      rows={productosConDISP0}
-                      columns={columnsP}
-                      getRowId={(row) => row.ARTICULO}
-                      onRowSelectionModelChange={handleRowModesModelChange}
-                      onRowEditStop={handleRowEditStop}
-                      processRowUpdate={processRowUpdate}
-                      slotProps={{
-                        toolbar: { setProductosP, setRowModesModel },
-                      }}
-                      initialState={{
-                        pagination: {
-                          paginationModel: { page: 0, pageSize: 10 },
-                        },
-                      }}
-                      pageSizeOptions={[10]}
-                    />
-                  </Box>
-                </Box>
-              </CustomTabPanel>
-            </Paper>
-          </Grid>
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>{" "}Impreso{" "}</InputLabel>
+                  <OutlinedInput value={clienteP?.IMPRESO || ""} label="Impreso" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Nro</InputLabel>
+                  <OutlinedInput value={clienteP?.PEDIDO || ""} label="Nro" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>{" "}Cliente{" "}</InputLabel>
+                  <OutlinedInput value={clienteP?.CLIENTE || ""} label="Cliente" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 9 }}>
+                <FormControl fullWidth>
+                  <InputLabel></InputLabel>
+                  <OutlinedInput value={clienteP?.NOMBRE_RAZON || ""} />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Fecha</InputLabel>
+                  <OutlinedInput  label="Fecha" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>{" "}Direccion de Envio{" "}</InputLabel>
+                  <OutlinedInput value={clienteP?.DEPTO || ""} label="Direccion Envio" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3}}>
+                <FormControl fullWidth>
+                  <InputLabel></InputLabel>
+                  <OutlinedInput value={clienteP?.CIUDAD || ""} />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Vend</InputLabel>
+                  <OutlinedInput value={clienteP?.VENDEDOR || ""} label="Vend" />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 1 }}>
+                <Paper>
+                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
+                  <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
+                </Paper>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControl sx={{ margin: 0.5, display: "flex" }}>
+                  <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
+                  <OutlinedInput
+                    label="Nota Factura (Doc2)"
+                    id="OBSERVACIONES"
+                    name="OBSERVACIONES"
+                    autoComplete="OBSERVACIONES"
+                    autoFocus
+                    value={form.OBSERVACIONES || ""}
+                    onChange={changed}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid size={{ xs: 12, sm: 5}}>
+                <FormControl sx={{ margin: 0.5, display: "flex"  }}>
+                  <InputLabel htmlFor="component-disabled"></InputLabel>
+                  <TextField
+                    id="outlined-multiline-static"
+                    label="Multiline"
+                    multiline
+                    rows={1}
+                    defaultValue={clienteP?.OBSERVACIONES || ""}
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Paper>
         </Box>
+
+          
+        <Grid size={{ xs: 12 }}>
+          <Paper sx={{ width: "100%" }}>
+            <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+              <Tab label="Detalles Lineas" {...a11yProps(0)} />
+              <Tab label="Articulos Pendientes" {...a11yProps(1)} />
+            </Tabs>
+        
+            <CustomTabPanel value={value} index={0}>
+              <Box sx={{ height: "auto", width: "100%", 
+                  "& .MuiDataGrid-cell--editable": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
+                    },
+                  },
+                }}>
+                <Box sx={{ height: "auto", width: "100%" }}>
+                  <DataGrid
+                    density="compact"
+                    rows={productosP}
+                    columns={columnsP}
+                    getRowId={(row) => row.ARTICULO}
+                    editMode="row"
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                  />
+                </Box>
+              </Box>
+            </CustomTabPanel>
+
+            <CustomTabPanel value={value} index={1}>
+              <Box sx={{ height: "auto", width: "100%",
+                  "& .MuiDataGrid-cell--editable": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
+                    },
+                  },
+                }}>
+                <Box sx={{ height: "auto", width: "100%" }}>
+                  <DataGrid
+                    density="compact"
+                    rows={productosConDISP0}
+                    columns={columnsP}
+                    getRowId={(row) => row.ARTICULO}
+                    onRowSelectionModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slotProps={{
+                      toolbar: { setProductosP, setRowModesModel },
+                    }}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 10 },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                  />
+                </Box>
+              </Box>
+            </CustomTabPanel>
+          </Paper>
+        </Grid>
+        
 
       <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3}}>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

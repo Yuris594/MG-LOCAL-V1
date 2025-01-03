@@ -69,7 +69,7 @@ const columns = [
 ];
 
 const conseguirPedidos = async () => {
-  const response = await fetch(Conexion.url + "/pedidos/listar", {
+  const response = await fetch("/api/pedidos/listar", {
     next: { revalidate: 60 },
     method: "GET",
     headers: { "Content-Type" : "application/json" }
@@ -149,13 +149,17 @@ const Pedidos = () => {
           </Box>
         ) : (
           <Box>
-            <Grid container direction="column" sx={{ minHeight: "90vh", backfroundColor: "#ffffff", padding: 2 }}>
+            <Grid container direction="column" sx={{ minHeight: "90vh", backgroundColor: "#ffffff", padding: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
                   <Grid size={{ xs: 12, sm: 8, md: 6}}>
                     <h2><strong>PEDIDOS</strong></h2>
                   </Grid>
+                  <Grid size={{ sx: 6,  }}>
                     <Button variant="outlined" sx={{ margin: "10px" }}>{" "}Nuevo{" "}</Button>
+                  </Grid>
+                  <Grid size={{ sx: 6 }}>
                     <BotonExcel datos={pedidosFiltrados} />
+                  </Grid>
                   <Grid size={{ xs: 12, sm: 8, md: 6}}>
                     <TextField
                       id="outlined-basic"

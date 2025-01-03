@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Conexion } from "@/conexion";
 
 const actualizar = async (form) => {
-  const response = await fetch(Conexion.url + "/usuarios/actualizar/", {
+  const response = await fetch("/api/usuarios/actualizar/", {
     method: "POST",
     body: JSON.stringify(form),
     headers: { "Content-Type": "application/json" },
@@ -68,18 +68,17 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
 
   return (
     <>
-      <Container component="main" maxWidth="md">
         <CssBaseline />
-        <Box sx={{ backgroundColor: 'white', maxWidth: '100%', width: "100%", height: "40vh", overflowY: "auto", padding: 2, mt: 2, boxShadow: 1, borderRadius: 1 }}>
-          <h2 style={{ textAlign: "center" }}>ACTUALIZACIÓN DE USUARIO</h2>
+        
           <Box component="form" onSubmit={Actualizar}>
+          <h3 style={{ textAlign: "center" }}>ACTUALIZACIÓN DE USUARIO</h3>
             <Grid container spacing={2}>
               <Grid size={{ sx: 12, md: 6 }}>
                 <TextField
                   required
                   fullWidth
                   id="PER_Nom"
-                  label="PER_Nom"
+                  label="NOMBRE"
                   name="PER_Nom"
                   autoFocus
                   value={form.PER_Nom || ""}
@@ -91,18 +90,18 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
                   required
                   fullWidth
                   id="PER_Usuario"
-                  label="PER_Usuario"
+                  label="USUARIO"
                   name="PER_Usuario"
                   value={form.PER_Usuario || ""}
                   onChange={changed}
                 />
               </Grid>
-              <Grid size={12}>
+              <Grid size={{ sx: 12, md: 12 }}>
                 <TextField
                   required
                   fullWidth
                   id="PER_Clave"
-                  label="PER_Clave"
+                  label="CLAVE"
                   type="password"
                   name="PER_Clave"
                   value={form.PER_Clave || ""}
@@ -114,7 +113,7 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
                   required
                   fullWidth
                   name="IdDiv"
-                  label="IdDiv"
+                  label="IdDIV"
                   type="number"
                   id="IdDiv"
                   value={form.IdDiv || ""}
@@ -137,7 +136,7 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
                 <TextField
                   fullWidth
                   id="CODVEND"
-                  label="CODVEND"
+                  label="COD-VEND"
                   name="CODVEND"
                   value={form.CODVEND || ""}
                   onChange={changed}
@@ -157,17 +156,19 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
                 <TextField
                   fullWidth
                   id="CONSECUTIVOPED"
-                  label="CONSECUTIVOPED"
+                  label="CONSECUTIVO"
                   type="number"
                   name="CONSECUTIVOPED"
                   value={form.CONSECUTIVOPED || ""}
                   onChange={changed}
                 />
               </Grid>
+              <Grid size={{ sx: 12, md: 12 }}>
+                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                  Actualizar
+                </Button>
+              </Grid>
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Actualizar
-            </Button>
           </Box>
           {open && (
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
@@ -183,8 +184,7 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
               </Alert>
             </Snackbar>
           )}
-        </Box>
-      </Container>
+        
     </>
   );
 };

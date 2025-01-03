@@ -85,7 +85,7 @@ import { format } from 'date-fns';
           pdf.text(`CIUDAD PPAL:    ${clienteP.CIUDAD}-${clienteP.DEPTO}`, 12, 112,);
           pdf.text(`TEL:    ${clienteP.PEDIDO}`, 340, 112,);
           pdf.text(`D'UNA:    ${clienteP.PEDIDO}`, 450, 112,);
-          pdf.text(`DIRECCION Y CIDUAD DE DESPACHO:    ${clienteP.PEDIDO}`, 12, 125,);
+          pdf.text(`DIRECCION Y CIUDAD DE DESPACHO:    ${clienteP.PEDIDO}`, 12, 125,);
           pdf.text(`SOLICITA:   ${clienteP.PEDIDO}`, 340, 125,);
         }
 
@@ -103,15 +103,15 @@ import { format } from 'date-fns';
           pdf.setFontSize(10);
           pdf.text(`TOTAL ITEMS: ${productosP.length}`, 350, pdf.autoTable.previous.finalY + 20);
           pdf.text(`Total: ${sumaSaldoTotalDESC}`, 470, pdf.autoTable.previous.finalY + 20);
-          pdf.text("SEPARADO POR_____________________________________", 12, pdf.autoTable.previous.finalY + 20)
-          pdf.text("REVISADO POR______________________________________", 12, pdf.autoTable.previous.finalY + 40);
-          pdf.text("DESPACHADO POR______________________", 350, pdf.autoTable.previous.finalY + 40);
+          pdf.text("SEPARADO POR _____________________________________", 12, pdf.autoTable.previous.finalY + 20)
+          pdf.text("REVISADO POR ______________________________________", 12, pdf.autoTable.previous.finalY + 40);
+          pdf.text("DESPACHADO POR ______________________", 350, pdf.autoTable.previous.finalY + 40);
           pdf.setFontSize(8);
           pdf.text(`VENDEDOR: ${clienteP.VENDEDOR}`, 12, pdf.autoTable.previous.finalY + 65);
           pdf.text(`MODIFICADO POR: ${clienteP.U_EDITADOPOR}`, 350, pdf.autoTable.previous.finalY + 65);
           pdf.text(`AUTORIZADO EN CARTERA POR: ${clienteP.VENDEDOR}`, 12, pdf.autoTable.previous.finalY + 80);
           pdf.text(`FECHA AUTORIZADO: ${clienteP.U_EDITADOPOR}`, 350, pdf.autoTable.previous.finalY + 80);
-          pdf.text("___________________________________________________________________________________________________________________", 12, pdf.autoTable.previous.finalY + 90);
+          pdf.text("________________________________________________________________________________________", 12, pdf.autoTable.previous.finalY + 90);
           pdf.text(`${fecha}`, 12, pdf.autoTable.previous.finalY + 103);
         }
 

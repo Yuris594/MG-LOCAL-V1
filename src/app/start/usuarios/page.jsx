@@ -12,15 +12,19 @@ import Grid from "@mui/material/Grid2";
 import { Conexion } from "@/conexion";
 import Swal from "sweetalert2";
 
-const styles = {
+const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "auto",
-  height: "auto",
-  bgcolor: "background.paper",
-  boxShadow: 24,
+  maxHeight: "60vh",  
+  maxWidth: "30vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  bgcolor: "#fff",
+  border: "2px solid #000",
+  boxShadow: 24, 
 };
 
 export function conexion() {
@@ -45,7 +49,7 @@ const columns = [
 
 
 const obtenerUsuario = async () => {
-  const response = await fetch(Conexion.url + '/usuarios/listar', {
+  const response = await fetch('/api/usuarios/listar', {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -168,7 +172,7 @@ function Usuarios() {
               onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
-              <Box sx={styles}>
+              <Box sx={style}>
                 <Registro onClose={handleClose} />
               </Box>
             </Modal>
@@ -178,19 +182,20 @@ function Usuarios() {
               onClose={handleCloseA}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
-              <Box sx={styles}>
+              <Box sx={style}>
                 <UsuarioActualizar usuario={usuario} onClose={handleCloseA} />
               </Box>
             </Modal>
 
             <Grid container direction="column" sx={{ minHeight: "90vh", backfroundColor: "#ffffff", padding: 2 }}>
               <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center", gap: 2, marginBottom: 2 }}>
-                <Grid size={{ xs: 12, sm: 8, md: 6}}>
+                <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                   <h2><strong>USUARIOS</strong></h2>
                 </Grid>
-                
-                  <Button variant="outlined" onClick={handleOpen} sx={{ margin: 1 }} color="primary">Nuevo Usuario</Button>
-                <Grid size={{ xs: 12, sm: 8, md: 6}}>
+                <Grid size={{ sx: 12, sm: 2, md: 1 }}>
+                  <Button variant="outlined" onClick={handleOpen} color="primary">Nuevo Usuario</Button>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4, md: 5 }}>
                   <TextField
                     id="outlined-basic"
                     placeholder="Buscar..."

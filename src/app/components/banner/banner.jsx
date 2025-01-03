@@ -6,32 +6,14 @@ import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import HomeIcon from "@mui/icons-material/Home";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
+import { Lora } from "next/font/google";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import Navbar from "./navbar";
 import Link from "next/link";
-import Swal from "sweetalert2";
-import { Lora } from "next/font/google";
 
 const inter = Lora({ subsets: ['latin'] })
-
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  alignItems: "center",
-  justifyContext: "center",
-  boxShadow: 24,
-  textAlign: "center",
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
 
 const Banner = () => {
   const { auth, logout } = useAuth();
@@ -75,17 +57,17 @@ const Banner = () => {
   const page = [
     {
       title: "USUARIOS ",
-      url: "./usuarios",
+      url: "/start/usuarios",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "./pedidos",
+      url: "/start/pedidos",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "./clients",
+      url: "/start/clients",
       icon: <Person />,
     },
     {
@@ -95,12 +77,12 @@ const Banner = () => {
     },
     {
       title: "FACTURAS",
-      url: "./facturas",
+      url: "/start/facturas",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "./pedidos/pedidosCaja",
+      url: "/start/pedidos/pedidosCaja",
       icon: <Storefront />,
     },
   ];
@@ -148,10 +130,10 @@ const Banner = () => {
           onClose={handleCloseM}
           MenuListProps={{ "aria-labelledby": "basic-button" }}
           >
-          <MenuItem onClick={handleCloseM} component={Link} href="./buscarProd" >
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" >
             Buscar Por Referencias
           </MenuItem>
-          <MenuItem onClick={handleCloseM} component={Link} href="./productosMG">
+          <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG">
             Lista de Todos Los Productos
           </MenuItem>
         </Menu>
