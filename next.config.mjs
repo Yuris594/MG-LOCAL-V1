@@ -5,6 +5,7 @@
     },
     
     output: 'export',
+    trailingSlash: true,
 
     /*async rewrites() {
       return [
