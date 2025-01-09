@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import Grid from "@mui/material/Grid2";
+import { Conexion } from "@/conexion";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import { Conexion } from "@/conexion";
 
 
 function CustomTabPanel(props) {
@@ -82,7 +82,9 @@ const columnsF = [
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
-  { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
+  { field: "PEDIDO", headerName: "PEDIDO", width: 130, 
+    cellClassName: "pedido-cell" 
+  },
   { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
   { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
   { field: "CANTIDAD", headerName: "CANT", width: 130, },
@@ -116,7 +118,9 @@ const columnsC = [
   { field: "FECHAVENC", headerName: "FECHA VENC", width: 190,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "NUMDOC", headerName: "NUM DOC", width: 130, cellClassName: "autor-cell" },
+  { field: "NUMDOC", headerName: "NUM DOC", width: 130, 
+    cellClassName: "autor-cell" 
+  },
   { field: "DIASVENC", headerName: "VENC", width: 130, },
   { field: "MONTO", headerName: "MONTO", width: 130,
     valueFormatter: (value) => {
@@ -124,11 +128,11 @@ const columnsC = [
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },
-  { field: "SALDO", headerName: "SALDO", width: 130,  cellClassName: "plazo-cell",
+  { field: "SALDO", headerName: "SALDO", width: 130,  
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
-    }, 
+    }, cellClassName: "plazo-cell",
   },
   { field: "SMenorA30", headerName: "VENC < 30", width: 130,
     valueFormatter: (value) => {
@@ -148,7 +152,9 @@ const columnsC = [
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },
-  { field: "PLAZO", headerName: "PLAZO", width: 130, cellClassName: "plazo-cell" },
+  { field: "PLAZO", headerName: "PLAZO", width: 130, 
+    cellClassName: "plazo-cell" 
+  },
   { field: "VENDEDOR", headerName: "VENDEDOR", width: 130 },
 ];
 
@@ -277,212 +283,210 @@ const ClientesTemp = () => {
     <>
       <Box><Banner /></Box>
       
-      <Box>
-        <Paper elevation={3} sx={{ padding: 3, margin: "0 auto", marginTop: 3, maxWidth: 1000, width: "100%" }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
-              <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} LinkComponent={Link} href="../clients">
-                Cerrar
-              </Button>
-              <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href=".././pedidos/crearPedido">
-                Crear Pedido
-              </Button>
-            </Box>
+      <Paper elevation={3} sx={{ padding: 3, margin: "0 auto", marginTop: 3, maxWidth: 1000, width: "100%" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "flex-end", alignItems: "center", gap: 2 }}>
+            <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} LinkComponent={Link} href="../">
+              Cerrar
+            </Button>
+            <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href="../../pedidos/crearPedido">
+              Crear Pedido
+            </Button>
+          </Box>
 
-          <Divider orientation="horizontal" />
+        <Divider orientation="horizontal" />
 
-          <h3><strong style={{ fontSize: 20, color: "#6d32f7" }}>{clienteT?.NOMBREALIAS || ""}</strong></h3>
+        <h3><strong style={{ fontSize: 20, color: "#6d32f7" }}>{clienteT?.NOMBREALIAS || ""}</strong></h3>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
-            <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>NIT</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.CLIENTE || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Cupo</strong>
-                <Typography sx={{ mb: 1.5, display: "flex", color: "#16f50f" }}> 
-                  ${Number(clienteT?.CUPO || "0").toLocaleString("es-ES")} 
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Debe</strong>
-                <Typography sx={{ mb: 1.5, display: "flex", color: "#f50f0f" }}>
-                  ${Number(clienteT?.SALDO || "0").toLocaleString("es-ES")}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Dirección</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.DIRECCION || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Teléfono</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.TELEFONO1 || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Celular</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.TELEFONO1 || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Ciudad</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.CIUDAD || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 9, sm: 6, md: 3 }}>
-                <strong>Departamento</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.DEPARTAMENTO || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 8, md: 8}}>
-                <strong>Email</strong>
-                <Typography sx={{ mb: 1.5, display: "flex" }}>
-                  {clienteT?.E_MAIL || ""}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 8, md: 8}}>
-                <TextField
-                  id="outlined-basic"
-                  multiline
-                  rows={3}
-                  defaultValue={clienteT?.NOTAS || ""}
-                  variant="outlined"
-                  sx={{ width: "100%", border: "2px solid #13ace9" }}
-                />
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 8, md: 4}}>
-                <Box sx={{ dispĺay: "flex", justifyContent: "space-around", alignItems: "center", gap: 2, flexWrap: isSmallScreen ? "wrap" : "nowrap" }}>
-                  <Box sx={{ display: "flex", justifyContent: "flex-end", }}>
-                    <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
-                      <Button sx={{ flexDirection: "column" }}>
-                        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
-                          ${sumaSaldoTotal}
-                        </Typography>
-                        <strong>Saldo</strong>
-                      </Button>
-
-                      <Button sx={{ flexDirection: "column" }}>
-                        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-                          ${sumaSaldo60Total}
-                        </Typography>
-                        <strong>Saldo Mayor a 60</strong>
-                      </Button>
-                    </ButtonGroup>
-                  </Box>
-                </Box>
-              </Grid>
+        <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: isSmallScreen ? "column" : "row", alignItems: "center" }}>
+          <Grid container rowSpacing={1.5} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ p: 1 }}>
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>NIT</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.CLIENTE || ""}
+              </Typography>
             </Grid>
-          </Box>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Cupo</strong>
+              <Typography sx={{ mb: 1.5, display: "flex", color: "#16f50f" }}> 
+                ${Number(clienteT?.CUPO || "0").toLocaleString("es-ES")} 
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Debe</strong>
+              <Typography sx={{ mb: 1.5, display: "flex", color: "#f50f0f" }}>
+                ${Number(clienteT?.SALDO || "0").toLocaleString("es-ES")}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Dirección</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.DIRECCION || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Teléfono</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.TELEFONO1 || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Celular</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.TELEFONO1 || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Ciudad</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.CIUDAD || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 9, sm: 6, md: 3 }}>
+              <strong>Departamento</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.DEPARTAMENTO || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 8, md: 8}}>
+              <strong>Email</strong>
+              <Typography sx={{ mb: 1.5, display: "flex" }}>
+                {clienteT?.E_MAIL || ""}
+              </Typography>
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 8, md: 8}}>
+              <TextField
+                id="outlined-basic"
+                multiline
+                rows={3}
+                defaultValue={clienteT?.NOTAS || ""}
+                variant="outlined"
+                sx={{ width: "100%", border: "2px solid #13ace9" }}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 8, md: 4}}>
+              <Box sx={{ dispĺay: "flex", justifyContent: "space-around", alignItems: "center", gap: 2, flexWrap: isSmallScreen ? "wrap" : "nowrap" }}>
+                <Box sx={{ display: "flex", justifyContent: "flex-end", }}>
+                  <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
+                    <Button sx={{ flexDirection: "column" }}>
+                      <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom >
+                        ${sumaSaldoTotal}
+                      </Typography>
+                      <strong>Saldo</strong>
+                    </Button>
+
+                    <Button sx={{ flexDirection: "column" }}>
+                      <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+                        ${sumaSaldo60Total}
+                      </Typography>
+                      <strong>Saldo Mayor a 60</strong>
+                    </Button>
+                  </ButtonGroup>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
-
-
-          <Box sx={{ width: "100%", mt: 3 }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="Pedidos" {...a11yProps(0)} onClick={obtenerPedidos} />
-              <Tab label="Facturas" {...a11yProps(1)} onClick={obtenerFacturas} />
-              <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
-              <Tab label="" {...a11yProps(3)}  />
-            </Tabs>
-        
-            <CustomTabPanel value={value} index={0}>
-              <Box sx={{ width: "100%", height: 350 }}>
-                {cargando === true ? (
-                  <Box sx={{ width: "100%" }}>
-                    <LinearProgress />
-                  </Box>
-                ) : pedidos.length <= 0 ? (
-                  <h2>NO HAY PEDIDOS</h2>
-                ) : (
-                  <DataGrid
-                    density="compact"
-                    rows={pedidos}
-                    columns={columnsP}
-                    pageSizeOptions={[5, 10]}
-                    rowSelectionModel={selectedRows}
-                    getRowId={(row) => row.PEDIDO}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                  />
-                )}
-              </Box>
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={1}>
-              <Box sx={{ width: "100%", height: 350 }}>
-                {cargando === true ? (
-                  <Box sx={{ width: "100%" }}>
-                    <LinearProgress />
-                  </Box>
-                ) : facturas.length <= 0 ? (
-                  <h2>NO HAY FACTURAS</h2>
-                ) : (
-                  <DataGrid
-                    density="compact"
-                    rows={facturas}
-                    columns={columnsF}
-                    getRowId={(row) => row.ID}
-                    pageSize={[5, 10]}
-                    rowSelectionModel={selectedRows}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                  />
-                )}
-              </Box>
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={2}>
-              <Box sx={{ width: "100%", height: 350 }}>
-                {cargando === true ? (
-                  <Box sx={{ width: "100%" }}>
-                    <LinearProgress />
-                  </Box>
-                ) : cartera.length <= 0 ? (
-                  <h2>NO HAY CARTERA</h2>
-                ) : (
-                  <DataGrid
-                    density="compact"
-                    rows={cartera}
-                    columns={columnsC}
-                    pageSizeOptions={[5, 10]}
-                    rowSelectionModel={selectedRows}
-                    getRowId={(row) => row.NUMDOC}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                  />
-                )}
-              </Box>
-            </CustomTabPanel>
-          </Box>
-        </Paper>
       </Box>
+
+
+        <Box sx={{ width: "100%", mt: 3 }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Pedidos" {...a11yProps(0)} onClick={obtenerPedidos} />
+            <Tab label="Facturas" {...a11yProps(1)} onClick={obtenerFacturas} />
+            <Tab label="Cartera" {...a11yProps(2)} onClick={obtenerCarteras} />
+            <Tab label="" {...a11yProps(3)}  />
+          </Tabs>
+      
+          <CustomTabPanel value={value} index={0}>
+            <Box sx={{ width: "100%", height: 350 }}>
+              {cargando === true ? (
+                <Box sx={{ width: "100%" }}>
+                  <LinearProgress />
+                </Box>
+              ) : pedidos.length <= 0 ? (
+                <h2>NO HAY PEDIDOS</h2>
+              ) : (
+                <DataGrid
+                  density="compact"
+                  rows={pedidos}
+                  columns={columnsP}
+                  pageSizeOptions={[5, 10]}
+                  rowSelectionModel={selectedRows}
+                  getRowId={(row) => row.PEDIDO}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          </CustomTabPanel>
+
+          <CustomTabPanel value={value} index={1}>
+            <Box sx={{ width: "100%", height: 350 }}>
+              {cargando === true ? (
+                <Box sx={{ width: "100%" }}>
+                  <LinearProgress />
+                </Box>
+              ) : facturas.length <= 0 ? (
+                <h2>NO HAY FACTURAS</h2>
+              ) : (
+                <DataGrid
+                  density="compact"
+                  rows={facturas}
+                  columns={columnsF}
+                  getRowId={(row) => row.ID}
+                  pageSize={[5, 10]}
+                  rowSelectionModel={selectedRows}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          </CustomTabPanel>
+
+          <CustomTabPanel value={value} index={2}>
+            <Box sx={{ width: "100%", height: 350 }}>
+              {cargando === true ? (
+                <Box sx={{ width: "100%" }}>
+                  <LinearProgress />
+                </Box>
+              ) : cartera.length <= 0 ? (
+                <h2>NO HAY CARTERA</h2>
+              ) : (
+                <DataGrid
+                  density="compact"
+                  rows={cartera}
+                  columns={columnsC}
+                  pageSizeOptions={[5, 10]}
+                  rowSelectionModel={selectedRows}
+                  getRowId={(row) => row.NUMDOC}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                    },
+                  }}
+                />
+              )}
+            </Box>
+          </CustomTabPanel>
+        </Box>
+      </Paper>
     </>
   );
 };

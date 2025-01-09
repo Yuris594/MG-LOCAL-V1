@@ -32,13 +32,11 @@ const columns = [
 const conseguirClientes = async () => {
   const response = await fetch(Conexion.url + "/clientes/listar", {
     method: "GET",
-    headers: {
-      "Content-Type" : "application/json"
-    }
+    headers: { "Content-Type" : "application/json" }
   });
   const data = await response.json()
   return data;
-}
+};
 
 const Clientes = () => {
   const router = useRouter();
@@ -102,7 +100,7 @@ const Clientes = () => {
         });
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
         setCliente(resultadosFiltrados);
-        router.push("/start/clients/clientesTemp");
+        router.push("/start/clients/clientesTemp/");
       }
     },
     [clientesFiltrados]

@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Modal, Button, ButtonGroup, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, Typography, Divider, } from "@mui/material";
+import { Box, Modal, Button, ButtonGroup, IconButton, List, ListItem, 
+ListItemButton, ListItemText, Paper, Typography, Divider } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -285,7 +286,7 @@ const pago = () => {
             <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: 0, width: "100%", height: "100%" }}>
               <Button
                 component={Link}
-                href="../start/pedidos/ReciboCaja"
+                href="../pedidos/ReciboCaja/"
                 variant="outlined"
                 onClick={actualizarInformacion}
                 sx={{
@@ -303,28 +304,28 @@ const pago = () => {
             <Box sx={{ display: "flex", flexDirection: "column", zoom: 2, width: "auto", }}>
               <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "10px" }} gutterBottom>
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "8px" }} gutterBottom>
                     {" "}Cambio: {" "}
                   </Typography>
-                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                  <Typography sx={{ fontSize: "8px" }} gutterBottom>
                     {" "}${cambio.toLocaleString("es")}{" "}
                   </Typography>
                 </Button>
 
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "10px",}} gutterBottom>
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2, color: "black", fontSize: "8px",}} gutterBottom>
                     {" "}Restante: {" "}
                   </Typography>
-                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                  <Typography sx={{ fontSize: "8px" }} gutterBottom>
                     {" "}${restante.toLocaleString("es")}{" "}
                   </Typography>
                 </Button>
 
                 <Button sx={{ flexDirection: "row" }}>
-                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2,  color: "black", fontSize: "10px" }} gutterBottom>
+                  <Typography variant="outline" sx={{ display: "flex", paddingRight: 2,  color: "black", fontSize: "8px" }} gutterBottom>
                     {" "}Total: {" "}
                   </Typography>
-                  <Typography sx={{ fontSize: "10px" }} gutterBottom>
+                  <Typography sx={{ fontSize: "8px" }} gutterBottom>
                     {" "}${caja.total}{" "}
                   </Typography>
                 </Button>

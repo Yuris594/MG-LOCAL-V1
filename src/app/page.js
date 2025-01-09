@@ -71,7 +71,7 @@ function Login() {
         } else {
           const tokens = resultado;
           login(tokens);
-          router.push("./start");
+          router.push("./start/");
           setOpen(true);
         }
     } catch (error) {

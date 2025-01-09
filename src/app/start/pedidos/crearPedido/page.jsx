@@ -62,13 +62,14 @@ const CrearPedido = () => {
     { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500 },
     { field: "SUBLINEA", headerName: "SUBLINEA", width: 250 },
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
-    { field: "PRECIO", headerName: "PRECIO", width: 130, editable: true, type: "number",
+    { field: "PRECIO", headerName: "PRECIO", width: 130, 
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString('es-CO')}`;
-      }, editable: true
+      }, editable: true, type: "number",
     },
-    { field: "cantped", headerName: "CANT", width: 100, editable: true, editable: true, type: "number"
+    { field: "cantped", headerName: "CANT", width: 100, 
+      editable: true, editable: true, type: "number"
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 70,
       valueFormatter: (value) => {
@@ -100,7 +101,8 @@ const CrearPedido = () => {
         return `${parseFloat(precio).toLocaleString()}`;
       }
     },
-    { field: "actions", type: "actions", headerName: "", width: 100, cellClassName: "actions",
+    { field: "actions", type: "actions", headerName: "", width: 100, 
+      cellClassName: "actions",
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -377,7 +379,7 @@ const CrearPedido = () => {
           <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#f36fad", "&:hover": { bgcolor: "#e6228e" }, mr: 2 }}>
             Guardar Pedido
           </Button>
-          <Button variant="filled" sx={{ bgcolor: "#eb85eb", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../start/clients">
+          <Button variant="filled" sx={{ bgcolor: "#eb85eb", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../clients">
             Cerrar
           </Button>
         </Box>

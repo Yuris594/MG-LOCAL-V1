@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import { Conexion } from "@/conexion";
 import Box from "@mui/material/Box";
 
+
 const columns = [
   { field: "CLIENTE", headerName: "NIT", width: 130, headerClassName: 'super-app-theme--header' },
   { field: "NOMBREALIAS", headerName: "NOMBRE", width: 600, headerClassName: 'super-app-theme--header' },
@@ -104,36 +105,37 @@ const ClientesGlobal = ({ setOpen }) => {
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
           <h2><strong>CLIENTES</strong></h2>
           <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 600, margin: "0%" }}>
-              <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Buscar"
-                  inputProps={{ "aria-label": "search google maps" }}
-                  autoComplete="usuario"
-                  autoFocus
-                  value={busqueda}
-                  onChange={handleChange}
-              />
-              <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
-                  <SearchIcon />
-              </IconButton>
-            </Paper>
-          </Box>
-          <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#00796b', color: '#000000' } }}>
-              <DataGrid
-                rows={clientesFiltrados}
-                columns={columns}
-                pageSizeOptions={[5, 10]}
-                onRowSelectionModelChange={handleSelectionChange}
-                rowSelectionModel={selectedRows}
-                getRowId={(row) => row.CLIENTE}
-                sx={{ backgroundColor: "#ffffff" }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                    },
-                }}
-              />
-          </Box>
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Buscar"
+              inputProps={{ "aria-label": "search google maps" }}
+              autoComplete="usuario"
+              autoFocus
+              value={busqueda}
+              onChange={handleChange}
+            />
+            <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
+                <SearchIcon />
+            </IconButton>
+          </Paper>
+        </Box>
+
+        <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#00796b', color: '#000000' } }}>
+          <DataGrid
+            rows={clientesFiltrados}
+            columns={columns}
+            pageSizeOptions={[5, 10]}
+            onRowSelectionModelChange={handleSelectionChange}
+            rowSelectionModel={selectedRows}
+            getRowId={(row) => row.CLIENTE}
+            sx={{ backgroundColor: "#ffffff" }}
+            initialState={{
+                pagination: {
+                    paginationModel: { page: 0, pageSize: 10 },
+                },
+            }}
+          />
+        </Box>
       </div>
     </>
   );

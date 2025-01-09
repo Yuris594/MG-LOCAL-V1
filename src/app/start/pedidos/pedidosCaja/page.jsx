@@ -8,9 +8,9 @@ import useTecladoCaja from "@/app/hooks/useTecladoCaja";
 import Banner from "@/app/components/banner/banner";
 import { useAuth } from "@/context/authContext";
 import { useEffect, useState } from "react";
+import { Conexion } from "@/conexion";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import { Conexion } from "@/conexion";
 
 
 function CustomTabPanel(props) {
@@ -51,8 +51,12 @@ const style = {
 };
 
 const columns = [
-  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, headerClassName: 'header-bold' },
-  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, headerClassName: 'header-bold' },
+  { field: "DESCRIPCION", headerName: "REFERENCIA", width: 500, 
+    headerClassName: 'header-bold' 
+  },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, 
+    headerClassName: 'header-bold' 
+  },
   { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
     valueFormatter: (value) => {
       const total = parseFloat(value).toFixed(0);
@@ -65,7 +69,9 @@ const columns = [
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     }, editable: true, type: "number", headerClassName: 'header-bold'
   },
-  { field: "CANTIDAD", headerName: "", width: 50, type: "number", headerClassName: 'header-bold' },
+  { field: "CANTIDAD", headerName: "", width: 50, type: "number", 
+    headerClassName: 'header-bold' 
+  },
   { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90,
     valueFormatter: (value) => {
       const real = parseFloat(value).toFixed(0);
@@ -460,7 +466,7 @@ const PedidosCaja = () => {
                 </Modal>
 
                 <Button component={Link} variant="outlined"
-                  href={sumaSaldoTotalDESC !== "0" ? "../../../start/caja" : ""}
+                  href={sumaSaldoTotalDESC !== "0" ? "/start/caja/" : ""}
                   onClick={sumaSaldoTotalDESC !== "0" ? pago : null}
                   sx={{ width: "100%", height: "100%",
                     backgroundColor: sumaSaldoTotalDESC !== "0" ? "#00796b" : "transparent",

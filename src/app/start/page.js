@@ -51,17 +51,17 @@ import Link from "next/link";
   const page = [
     {
       title: "USUARIOS",
-      url: "./start/usuarios",
+      url: "./usuarios/",
       icon: <AccountCircle />,
     },
     {
       title: "PEDIDOS",
-      url: "./start/pedidos",
+      url: "./pedidos/",
       icon: <Assignment />,
     },
     {
       title: "CLIENTES",
-      url: "./start/clients",
+      url: "./clients/",
       icon: <Person />,
     },
     
@@ -72,12 +72,12 @@ import Link from "next/link";
     },
     {
       title: "FACTURAS",
-      url: "./start/facturas",
+      url: "./facturas/",
       icon: <ReceiptLong />,
     },
     {
       title: "CAJA",
-      url: "./start/pedidos/pedidosCaja",
+      url: "./pedidos/pedidosCaja/",
       icon: <Storefront />,
     },
   ];
@@ -141,10 +141,10 @@ import Link from "next/link";
       </Box>
 
       <Menu id="basic-menu" anchorEl={anchor} open={productos} onClose={handleCloseM} MenuListProps={{ "aria-labelledby" : "basic-button", }}>
-        <MenuItem onClick={handleCloseM} component={Link} href="/start/buscarProd" variant="body1" sx={{ fontSize: "15px" }}>
+        <MenuItem onClick={handleCloseM} component={Link} href="./buscarProd/" variant="body1" sx={{ fontSize: "15px" }}>
           Buscar Por Referencias
         </MenuItem>
-        <MenuItem onClick={handleCloseM} component={Link} href="/start/productosMG" variant="body1" sx={{ fontSize: "15px" }}>
+        <MenuItem onClick={handleCloseM} component={Link} href="./productosMG/" variant="body1" sx={{ fontSize: "15px" }}>
           Lista De Todos Los Productos
         </MenuItem>
       </Menu>
