@@ -1,15 +1,15 @@
-
 "use client";
 
-import { Box, IconButton, InputBase, LinearProgress, Paper, Tab, Tabs, Typography, } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
-
-import Banner from "../../../components/banner/banner";
-import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Conexion } from "@/conexion";
+import { DataGrid } from "@mui/x-data-grid";
+import SearchIcon from "@mui/icons-material/Search";
+import BotonExcel from "@/app/hooks/useExportoExcel";
+import Banner from "../../../components/banner/banner";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, IconButton, InputBase, LinearProgress, Paper, Tab, 
+Tabs, Typography, } from "@mui/material";
+
 
 const fDate = (dateString) => {
   const options = {

@@ -1,31 +1,30 @@
 "use client";
 
-
-import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
-import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons } from "@mui/x-data-grid";
-import { useEffect, useRef, useState } from "react";
-import { useAuth } from "@/context/authContext";
-import { useForm } from "@/app/hooks/useForm";
-import MuiAlert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid2";
-import { Conexion } from "@/conexion";
-
-import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-import Banner from "@/app/components/banner/banner";
-import PropTypes from "prop-types";
 import React from "react";
-
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PrintIcon from '@mui/icons-material/Print';
+import PropTypes from "prop-types";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import MuiAlert from "@mui/material/Alert";
+import { useForm } from "@/app/hooks/useForm";
+import { useAuth } from "@/context/authContext";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import StarIcon from '@mui/icons-material/Star';
+import PrintIcon from '@mui/icons-material/Print';
+import { useEffect, useRef, useState } from "react";
+import Banner from "@/app/components/banner/banner";
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import useGenerarPDF from "@/app/hooks/useGenerarPDF";
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
+import { GridRowModes, DataGrid, GridActionsCellItem, 
+GridRowEditStopReasons } from "@mui/x-data-grid";
+import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, 
+InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
 
 
 const style = {

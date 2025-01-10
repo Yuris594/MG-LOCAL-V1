@@ -1,16 +1,16 @@
 "use client";
 
-import { Edit as EditIcon, DeleteOutlined as DeleteIcon, Close as CancelIcon, Save as SaveIcon, } from "@mui/icons-material";
-import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
-import { Box, Modal, ButtonGroup, Button, Typography, InputBase, LinearProgress, } from "@mui/material";
-import ClientesGlobal from "../../clients/clientesGlobal/page";
-import useTecladoCaja from "@/app/hooks/useTecladoCaja";
-import Banner from "@/app/components/banner/banner";
-import { useAuth } from "@/context/authContext";
-import { useEffect, useState } from "react";
-import { Conexion } from "@/conexion";
-import PropTypes from "prop-types";
 import Link from "next/link";
+import PropTypes from "prop-types";
+import { Conexion } from "@/conexion";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/authContext";
+import Banner from "@/app/components/banner/banner";
+import useTecladoCaja from "@/app/hooks/useTecladoCaja";
+import ClientesGlobal from "../../clients/clientesGlobal/page";
+import { Box, Modal, ButtonGroup, Button, Typography, InputBase, LinearProgress, } from "@mui/material";
+import { GridRowModes, DataGrid, GridActionsCellItem, GridRowEditStopReasons, } from "@mui/x-data-grid";
+import { Edit as EditIcon, DeleteOutlined as DeleteIcon, Close as CancelIcon, Save as SaveIcon, } from "@mui/icons-material";
 
 
 function CustomTabPanel(props) {

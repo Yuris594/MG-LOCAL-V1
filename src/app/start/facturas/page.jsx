@@ -221,38 +221,14 @@ const Factura = () => {
       <Box>{" "}<Banner />{" "}</Box>
       <Box className="container">
         <Box className={inter.className} sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "44vw", }}>
-          <Paper
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              bgcolor: "#eeee",
-              padding: 2,
-            }}>
+          <Paper sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center", bgcolor: "#eeee", padding: 2 }}>
             <Typography className={inter.className} component="h1" variant="h5">
               Digite el número de la Factura
             </Typography>
 
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              <TextField
-                required
-                fullWidth
-                id="factura"
-                name="factura"
-                autoComplete="factura"
-                autoFocus
-                value={form.factura || ""}
-                onChange={changed}
-              />
-              <Button
-                className={inter.className}
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={factura}
-              >
+              <TextField required fullWidth id="factura" name="factura" autoComplete="factura" autoFocus value={form.factura || ""} onChange={changed} />
+              <Button className={inter.className} type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={factura}>
                 Buscar
               </Button>
             </Box>

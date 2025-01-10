@@ -1,51 +1,52 @@
 "use client";
 
-import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
-import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, 
-  ListItemIcon, ListItemText, Menu, MenuItem, Paper, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
-import { useAuth }  from "@/context/authContext";
-import HomeIcon from "@mui/icons-material/Home";
-import { Lora } from "next/font/google";
-import { useState } from "react";
-import Swal from "sweetalert2";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import { useState } from "react";
+import { Lora } from "next/font/google";
+import HomeIcon from "@mui/icons-material/Home";
+import { useAuth }  from "@/context/authContext";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { AppBar, Box, Button, CardActions, CardContent, Divider, List, ListItem, ListItemButton, 
+ListItemIcon, ListItemText, Menu, MenuItem, Paper, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront, } from "@mui/icons-material";
 
-  const inter = Lora({ subsets: ['latin'] })
+  
+const inter = Lora({ subsets: ['latin'] })
 
-  const Inicio = () => {
-    const { auth, logout } = useAuth();
-    const [anchor, setAnchor] = useState(null);
-    const [productos, setProductos] = useState(false);
+const Inicio = () => {
+  const { auth, logout } = useAuth();
+  const [anchor, setAnchor] = useState(null);
+  const [productos, setProductos] = useState(false);
 
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const handleClick = (event) => {
-      setProductos(true);
-      setAnchor(event.currentTarget);
-    };
+  const handleClick = (event) => {
+    setProductos(true);
+    setAnchor(event.currentTarget);
+  };
 
-    const handleCloseM = () => {
-      setProductos(false);
-      setAnchor(null);
-    };
+  const handleCloseM = () => {
+    setProductos(false);
+    setAnchor(null);
+  };
 
-    const cerrarSesion = () => {
-      Swal.fire({
-        title: "¿Quieres Terminar La Sesión?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#28ee32",
-        cancelButtonColor: "#f12260",
-        confirmButtonText: "Aceptar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          logout();
-        }
-      })
-    };
+  const cerrarSesion = () => {
+    Swal.fire({
+      title: "¿Quieres Terminar La Sesión?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#28ee32",
+      cancelButtonColor: "#f12260",
+      confirmButtonText: "Aceptar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    })
+  };
 
 
   const page = [

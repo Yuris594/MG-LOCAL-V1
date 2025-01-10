@@ -1,9 +1,10 @@
 'use client';
 
-import { Alert, Box, Button, Container, CssBaseline, Snackbar, TextField, useMediaQuery, useTheme } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import { Conexion } from "@/conexion";
 import { useState } from "react";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import { Alert, Box, Button, CssBaseline, Snackbar, 
+TextField, useMediaQuery, useTheme } from "@mui/material";
 
 const registro = async (form) => {
   const response =  await fetch(Conexion.url + "/usuarios/nuevo", {

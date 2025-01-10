@@ -1,14 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import { Conexion } from "@/conexion";
+import Paper from "@mui/material/Paper";
+import { DataGrid } from "@mui/x-data-grid";
 import InputBase from "@mui/material/InputBase";
 import { useAuth } from "@/context/authContext";
-import { DataGrid } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
-import { Conexion } from "@/conexion";
-import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import { useCallback, useEffect, useState } from "react";
 
 
 const columns = [
@@ -18,10 +18,10 @@ const columns = [
   { field: "TELEFONO1", headerName: "TELEFONO", width: 190, headerClassName: 'super-app-theme--header' },
   { field: "NOMVENDEDOR", headerName: "VENDEDOR", width: 200, headerClassName: 'super-app-theme--header' },
   { field: "SALDO", headerName: "CARTERA", type: "number", width: 120, headerClassName: 'super-app-theme--header',
-      valueFormatter: (value) => {
-          const precioRedondeado = Number(value).toFixed(0);
-          return `${parseFloat(precioRedondeado).toLocaleString()}`;
-      }, align: "right",
+    valueFormatter: (value) => {
+        const precioRedondeado = Number(value).toFixed(0);
+        return `${parseFloat(precioRedondeado).toLocaleString()}`;
+    }, align: "right",
   },
 ];
 

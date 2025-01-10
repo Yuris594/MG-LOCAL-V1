@@ -1,16 +1,17 @@
 "use client";
 
-import { Box, Button, LinearProgress, Modal, TextField, useMediaQuery } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import Banner from "@/app/components/banner/banner";
-import UsuarioActualizar from "./actualizar/page";
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
-import Registro from "./registrar/page";
-import Grid from "@mui/material/Grid2";
-import { Conexion } from "@/conexion";
 import Swal from "sweetalert2";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import Registro from "./registrar/page";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+import UsuarioActualizar from "./actualizar/page";
+import Banner from "@/app/components/banner/banner";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useCallback, useEffect, useState } from "react";
+import { Box, Button, LinearProgress, Modal, TextField, 
+useMediaQuery } from "@mui/material";
 
 const style = {
   position: "absolute",

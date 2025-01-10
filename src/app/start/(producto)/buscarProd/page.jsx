@@ -1,15 +1,15 @@
 "use client";
 
-import { useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
+import { useRef, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import Banner from "@/app/components/banner/banner";
 import CheckIcon from '@mui/icons-material/Check';
+import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
- useMediaQuery, useTheme, LinearProgress, Typography, } from "@mui/material";
-import { Conexion } from "@/conexion";
+useMediaQuery, useTheme, LinearProgress, Typography, } from "@mui/material";
 
 
 function CustomTabPanel(props) {

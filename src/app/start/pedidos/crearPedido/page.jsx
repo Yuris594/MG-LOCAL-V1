@@ -1,23 +1,24 @@
 "use client";
 
 
-import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, useMediaQuery } from "@mui/material";
-import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
-import { useCallback, useEffect, useRef, useState } from "react";
-import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import BusinessIcon from "@mui/icons-material/Business";
+import Link from "next/link";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import { useAuth } from "@/context/authContext";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
 import Banner from "@/app/components/banner/banner";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
-import { useAuth } from "@/context/authContext";
-import Grid from "@mui/material/Grid2";
-import Link from "next/link";
-import { Conexion } from "@/conexion";
+import BusinessIcon from "@mui/icons-material/Business";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
+import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, 
+useMediaQuery } from "@mui/material";
 
 
 const style = {

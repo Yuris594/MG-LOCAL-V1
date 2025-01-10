@@ -1,16 +1,16 @@
 "use client";
 
-import { Box, Tabs, Tab, Typography, TextField, Divider, Button, ButtonGroup, 
-   Paper, LinearProgress, useMediaQuery } from "@mui/material/";
-import Banner from "@/app/components/banner/banner";
-import { useAuth } from "@/context/authContext";
+import Link from "next/link";
+import PropTypes from "prop-types";
+import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
-import Grid from "@mui/material/Grid2";
-import { Conexion } from "@/conexion";
-import PropTypes from "prop-types";
-import Link from "next/link";
+import { useAuth } from "@/context/authContext";
+import Banner from "@/app/components/banner/banner";
+import { Box, Tabs, Tab, Typography, TextField, Divider, Button, 
+ButtonGroup, Paper, LinearProgress, useMediaQuery } from "@mui/material";
 
 
 function CustomTabPanel(props) {
@@ -54,9 +54,13 @@ const columnsP = [
   { field: "FECHA_PEDIDO", headerName: "FECHA", width: 150,
     renderCell: (params) => fDate(params.value),
   },
-  { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
+  { field: "PEDIDO", headerName: "PEDIDO", width: 130, 
+    cellClassName: "pedido-cell" 
+  },
   { field: "ESTADO", headerName: "ESTADO", width: 130 },
-  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 130, cellClassName: "autor-cell" },
+  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 130, 
+    cellClassName: "autor-cell" 
+  },
   { field: "TOTAL_A_FACTURAR", headerName: "TOTAL A FACTURAR", width: 200,
     valueFormatter: (value) => {
       const precio = parseFloat(value).toFixed(0);

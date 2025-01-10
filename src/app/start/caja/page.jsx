@@ -1,15 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { Lora } from "next/font/google";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/authContext";
+import Banner from "@/app/components/banner/banner";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClientesGlobal from "../clients/clientesGlobal/page";
 import { Box, Modal, Button, ButtonGroup, IconButton, List, ListItem, 
 ListItemButton, ListItemText, Paper, Typography, Divider } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-
-import ClientesGlobal from "../clients/clientesGlobal/page";
-import Banner from "@/app/components/banner/banner";
-import { useAuth } from "@/context/authContext";
-import { Lora } from "next/font/google";
 
 
 const inter = Lora({ subsets: ["latin"] });

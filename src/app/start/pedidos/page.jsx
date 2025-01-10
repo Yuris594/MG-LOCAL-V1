@@ -1,26 +1,16 @@
 "use client";
 
-import { Box, Button, LinearProgress, TextField, Typography, useMediaQuery } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import BotonExcel from "../../hooks/useExportoExcel";
-import Banner from "@/app/components/banner/banner";
-import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
-import Grid from "@mui/material/Grid2";
 import { Conexion } from "@/conexion";
+import Grid from "@mui/material/Grid2";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
+import Banner from "@/app/components/banner/banner";
+import BotonExcel from "../../hooks/useExportoExcel";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useCallback, useEffect, useState } from "react";
+import { Box, Button, LinearProgress, TextField, Typography, 
+useMediaQuery } from "@mui/material";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "white",
-  width: 800,
-  height: 450,
-  boxShadow: 24,
-  p: 4,
-};
 
 const fDate = (dateString) => {
   const options = {
@@ -70,7 +60,6 @@ const columns = [
 
 const conseguirPedidos = async () => {
   const response = await fetch(Conexion.url + "/pedidos/listar", {
-    next: { revalidate: 60 },
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });
