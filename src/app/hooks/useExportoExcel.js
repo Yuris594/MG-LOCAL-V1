@@ -28,12 +28,7 @@ const BotonExcel = ({ datos }) => {
   };
 
   return (
-    <Button
-      variant="outlined"
-      color="success"
-      onClick={handleDownload}
-      disabled={loading}
-    >
+    <Button variant="outlined" color="success" onClick={handleDownload} disabled={loading}>
       {loading ? "Loading..." : "Excel"}
     </Button>
   );

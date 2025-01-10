@@ -3,12 +3,12 @@
 import Link from "next/link";
 import Swal from "sweetalert2";
 import dynamic from 'next/dynamic';
+import { Conexion } from "@/conexion";
 import { useEffect, useRef, useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
 const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
 import { AppBar, Box, Button, ButtonGroup, CssBaseline, Paper, TextField, Toolbar } from "@mui/material";
-import { Conexion } from "@/conexion";
 
 
 
@@ -19,6 +19,7 @@ const entrada = () => {
     confirmButtonText: "Aceptar",
   });
 };
+
 const salida = () => {
   Swal.fire({
     title: "¡Hora de SALIDA registrada",

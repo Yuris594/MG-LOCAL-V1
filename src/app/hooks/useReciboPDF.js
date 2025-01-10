@@ -1,48 +1,48 @@
-'use client'
+'use client';
 
-import { format } from "date-fns";
-import { useState } from "react";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
+import jsPDF from "jspdf";
+import { useState } from "react";
+import { format } from "date-fns";
 
-  const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
-    const [pdfDataUrl, setPdfDataUrl] = useState(null);
-    const fecha = format(new Date(), 'dd/MM/yyyy HH:mm:ss');
+const useGenerarPDF = (valores, valores2, auth, caja = {}) => {
+  const [pdfDataUrl, setPdfDataUrl] = useState(null);
+  const fecha = format(new Date(), 'dd/MM/yyyy HH:mm:ss');
 
-    const generarPDF = () => {
-      const pdf = new jsPDF();
-      const columnsParaPDF = [
-        { field: 'DESCRIPCION', headerName: 'DESCRIPCIÓN', width: 500 },
-        { field: 'PRECIO', headerName: 'PRECIO', width: 200 }
-      ];
+  const generarPDF = () => {
+    const pdf = new jsPDF();
+    const columnsParaPDF = [
+      { field: 'DESCRIPCION', headerName: 'DESCRIPCIÓN', width: 500 },
+      { field: 'PRECIO', headerName: 'PRECIO', width: 200 }
+    ];
 
-    const styles = {
-      theme: "plain",
-      tableWidth: "auto",
-      lineColor: [200, 200, 200],
-      lineWight: 0.1,
-      font: "times",
-      fontStyle: "normal",
-      textColor: [0, 0, 0],
-      display: "flex",
-      cellWidth: "auto",
-      fontSize: 8,
-    };
+  const styles = {
+    theme: "plain",
+    tableWidth: "auto",
+    lineColor: [200, 200, 200],
+    lineWight: 0.1,
+    font: "times",
+    fontStyle: "normal",
+    textColor: [0, 0, 0],
+    display: "flex",
+    cellWidth: "auto",
+    fontSize: 8,
+  };
 
 
-    const dataToPrint = valores
-      .filter(row => row.DESCRIPCION && row.PRECIO)
-      .map(row => {
-        return columnsParaPDF.map(column => {
-          let value = row[column.field];
+  const dataToPrint = valores
+    .filter(row => row.DESCRIPCION && row.PRECIO)
+    .map(row => {
+      return columnsParaPDF.map(column => {
+        let value = row[column.field];
 
-          if (column.field === "PRECIO") {
-            const precioRedondeado = Number(value).toFixed(0);
-            value = parseFloat(precioRedondeado).toLocaleString();
-          }
-          return value;
-      });
+        if (column.field === "PRECIO") {
+          const precioRedondeado = Number(value).toFixed(0);
+          value = parseFloat(precioRedondeado).toLocaleString();
+        }
+        return value;
     });
+  });
 
   function encabezado() {
     pdf.setFontSize(10);
@@ -57,7 +57,7 @@ import "jspdf-autotable";
     pdf.text(`Servicio: ${auth.PER_Nom || 'Desconocido'}`, 160, 20);
   }
    
-    encabezado()
+  encabezado()
     pdf.autoTable({
       head: [columnsParaPDF.map(column => column.headerName)], 
       body: dataToPrint, 

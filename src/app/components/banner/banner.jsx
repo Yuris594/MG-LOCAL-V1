@@ -1,17 +1,17 @@
 "use client";
 
-import { AppBar, Box, Button, CssBaseline, IconButton, Menu, MenuItem, Modal, Toolbar, Typography } from "@mui/material";
-import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront } from "@mui/icons-material";
-import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
+import Link from "next/link";
+import Navbar from "./navbar";
+import Swal from "sweetalert2";
+import { useState } from "react";
+import { Lora } from "next/font/google";
 import HomeIcon from "@mui/icons-material/Home";
 import { useAuth } from "@/context/authContext";
-import { Lora } from "next/font/google";
-import { useState } from "react";
-import Swal from "sweetalert2";
-import Navbar from "./navbar";
-import Link from "next/link";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
+import { AccountCircle, ShoppingBag, Assignment, Person, ReceiptLong, Storefront } from "@mui/icons-material";
+import { AppBar, Box, Button, CssBaseline, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 
 const inter = Lora({ subsets: ['latin'] })
 
