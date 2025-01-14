@@ -15,6 +15,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import BusinessIcon from "@mui/icons-material/Business";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import ClientesGlobal from "../../clients/clientesGlobal/page";
+import UseImportoExcel from "@/app/hooks/useImportoExcel";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
 import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, 
@@ -31,7 +33,7 @@ const style = {
   overflowY: "auto",
   overflowX: "hidden",
   padding: "16px",
-  bgcolor: "#ffffff",
+  bgcolor: "#fff",
   border: "2px solid #000",
   boxShadow: 24
 };
@@ -40,23 +42,54 @@ const style = {
 const CrearPedido = () => {
   const inputRef = useRef();
   const { cliente } = useAuth();
-  const [notas, setNotas] = useState("");
-  const [openM, setOpenM] = useState("");
   const [total, setTotal] = useState("");
+  const [notas, setNotas] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openM, setOpenM] = useState(false);
   const [subTotal, setSubTotal] = useState("");
   const [busqueda, setBusqueda] = useState("");
   const [productos, setProductos] = useState([]);
   const [cantidades, setCantidades] = useState("");
-  const [clienteP, setClienteP] = useState(cliente[0]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [clienteP, setClienteP] = useState(cliente?.[0] || {});
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   const handleOpenM = () => setOpenM(true);
   const handleCloseM = () => setOpenM(false);
+  const handleOpenC = () => setOpen(true);
+  const handleCloseC = () => setOpen(false);
 
+  useEffect(() => {
+    if (cliente?.[0]) {
+      setClienteP(cliente[0]);
+    }
+  }, [cliente]);
+
+  const seleccionarCliente = (clienteSeleccionado) => {
+    setClienteP(clienteSeleccionado);
+    cliente[0] = clienteSeleccionado;
+  };
+
+  const handleImportData = (data) => {
+    const nuevosProductos = data.map((row) => ({
+      ARTICULO: `${row["CODIGO"]}`,
+      DESCRIPCION: row["REFERENCIA"],
+      SUBLINEA: row["SUBLINEA"],
+      UNIDAD_EMPAQUE: row["EMP"],
+      PRECIO: row["PRECIO"],
+      cantped: parseFloat(row["CANT"]) || 0,
+      PORC_IMPUESTO: parseFloat(row["IVA"]) || 0,
+      PORC_DCTO: parseFloat(row["DESC"]) || 0,
+      PRECIOMASIVA: parseFloat(row["MASIVA"]) || 0,
+      TOTAL_DISP: parseFloat(row["DISP"]) || 0,
+      EXIST_REAL: parseFloat(row["EXIST_REAL"]) || 0,
+    }));
+    setArticulosSeleccionados((prevProductos) => [...prevProductos, ...nuevosProductos]);
+    CalcularTotales(nuevosProductos)
+  };
 
   const columns = [
     { field: "ARTICULO", headerName: "CODIGO", width: 100 },
@@ -78,17 +111,17 @@ const CrearPedido = () => {
         return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number" 
     },
-    { field: "PORC_DCTO", headerName: "D1", width: 70,
+    { field: "PORC_DCTO", headerName: "DESC", width: 70,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number" 
     },
-    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
+    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString('es-CO')}`;
-      }, align: "right",
+      }, 
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
       valueFormatter: (value) => {
@@ -96,7 +129,7 @@ const CrearPedido = () => {
         return `${parseFloat(precio).toLocaleString()}`;
       }
     },
-    { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 90, 
+    { field: "EXIST_REAL", headerName: "EXIST_REAL", width: 90, 
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
@@ -146,6 +179,12 @@ const CrearPedido = () => {
     },
   ];
 
+  const handleRowEditStop = (params, event) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -155,7 +194,9 @@ const CrearPedido = () => {
   };
 
   const handleDeleteClick = (id) => () => {
-    setProductos(productos.filter((row) => row.ARTICULO !== id));
+    setArticulosSeleccionados((prevSeleccionados) => 
+      prevSeleccionados.filter((row) => row.ARTICULO !== id) 
+    );
   };
 
   const handleCancelClick = (id) => () => {
@@ -169,6 +210,21 @@ const CrearPedido = () => {
       setProductos(productos.filter((row) => row.ARTICULO !== id));
     }
   };
+
+  const processRowUpdate = (newRow) => {
+    const index = articulosSeleccionados.findIndex((row) => row.ARTICULO === newRow.ARTICULO);
+      if (index === -1) {
+        console.error("ARTICULO NO ENCONTRADO");
+        return newRow;
+      }
+    const updatedRow = { ...newRow, isNew: false };
+    const newProductosP = [...articulosSeleccionados];
+    newProductosP[index] = updatedRow;
+    setArticulosSeleccionados(newProductosP);
+    CalcularTotales(newProductosP);
+    return updatedRow;
+  };
+
 
 
   const agregarArticulo = (nuevosArticulos) => {
@@ -247,7 +303,7 @@ const CrearPedido = () => {
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
-        const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
+        const response = await fetch("/api/productos/listar_solo_para_mg", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -332,7 +388,7 @@ const CrearPedido = () => {
     { field: "PRECIO", headerName: "PRECIO", width: 130,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString()}`;
       },
     },
     { field: "CANTIDAD", headerName: "CANT", width: 80, 
@@ -349,15 +405,25 @@ const CrearPedido = () => {
       }
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
+    { field: "PORC_DCTO", headerName: "D1", width: 40 },
+    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
       valueFormatter: (value) => {
         const precio = parseFloat(value).toFixed(0);
-        return `$${parseFloat(precio).toLocaleString('es-CO')}`;
-      }, align: "right",
+        return `${parseFloat(precio).toLocaleString()}`;
+      }, 
     },
-    { field: "PORC_DCTO", headerName: "D1", width: 40 },
-    { field: "TOTAL_DISP", headerName: "DISP", width: 70 },
-    { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90 },
+    { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
+      valueFormatter: (value) => {
+        const disponible = parseFloat(value).toFixed(0);
+        return `${parseFloat(disponible).toLocaleString()}`;
+      },
+    },
+    { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 90, 
+      valueFormatter: (value) => {
+        const existe = parseFloat(value).toFixed(0);
+        return `${parseFloat(existe).toLocaleString()}`;
+      },
+    },
   ];
 
 
@@ -371,16 +437,17 @@ const CrearPedido = () => {
         </Box>
         
         <Box sx={{ padding: 2 }}>
-          <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#91d9e9" },}}>
+          <Button onClick={handleOpenC} variant="filled" sx={{ bgcolor: "#eb4d55", "&:hover": { bgcolor: "#ec1c27" } }}>
+            Clientes
+          </Button>
+          <UseImportoExcel onImportData={handleImportData} />
+          <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#36c7e7" }, m: 2 }}>
             Productos-MG
           </Button>
-          <Button variant="filled" sx={{ bgcolor: "#ffa28a", "&:hover": { bgcolor: "#e98c74" }, m: 2 }}>
-            Crear PDF
-          </Button>
-          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#f36fad", "&:hover": { bgcolor: "#e6228e" }, mr: 2 }}>
+          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#6ff581", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
             Guardar Pedido
           </Button>
-          <Button variant="filled" sx={{ bgcolor: "#eb85eb", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../clients">
+          <Button variant="filled" sx={{ bgcolor: "#ee70ee", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../clients">
             Cerrar
           </Button>
         </Box>
@@ -449,13 +516,16 @@ const CrearPedido = () => {
         <DataGrid 
           rows={articulosSeleccionados}
           columns={columns}
-          getRowId={(row) => row.DESCRIPCION}
+          getRowId={(row) => row.ARTICULO}
           initialState={{
             pagination: {
               paginationModel: { pageSize: 10 }
             }
           }}
           pageSizeOptions={[5, 10, 15]}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slotProps={{ toolbar: { setArticulosSeleccionados, setRowModesModel } }}
         />
       </Box>
 
@@ -523,8 +593,21 @@ const CrearPedido = () => {
         </Box>
       </Modal>
 
+
+      <Modal
+        open={open}
+        onClose={handleCloseC}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+
+        <Box sx={style}>
+          <ClientesGlobal setOpen={setOpen} seleccionarCliente={seleccionarCliente} />
+        </Box>
+      </Modal>
+
     </>
   )
 }
 
 export default CrearPedido;
+

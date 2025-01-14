@@ -4,17 +4,17 @@
       unoptimized: true,
     },
     
-    output: 'export',
+    //output: 'export',
     trailingSlash: true,
 
-    /*async rewrites() {
+    async rewrites() {
       return [
         {
           source: '/api/:path*',
           destination: 'http://172.20.20.3:8001/:path*',
         },
       ]
-    },*/
+    },
 
   }
 

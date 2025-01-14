@@ -27,7 +27,7 @@ const columns = [
 
 const conseguirClientes = async () => {
   try {
-      const response = await fetch(Conexion.url + "/clientes/listar", {
+      const response = await fetch("/api/clientes/listar", {
           method: "GET",
           headers: { "Content-Type": "application/json" }
       });
@@ -44,7 +44,7 @@ const conseguirClientes = async () => {
   }
 };
 
-const ClientesGlobal = ({ setOpen }) => {
+const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
   const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
@@ -96,6 +96,7 @@ const ClientesGlobal = ({ setOpen }) => {
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
         setCliente(resultadosFiltrados[0]);
         setOpen(false);
+        seleccionarCliente(resultadosFiltrados[0]);
     }
   }, [tablaClientes]);
 

@@ -293,7 +293,7 @@ const ClientesTemp = () => {
             <Button variant="contained" sx={{ bgcolor: "#ffa28a", color: "white" }} LinkComponent={Link} href="../">
               Cerrar
             </Button>
-            <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href="../../pedidos/crearPedido">
+            <Button variant="contained" sx={{ bgcolor: "#12e7dd", color: "white" }} LinkComponent={Link} href="../../pedidos/crearPedido/">
               Crear Pedido
             </Button>
           </Box>

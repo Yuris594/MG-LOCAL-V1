@@ -10,6 +10,7 @@ import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
 useMediaQuery, useTheme, LinearProgress, Typography, } from "@mui/material";
+import Swal from "sweetalert2";
 
 
 function CustomTabPanel(props) {
@@ -195,7 +196,7 @@ const columnsP = [
 
 
 const obtenerFacturas = async (seleccionarArticulo) => {
-  const response = await fetch(Conexion.url + `/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(`/api/productos/facturas/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
     headers: { "Content-Type": "application/json", },
   });
@@ -215,7 +216,7 @@ const obtenerFacturas = async (seleccionarArticulo) => {
 };
 
 const obtenerPedidos = async (seleccionarArticulo) => {
-  const response = await fetch(Conexion.url + `/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
+  const response = await fetch(`/api/productos/pedidos/${seleccionarArticulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -285,8 +286,8 @@ const BuscarReferencia = () => {
     try {
       const endpoint =
       criterio === "ARTICULO" 
-        ?  Conexion.url + `/productos/${valorBusqueda}`
-        :  Conexion.url + `/productos/descripcion/${valorBusqueda}`;
+        ?  `/api/productos/${valorBusqueda}`
+        :  `/api/productos/descripcion/${valorBusqueda}`;
       const response = await fetch(endpoint, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
@@ -299,11 +300,17 @@ const BuscarReferencia = () => {
         if (datos.length > 0) {
           setSeleccionarArticulo(datos[0]);
           setValue(0);
-        }       
-
+          console.log("Referencia encontrada...")
+        }      
       } else {
         console.log("Error en la busqueda:", response.statusText);
         setProductos([]);
+        setValue(0);
+        Swal.fire({
+          icon: "warning",
+          title: "La Referencia Solicitada No Existe."
+        });
+        setSeleccionarArticulo('');
       }
     } catch (error) {
       console.log("Error al momento de realizar la busqueda", error);
@@ -368,7 +375,7 @@ const BuscarReferencia = () => {
         <Grid size={12}>
           <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
             <Box display="flex" alignItems="center" gap={2}>
-            <h2><strong>Buscar Por Referencias</strong></h2>
+            <h2><strong>Buscar Por</strong></h2>
               <Autocomplete 
                 id="size-small-outlined"
                 size="small"

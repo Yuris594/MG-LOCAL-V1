@@ -10,6 +10,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import { Box, Button, LinearProgress, TextField, Typography, 
 useMediaQuery } from "@mui/material";
+import Link from "next/link";
 
 
 const fDate = (dateString) => {
@@ -59,7 +60,7 @@ const columns = [
 ];
 
 const conseguirPedidos = async () => {
-  const response = await fetch(Conexion.url + "/pedidos/listar", {
+  const response = await fetch("/api/pedidos/listar", {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });
@@ -144,7 +145,7 @@ const Pedidos = () => {
                     <h2><strong>PEDIDOS</strong></h2>
                   </Grid>
                   <Grid size={{ sx: 6,  }}>
-                    <Button variant="outlined" sx={{ margin: "10px" }}>{" "}Nuevo{" "}</Button>
+                    <Button variant="outlined" sx={{ margin: "10px" }} LinkComponent={Link} href="./crearPedido">{" "}Nuevo{" "}</Button>
                   </Grid>
                   <Grid size={{ sx: 6 }}>
                     <BotonExcel datos={pedidosFiltrados} />
