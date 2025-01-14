@@ -121,11 +121,11 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
           </Paper>
         </Box>
 
-        <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#00796b', color: '#000000' } }}>
+        <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#80f5e7', color: '#000000' } }}>
           <DataGrid
             rows={clientesFiltrados}
             columns={columns}
-            pageSizeOptions={[5, 10]}
+            pageSizeOptions={[5, 10, 20]}
             onRowSelectionModelChange={handleSelectionChange}
             rowSelectionModel={selectedRows}
             getRowId={(row) => row.CLIENTE}

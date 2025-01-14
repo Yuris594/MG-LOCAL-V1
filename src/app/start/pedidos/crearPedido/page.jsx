@@ -42,11 +42,11 @@ const style = {
 const CrearPedido = () => {
   const inputRef = useRef();
   const { cliente } = useAuth();
-  const [total, setTotal] = useState("");
+  const [total, setTotal] = useState("0");
   const [notas, setNotas] = useState("");
   const [open, setOpen] = useState(false);
   const [openM, setOpenM] = useState(false);
-  const [subTotal, setSubTotal] = useState("");
+  const [subTotal, setSubTotal] = useState("0");
   const [busqueda, setBusqueda] = useState("");
   const [productos, setProductos] = useState([]);
   const [cantidades, setCantidades] = useState("");
@@ -422,6 +422,7 @@ const CrearPedido = () => {
       valueFormatter: (value) => {
         const existe = parseFloat(value).toFixed(0);
         return `${parseFloat(existe).toLocaleString()}`;
+        
       },
     },
   ];
@@ -437,17 +438,17 @@ const CrearPedido = () => {
         </Box>
         
         <Box sx={{ padding: 2 }}>
-          <Button onClick={handleOpenC} variant="filled" sx={{ bgcolor: "#eb4d55", "&:hover": { bgcolor: "#ec1c27" } }}>
+          <Button onClick={handleOpenC} variant="filled" sx={{ bgcolor: "#d85bd8", "&:hover": { bgcolor: "#ec1ee2 " },  }}>
             Clientes
           </Button>
-          <UseImportoExcel onImportData={handleImportData} />
-          <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#aeefff", "&:hover": { bgcolor: "#36c7e7" }, m: 2 }}>
+          <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#6cd3ec", "&:hover": { bgcolor: "#36c7e7" }, m: 2 }}>
             Productos-MG
           </Button>
-          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#6ff581", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
+          <UseImportoExcel onImportData={handleImportData} />
+          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
             Guardar Pedido
           </Button>
-          <Button variant="filled" sx={{ bgcolor: "#ee70ee", "&:hover": { bgcolor: "#ec1ee2" }, }} LinkComponent={Link} href="../../clients">
+          <Button variant="filled" sx={{ bgcolor: "#f13c3c", "&:hover": { bgcolor: "#ec1c27" }, }} LinkComponent={Link} href="../../clients/">
             Cerrar
           </Button>
         </Box>

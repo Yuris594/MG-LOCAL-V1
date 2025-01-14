@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Box from "@mui/material/Box";
 import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
@@ -11,8 +10,23 @@ import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { LinearProgress, TextField, useMediaQuery } from "@mui/material";
+import { Alert, LinearProgress, Modal, Snackbar, TextField, useMediaQuery } from "@mui/material";
 
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  maxHeight: "90vh",
+  maxWidth: "80vw",
+  overflowY: "auto",
+  overflowX: "hidden",
+  padding: "16px",
+  bgcolor: "#fff",
+  border: "2px solid #000",
+  boxShadow: 24
+};
 
 const columns = [
   { field: "CLIENTE", headerName: "NIT", width: 170 },
@@ -41,12 +55,16 @@ const conseguirClientes = async () => {
 const Clientes = () => {
   const router = useRouter();
   const { setCliente } = useAuth();
+  const [open, setOpen] = useState(false);
   const [busqueda, setBusqueda] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaClientes, setTablaClientes] = useState();
   const [clientesFiltrados, setClientesFiltrados] = useState();
-  const isSmallScreen = useMediaQuery("(max-width: 600px)")
+  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const obtenerClientes = async () => {
@@ -121,7 +139,7 @@ const Clientes = () => {
                 <h2><strong>CLIENTES</strong></h2>
               </Grid>
                
-              <Link href=""><Button variant="outlined" sx={{ margin: "2px" }}>Nuevo</Button></Link>
+              <Button onClick={handleOpen} variant="outlined" sx={{ margin: "2px" }}>Nuevo</Button>
               <BotonExcel datos={clientesFiltrados} />
 
               <Grid size={{ xs: 12, sm: 8, md: 6}} sx={{ padding: 2 }}>
@@ -164,6 +182,71 @@ const Clientes = () => {
           </Grid>
         )}
       </Box>
+
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box sx={style}>
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="80vh" width="60vh" bgcolor="#f5f5f5" padding={3} >
+            <h3>CREAR NUEVO CLIENTE</h3>
+
+            <Box component="form" noValidate sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 400, }}>
+              <TextField
+                label="NIT"
+                name="nombre"
+                fullWidth
+                margin="normal"
+                required
+              />
+
+              <TextField
+                label="NOMBRE"
+                name="nombre"
+                fullWidth
+                margin="normal"
+                required
+              />
+
+              <TextField
+                label="EMAIL"
+                name="email"
+                type="email"
+                fullWidth
+                margin="normal"
+                required
+              />
+
+              <TextField
+                label="TELEFÓNO"
+                name="telefono"
+                fullWidth
+                margin="normal"
+                required
+              />
+
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>
+                Crear Cliente
+              </Button>
+            </Box>
+
+
+            <Snackbar autoHideDuration={6000}>
+              <Alert severity="error" >
+                No fue posible crear al cliente.
+              </Alert>
+            </Snackbar>
+
+            <Snackbar  autoHideDuration={6000} >
+              <Alert severity="success" >
+                Cliente creado exitosamente.
+              </Alert>
+            </Snackbar>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 };
