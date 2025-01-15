@@ -63,7 +63,7 @@ const columnsP = [
   },
   { field: "TOTAL_A_FACTURAR", headerName: "TOTAL A FACTURAR", width: 200,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },
@@ -82,7 +82,7 @@ const columnsF = [
   { field: "ANULADA", headerName: "AN", width: 130 },
   { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
@@ -94,7 +94,7 @@ const columnsF = [
   { field: "CANTIDAD", headerName: "CANT", width: 130, },
   { field: "PRECIO_UNITARIO", headerName: "PRECIO UNI.", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
@@ -103,7 +103,7 @@ const columnsF = [
   { field: "VDESC", headerName: "V DESC", width: 130 },
   { field: "TOTAL_MERCADERIA", headerName: "V. TOTAL ", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
@@ -128,31 +128,31 @@ const columnsC = [
   { field: "DIASVENC", headerName: "VENC", width: 130, },
   { field: "MONTO", headerName: "MONTO", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },
   { field: "SALDO", headerName: "SALDO", width: 130,  
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, cellClassName: "plazo-cell",
   },
   { field: "SMenorA30", headerName: "VENC < 30", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     },
   },
   { field: "SMayorA60", headerName: "VENC < 60", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },
   { field: "SMenorA60", headerName: "VENC > 60", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `$${parseFloat(precio).toLocaleString('es-CO')}`;
     }, 
   },

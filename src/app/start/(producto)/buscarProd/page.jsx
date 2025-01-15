@@ -57,38 +57,38 @@ const columns = [
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300 },
   { field: "TOTAL_DISP", headerName: "DISP-MG", width: 130, 
     valueFormatter: (value) => {
-      const disponible = parseFloat(value).toFixed(0);
+      const disponible = Number(value).toFixed(0);
       return `${parseFloat(disponible).toLocaleString()}`
     }, type: "number"
   },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130, 
+  { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 130, 
     valueFormatter: (value) => {
-      const existe = parseFloat(value).toFixed(0);
+      const existe = Number(value).toFixed(0);
       return `${parseFloat(existe).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 130, 
     valueFormatter: (value) => {
-      const impuesto = parseFloat(value).toLocaleString();
-      return `${parseFloat(impuesto).toFixed(1)}`
+      const impuesto = Number(value).toFixed(1);
+      return `${parseFloat(impuesto).toLocaleString()}`
     }, type: "number"
   },
   { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PORC_DCTO", headerName: "D1", width: 130, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toLocaleString();
-      return `${parseFloat(precio).toFixed(1)}`;
+      const precio = Number(value).toFixed(1);
+      return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
@@ -100,48 +100,42 @@ const columnsF = [
     renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 50 },
-  { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
+  { field: "PRECIO_TOTAL", headerName: "VALOR FACT", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PEDIDO", headerName: "PEDIDO", width: 130, cellClassName: "pedido-cell" },
   { field: "ARTICULO", headerName: "ARTICULO", width: 130 },
-  { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
+  { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 500 },
   { field: "CANTIDAD", headerName: "CANT", width: 130, 
     valueFormatter: (value) => {
-      const cantidad = parseFloat(value).toFixed(0);
+      const cantidad = Number(value).toFixed(0);
       return `${parseFloat(cantidad).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PRECIO_UNITARIO", headerName: "PRECIO UNI.", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0); 
+      const precio = Number(value).toFixed(0); 
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },    
   { field: "PORCIVA", headerName: "IVA", width: 130, 
     valueFormatter: (value) => {
-      const iva = parseFloat(value).toLocaleString(); 
-      return `${parseFloat(iva).toFixed(1)}`;
+      const iva = Number(value).toFixed(1); 
+      return `${parseFloat(iva).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PORDESC", headerName: "DESC", width: 130, 
     valueFormatter: (value) => {
-      const desc = parseFloat(value).toLocaleString();
-      return `${parseFloat(desc).toFixed(1)}`;
+      const desc = Number(value).toFixed(1);
+      return `${parseFloat(desc).toLocaleString()}`;
     }, type: "number"
   },
-  { field: "VDESC", headerName: "V. DESC", width: 130, 
+  { field: "TOTAL_MERCADERIA", headerName: "VALOR TOTAL", width: 130,
     valueFormatter: (value) => {
-      const vdesc = parseFloat(value).toFixed(0);
-      return `${parseFloat(vdesc).toLocaleString()}`;
-    }, 
-  },
-  { field: "TOTAL_MERCADERIA", headerName: "V. TOTAL", width: 130,
-    valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number", cellClassName: "autor-cell",
   },
@@ -159,36 +153,36 @@ const columnsP = [
   { field: "PEDIDO", headerName: "PEDIDO", width: 100, cellClassName: "pedido-cell" },
   { field: "PED", headerName: "PED", width: 100, 
     valueFormatter: (value) => {
-      const ped = parseFloat(value).toFixed(0);
+      const ped = Number(value).toFixed(0);
       return `${parseFloat(ped).toLocaleString()}`;
     }, type: "number"
   },
   { field: "DESP", headerName: "DESP", width: 100, 
     valueFormatter: (value) => {
-      const desp = parseFloat(value).toFixed(0);
+      const desp = Number(value).toFixed(0);
       return `${parseFloat(desp).toLocaleString()}`
     }, type: "number"
   },
   { field: "PEND", headerName: "PEND", width: 100, 
     valueFormatter: (value) => {
-      const pend = parseFloat(value).toFixed(0);
+      const pend = Number(value).toFixed(0);
       return `${parseFloat(pend).toLocaleString()}`;
     }, type: "number"
   },
   { field: "ESTADO", headerName: "ESTADO", width: 120 },
-  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 200,
+  { field: "AUTORIZADO", headerName: "AUTORIZADO", width: 200,
     renderCell: (params) => {
-      const AUTORIZADONOM = params.row.AUTORIZADONOM;
+      const AUTORIZADO = params.row.AUTORIZADO;
       const cellStyle = {
         color:
-        AUTORIZADONOM === "APROBADO"
-        ? "#00FC00"
-        : AUTORIZADONOM === "RETENIDO"
-        ? "#FF1507"
+        AUTORIZADO === "APROBADO"
+        ? "#00ff00"
+        : AUTORIZADO === "RETENIDO"
+        ? "#ff0000"
         : "#000000",
         backgroundColor: "transparent",
       };
-      return <Typography style={cellStyle}>{AUTORIZADONOM}</Typography>;
+      return <Typography style={cellStyle}>{AUTORIZADO}</Typography>;
     },
   },
   { field: "VE", headerName: "VEND", width: 80, cellClassName: "autor-cell" },
@@ -431,26 +425,25 @@ const BuscarReferencia = () => {
             </Box>
 
             <CustomTabPanel component={Box} value={value} index={0} dir={theme.direction}>
-                <Box sx={{ width: "100%", height: 750 }}>
-                  <DataGrid
-                    rows={productos}
-                    columns={columns}
-                    pageSizeOptions={[5, 12, 20]}
-                    getRowId={(row) => row.ARTICULO}
-                    onRowClick={handleRowClick}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 12 },
-                      },
-                    }}
-                    sx={{
-                      "& .MuiDataGrid-columnHeaderTitle": {
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              
+              <Box sx={{ width: "100%", height: 750 }}>
+                <DataGrid
+                  rows={productos}
+                  columns={columns}
+                  pageSizeOptions={[5, 12, 20]}
+                  getRowId={(row) => row.ARTICULO}
+                  onRowClick={handleRowClick}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 12 },
+                    },
+                  }}
+                  sx={{
+                    "& .MuiDataGrid-columnHeaderTitle": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+              </Box>
             </CustomTabPanel>
 
             <CustomTabPanel component={Box} value={value} index={1} dir={theme.direction}>

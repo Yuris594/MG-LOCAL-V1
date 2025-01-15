@@ -59,7 +59,7 @@ const columns = [
   },
   { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
     valueFormatter: (value) => {
-      const total = parseFloat(value).toFixed(0);
+      const total = Number(value).toFixed(0);
       return `${parseFloat(total).toLocaleString()}`;
     }, type: "number", headerClassName: 'header-bold'  
   },
@@ -74,7 +74,7 @@ const columns = [
   },
   { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90,
     valueFormatter: (value) => {
-      const real = parseFloat(value).toFixed(0);
+      const real = Number(value).toFixed(0);
       return `${parseFloat(real).toLocaleString()}`;
     }, type: "number", headerClassName: 'header-bold'  },
 ];
@@ -459,7 +459,12 @@ const PedidosCaja = () => {
                 <Button variant="outlined" sx={{ width: "100%", height: "30%" }} onClick={handleOpen}>
                   Cliente:{cliente.NOMBREALIAS}
                 </Button>
-                <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                <Modal 
+                  open={open} 
+                  onClose={handleClose} 
+                  aria-labelledby="modal-modal-title" 
+                  aria-describedby="modal-modal-description"
+                >
                   <Box sx={style}>
                     <ClientesGlobal setOpen={setOpen} />
                   </Box>

@@ -25,6 +25,7 @@ import { GridRowModes, DataGrid, GridActionsCellItem,
 GridRowEditStopReasons } from "@mui/x-data-grid";
 import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, 
 InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 
 const style = {
@@ -81,6 +82,7 @@ function a11yProps(index) {
 
 export const PedidosC = () => {
   const inputRef = useRef();
+  const router = useRouter();
   const { form, changed } = useForm({});
   const { pedido, setPedido } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
@@ -131,7 +133,7 @@ export const PedidosC = () => {
         setTablaProducto(datos)
       };
     } catch (error) {
-      console.log("error")
+      console.log("error", error);
     }
   };
 
@@ -242,13 +244,15 @@ export const PedidosC = () => {
     setProductos(resultadosFiltrados);
   };
 
+  const handleSelectionChange = (newSelection) => {
+    setSelectedRows(newSelection);
+  };
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
   };
-
  
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -261,7 +265,6 @@ export const PedidosC = () => {
   const handleDeleteClick = (id) => () => {
     setProductosP(productosP.filter((row) => row.ARTICULO !== id));
   };
-
 
   const handleCancelClick = (id) => () => {
     setRowModesModel({
@@ -292,30 +295,31 @@ export const PedidosC = () => {
       setRowModesModel(newRowModesModel);
   };
 
-
   const columnsP = [
     { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
     { field: 'DESCRIPCION', headerName: 'REFERENCIA', width: 500 },
     { field: 'PRECIO', headerName: 'PRECIO', width: 130,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: 'number'
     },
-    { field: 'CPed', headerName: 'CANT', width: 80, type: 'number', editable: true },
+    { field: 'CPed', headerName: 'CANT', width: 80, 
+      type: 'number', editable: true 
+    },
     { field: 'PORC_DCTO', headerName: 'D1', width: 70,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toLocaleString();
-        return `${parseFloat(precio).toFixed(1)}`;
+        const precio = Number(value).toFixed(1);
+        return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number"
     },
-    { field: 'DISP', headerName: 'DISP', width: 70,  },
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40, 
       valueFormatter: (value) => {
-        const iva = parseFloat(value).toLocaleString();
-        return `${parseFloat(iva).toFixed(1)}`;
+        const iva = Number(value).toFixed(1);
+        return `${parseFloat(iva).toLocaleString()}`;
       }, type: "number"
     },
+    { field: 'DISP', headerName: 'DISP', width: 70, },
     { field: 'Em', headerName: 'EMP', width: 80 },
     { field: 'actions', type: 'actions', headerName: 'ACTIONS', width: 100, cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -361,7 +365,7 @@ export const PedidosC = () => {
   ];
 
   const cerrarP = () => {
-    window.history.back();
+    router.push("../")
     localStorage.removeItem('pedidoTemp');
   };
   
@@ -414,10 +418,6 @@ export const PedidosC = () => {
     handleCloseM();
   };
 
-  const handleSelectionChange = (newSelection) => {
-    setSelectedRows(newSelection);
-  };
-
 
   const columnsM = [
     { field: 'ARTICULO', headerName: 'CODIGO', width: 100 },
@@ -425,11 +425,11 @@ export const PedidosC = () => {
     { field: 'SUBLINEA', headerName: 'SUBLINEA', width: 300 },
     { field: 'PRECIO', headerName: 'PRECIO', width: 130,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString('es-CO')}`;
+        const precio = Number(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number"
     },
-    { field: 'CANTIDAD', headerName: 'CANT', width: 80, type: 'number', editable: true,
+    { field: 'CANTIDAD', headerName: 'CANT', width: 80,
       renderCell: (params) => {
         return (
           <TextField 
@@ -440,13 +440,13 @@ export const PedidosC = () => {
             onChange={(e) => handleCantidad(params.id, e.target.value)}
           />
         )
-      },
+      }, type: 'number', editable: true,
     },
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
     { field: 'PRECIOMASIVA', headerName: 'MASIVA', width: 130,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString('es-CO')}`;
+        const precio = Number(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true
     },
     { field: 'PORC_DCTO', headerName: 'D1', width: 40 },
@@ -460,8 +460,8 @@ export const PedidosC = () => {
       <Box> {" "} <Banner />{" "} </Box>
         <Grid container spacing={2} direction={isSmallScreen ? "column" : "row"} alignItems="center" justifyContent="space-between">
           <h2 style={{ margin: 4 }}>PEDIDOS</h2>
-          
           <Grid size={{ xs: 12, sm: 6, md: 6 }} sx={{ padding: 2 }}>
+
             <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
               {clienteP?.AUTORIZADONOM === "APROBADO" ? (
                 <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
@@ -569,14 +569,14 @@ export const PedidosC = () => {
                 </FormControl>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 1 }}>
+              <Grid size={{ xs: 12, sm: 3 }}>
                 <Paper>
                   <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
                   <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
                 </Paper>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 9 }}>
                 <FormControl sx={{ margin: 0.5, display: "flex" }}>
                   <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
                   <OutlinedInput
@@ -591,7 +591,7 @@ export const PedidosC = () => {
                 </FormControl>
               </Grid>
 
-              <Grid size={{ xs: 12, sm: 5}}>
+              <Grid size={{ xs: 12, sm: 12}}>
                 <FormControl sx={{ margin: 0.5, display: "flex"  }}>
                   <InputLabel htmlFor="component-disabled"></InputLabel>
                   <TextField
@@ -609,79 +609,77 @@ export const PedidosC = () => {
 
           
         <Grid size={{ xs: 12 }}>
-          <Paper sx={{ width: "100%" }}>
-            <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
-              <Tab label="Detalles Lineas" {...a11yProps(0)} />
-              <Tab label="Articulos Pendientes" {...a11yProps(1)} />
-            </Tabs>
-        
-            <CustomTabPanel value={value} index={0}>
-              <Box sx={{ height: "auto", width: "100%", 
-                  "& .MuiDataGrid-cell--editable": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                    },
+          <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
+            <Tab label="Detalles Lineas" {...a11yProps(0)} />
+            <Tab label="Articulos Pendientes" {...a11yProps(1)} />
+          </Tabs>
+      
+          <CustomTabPanel value={value} index={0}>
+            <Box sx={{ height: "auto", width: "100%", 
+                "& .MuiDataGrid-cell--editable": {
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                   },
-                }}>
-                <Box sx={{ height: "auto", width: "100%" }}>
-                  <DataGrid
-                    density="compact"
-                    rows={productosP}
-                    columns={columnsP}
-                    getRowId={(row) => row.ARTICULO}
-                    editMode="row"
-                    onRowModesModelChange={handleRowModesModelChange}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                    pageSizeOptions={[10]}
-                  />
-                </Box>
+                },
+              }}>
+              <Box sx={{ height: "auto", width: "100%" }}>
+                <DataGrid
+                  density="compact"
+                  rows={productosP}
+                  columns={columnsP}
+                  getRowId={(row) => row.ARTICULO}
+                  editMode="row"
+                  onRowModesModelChange={handleRowModesModelChange}
+                  onRowEditStop={handleRowEditStop}
+                  processRowUpdate={processRowUpdate}
+                  slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                    },
+                  }}
+                  pageSizeOptions={[10]}
+                />
               </Box>
-            </CustomTabPanel>
+            </Box>
+          </CustomTabPanel>
 
-            <CustomTabPanel value={value} index={1}>
-              <Box sx={{ height: "auto", width: "100%",
-                  "& .MuiDataGrid-cell--editable": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                    },
+          <CustomTabPanel value={value} index={1}>
+            <Box sx={{ height: "auto", width: "100%",
+                "& .MuiDataGrid-cell--editable": {
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
                   },
-                }}>
-                <Box sx={{ height: "auto", width: "100%" }}>
-                  <DataGrid
-                    density="compact"
-                    rows={productosConDISP0}
-                    columns={columnsP}
-                    getRowId={(row) => row.ARTICULO}
-                    onRowSelectionModelChange={handleRowModesModelChange}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    slotProps={{
-                      toolbar: { setProductosP, setRowModesModel },
-                    }}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                    pageSizeOptions={[10]}
-                  />
-                </Box>
+                },
+              }}>
+              <Box sx={{ height: "auto", width: "100%" }}>
+                <DataGrid
+                  density="compact"
+                  rows={productosConDISP0}
+                  columns={columnsP}
+                  getRowId={(row) => row.ARTICULO}
+                  onRowSelectionModelChange={handleRowModesModelChange}
+                  onRowEditStop={handleRowEditStop}
+                  processRowUpdate={processRowUpdate}
+                  slotProps={{
+                    toolbar: { setProductosP, setRowModesModel },
+                  }}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                    },
+                  }}
+                  pageSizeOptions={[10]}
+                />
               </Box>
-            </CustomTabPanel>
-          </Paper>
+            </Box>
+          </CustomTabPanel>
         </Grid>
         
 

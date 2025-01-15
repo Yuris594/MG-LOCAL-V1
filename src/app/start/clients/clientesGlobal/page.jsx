@@ -9,6 +9,7 @@ import { useAuth } from "@/context/authContext";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { useCallback, useEffect, useState } from "react";
+import { CircularProgress } from "@mui/material";
 
 
 const columns = [
@@ -47,6 +48,7 @@ const conseguirClientes = async () => {
 const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
   const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState("");
+  const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaClientes, setTablaClientes] = useState([]);
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
@@ -57,6 +59,7 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
       if (datos && datos.length > 0) {
           setClientesFiltrados(datos);
           setTablaClientes(datos);
+          setCargando(false);
       } else {
           console.log("No se encontraron clientes");
       }
@@ -105,7 +108,7 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
       <div style={{ height: "auto", width: "100%", backgroundColor: "#ffffff" }}>
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
           <h2><strong>CLIENTES</strong></h2>
-          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 600, margin: "0%" }}>
+          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 500, margin: "0%" }}>
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder="Buscar"
@@ -122,20 +125,26 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
         </Box>
 
         <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#80f5e7', color: '#000000' } }}>
-          <DataGrid
-            rows={clientesFiltrados}
-            columns={columns}
-            pageSizeOptions={[5, 10, 20]}
-            onRowSelectionModelChange={handleSelectionChange}
-            rowSelectionModel={selectedRows}
-            getRowId={(row) => row.CLIENTE}
-            sx={{ backgroundColor: "#ffffff" }}
-            initialState={{
-                pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                },
-            }}
-          />
+          {cargando === true ? (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <DataGrid
+              rows={clientesFiltrados}
+              columns={columns}
+              pageSizeOptions={[5, 10, 20]}
+              onRowSelectionModelChange={handleSelectionChange}
+              rowSelectionModel={selectedRows}
+              getRowId={(row) => row.CLIENTE}
+              sx={{ backgroundColor: "#ffffff" }}
+              initialState={{
+                  pagination: {
+                      paginationModel: { page: 0, pageSize: 10 },
+                  },
+              }}
+            />
+          )}
         </Box>
       </div>
     </>

@@ -43,23 +43,10 @@ const columns = [
   { field: "PER_Clave", headerName: "CONTRASEÑA", width: 150, editable: true },
   { field: "IdDiv", headerName: "ID DIVISIÓN", type: "number", width: 120, editable: true },
   { field: "PERAUTOPED", headerName: "AUTO PEDIDOS", type: "number", width: 130, editable: true },
-  { field: "CODVEND", headerName: "CÓDIGO VENDEDOR", width: 150, editable: true },
-  { field: "PREFIJO", headerName: "PREFIJO", width: 120, editable: true },
+  { field: "CODVEND", headerName: "CÓDIGO VENDEDOR", width: 160, editable: true },
+  { field: "PREFIJO", headerName: "PREFIJO", width: 100, editable: true },
   { field: "CONSECUTIVOPED", headerName: "CONSECUTIVO PEDIDOS", type: "number", width: 180, editable: true },
 ];
-
-
-const obtenerUsuario = async () => {
-  const response = await fetch(Conexion.url + '/usuarios/listar', {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
-  return data;
-};
-
 
 
 function Usuarios() {
@@ -94,12 +81,17 @@ function Usuarios() {
   };
 
   const conseguirUsuarios = async () => {
-    const datos = await obtenerUsuario();
     try {
-      if (datos)
+      const response = await fetch('/api/usuarios/listar', {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const datos = await response.json();
+      if (datos) {
         setCargando(false);
         setUsuarios(datos);
         setTablaUsuario(datos);
+      }
     } catch (error) {
         console.log(error)
     }

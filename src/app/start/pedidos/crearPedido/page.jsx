@@ -21,6 +21,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
 import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, 
 useMediaQuery } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 
 const style = {
@@ -41,6 +42,7 @@ const style = {
 
 const CrearPedido = () => {
   const inputRef = useRef();
+  const router = useRouter();
   const { cliente } = useAuth();
   const [total, setTotal] = useState("0");
   const [notas, setNotas] = useState("");
@@ -74,21 +76,26 @@ const CrearPedido = () => {
   };
 
   const handleImportData = (data) => {
-    const nuevosProductos = data.map((row) => ({
-      ARTICULO: `${row["CODIGO"]}`,
-      DESCRIPCION: row["REFERENCIA"],
-      SUBLINEA: row["SUBLINEA"],
-      UNIDAD_EMPAQUE: row["EMP"],
-      PRECIO: row["PRECIO"],
-      cantped: parseFloat(row["CANT"]) || 0,
-      PORC_IMPUESTO: parseFloat(row["IVA"]) || 0,
-      PORC_DCTO: parseFloat(row["DESC"]) || 0,
-      PRECIOMASIVA: parseFloat(row["MASIVA"]) || 0,
-      TOTAL_DISP: parseFloat(row["DISP"]) || 0,
-      EXIST_REAL: parseFloat(row["EXIST_REAL"]) || 0,
-    }));
-    setArticulosSeleccionados((prevProductos) => [...prevProductos, ...nuevosProductos]);
-    CalcularTotales(nuevosProductos)
+    if (data.length === 0) {
+      setArticulosSeleccionados([]);
+      CalcularTotales([]);
+    } else {
+      const nuevosProductos = data.map((row) => ({
+        ARTICULO: `${row["CODIGO"]}`,
+        DESCRIPCION: row["REFERENCIA"],
+        SUBLINEA: row["SUBLINEA"],
+        UNIDAD_EMPAQUE: row["EMP"],
+        PRECIO: row["PRECIO"],
+        cantped: parseFloat(row["CANT"]) || 0,
+        PORC_IMPUESTO: parseFloat(row["IVA"]) || 0,
+        PORC_DCTO: parseFloat(row["DESC"]) || 0,
+        PRECIOMASIVA: parseFloat(row["MASIVA"]) || 0,
+        TOTAL_DISP: parseFloat(row["DISP"]) || 0,
+        EXIST_REAL: parseFloat(row["EXIST_REAL"]) || 0,
+      }));
+      setArticulosSeleccionados((prevProductos) => [...prevProductos, ...nuevosProductos]);
+      CalcularTotales(nuevosProductos)
+    }
   };
 
   const columns = [
@@ -98,7 +105,7 @@ const CrearPedido = () => {
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
     { field: "PRECIO", headerName: "PRECIO", width: 130, 
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString('es-CO')}`;
       }, editable: true, type: "number",
     },
@@ -107,33 +114,33 @@ const CrearPedido = () => {
     },
     { field: "PORC_IMPUESTO", headerName: "IVA", width: 70,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number" 
     },
     { field: "PORC_DCTO", headerName: "DESC", width: 70,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number" 
     },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString('es-CO')}`;
-      }, 
+      }, type: "number" 
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
-      }
+      }, type: "number" 
     },
     { field: "EXIST_REAL", headerName: "EXIST_REAL", width: 90, 
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
-      }
+      }, type: "number" 
     },
     { field: "actions", type: "actions", headerName: "", width: 100, 
       cellClassName: "actions",
@@ -194,9 +201,11 @@ const CrearPedido = () => {
   };
 
   const handleDeleteClick = (id) => () => {
-    setArticulosSeleccionados((prevSeleccionados) => 
-      prevSeleccionados.filter((row) => row.ARTICULO !== id) 
-    );
+    setArticulosSeleccionados((prevSeleccionados) => {
+      const articulosActualizados = prevSeleccionados.filter((row) => row.ARTICULO !== id) 
+      CalcularTotales(articulosActualizados);
+      return articulosActualizados;
+    });
   };
 
   const handleCancelClick = (id) => () => {
@@ -273,7 +282,7 @@ const CrearPedido = () => {
   const guardarPedido = () => {
     const pedidosGuardados = JSON.parse(localStorage.getItem("pedidos")) || [];
 
-    let ultimoId = 0;
+    let ultimoId = 1;
     if (pedidosGuardados.length > 0) {
       ultimoId = Math.max(...pedidosGuardados.map(pedido => pedido.PEDID));
     }
@@ -297,7 +306,9 @@ const CrearPedido = () => {
     pedidosGuardados.push(pedido);
     localStorage.setItem("pedidos", JSON.stringify(pedidosGuardados));
 
-    alert("Pedido Guaardado Correctamente");
+    router.push('../');
+
+    alert("Pedido Guardado Correctamente");
   };
 
   useEffect(() => {
@@ -387,7 +398,7 @@ const CrearPedido = () => {
     { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 80 },
     { field: "PRECIO", headerName: "PRECIO", width: 130,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       },
     },
@@ -396,10 +407,17 @@ const CrearPedido = () => {
         return (
           <TextField 
             value={cantidades[params.id] || ""}
-            onChange={(e) => handleCantidad(params.id, e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d*$/.test(value)) {
+                handleCantidad(params.id, value);
+              }
+            }}
             sx={{ width: "70px" }}
             variant="outlined"
             size="small"
+            type="text"
+            inputProps={{ inputMode: "numeric" }}
           />
         )
       }
@@ -408,19 +426,19 @@ const CrearPedido = () => {
     { field: "PORC_DCTO", headerName: "D1", width: 40 },
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
       valueFormatter: (value) => {
-        const precio = parseFloat(value).toFixed(0);
+        const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
       }, 
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
       valueFormatter: (value) => {
-        const disponible = parseFloat(value).toFixed(0);
+        const disponible = Number(value).toFixed(0);
         return `${parseFloat(disponible).toLocaleString()}`;
       },
     },
     { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 90, 
       valueFormatter: (value) => {
-        const existe = parseFloat(value).toFixed(0);
+        const existe = Number(value).toFixed(0);
         return `${parseFloat(existe).toLocaleString()}`;
         
       },

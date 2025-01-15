@@ -227,7 +227,7 @@ const Clientes = () => {
                 required
               />
 
-              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>
+              <Button variant="contained" color="primary" fullWidth sx={{ marginTop: 2 }}>
                 Crear Cliente
               </Button>
             </Box>

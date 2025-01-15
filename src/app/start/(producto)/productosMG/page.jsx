@@ -23,84 +23,84 @@ const fDate = (dateString) => {
 const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
-  { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, },
+  { field: "SUBLINEA", headerName: "SUBLINEA", width: 200, },
   { field: "TOTAL_DISP", headerName: "DISP", width: 130, 
     valueFormatter: (value) => {
-      const dispo = parseFloat(value).toFixed(0);
+      const dispo = Number(value).toFixed(0);
       return `${parseFloat(dispo).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PRECIO", headerName: "PRECIO", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PORC_IMPUESTO", headerName: "IVA", width: 100, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toLocaleString();
-      return `${parseFloat(precio).toFixed(1)}`;
+      const precio = Number(value).toFixed(1);
+      return `${parseFloat(precio).toLocaleString()}`;
+    }, type: "number"
+  },
+  { field: "PORC_DCTO", headerName: "DESC", width: 130, 
+    valueFormatter: (value) => {
+      const precio = Number(value).toFixed(1);
+      return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PRECIOMASIVA", headerName: "MASIVA", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
-    }, type: "number"
-  },
-  { field: "PORC_DCTO", headerName: "D1", width: 130, 
-    valueFormatter: (value) => {
-      const precio = parseFloat(value).toLocaleString();
-      return `${parseFloat(precio).toFixed(1)}`;
     }, type: "number"
   },
   { field: "UNIDAD_EMPAQUE", headerName: "EMP", width: 130 },
   { field: "EXIST_REAL", headerName: "EXIST-REAL", width: 130, 
     valueFormatter: (value) => {
-      const existe = parseFloat(value).toFixed(0);
+      const existe = Number(value).toFixed(0);
       return `${parseFloat(existe).toLocaleString()}`;
     }, type: "number"
   },
 ];
 
 const columnsP = [
-  { field: "FECHA", headerName: "Fecha", width: 250,
+  { field: "FECHA", headerName: "FECHA", width: 250,
     renderCell: (params) => fDate(params.value),
   },
   { field: "CLIENTE", headerName: "CLIENTE", width: 180 },
   { field: "PEDIDO", headerName: "PEDIDO", width: 150, cellClassName: 'pedido-cell' },
   { field: "PED", headerName: "PED", width: 100, 
     valueFormatter: (value) => {
-      const ped = parseFloat(value).toFixed(0);
+      const ped = Number(value).toFixed(0);
       return `${parseFloat(ped).toLocaleString()}`;
     }, 
   },
   { field: "DESP", headerName: "DESP", width: 120, 
     valueFormatter: (value) => {
-      const desp = parseFloat(value).toFixed(0);
+      const desp = Number(value).toFixed(0);
       return `${parseFloat(desp).toLocaleString()}`;
     }
   },
   { field: "PEND", headerName: "PEND", width: 130, 
     valueFormatter: (value) => {
-      const pend = parseFloat(value).toFixed(0);
+      const pend = Number(value).toFixed(0);
       return `${parseFloat(pend).toLocaleString()}`;
     }
   },
   { field: "ESTADO", headerName: "ESTADO", width: 160 },
-  { field: "AUTORIZADONOM", headerName: "AUTORIZADO", width: 200,
+  { field: "AUTORIZADO", headerName: "AUTORIZADO", width: 200,
     renderCell: (params) => {
-      const AUTORIZADONOM = params.row.AUTORIZADONOM;
+      const AUTORIZADO = params.row.AUTORIZADO;
       const cellStyle = {
         color:
-        AUTORIZADONOM === "APROBADO"
+        AUTORIZADO === "APROBADO"
         ? "#00FC00"
-        : AUTORIZADONOM === "RETENIDO"
+        : AUTORIZADO === "RETENIDO"
         ? "#FF1507"
         : "#000000",
         backgroundColor: "transparent",
       };
-      return <Typography style={cellStyle}>{AUTORIZADONOM}</Typography>;
+      return <Typography style={cellStyle}>{AUTORIZADO}</Typography>;
     },
   },
   { field: "VE", headerName: "VEND", width: 100, cellClassName: "autor-cell" },
@@ -112,9 +112,9 @@ const columnsF = [
     renderCell: (params) => fDate(params.value),
   },
   { field: "ANULADA", headerName: "AN", width: 50 },
-  { field: "PRECIO_TOTAL", headerName: "V. FACT", width: 130,
+  { field: "PRECIO_TOTAL", headerName: "VALOR FACT", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
@@ -123,37 +123,31 @@ const columnsF = [
   { field: "DESCRIPCION", headerName: "DESCRIPCION", width: 700 },
   { field: "CANTIDAD", headerName: "CANT", width: 130, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PRECIO_UNITARIO", headerName: "PRECION UNI.", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
   { field: "PORCIVA", headerName: "IVA", width: 100, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toLocaleString();
+      const precio = Number(value).toLocaleString();
       return `${parseFloat(precio).toFixed(1)}`;
     }, type: "number"
   },
   { field: "PORDESC", headerName: "DESC", width: 100, 
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number"
   },
-  { field: "VDESC", headerName: "V DESC", width: 130, 
+  { field: "TOTAL_MERCADERIA", headerName: "VALOR TOTAL", width: 130,
     valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
-      RETURN `${parseFloat(precio).toLocaleString()}`;
-    }
-  },
-  { field: "TOTAL_MERCADERIA", headerName: "VTotal ", width: 130,
-    valueFormatter: (value) => {
-      const precio = parseFloat(value).toFixed(0);
+      const precio = Number(value).toFixed(0);
       return `${parseFloat(precio).toLocaleString()}`;
     }, type: "number", cellClassName: "autor-cell",
   },
@@ -162,6 +156,7 @@ const columnsF = [
   { field: "OBSERVACIONES", headerName: "OBSERVACIONES", width: 800 },
   { field: "RUBRO1", headerName: "DOCS 2", width: 500 },
 ];
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -192,7 +187,7 @@ function allyProps(index) {
 }
 
 const obtenerProductos = async () => {
-  const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
+  const response = await fetch("/api/productos/listar_solo_para_mg", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -202,7 +197,7 @@ const obtenerProductos = async () => {
 };
 
 const obtenerFacturas = async (articulo) => {
-  const response = await fetch(Conexion.url + `/productos/facturas/${articulo.ARTICULO}`, {
+  const response = await fetch(`/api/productos/facturas/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -218,7 +213,7 @@ const obtenerFacturas = async (articulo) => {
 };
 
 const obtenerPedidos = async (articulo) => {
-  const response = await fetch(Conexion.url + `/productos/pedidos/${articulo.ARTICULO}`, {
+  const response = await fetch(`/api/productos/pedidos/${articulo.ARTICULO}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -360,10 +355,10 @@ const productosMG = () => {
               
               <BotonExcel datos={productos} />
              
-              <h2 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#eb171b", }}>
+              <h3 style={{ display: "flex", justifyContent: "column", alignItems: "center", width: "auto", margin: 0, color: "#eb171b", }}>
                 {articulo.ARTICULO} - {articulo.DESCRIPCION}
-              </h2>
-              <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 700, margin: "10px", }}>
+              </h3>
+              <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-rigth", width: 500, margin: "10px", }}>
                 <InputBase
                   sx={{ ml: 1, flex: 1 }}
                   placeholder="Buscar..."

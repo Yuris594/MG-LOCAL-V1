@@ -55,19 +55,19 @@
 
 
 .total-cell {
-  color: red;
+  color: rgb(0, 255, 0);
 }
 
 .pedido-cell {
-  color: rgb(0, 109, 128)
+  color: rgb(7, 165, 152)
 }
 
 .autor-cell {
-  color: green
+  color: rgb(14, 58, 180)
 }
 
 .plazo-cell {
-  color: rgb(255, 0, 149)
+  color: rgb(255, 1, 1)
 }
   
 .header-bold {

@@ -15,14 +15,13 @@ const inter = Lora({ subsets: ["latin"] });
 
 const noExiste = () => {
   Swal.fire({
-    title: "Factura no existe!",
-    icon: "error",
-    button: "Aceptar",
+    title: "Factura Solicitada No Existe!",
+    icon: "info",
   });
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(Conexion.url + `/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import * as XLSX from "xlsx";
 import { Button } from "@mui/material";
+import Swal from "sweetalert2";
+import * as XLSX from "xlsx";
 
 const UseImportoExcel = ({ onImportData }) => {
   const [fileName, setFileName] = useState("Subir Archivo");
+  const [importedData, setImportedData] = useState(null);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -23,18 +25,34 @@ const UseImportoExcel = ({ onImportData }) => {
           const data = XLSX.utils.sheet_to_json(sheet);
 
           if (data.length) {
-            // Enviar los datos procesados al componente padre
+            setImportedData(data);
             onImportData(data);
           } else {
             console.error("El archivo Excel está vacío.");
+            Swal.fire({
+              icon: "info",
+              title: "El archivo está vacío.",
+              text: "Por favor, sube un archivo válido.",
+            });
           }
         } catch (error) {
           console.error("Error al procesar el archivo:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error al procesar el archivo.",
+            text: "Por favor, verifica que el formato sea correcto.",
+          });
         }
       };
 
       reader.readAsBinaryString(file);
     }
+  };
+
+  const handleRemoveFile = () => {
+    setFileName("Subir Archivo");
+    setImportedData(null);
+    onImportData([]); 
   };
 
   return (
@@ -51,8 +69,22 @@ const UseImportoExcel = ({ onImportData }) => {
         style={{ display: "none" }}
         onChange={handleFileUpload}
       />
+      {importedData && (
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleRemoveFile}
+          style={{ marginLeft: "1rem" }}
+        >
+          Remover Archivo
+        </Button>
+      )}
     </>
   );
 };
 
 export default UseImportoExcel;
+
+
+
+
