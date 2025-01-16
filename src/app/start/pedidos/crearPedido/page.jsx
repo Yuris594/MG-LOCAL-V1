@@ -2,7 +2,7 @@
 
 
 import Link from "next/link";
-import { Conexion } from "@/conexion";
+import { Conexion, Global } from "@/conexion";
 import Grid from "@mui/material/Grid2";
 import { useAuth } from "@/context/authContext";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,6 +12,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import Banner from "@/app/components/banner/banner";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Autocomplete from '@mui/material/Autocomplete';
 import BusinessIcon from "@mui/icons-material/Business";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -22,6 +23,7 @@ import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
 import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, 
 useMediaQuery } from "@mui/material";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 
 const style = {
@@ -127,7 +129,7 @@ const CrearPedido = () => {
     { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
       valueFormatter: (value) => {
         const precio = Number(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString()}`;
       }, type: "number" 
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
@@ -235,7 +237,6 @@ const CrearPedido = () => {
   };
 
 
-
   const agregarArticulo = (nuevosArticulos) => {
     const articulosConTotal = nuevosArticulos.map((art) => {
       const precioUnitario = art.PRECIO * (1 + art.PORC_IMPUESTO / 100);
@@ -280,7 +281,7 @@ const CrearPedido = () => {
 
 
   const guardarPedido = () => {
-    const pedidosGuardados = JSON.parse(localStorage.getItem("pedidos")) || [];
+    const pedidosGuardados = JSON.parse(localStorage.getItem("pedidosLocal")) || [];
 
     let ultimoId = 1;
     if (pedidosGuardados.length > 0) {
@@ -447,6 +448,141 @@ const CrearPedido = () => {
 
 
 
+  const obtenerConse = async () => {
+    try {
+      const response = await fetch(Global.url + `/pedidos/301`, {
+        method: "GET",
+        headers: { "Content-Type" : "application/json" },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error al obtener el consecutivo: ${response.status} ${response.statusText}`);
+      }
+
+      const datos = await response.json();
+      return datos[0];
+    } catch (error) {
+      console.error("Error al obtener el consecutivo:", error);
+      throw error;
+    }
+  };
+
+  const enviarPedido = async () => {
+
+    const resultado = await Swal.fire({
+      title: "Almacenar!",
+      text: "¿Desea almacenar el Pedido?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Aceptar",
+      cancelButtonText: "Cancelar",
+    }); 
+    
+    if(!resultado.isConfirmed) {
+      Swal.fire({
+        text: "El Pedido no se almacenó.",
+        icon: "info",
+        timer: 3000, 
+      });
+      return; 
+    }
+
+    try {
+      const datosConse = await obtenerConse();
+      const conseActualizado = datosConse.consecutivo + 1;
+      const NUMPED = `${datosConse.Prefijo}${conseActualizado}`; 
+
+      const response = await fetch(Global.url + `/pedidos/PEDIDOS/301`, {
+        method: "PUT",
+        headers: { "Content-Type" : "application/json" },
+        body: JSON.stringify({ Consecutivo: conseActualizado })
+      }); 
+
+      if (!response.ok) {
+        console.log("Error al actualizar el consecutivo:", response.statusText);
+        throw new Error("Error al actualizar el consecutivo");
+      } else {
+        console.log("Consecutivo actualizado correctamente");
+      }
+      
+      const pedido = {
+        FKID_sellers: clienteP.VENDEDOR,
+        Notas: notas,
+        FKId_clientes: clienteP.CLIENTE,
+        NUMPED,
+      };
+
+      const encabezadoResponse = await fetch(Global.url + '/pedidos/', {
+        method: "POST",
+        headers: { "Content-Type" : "application/json" },
+        body: JSON.stringify(pedido),
+      });
+  
+      if (!encabezadoResponse.ok) {
+        const errorResponse = await encabezadoResponse.json();
+        console.error("Error al crear el pedido", errorResponse);
+        throw new Error("Error al crear el encabezado del pedido");
+      } 
+        
+      console.log("Pedido creado correctamente");               
+      
+      const ultimoFKidPedidos = parseInt(localStorage.getItem("ultimoPedido"), 10) || 0;
+      const nuevoFKidPedidos = ultimoFKidPedidos + 1;
+
+      const detallePedido = articulosSeleccionados.map(art => ({
+        FKid_pedidos2: nuevoFKidPedidos,
+        FKcodigo_articles: art.ARTICULO,
+        Cantidad: art.cantped,
+        Precio: art.PRECIO,
+        Descuento: art.PORC_DCTO,
+        Iva: art.PORC_IMPUESTO,
+        Total: art.Total,
+        FKNUMPED: NUMPED,
+        BODEGA: art.BODEGA
+      }));
+      
+      for (const detalle of detallePedido) {
+        const detalleResponse = await fetch(Global.url + `/pedidos/${NUMPED}`, {
+          method: "POST",
+          headers: { "Content-Type" : "application/json" },        
+          body: JSON.stringify(detalle),
+        });
+      
+        if (!detalleResponse.ok) {
+          const errorResponse = await detalleResponse.json(); 
+          console.error("Error al crear el detalle del pedido:", errorResponse);
+          throw new Error(`Error al crear el detalle del pedido: ${detalleResponse.status} - ${detalleResponse.statusText}`);
+        }
+      }
+      
+      console.log("Detalle del pedido creado correctamente");
+      localStorage.setItem("ultimoFKidPedidos", nuevoFKidPedidos);
+    
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "Pedido Fue Almacenado Correctamente.",
+        icon: "success",
+        timer: 3000, 
+        showConfirmButton: false,
+      });
+
+      router.push("../");
+      
+    } catch (error) {
+      console.error("Error:", error.message);
+      console.error("Detalles del error:", error); 
+      Swal.fire({
+        title: "Oops...!",
+        text: "Hubo un problema al enviar el pedido.",
+        icon: "error",
+      });
+    }    
+  };
+
+
+
   return (
     <>
       <Banner />
@@ -463,6 +599,9 @@ const CrearPedido = () => {
             Productos-MG
           </Button>
           <UseImportoExcel onImportData={handleImportData} />
+          <Button onClick={enviarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
+            Enviar Pedido
+          </Button>
           <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
             Guardar Pedido
           </Button>
@@ -529,6 +668,15 @@ const CrearPedido = () => {
             sx={{ width: "100%", border: "2px solid #13e95a", marginTop: 2 }}
           />
         </Paper>
+      </Box>
+
+      <Box display="flex" justifyContent="flex-end" alignItems="center" margin={2} gap={2}>
+        <h3>Seleccionar</h3>
+        <Autocomplete
+          disablePortal
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params}  />}
+        />
       </Box>
 
       <Box sx={{ width: "97%", height: "auto", margin: 2 }}>

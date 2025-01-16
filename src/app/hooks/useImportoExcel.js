@@ -71,7 +71,7 @@ const UseImportoExcel = ({ onImportData }) => {
       />
       {importedData && (
         <Button
-          variant="outlined"
+          variant="text"
           color="error"
           onClick={handleRemoveFile}
           style={{ marginLeft: "1rem" }}

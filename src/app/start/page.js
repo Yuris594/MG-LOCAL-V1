@@ -35,11 +35,11 @@ const Inicio = () => {
 
   const cerrarSesion = () => {
     Swal.fire({
-      title: "¿Quieres Terminar La Sesión?",
+      title: "¿Quieres terminar la Sesión?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#28ee32",
-      cancelButtonColor: "#f12260",
+      confirmButtonColor: "#09ff00",
+      cancelButtonColor: "#fa0000",
       confirmButtonText: "Aceptar"
     }).then((result) => {
       if (result.isConfirmed) {

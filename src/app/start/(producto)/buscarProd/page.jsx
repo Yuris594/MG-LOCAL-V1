@@ -1,5 +1,6 @@
 "use client";
 
+import Swal from "sweetalert2";
 import PropTypes from "prop-types";
 import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
@@ -10,7 +11,6 @@ import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { Autocomplete, Box, IconButton, Tab, Tabs, TextField, 
 useMediaQuery, useTheme, LinearProgress, Typography, } from "@mui/material";
-import Swal from "sweetalert2";
 
 
 function CustomTabPanel(props) {

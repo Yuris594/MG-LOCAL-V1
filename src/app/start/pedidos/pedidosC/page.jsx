@@ -180,7 +180,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
+      const response = await fetch(Conexion.urlM + "/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }
@@ -205,7 +205,7 @@ export const PedidosC = () => {
     };
 
     try {
-      const response = await fetch(Conexion.url + "/pedido/crear/", {
+      const response = await fetch(Conexion.urlM + "/pedido/crear/", {
           method: "POST",
           body: JSON.stringify(bodyData), 
           headers: { "Content-Type": "application/json" }
@@ -544,7 +544,7 @@ export const PedidosC = () => {
               <Grid size={{ xs: 12, sm: 3 }}>
                 <FormControl fullWidth>
                   <InputLabel>Fecha</InputLabel>
-                  <OutlinedInput  label="Fecha" />
+                  <OutlinedInput value={clienteP?.FECHA_PEDIDO || ''} label="Fecha" />
                 </FormControl>
               </Grid>
 

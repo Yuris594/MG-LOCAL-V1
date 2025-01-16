@@ -14,7 +14,7 @@ import { AppBar, Box, Button, ButtonGroup, CssBaseline, Paper, TextField, Toolba
 
 const entrada = () => {
   Swal.fire({
-    title: "¡Hora de ENTRADA registrada",
+    title: "¡Hora de ENTRADA Registrada",
     icon: "success",
     confirmButtonText: "Aceptar",
   });
@@ -22,7 +22,7 @@ const entrada = () => {
 
 const salida = () => {
   Swal.fire({
-    title: "¡Hora de SALIDA registrada",
+    title: "¡Hora de SALIDA Registrada",
     icon: "success",
     confirmButtonText: "Aceptar",
   });
@@ -37,7 +37,7 @@ const servidor = () => {
 };
 const conexion = () => {
   Swal.fire({
-    title: "No existe conexion",
+    title: "No Existe Conexion",
     text: "Verifique la conexion con la empresa o no tiene internet",
     icon: "warning",
     confirmButtonText: "Aceptar",
@@ -48,12 +48,12 @@ const espera = () => {
     title: "¡Espere un momento porfavor,estamos procesando",
     text: "Si esta muy lento,cancele el proceso y verifique su conexion",
     icon: "warning",
-    confirmButtonText: "cancelar",
+    confirmButtonText: "Cancelar",
   });
 };
 const noExiste = () => {
   Swal.fire({
-    title: "CEDULA no existe!",
+    title: "CEDULA No Existe!",
     icon: "error",
     confirmButtonText: "Aceptar",
   });
@@ -61,7 +61,7 @@ const noExiste = () => {
 
 const registro = async (cedula) => {
   try {
-    const response = await fetch(Conexion.url + `/control_entradas/documento/${cedula}`, {
+    const response = await fetch(`/api/control_entradas/documento/${cedula}`, {
       method: "POST",
       body: JSON.stringify(cedula), 
       headers: { "Content-Type": "application/json" }
