@@ -57,7 +57,7 @@ const columns = [
   { field: "SUBLINEA", headerName: "SUBLINEA", width: 300, 
     headerClassName: 'header-bold' 
   },
-  { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
+  { field: "TOTAL_DISP", headerName: "DISP", width: 130, 
     valueFormatter: (value) => {
       const total = Number(value).toFixed(0);
       return `${parseFloat(total).toLocaleString()}`;
@@ -69,10 +69,7 @@ const columns = [
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
     }, editable: true, type: "number", headerClassName: 'header-bold'
   },
-  { field: "CANTIDAD", headerName: "", width: 50, type: "number", 
-    headerClassName: 'header-bold' 
-  },
-  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 90,
+  { field: "EXIST_REAL", headerName: "EXISTREAL", width: 130,
     valueFormatter: (value) => {
       const real = Number(value).toFixed(0);
       return `${parseFloat(real).toLocaleString()}`;
@@ -80,7 +77,7 @@ const columns = [
 ];
 
 const conseguirProductos = async () => {
-  const response = await fetch("/api/productos/listar_solo_para_mg", {
+  const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
@@ -396,7 +393,7 @@ const PedidosCaja = () => {
                   theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
                 "&:hover": {
                   backgroundColor: (theme) =>
-                    theme.palette.mode === "dark" ? "#27512" : "#e1e1e1", // Cambia el color al hacer hover
+                    theme.palette.mode === "dark" ? "#27512" : "#e1e1e1", 
                 },
               },
               "& .super-app-theme--header": {
@@ -560,7 +557,7 @@ const PedidosCaja = () => {
         </Box>
 
         <Box sx={{ display: "flex", width: "70%", alignItems: "center", height: "100%", justifyContent: "space-between", flexDirection: "column", }}>
-          <Box sx={{ display: "flex", width: "100%", height: 1030,
+          <Box sx={{ display: "flex", width: "100%", height: 900,
               "& .super-app-theme--header": {
                 backgroundColor: "#DCDCDC",
                 color: "#000000",
@@ -575,11 +572,11 @@ const PedidosCaja = () => {
                 rows={productos}
                 columns={columns}
                 getRowId={(row) => row.ARTICULO}
-                pageSizeOptions={[17]}
+                pageSizeOptions={[10, 15, 20, 30]}
                 onRowSelectionModelChange={handleSelectionChange}
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 17 },
+                    paginationModel: { page: 0, pageSize: 15 },
                   },
                 }}
                 onSelectionModelChange={(newSelection) =>

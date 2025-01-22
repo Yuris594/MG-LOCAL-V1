@@ -38,13 +38,12 @@ const columns = [
     valueFormatter: (value) => {
       const precioRedondeado = Number(value).toFixed(0);
       return `${parseFloat(precioRedondeado).toLocaleString()}`;
-    },
-    align: "right",
+    }, align: "right",
   },
 ];
 
 const conseguirClientes = async () => {
-  const response = await fetch("/api/clientes/listar", {
+  const response = await fetch(Conexion.url + "/clientes/listar", {
     method: "GET",
     headers: { "Content-Type" : "application/json" }
   });

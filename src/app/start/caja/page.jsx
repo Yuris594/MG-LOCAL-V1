@@ -222,7 +222,7 @@ const pago = () => {
           <h2 className={inter.className} style={{ fontSize: "2rem", alignItems: "center", justifyContent: "center" }}>
             {" "} PAGO {" "}
           </h2>
-          <Button component={Link} variant="outlined" href="../start/pedidos/pedidosCaja" sx={{ bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
+          <Button component={Link} variant="outlined" href="../pedidos/pedidosCaja/" sx={{ bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>
             Atras
           </Button>
         </Box>

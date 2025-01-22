@@ -1,9 +1,10 @@
 "use client";
 
-
 import Link from "next/link";
-import { Conexion, Global } from "@/conexion";
+import Swal from "sweetalert2";
 import Grid from "@mui/material/Grid2";
+import { useRouter } from "next/navigation";
+import { Conexion, Global } from "@/conexion";
 import { useAuth } from "@/context/authContext";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -12,18 +13,15 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import Banner from "@/app/components/banner/banner";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CancelIcon from "@mui/icons-material/Cancel";
-import Autocomplete from '@mui/material/Autocomplete';
 import BusinessIcon from "@mui/icons-material/Business";
+import UseImportoExcel from "@/app/hooks/useImportoExcel";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import ClientesGlobal from "../../clients/clientesGlobal/page";
-import UseImportoExcel from "@/app/hooks/useImportoExcel";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
-import { Box, Button, ButtonGroup, Modal, Paper, TextField, Typography, 
-useMediaQuery } from "@mui/material";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
+import { Box, Button, ButtonGroup, Checkbox, List, ListItem, ListItemText, Modal, Paper, 
+TextField, Typography, useMediaQuery } from "@mui/material";
 
 
 const style = {
@@ -46,17 +44,21 @@ const CrearPedido = () => {
   const inputRef = useRef();
   const router = useRouter();
   const { cliente } = useAuth();
-  const [total, setTotal] = useState("0");
   const [notas, setNotas] = useState("");
+  const [total, setTotal] = useState("0");
   const [open, setOpen] = useState(false);
   const [openM, setOpenM] = useState(false);
-  const [subTotal, setSubTotal] = useState("0");
+  const [openE, setOpenE] = useState(false);
   const [busqueda, setBusqueda] = useState("");
+  const [subTotal, setSubTotal] = useState("0");
   const [productos, setProductos] = useState([]);
+  const [codVenData, setCodVenData] = useState([]);
   const [cantidades, setCantidades] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [selectedData, setSelectedData] = useState(null);
+  const [seleccion, setSeleccion] = useState('CREADO POR');
   const [clienteP, setClienteP] = useState(cliente?.[0] || {});
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -65,6 +67,8 @@ const CrearPedido = () => {
   const handleCloseM = () => setOpenM(false);
   const handleOpenC = () => setOpen(true);
   const handleCloseC = () => setOpen(false);
+  const handleOpenE = () => setOpenE(true);
+  const handleCloseE = () => setOpenE(false);
 
   useEffect(() => {
     if (cliente?.[0]) {
@@ -77,27 +81,81 @@ const CrearPedido = () => {
     cliente[0] = clienteSeleccionado;
   };
 
-  const handleImportData = (data) => {
+  const handleImportData = async (data) => {
     if (data.length === 0) {
       setArticulosSeleccionados([]);
       CalcularTotales([]);
-    } else {
-      const nuevosProductos = data.map((row) => ({
-        ARTICULO: `${row["CODIGO"]}`,
-        DESCRIPCION: row["REFERENCIA"],
-        SUBLINEA: row["SUBLINEA"],
-        UNIDAD_EMPAQUE: row["EMP"],
-        PRECIO: row["PRECIO"],
-        cantped: parseFloat(row["CANT"]) || 0,
-        PORC_IMPUESTO: parseFloat(row["IVA"]) || 0,
-        PORC_DCTO: parseFloat(row["DESC"]) || 0,
-        PRECIOMASIVA: parseFloat(row["MASIVA"]) || 0,
-        TOTAL_DISP: parseFloat(row["DISP"]) || 0,
-        EXIST_REAL: parseFloat(row["EXIST_REAL"]) || 0,
-      }));
-      setArticulosSeleccionados((prevProductos) => [...prevProductos, ...nuevosProductos]);
-      CalcularTotales(nuevosProductos)
+      return;
+    } 
+
+    const articulosImportados = data.map((row) => {
+      const PRECIO = parseFloat(row["PRECIO"]) || 0;
+      const cantped = parseFloat(row["CANT"]) || 0;
+      const PORC_IMPUESTO = parseFloat(row["IVA"]) || 0;
+      const PORC_DCTO = parseFloat(row["DESC"]) || 0;
+      
+      return {
+        ARTICULO: row["CODIGO"],
+        PRECIO,
+        cantped,
+        PORC_IMPUESTO,
+        PORC_DCTO,
+        DESCRIPCION: row["REFERENCIA"] || '',
+        SUBLINEA: row["SUBLINEA"] || '',
+        UNIDAD_EMPAQUE: row["EMP"] || '',
+        PRECIOMASIVA: row["MASIVA"] || 0,
+        TOTAL_DISP: row["DISP"] || 0,
+        EXIST_REAL: row["EXIST_REAL"] || 0,
+        Total: ((PRECIO * cantped) + (PRECIO * cantped * PORC_IMPUESTO / 100) - (PRECIO * cantped * PORC_DCTO / 100)), 
+      }
+    });
+    setArticulosSeleccionados((prevProductos) =>  [...prevProductos, ...articulosImportados]);
+    CalcularTotales(articulosImportados);
+  };
+
+
+  const names = {
+    "PEDIDO LOCAL": "61",
+    "TELEMERCADEO 1": "301",
+    "TELEMERCADEO 2": "300",
+    "PUNTO NARANJA I.": "AA",
+    "PUNTO NARANJA E.": "EE",
+  };
+
+  useEffect(() => {
+    const fetchCodVenData = async () => {
+      try {
+        const response = await fetch(Global.url + '/consecutivo/list', {
+          method: "GET",
+          headers: { "Content-Type" : "application/json" }
+        });
+        const data = await response.json();
+        setCodVenData(data);
+      } catch (error) {
+        console.error("Error al obtener los datos de CodVen:", error);
+      }
+    };
+
+    fetchCodVenData();
+  }, []);
+  
+
+  const handleSelect = (name) => {
+    const codVen = names[name];
+    if (codVen) {
+      const relatedData = codVenData.find((item) => item.Codven === codVen);
+      if (relatedData) {
+        setSeleccion(name);
+        setSelectedData({
+          CodVen: relatedData.Codven,
+          Prefijo: relatedData.Prefijo,
+          Consecutivo: relatedData.Consecutivo,
+        });
+      } else {
+        console.warn(`No se encontraron datos para CodVen: ${codVen}`);
+      }
     }
+    handleCloseE();
   };
 
   const columns = [
@@ -108,7 +166,7 @@ const CrearPedido = () => {
     { field: "PRECIO", headerName: "PRECIO", width: 130, 
       valueFormatter: (value) => {
         const precio = Number(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString('es-CO')}`;
+        return `${parseFloat(precio).toLocaleString()}`;
       }, editable: true, type: "number",
     },
     { field: "cantped", headerName: "CANT", width: 100, 
@@ -138,7 +196,7 @@ const CrearPedido = () => {
         return `${parseFloat(precio).toLocaleString()}`;
       }, type: "number" 
     },
-    { field: "EXIST_REAL", headerName: "EXIST_REAL", width: 90, 
+    { field: "EXIST_REAL", headerName: "EXIST_REAL", width: 110, 
       valueFormatter: (value) => {
         const precio = Number(value).toFixed(0);
         return `${parseFloat(precio).toLocaleString()}`;
@@ -279,43 +337,10 @@ const CrearPedido = () => {
     setSubTotal(subTotalFormateado);
   };
 
-
-  const guardarPedido = () => {
-    const pedidosGuardados = JSON.parse(localStorage.getItem("pedidosLocal")) || [];
-
-    let ultimoId = 1;
-    if (pedidosGuardados.length > 0) {
-      ultimoId = Math.max(...pedidosGuardados.map(pedido => pedido.PEDID));
-    }
-
-    const nuevoId = ultimoId + 1;
-
-    const pedido = {
-      PEDID: nuevoId,
-      Fecha: new Date().toISOString(),
-      Nombre: clienteP.NOMBREALIAS,
-      Nit: clienteP.CLIENTE,
-      notas,
-      total,
-      subTotal,
-      articulos: articulosSeleccionados.map(art => ({
-        ...art,
-        IdPedido: nuevoId
-      })),
-    };
-
-    pedidosGuardados.push(pedido);
-    localStorage.setItem("pedidos", JSON.stringify(pedidosGuardados));
-
-    router.push('../');
-
-    alert("Pedido Guardado Correctamente");
-  };
-
   useEffect(() => {
     const obtenerProductos = async () => {
       try {
-        const response = await fetch("/api/productos/listar_solo_para_mg", {
+        const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -446,11 +471,9 @@ const CrearPedido = () => {
     },
   ];
 
-
-
   const obtenerConse = async () => {
     try {
-      const response = await fetch(Global.url + `/pedidos/301`, {
+      const response = await fetch(Global.url + `/pedidos/${selectedData.CodVen}`, {
         method: "GET",
         headers: { "Content-Type" : "application/json" },
       });
@@ -494,7 +517,7 @@ const CrearPedido = () => {
       const conseActualizado = datosConse.consecutivo + 1;
       const NUMPED = `${datosConse.Prefijo}${conseActualizado}`; 
 
-      const response = await fetch(Global.url + `/pedidos/PEDIDOS/301`, {
+      const response = await fetch(Global.url + `/pedidos/PEDIDOS/${selectedData.CodVen}`, {
         method: "PUT",
         headers: { "Content-Type" : "application/json" },
         body: JSON.stringify({ Consecutivo: conseActualizado })
@@ -528,6 +551,7 @@ const CrearPedido = () => {
         
       console.log("Pedido creado correctamente");               
       
+
       const ultimoFKidPedidos = parseInt(localStorage.getItem("ultimoPedido"), 10) || 0;
       const nuevoFKidPedidos = ultimoFKidPedidos + 1;
 
@@ -540,7 +564,7 @@ const CrearPedido = () => {
         Iva: art.PORC_IMPUESTO,
         Total: art.Total,
         FKNUMPED: NUMPED,
-        BODEGA: art.BODEGA
+        BODEGA: '1',
       }));
       
       for (const detalle of detallePedido) {
@@ -549,6 +573,8 @@ const CrearPedido = () => {
           headers: { "Content-Type" : "application/json" },        
           body: JSON.stringify(detalle),
         });
+
+        console.log(detallePedido)
       
         if (!detalleResponse.ok) {
           const errorResponse = await detalleResponse.json(); 
@@ -558,7 +584,7 @@ const CrearPedido = () => {
       }
       
       console.log("Detalle del pedido creado correctamente");
-      localStorage.setItem("ultimoFKidPedidos", nuevoFKidPedidos);
+      localStorage.setItem("ultimoPedido", nuevoFKidPedidos);
     
       Swal.fire({
         title: "¡Éxito!",
@@ -582,7 +608,6 @@ const CrearPedido = () => {
   };
 
 
-
   return (
     <>
       <Banner />
@@ -592,18 +617,18 @@ const CrearPedido = () => {
         </Box>
         
         <Box sx={{ padding: 2 }}>
-          <Button onClick={handleOpenC} variant="filled" sx={{ bgcolor: "#d85bd8", "&:hover": { bgcolor: "#ec1ee2 " },  }}>
+          <Button onClick={handleOpenC} variant="filled" sx={{ bgcolor: "#ec57cc", "&:hover": { bgcolor: "#ec1edb " },  }}>
             Clientes
           </Button>
           <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#6cd3ec", "&:hover": { bgcolor: "#36c7e7" }, m: 2 }}>
             Productos-MG
           </Button>
+          <Button onClick={handleOpenE} variant="contained" sx={{ bgcolor: "#a449ee", "&:hover": { bgcolor: "#992be2" }, mr: 2 }}>
+            {seleccion}
+          </Button>
           <UseImportoExcel onImportData={handleImportData} />
           <Button onClick={enviarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
             Enviar Pedido
-          </Button>
-          <Button onClick={guardarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
-            Guardar Pedido
           </Button>
           <Button variant="filled" sx={{ bgcolor: "#f13c3c", "&:hover": { bgcolor: "#ec1c27" }, }} LinkComponent={Link} href="../../clients/">
             Cerrar
@@ -670,15 +695,6 @@ const CrearPedido = () => {
         </Paper>
       </Box>
 
-      <Box display="flex" justifyContent="flex-end" alignItems="center" margin={2} gap={2}>
-        <h3>Seleccionar</h3>
-        <Autocomplete
-          disablePortal
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params}  />}
-        />
-      </Box>
-
       <Box sx={{ width: "97%", height: "auto", margin: 2 }}>
         <DataGrid 
           rows={articulosSeleccionados}
@@ -711,6 +727,27 @@ const CrearPedido = () => {
           </ButtonGroup>
         </Box>
       </Paper>
+
+      <Modal
+        open={openE}
+        onClose={handleCloseE}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box sx={{ margin: 2 }}>
+            <h3>SELECCIONAR VENDEDOR</h3> 
+            <List>
+              {Object.keys(names).map((name) => (
+                <ListItem key={name} button="true" onClick={() => handleSelect(name)}>
+                  <Checkbox checked={seleccion === name} sx={{ color: "green", "&.Mui-checked": { color: "pink" } }} />
+                  <ListItemText primary={name} />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </Box>
+      </Modal>
 
       <Modal
         open={openM}

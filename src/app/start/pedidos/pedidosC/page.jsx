@@ -121,7 +121,7 @@ export const PedidosC = () => {
 
   const conseguirProductos = async () => {
     try {
-      const response = await fetch("/api/productos/listar_solo_para_mg", {
+      const response = await fetch(Conexion.url + "/productos/listar_solo_para_mg", {
         method: "GET",
         headers: { "Content-Type" : "application/json" },
       });
@@ -139,7 +139,7 @@ export const PedidosC = () => {
 
   const conseguirProductosP = async () => {
     try {
-      const response = await fetch(`/api/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+      const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application" },
       });
@@ -148,6 +148,7 @@ export const PedidosC = () => {
 
       if (datos) {
         setProductosP(datos);
+        console.log(datos)
       }
     } catch (error) {
       console.log("error")
@@ -156,7 +157,7 @@ export const PedidosC = () => {
 
   const conseguirProductosPendientes = async () => {
     try {
-      const response = await fetch(`/api/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+      const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
       });
@@ -699,9 +700,9 @@ export const PedidosC = () => {
       </Paper>
 
       <Box sx={{ flexDirection: "row", display: "flex", justifyContent: "flex-end" }}>
-        <strong>{" "}Editado por:{" "}</strong>
+        <strong>{" "}Editado por: {" "} </strong>
         <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-          {" "}{clienteP?.createdBy || ""}{" "}
+          {" "}{clienteP?.U_EDITADOPOR || ""}{" "}
         </Typography>
       </Box>
 

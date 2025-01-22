@@ -2,14 +2,11 @@
 
 import Box from "@mui/material/Box";
 import { Conexion } from "@/conexion";
-import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid2";
+import { TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import InputBase from "@mui/material/InputBase";
 import { useAuth } from "@/context/authContext";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import { useCallback, useEffect, useState } from "react";
-import { CircularProgress } from "@mui/material";
 
 
 const columns = [
@@ -28,7 +25,7 @@ const columns = [
 
 const conseguirClientes = async () => {
   try {
-      const response = await fetch("/api/clientes/listar", {
+      const response = await fetch(Conexion.url + "/clientes/listar", {
           method: "GET",
           headers: { "Content-Type": "application/json" }
       });
@@ -105,35 +102,29 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
 
   return (
     <>
-      <div style={{ height: "auto", width: "100%", backgroundColor: "#ffffff" }}>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", margin: 1 }}>
-          <h2><strong>CLIENTES</strong></h2>
-          <Paper elevation={3} sx={{ p: "2px 4px", display: "flex", alignItems: "flex-right", width: 500, margin: "0%" }}>
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Buscar"
-              inputProps={{ "aria-label": "search google maps" }}
-              autoComplete="usuario"
-              autoFocus
+      <Grid container direction="column" sx={{ minHeight: "80vh", backgroundColor: "#ffffff", padding: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Grid size={6}>
+            <h2><strong>CLIENTES</strong></h2>
+          </Grid>
+          <Grid size={6}>
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              label="Buscador..."
               value={busqueda}
               onChange={handleChange}
+              sx={{ width: "100%" }}
             />
-            <IconButton title="buscar" type="button" sx={{ p: "10px" }} aria-label="search">
-                <SearchIcon />
-            </IconButton>
-          </Paper>
+          </Grid>
         </Box>
 
-        <Box sx={{ height: 640, width: "100%", '& .super-app-theme--header': { backgroundColor: '#80f5e7', color: '#000000' } }}>
-          {cargando === true ? (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-              <CircularProgress />
-            </Box>
-          ) : (
+        <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
+          <Box sx={{ height: 650, width: "100%", '& .super-app-theme--header': { backgroundColor: '#80f5e7', color: '#000000' } }}>
             <DataGrid
               rows={clientesFiltrados}
               columns={columns}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[5, 10, 20, 30]}
               onRowSelectionModelChange={handleSelectionChange}
               rowSelectionModel={selectedRows}
               getRowId={(row) => row.CLIENTE}
@@ -144,9 +135,9 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
                   },
               }}
             />
-          )}
-        </Box>
-      </div>
+          </Box>
+        </Grid>
+      </Grid>
     </>
   );
 };

@@ -1,15 +1,15 @@
 "use client";
 
-import { Box, Button, Typography, Paper, TextField } from "@mui/material";
-import Banner from "@/app/components/banner/banner";
-import { useForm } from "@/app/hooks/useForm";
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import Swal from "sweetalert2";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { Lora } from "next/font/google";
+import jsPDF from "jspdf";
+import Swal from "sweetalert2";
+import { format } from "date-fns";
 import { Conexion } from "@/conexion";
+import { Lora } from "next/font/google";
+import { useEffect, useState } from "react";
+import { useForm } from "@/app/hooks/useForm";
+import Banner from "@/app/components/banner/banner";
+import { Box, Button, Typography, Paper, TextField } from "@mui/material";
 
 const inter = Lora({ subsets: ["latin"] });
 
@@ -21,7 +21,7 @@ const noExiste = () => {
 };
 
 const obtenerFactura = async (factura_) => {
-  const response = await fetch(`/api/clientes/factura_lineas/${factura_}`, {
+  const response = await fetch(Conexion.url + `/clientes/factura_lineas/${factura_}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

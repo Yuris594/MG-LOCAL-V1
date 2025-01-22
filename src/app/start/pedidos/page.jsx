@@ -164,7 +164,7 @@ const Pedidos = () => {
           </Box>
 
           <Grid size={12} sx={{ flexGrow: 1, marginBottom: 2 }}>
-            <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 795 }}>
+            <Box sx={{ width: "100%", height: isSmallScreen ? 500 : 810 }}>
               <DataGrid
                 rows={pedidosFiltrados}
                 columns={columns}
