@@ -8,7 +8,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Box, LinearProgress, TextField } from "@mui/material";
 
 
-
 const columns = [
   { field: "ARTICULO", headerName: "COD", width: 130 },
   { field: "DESCRIPCION", headerName: "REFERENCIA", width: 700 },
@@ -52,15 +51,6 @@ const columns = [
   },
 ];
 
-const obtenerProductos = async () => {
-  const response = await fetch(Conexion.url + '/productos/listar_solo_para_mg', {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return response.json();
-};
 
 
 const productosMG = () => {
@@ -70,13 +60,13 @@ const productosMG = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaProducto, setTablaProducto] = useState([]);
 
-  useEffect(() => {
-    conseguirProductos();
-  }, []);
-
   const conseguirProductos = async () => {
-    const datos = await obtenerProductos();
     try {
+      const response = await fetch(Conexion.url + '/productos/listar_solo_para_mg', {
+        method: "GET",
+        headers: { "Content-Type": "application/json", },
+      });
+      const datos = await response.json()
       if (datos) {
         setProductos(datos);
         setTablaProducto(datos);
@@ -89,6 +79,10 @@ const productosMG = () => {
       console.log("Error al obtener usuarios", error);
     }
   };
+
+  useEffect(() => {
+    conseguirProductos();
+  }, []);
  
 
   const handleChange = (e) => {

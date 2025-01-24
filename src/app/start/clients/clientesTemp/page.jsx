@@ -6,7 +6,6 @@ import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import Banner from "@/app/components/banner/banner";
 import { Box, Tabs, Tab, Typography, TextField, Divider, Button, 
@@ -209,7 +208,6 @@ const ConseguirCarteras = async (clienteT) => {
 
 const ClientesTemp = () => {
   const { cliente } = useAuth();
-  const router = useRouter();
   const [selectedRows] = useState([]);
   const [value, setValue] = useState(3);
   const [cartera, setCartera] = useState([]);
@@ -425,7 +423,7 @@ const ClientesTemp = () => {
                   density="compact"
                   rows={pedidos}
                   columns={columnsP}
-                  pageSizeOptions={[5, 10]}
+                  pageSizeOptions={[5, 10, 15]}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.PEDIDO}
                   initialState={{
@@ -452,7 +450,7 @@ const ClientesTemp = () => {
                   rows={facturas}
                   columns={columnsF}
                   getRowId={(row) => row.ID}
-                  pageSize={[5, 10]}
+                  pageSize={[5, 10, 15]}
                   rowSelectionModel={selectedRows}
                   initialState={{
                     pagination: {
@@ -477,7 +475,7 @@ const ClientesTemp = () => {
                   density="compact"
                   rows={cartera}
                   columns={columnsC}
-                  pageSizeOptions={[5, 10]}
+                  pageSizeOptions={[5, 10, 15]}
                   rowSelectionModel={selectedRows}
                   getRowId={(row) => row.NUMDOC}
                   initialState={{

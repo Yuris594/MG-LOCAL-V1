@@ -42,14 +42,6 @@ const columns = [
   },
 ];
 
-const conseguirClientes = async () => {
-  const response = await fetch(Conexion.url + "/clientes/listar", {
-    method: "GET",
-    headers: { "Content-Type" : "application/json" }
-  });
-  const data = await response.json()
-  return data;
-};
 
 const Clientes = () => {
   const router = useRouter();
@@ -67,8 +59,13 @@ const Clientes = () => {
 
   useEffect(() => {
     const obtenerClientes = async () => {
-      const datos = await conseguirClientes();
       try {
+        const response = await fetch(Conexion.url + "/clientes/listar", {
+          method: "GET",
+          headers: { "Content-Type" : "application/json" }
+        });
+        const datos = await response.json();
+
         setClientesFiltrados(datos);
         setTablaClientes(datos);
         setCargando(false);

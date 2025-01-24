@@ -4,28 +4,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
-import MuiAlert from "@mui/material/Alert";
+import { useRouter } from "next/navigation";
 import { useForm } from "@/app/hooks/useForm";
-import { useAuth } from "@/context/authContext";
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
 import StarIcon from '@mui/icons-material/Star';
+import { useAuth } from "@/context/authContext";
 import PrintIcon from '@mui/icons-material/Print';
 import { useEffect, useRef, useState } from "react";
 import Banner from "@/app/components/banner/banner";
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
 import useGenerarPDF from "@/app/hooks/useGenerarPDF";
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
-import { GridRowModes, DataGrid, GridActionsCellItem, 
-GridRowEditStopReasons } from "@mui/x-data-grid";
+import { DataGrid, GridRowEditStopReasons } from "@mui/x-data-grid";
 import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, 
-InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
-import { useRouter } from "next/navigation";
+  InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
 
 
 const style = {
@@ -43,12 +34,6 @@ const style = {
   boxShadow: 24
 };
 
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return (
-    <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-  );
-});
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,17 +73,15 @@ export const PedidosC = () => {
   const [busqueda, setBusqueda] = useState([]);
   const [productos, setProductos] = useState([]);
   const [productosP, setProductosP] = useState([]);
+  const [cantidades, setCantidades] = useState({});
   const [clienteP, setClienteP] = useState(pedido[0]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [tablaProducto, setTablaProducto] = useState([]);
-  const [cantidades, setCantidades] = useState({});
   const [productosConDISP0, setProductosConDIPS0] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
   
   const [openM, setOpenM] = useState(false);
-  const [openS, setOpenS] = useState(false);
-  const [openE, setOpenE] = useState(false); 
   const [value, setValue] = useState(0);
   
   const argumentoPDF = value === 0 ? productosP : productosConDISP0;
@@ -110,8 +93,6 @@ export const PedidosC = () => {
 
   const handleOpenM = () => setOpenM(true);
   const handleCloseM = () => setOpenM(false);
-
-
 
   useEffect(() => {
       conseguirProductos()
@@ -170,59 +151,8 @@ export const PedidosC = () => {
     } catch (error) {
       console.log("error")
     }
-  }
-
-  const productosGuardar = async (e) => {
-    e.preventDefault();
-    const bodyData = {
-        ...clienteP,
-        ARTICULOS: productosP,
-        OBSERVACIONES: form.OBSERVACIONES
-    };
-
-    try {
-      const response = await fetch(Conexion.urlM + "/pedido/crear/", {
-          method: "POST",
-          body: JSON.stringify(bodyData), 
-          headers: { "Content-Type": "application/json" }
-      });
-
-      if (response.ok) {
-          setOpenS(true)
-      } else {
-          console.error("Error al enviar la solicitud:", response.statusText);
-          setOpenE(true)
-      }
-    } catch (error) {
-        console.error("Error de red:", error);
-        setOpenE(true)
-    }
   };
 
-  const productosguardarP = async () => {
-    const bodyData = {
-        ...clienteP,
-        ARTICULOS: productosConDISP0,
-    };
-
-    try {
-      const response = await fetch(Conexion.urlM + "/pedido/crear/", {
-          method: "POST",
-          body: JSON.stringify(bodyData), 
-          headers: { "Content-Type": "application/json" }
-      });
-      if (response.ok) {
-
-      } else {
-        console.error("Error al enviar la solicitud:", response.statusText);
-      }
-    } catch (error) {
-        console.log("error")
-        console.error("Error de red:", error);
-    }
-  };
-
-  
   const handleChange = (e) => {
     e.preventDefault();
     setBusqueda(e.target.value)
@@ -255,30 +185,7 @@ export const PedidosC = () => {
     }
   };
  
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
-  const handleDeleteClick = (id) => () => {
-    setProductosP(productosP.filter((row) => row.ARTICULO !== id));
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-        ...rowModesModel,
-        [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = productosP.find((row) => row.ARTICULO === id);
-    if (editedRow.isNew) {
-        setProductosP(productosP.filter((row) => row.ARTICULO !== id));
-    }
-  };
-
+ 
   const processRowUpdate = (newRow) => {
     const index = productosP.findIndex((row) => row.ARTICULO === newRow.ARTICULO);
       if (index === -1) {
@@ -293,7 +200,7 @@ export const PedidosC = () => {
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
-      setRowModesModel(newRowModesModel);
+    setRowModesModel(newRowModesModel);
   };
 
   const columnsP = [
@@ -322,47 +229,7 @@ export const PedidosC = () => {
     },
     { field: 'DISP', headerName: 'DISP', width: 70, },
     { field: 'Em', headerName: 'EMP', width: 80 },
-    { field: 'actions', type: 'actions', headerName: 'ACTIONS', width: 100, cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                  color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={handleCancelClick(id)}
-                color="inherit"
-              />,
-            ];
-          }
-
-          return [
-            <GridActionsCellItem
-              icon={<EditIcon />}
-              label="Edit"
-              className="textPrimary"
-              onClick={handleEditClick(id)}
-              color="inherit"
-            />,
-
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={handleDeleteClick(id)}
-              color="inherit"
-            />,
-        ];
-      },
-    },
+   
   ];
 
   const cerrarP = () => {
@@ -431,7 +298,7 @@ export const PedidosC = () => {
       }, editable: true, type: "number"
     },
     { field: 'CANTIDAD', headerName: 'CANT', width: 80,
-      renderCell: (params) => {
+      /*renderCell: (params) => {
         return (
           <TextField 
             sx={{ width: "70px" }}
@@ -441,7 +308,7 @@ export const PedidosC = () => {
             onChange={(e) => handleCantidad(params.id, e.target.value)}
           />
         )
-      }, type: 'number', editable: true,
+      },*/ type: 'number', editable: true,
     },
     { field: 'PORC_IMPUESTO', headerName: 'IVA', width: 40 },
     { field: 'PRECIOMASIVA', headerName: 'MASIVA', width: 130,
@@ -455,6 +322,28 @@ export const PedidosC = () => {
     { field: 'UNIDAD_EMPAQUE', headerName: 'EMP', width: 80 },
     { field: 'EXIST_REAL', headerName: 'EXISTREAL', width: 90 },
   ];
+
+
+  const actualizarDisp = async () => {
+    try {
+      const response = await fetch(Conexion.url + `/productos/actualizar_disponible/${clienteP.PEDIDO}`, {
+        method: "POST",
+        headers: { "Content-Type" : "aaplication/json" },
+      });
+  
+      const datos = await response.json();
+      console.log("Actualizacion Exitosa.", datos);
+
+      if (response.ok) {
+        await conseguirProductosP();
+      } else {
+        console.error("Error en la actualización:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error de red", error); 
+    }
+  };
+
 
   return (
     <>
@@ -480,14 +369,8 @@ export const PedidosC = () => {
               <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
                 MG
               </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }}>
-                {" "}<CheckCircleIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#eabafe" }} onClick={productosGuardar}>
-                {" "}<SaveAsIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#84D8F4" }} onClick={productosguardarP}>
-                <SaveAltIcon  />
+              <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }} onClick={actualizarDisp}>
+                DISP
               </Button>
               <Button variant="filled" sx={{ margin: 1, bgcolor: "#ffa28a" }} onClick={cerrarP}>
                 {" "}<HighlightOffIcon />{" "}
@@ -616,69 +499,37 @@ export const PedidosC = () => {
           </Tabs>
       
           <CustomTabPanel value={value} index={0}>
-            <Box sx={{ height: "auto", width: "100%", 
-                "& .MuiDataGrid-cell--editable": {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                  "&:hover": {
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                  },
-                },
-              }}>
-              <Box sx={{ height: "auto", width: "100%" }}>
-                <DataGrid
-                  density="compact"
-                  rows={productosP}
-                  columns={columnsP}
-                  getRowId={(row) => row.ARTICULO}
-                  editMode="row"
-                  onRowModesModelChange={handleRowModesModelChange}
-                  onRowEditStop={handleRowEditStop}
-                  processRowUpdate={processRowUpdate}
-                  slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 10 },
-                    },
-                  }}
-                  pageSizeOptions={[10]}
-                />
-              </Box>
+            <Box sx={{ height: 320, width: "100%" }}>
+              <DataGrid
+                density="compact"
+                rows={productosP}
+                columns={columnsP}
+                getRowId={(row) => row.ARTICULO}
+                editMode="row"
+                pageSizeOptions={[6, 10, 15]}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+                onRowModesModelChange={handleRowModesModelChange}
+                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 6 }, }, }}
+              />
             </Box>
           </CustomTabPanel>
 
           <CustomTabPanel value={value} index={1}>
-            <Box sx={{ height: "auto", width: "100%",
-                "& .MuiDataGrid-cell--editable": {
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? "#376331" : "#f5f5f5",
-                  "&:hover": {
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark" ? "#275126" : "#e1e1e1",
-                  },
-                },
-              }}>
-              <Box sx={{ height: "auto", width: "100%" }}>
-                <DataGrid
-                  density="compact"
-                  rows={productosConDISP0}
-                  columns={columnsP}
-                  getRowId={(row) => row.ARTICULO}
-                  onRowSelectionModelChange={handleRowModesModelChange}
-                  onRowEditStop={handleRowEditStop}
-                  processRowUpdate={processRowUpdate}
-                  slotProps={{
-                    toolbar: { setProductosP, setRowModesModel },
-                  }}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 10 },
-                    },
-                  }}
-                  pageSizeOptions={[10]}
-                />
-              </Box>
+            <Box sx={{ height: 320, width: "100%" }}>
+              <DataGrid
+                density="compact"
+                rows={productosConDISP0}
+                columns={columnsP}
+                pageSizeOptions={[6, 10, 15]}
+                getRowId={(row) => row.ARTICULO}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+                onRowSelectionModelChange={handleRowModesModelChange}
+                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 6 }, }, }}
+              />
             </Box>
           </CustomTabPanel>
         </Grid>
@@ -712,7 +563,7 @@ export const PedidosC = () => {
         onClose={handleCloseM}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        >
+      >
         <Box sx={style}>
           <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>

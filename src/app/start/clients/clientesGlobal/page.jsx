@@ -25,27 +25,25 @@ const columns = [
 
 const conseguirClientes = async () => {
   try {
-      const response = await fetch(Conexion.url + "/clientes/listar", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-      });
+    const response = await fetch(Conexion.url + "/clientes/listar", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    });
 
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      return data;
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data;
   } catch (error) {
-      console.error("Error fetching clients:", error);
-      return [];
+    console.error("Error fetching clients:", error);
+    return [];
   }
 };
 
 const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
   const { setCliente } = useAuth();
   const [busqueda, setBusqueda] = useState("");
-  const [cargando, setCargando] = useState(true);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tablaClientes, setTablaClientes] = useState([]);
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
@@ -56,7 +54,6 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
       if (datos && datos.length > 0) {
           setClientesFiltrados(datos);
           setTablaClientes(datos);
-          setCargando(false);
       } else {
           console.log("No se encontraron clientes");
       }

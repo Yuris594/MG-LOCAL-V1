@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Lora } from "next/font/google";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import Banner from "@/app/components/banner/banner";
@@ -9,9 +8,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ClientesGlobal from "../clients/clientesGlobal/page";
 import { Box, Modal, Button, ButtonGroup, IconButton, List, ListItem, 
 ListItemButton, ListItemText, Paper, Typography, Divider } from "@mui/material";
-
-
-const inter = Lora({ subsets: ["latin"] });
 
 const style = {
   position: "absolute",
@@ -219,7 +215,7 @@ const pago = () => {
       <Box sx={{  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '10px', boxShadow: '0px 4px 12px rgba(0,0,0,0.1)', }}>
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "90%", margin: 1 }}>
-          <h2 className={inter.className} style={{ fontSize: "2rem", alignItems: "center", justifyContent: "center" }}>
+          <h2 style={{ fontSize: "2rem", alignItems: "center", justifyContent: "center" }}>
             {" "} PAGO {" "}
           </h2>
           <Button component={Link} variant="outlined" href="../pedidos/pedidosCaja/" sx={{ bgcolor: "#B0DDFF", color: "black" }} onClick={Cerrar}>

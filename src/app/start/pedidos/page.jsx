@@ -58,14 +58,6 @@ const columns = [
   { field: "CIUDAD", headerName: "CIUDAD", width: 200 },
 ];
 
-const conseguirPedidos = async () => {
-  const response = await fetch("/api/pedidos/listar", {
-    method: "GET",
-    headers: { "Content-Type" : "application/json" }
-  });
-  const pedidos = await response.json();
-  return pedidos 
-};
 
 const Pedidos = () => {
   const router = useRouter();
@@ -80,8 +72,13 @@ const Pedidos = () => {
 
   useEffect(() => {
     const obtenerPedidos = async () => {
-      const datos = await conseguirPedidos();
       try {
+        const response = await fetch(Conexion.url + "/pedidos/listar", {
+          method: "GET",
+          headers: { "Content-Type" : "application/json" }
+        });
+        const datos = await response.json();
+
         setCargando(false);
         setPedidosFiltrados(datos);
         setTablaPedido(datos);
