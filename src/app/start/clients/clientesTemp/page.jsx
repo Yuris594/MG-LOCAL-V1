@@ -411,7 +411,7 @@ const ClientesTemp = () => {
           </Tabs>
       
           <CustomTabPanel value={value} index={0}>
-            <Box sx={{ width: "100%", height: 350 }}>
+            <Box sx={{ width: "100%", height: 320 }}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
@@ -423,9 +423,9 @@ const ClientesTemp = () => {
                   density="compact"
                   rows={pedidos}
                   columns={columnsP}
-                  pageSizeOptions={[5, 10, 15]}
-                  rowSelectionModel={selectedRows}
                   getRowId={(row) => row.PEDIDO}
+                  pageSizeOptions={[10, 15, 20]}
+                  rowSelectionModel={selectedRows}
                   initialState={{
                     pagination: {
                       paginationModel: { page: 0, pageSize: 10 },
@@ -437,7 +437,7 @@ const ClientesTemp = () => {
           </CustomTabPanel>
 
           <CustomTabPanel value={value} index={1}>
-            <Box sx={{ width: "100%", height: 350 }}>
+            <Box sx={{ width: "100%", height: 320 }}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
@@ -450,7 +450,7 @@ const ClientesTemp = () => {
                   rows={facturas}
                   columns={columnsF}
                   getRowId={(row) => row.ID}
-                  pageSize={[5, 10, 15]}
+                  pageSizeOptions={[10, 15, 20]}
                   rowSelectionModel={selectedRows}
                   initialState={{
                     pagination: {
@@ -463,7 +463,7 @@ const ClientesTemp = () => {
           </CustomTabPanel>
 
           <CustomTabPanel value={value} index={2}>
-            <Box sx={{ width: "100%", height: 350 }}>
+            <Box sx={{ width: "100%", height: 320 }}>
               {cargando === true ? (
                 <Box sx={{ width: "100%" }}>
                   <LinearProgress />
@@ -475,9 +475,9 @@ const ClientesTemp = () => {
                   density="compact"
                   rows={cartera}
                   columns={columnsC}
-                  pageSizeOptions={[5, 10, 15]}
-                  rowSelectionModel={selectedRows}
                   getRowId={(row) => row.NUMDOC}
+                  pageSizeOptions={[10, 15, 20]}
+                  rowSelectionModel={selectedRows}
                   initialState={{
                     pagination: {
                       paginationModel: { page: 0, pageSize: 10 },
