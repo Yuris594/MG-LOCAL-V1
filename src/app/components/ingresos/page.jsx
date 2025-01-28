@@ -8,54 +8,15 @@ import { useEffect, useRef, useState } from "react";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 const WifiIcon = dynamic(() => import("@mui/icons-material/Wifi"), {ssr:false});
 const WifiOffIcon = dynamic(() => import("@mui/icons-material/WifiOff"), {ssr:false});
-import { AppBar, Box, Button, ButtonGroup, CssBaseline, Paper, TextField, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, CssBaseline, Paper, TextField, Toolbar, Typography } from "@mui/material";
 
 
-
-const entrada = () => {
+const showAlert = (title, icon, text = null) => {
   Swal.fire({
-    title: "¡Hora de ENTRADA Registrada",
-    icon: "success",
-    confirmButtonText: "Aceptar",
-  });
-};
-
-const salida = () => {
-  Swal.fire({
-    title: "¡Hora de SALIDA Registrada",
-    icon: "success",
-    confirmButtonText: "Aceptar",
-  });
-};
-
-const servidor = () => {
-  Swal.fire({
-    title: "¡Por favor verifica la conexion o actualiza la pagina",
-    icon: "warning",
-    confirmButtonText: "Aceptar"
-  });
-};
-const conexion = () => {
-  Swal.fire({
-    title: "No Existe Conexion",
-    text: "Verifique la conexion con la empresa o no tiene internet",
-    icon: "warning",
-    confirmButtonText: "Aceptar",
-  });
-};
-const espera = () => {
-  Swal.fire({
-    title: "¡Espere un momento porfavor,estamos procesando",
-    text: "Si esta muy lento,cancele el proceso y verifique su conexion",
-    icon: "warning",
-    confirmButtonText: "Cancelar",
-  });
-};
-const noExiste = () => {
-  Swal.fire({
-    title: "CEDULA No Existe!",
-    icon: "error",
-    confirmButtonText: "Aceptar",
+    title,
+    text,
+    icon,
+    timer: 1000
   });
 };
 
@@ -96,6 +57,7 @@ const Ingresos = () => {
     };
   }, []);
 
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       inputRef.current.focus();
@@ -106,59 +68,58 @@ const Ingresos = () => {
     };
   }, []);
 
-const ingreso = async (e) => {
-  e.preventDefault();
 
-  if (!cedula) {
-    console.info("Por favor, completa todos los campos");
-    return;
-  }
-
-  if (!online) {
-    conexion();
-    return;
-  }
-
-  try {
-    espera();
-    const datos = await registro(cedula);
-    console.log("Datos recibidos:", datos);
-
-    if (datos && typeof datos.respuesta !== 'undefined') {
-      switch (datos.respuesta) {
-        case "0":
-          setCedula('');
-          entrada();
-          break;
-        case "1":
-          setCedula('');
-          salida();
-          break;
-        case "3":
-          setCedula('');
-          noExiste();
-          break;
-        default:
-          console.warn("Respuesta inesperada:", datos.respuesta);
-          servidor();
-      }
-    } else {
-      console.error("Datos no recibidos o respuesta indefinida");
-      conexion();
+  const ingreso = async (e) => {
+    if (!cedula) {
+      showAlert("Cédula requerida", "info", "Por favor, ingresa la cédula");
+      return;
     }
-  } catch (error) {
-    console.log("Error al procesar la solicitud:", error);
-  }
-};
 
+    if (!online) {
+      showAlert("Sin conexión", "warning", "Verifique su conexión a internet");
+      return;
+    }
 
-  const handleClick = (event) => {
-    const nuevoValor = event.currentTarget.value;
-    setCedula((prevCedula) => prevCedula + nuevoValor);
+    try {
+      showAlert("Estamos procesando su información.", "info", "Si esta muy lento, cancele el proceso y verifique su conexion.");
+      const datos = await registro(cedula);
+      console.log("Datos recibidos:", datos);
+
+      if (datos?.respuesta !== undefined) {
+        setCedula("");
+        const mensajes = {
+          "0": "¡Hora de ENTRADA registrada!",
+          "1": "¡Hora de SALIDA registrada!",
+          "2": "Ya Registró su hora de Entrada.",
+          "3": "Cédula No Existe.",
+        };
+        const iconos = {
+          "0": "success",
+          "1": "success",
+          "2": "info",
+          "3": "error",
+        };
+
+        showAlert(mensajes[datos.respuesta], iconos[datos.respuesta]);
+      } else {
+        console.error("Datos no recibidos o respuesta indefinida");
+        showAlert("Error de conexión", "error", "No se pudo procesar la solicitud.");
+      }
+    } catch (error) {
+      console.log("Error al procesar la solicitud:", error);
+    }
   };
 
-  const handleDelete = () => {
-    setCedula((prevCedula) => prevCedula.slice(0, -1));
+
+  const handleClick = (value) => setCedula((prev) => prev + value);
+  const handleDelete = () => setCedula((prev) => prev.slice(0, -1));
+
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      ingreso(); 
+    }
   };
 
   return (
@@ -174,88 +135,78 @@ const ingreso = async (e) => {
       </Box>
       
       <CssBaseline />
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", mt: 5 }}>     
-          <Box sx={{  display: "flex", height: "530px", boxShadow: 3, borderRadius: "15px", backgroundColor: "white"  }}>
-              <Paper className="" component="main">
-                <Box sx={{ padding: 2 }}>
-                  {online ? (
-                    <WifiIcon sx={{ color: "green" }} />
-                  ) : (
-                    <WifiOffIcon sx={{ color: "red" }} />
-                  )}
-
-                  <Box sx={{ textAlign: "center", marginBottom: "20px", width: { xs: "100px", sm: "200px", md: "300px" }, height: "auto" }}>
-                    <img src="/logo_miguelgomez-bglight.png" alt="imagenMG" style={{ width: "100%", height: "auto", objectFit: "contain" }}  />
-                  </Box>
-      
-                  <Box component="form" onSubmit={ingreso} noValidate sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "20px" }}>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="CEDULA"
-                      name="CEDULA"
-                      placeholder="Digite su cédula"
-                      value={cedula}
-                      onChange={(e) => setCedula(e.target.value)}
-                      inputRef={inputRef}
-                    />
-
-                    <Button type="submit" fullWidth sx={{ mt: 2, backgroundColor: "#11eb6c", color: "white", "$:hover": { backgroundColor: "#35eb11" } }}>
-                      Enviar
-                    </Button>
-                  </Box>
-
-                  <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
-                    <ButtonGroup orientation="vertical" aria-label="vertical outlined button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={1} onClick={handleClick}>
-                        1
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={4} onClick={handleClick}>
-                        4
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={7} onClick={handleClick}>
-                        7
-                      </Button>
-                  </ButtonGroup>
-
-                    <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={2} onClick={handleClick}>
-                        2
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={5} onClick={handleClick}>
-                        5
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={8} onClick={handleClick}>
-                        8
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={0} onClick={handleClick}>
-                        0
-                      </Button>
-                    </ButtonGroup>
-
-                    <ButtonGroup orientation="vertical" aria-label="vertical contained button group" variant="text" sx={{ margin: "2px", width: "30%", height: "100%" }}>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={3} onClick={handleClick}>
-                        3
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={6} onClick={handleClick}>
-                        6
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%" }} value={9} onClick={handleClick}>
-                        9
-                      </Button>
-                      <Button variant="outlined" sx={{ height: "100%", bgcolor: "#ff615b", color: "black", }} onClick={handleDelete}>
-                        X
-                      </Button>
-                    </ButtonGroup>
-                  </Box>
-                </Box>
-              </Paper>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "auto", margin: 2 }}>
+        <Paper sx={{ width: "90%", maxWidth: 400, padding: 3, borderRadius: 2, boxShadow: 3, }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2, }}>
+            <Box sx={{ width: 80, height: "auto" }}>
+              <img src="/logo_miguelgomez-bglight.png" alt="LOGO" style={{ width: "100%", height: "auto", objectFit: "contain" }} />
+            </Box>
+            {online ? (
+              <WifiIcon sx={{ color: "green", fontSize: 25 }} />
+            ) : (
+              <WifiOffIcon sx={{ color: "red", fontSize: 25 }} />
+            )}
           </Box>
-        </Box> 
+
+          <Typography sx={{ textAlign: "center", fontSize: "20px", fontWeight: "bold", marginBottom: 3, }}>
+            REGISTRO DE INGRESOS
+          </Typography>
+
+          <TextField
+            fullWidth
+            value={cedula}
+            onChange={(e) => setCedula(e.target.value)}
+            placeholder="Ingrese su cédula"
+            inputRef={inputRef}
+            onKeyDown={handleKeyPress}
+            sx={{
+              mb: 3,
+              "& .MuiInputBase-root": {
+                fontSize: 15,
+                textAlign: "center",
+              },
+            }}
+            
+          />
+
+          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, }}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "⌫"].map((key, index) => (
+              <Button
+                key={index}
+                variant="contained"
+                onClick={() => key === "⌫" ? handleDelete() : handleClick(key)}
+                disabled={key === ""}
+                sx={{
+                  height: 45,
+                  borderRadius: 2,
+                  fontSize: 16,
+                  backgroundColor: key === "⌫" ? "#d32f2f" : "#59ee60",
+                  color: "white",
+                  "&:hover": { backgroundColor: key === "⌫" ? "#9a0007" : "#15b337", }, }}>
+                {key}
+              </Button>
+            ))}
+          </Box>
+
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={ingreso}
+            sx={{
+              mt: 4,
+              bgcolor: "#11eb6c",
+              fontSize: 15,
+              fontWeight: "bold",
+              ":hover": { bgcolor: "#0db45e" }, 
+            }}>
+              Registrar
+          </Button>
+        </Paper>
+      </Box>
     </>
   );
 };
 
 export default Ingresos;
+
 
