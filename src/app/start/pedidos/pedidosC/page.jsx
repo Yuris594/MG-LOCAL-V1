@@ -455,7 +455,6 @@ export const PedidosC = () => {
 
         <Grid size={{ xs: 12, sm: 3}}>
           <Typography variant="body1">
-            Ciudad:
             <strong> {clienteP?.DEPTO || ""}</strong>
           </Typography>
         </Grid>
