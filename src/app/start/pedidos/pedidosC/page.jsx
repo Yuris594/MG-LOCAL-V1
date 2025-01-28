@@ -5,9 +5,7 @@ import PropTypes from "prop-types";
 import { Conexion } from "@/conexion";
 import Grid from "@mui/material/Grid2";
 import { useRouter } from "next/navigation";
-import { useForm } from "@/app/hooks/useForm";
-import StarIcon from '@mui/icons-material/Star';
-import { useAuth } from "@/context/authContext";
+import { useAuth } from '@/context/authContext';
 import PrintIcon from '@mui/icons-material/Print';
 import { useEffect, useRef, useState } from "react";
 import Banner from "@/app/components/banner/banner";
@@ -15,8 +13,8 @@ import useGenerarPDF from "@/app/hooks/useGenerarPDF";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import useCalculoSumaSaldo from "@/app/hooks/useCalculoSumaSaldo";
 import { DataGrid, GridRowEditStopReasons } from "@mui/x-data-grid";
-import { Box, Tabs, Tab, Button, Typography, Paper, TextField, FormControl, 
-  InputLabel, ButtonGroup, Modal, useMediaQuery, OutlinedInput } from "@mui/material";
+import { Box, Tabs, Tab, Button, Typography, Paper, TextField, ButtonGroup, 
+Modal, useMediaQuery, } from "@mui/material";
 
 
 const style = {
@@ -68,7 +66,7 @@ function a11yProps(index) {
 export const PedidosC = () => {
   const inputRef = useRef();
   const router = useRouter();
-  const { form, changed } = useForm({});
+  const [fecha, setFecha] = useState("");
   const { pedido, setPedido } = useAuth();
   const [busqueda, setBusqueda] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -98,7 +96,23 @@ export const PedidosC = () => {
       conseguirProductos()
       conseguirProductosP()
       conseguirProductosPendientes()
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (clienteP?.FECHA_PEDIDO) {
+      const obtenerFecha = () => {
+        const fechaPedido = new Date(clienteP?.FECHA_PEDIDO);
+        const dias = fechaPedido.getDate();
+        const mes = fechaPedido.toLocaleString("es-CO", { month: "short" });
+        const mesCapitalizado = mes.charAt(0).toUpperCase() + mes.slice(1);
+        const anio = fechaPedido.getFullYear();
+
+        const fechaFormateada = `${mesCapitalizado} ${dias}, ${anio}`;
+        setFecha(fechaFormateada);
+      };
+      obtenerFecha();
+    }
+  }, [clienteP]);
 
   const conseguirProductos = async () => {
     try {
@@ -106,12 +120,10 @@ export const PedidosC = () => {
         method: "GET",
         headers: { "Content-Type" : "application/json" },
       });
-
       const datos = await response.json();
-
       if (datos) {
         setProductos(datos);
-        setTablaProducto(datos)
+        setTablaProducto(datos);
       };
     } catch (error) {
       console.log("error", error);
@@ -124,12 +136,9 @@ export const PedidosC = () => {
         method: "GET",
         headers: { "Content-Type" : "application" },
       });
-
       const datos = await response.json();
-
       if (datos) {
         setProductosP(datos);
-        console.log(datos)
       }
     } catch (error) {
       console.log("error")
@@ -142,9 +151,7 @@ export const PedidosC = () => {
         method: "GET",
         headers: { "Content-Type" : "application/json" }
       });
-
       const datos = await response.json();
-
       if (datos) {
         setProductosConDIPS0(datos);
       }
@@ -185,7 +192,6 @@ export const PedidosC = () => {
     }
   };
  
- 
   const processRowUpdate = (newRow) => {
     const index = productosP.findIndex((row) => row.ARTICULO === newRow.ARTICULO);
       if (index === -1) {
@@ -215,7 +221,7 @@ export const PedidosC = () => {
     { field: 'CPed', headerName: 'CANT', width: 80, 
       type: 'number', editable: true 
     },
-    { field: 'PORC_DCTO', headerName: 'D1', width: 70,
+    { field: 'PORC_DCTO', headerName: 'DESC', width: 70,
       valueFormatter: (value) => {
         const precio = Number(value).toFixed(1);
         return `${parseFloat(precio).toLocaleString()}`;
@@ -345,267 +351,308 @@ export const PedidosC = () => {
   };
 
 
+
   return (
     <>
-      <Box> {" "} <Banner />{" "} </Box>
-        <Grid container spacing={2} direction={isSmallScreen ? "column" : "row"} alignItems="center" justifyContent="space-between">
-          <h2 style={{ margin: 4 }}>PEDIDOS</h2>
-          <Grid size={{ xs: 12, sm: 6, md: 6 }} sx={{ padding: 2 }}>
-
-            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "center", alignItems: "center" }}>
-              {clienteP?.AUTORIZADONOM === "APROBADO" ? (
-                <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
-                  {" "}<PrintIcon />{" "}
-                </Button>
-              ) : (
-                <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff64" }} disabled>
-                  {" "}<PrintIcon />{" "}
-                </Button>
-              )}
-
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff694" }} onClick={especial}>
-                {" "}<StarIcon />{" "}
-              </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
-                MG
-              </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }} onClick={actualizarDisp}>
-                DISP
-              </Button>
-              <Button variant="filled" sx={{ margin: 1, bgcolor: "#ffa28a" }} onClick={cerrarP}>
-                {" "}<HighlightOffIcon />{" "}
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-        
-
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "#fff", p: 2, zoom: 0.80  }}>
-          <Paper sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Estado</InputLabel>
-                  <OutlinedInput value={clienteP?.ESTADO || ''} label="Estado" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>{" "}Autorizacion{" "}</InputLabel>
-                  <OutlinedInput value={clienteP?.AUTORIZADONOM || ""} label="Autorizacion" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>{" "}Impreso{" "}</InputLabel>
-                  <OutlinedInput value={clienteP?.IMPRESO || ""} label="Impreso" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Nro</InputLabel>
-                  <OutlinedInput value={clienteP?.PEDIDO || ""} label="Nro" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>{" "}Cliente{" "}</InputLabel>
-                  <OutlinedInput value={clienteP?.CLIENTE || ""} label="Cliente" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 9 }}>
-                <FormControl fullWidth>
-                  <InputLabel></InputLabel>
-                  <OutlinedInput value={clienteP?.NOMBRE_RAZON || ""} />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Fecha</InputLabel>
-                  <OutlinedInput value={clienteP?.FECHA_PEDIDO || ''} label="Fecha" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>{" "}Direccion de Envio{" "}</InputLabel>
-                  <OutlinedInput value={clienteP?.DEPTO || ""} label="Direccion Envio" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3}}>
-                <FormControl fullWidth>
-                  <InputLabel></InputLabel>
-                  <OutlinedInput value={clienteP?.CIUDAD || ""} />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <FormControl fullWidth>
-                  <InputLabel>Vend</InputLabel>
-                  <OutlinedInput value={clienteP?.VENDEDOR || ""} label="Vend" />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 3 }}>
-                <Paper>
-                  <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom >{" "}Especial{" "}</Typography>
-                  <Typography sx={{ fontSize: 20, padding: 0.5, color: "red" }} variant="body2" color="text.primary">{" "}{clienteP?.U_COMPESPECIAL || ""}{" "}</Typography>
-                </Paper>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 9 }}>
-                <FormControl sx={{ margin: 0.5, display: "flex" }}>
-                  <InputLabel htmlFor="component-disabled">{" "}Nota Factura (Doc2){" "}</InputLabel>
-                  <OutlinedInput
-                    label="Nota Factura (Doc2)"
-                    id="OBSERVACIONES"
-                    name="OBSERVACIONES"
-                    autoComplete="OBSERVACIONES"
-                    autoFocus
-                    value={form.OBSERVACIONES || ""}
-                    onChange={changed}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 12}}>
-                <FormControl sx={{ margin: 0.5, display: "flex"  }}>
-                  <InputLabel htmlFor="component-disabled"></InputLabel>
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="Multiline"
-                    multiline
-                    rows={1}
-                    defaultValue={clienteP?.OBSERVACIONES || ""}
-                  />
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Box>
-
-          
-        <Grid size={{ xs: 12 }}>
-          <Tabs value={value} onChange={handleChanges} aria-label="basic tabs example">
-            <Tab label="Detalles Lineas" {...a11yProps(0)} />
-            <Tab label="Articulos Pendientes" {...a11yProps(1)} />
-          </Tabs>
-      
-          <CustomTabPanel value={value} index={0}>
-            <Box sx={{ height: 320, width: "100%" }}>
-              <DataGrid
-                density="compact"
-                rows={productosP}
-                columns={columnsP}
-                getRowId={(row) => row.ARTICULO}
-                editMode="row"
-                pageSizeOptions={[6, 10, 15]}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                onRowModesModelChange={handleRowModesModelChange}
-                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 6 }, }, }}
-              />
-            </Box>
-          </CustomTabPanel>
-
-          <CustomTabPanel value={value} index={1}>
-            <Box sx={{ height: 320, width: "100%" }}>
-              <DataGrid
-                density="compact"
-                rows={productosConDISP0}
-                columns={columnsP}
-                pageSizeOptions={[6, 10, 15]}
-                getRowId={(row) => row.ARTICULO}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
-                onRowSelectionModelChange={handleRowModesModelChange}
-                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 6 }, }, }}
-              />
-            </Box>
-          </CustomTabPanel>
-        </Grid>
-        
-
-      <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3}}>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
-            <Button sx={{ flexDirection: "column" }}>
-              <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotal}{" "}</Typography>
-              <strong>{" "}SUB-TOTAL{" "}</strong>
-            </Button>
-            <Button sx={{ flexDirection: "column" }}>
-              <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotalDESC}{" "}</Typography>
-              <strong>{" "}TOTAL{" "}</strong>
-            </Button>
-          </ButtonGroup>
-        </Box>
-      </Paper>
-
-      <Box sx={{ flexDirection: "row", display: "flex", justifyContent: "flex-end" }}>
-        <strong>{" "}Editado por: {" "} </strong>
-        <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
-          {" "}{clienteP?.U_EDITADOPOR || ""}{" "}
-        </Typography>
+     <Banner />
+     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", margin: 3 }}>
+        <h2>PEDIDOS</h2>
       </Box>
 
+      <Box sx={{ padding: 2 }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+          <Box display="flex" alignItems="center" gap={2}>
+            <h2><strong>Buscar N°</strong></h2>
+            <TextField 
+              id="buscador" 
+              variant="outlined"
+              size="small"
+              sx={{ marginRight: 2 }}
+            />
+          </Box>
+          {clienteP?.AUTORIZADONOM === "APROBADO" ? (
+            <Button variant="filled" sx={{ bgcolor: "#fa4f4f" }} onClick={generarPDF}>
+              {" "}<PrintIcon />{" "}
+            </Button>
+          ) : (
+            <Button variant="filled" sx={{ margin: 1, bgcolor: "#fff64" }} disabled>
+              {" "}<PrintIcon />{" "}
+            </Button>
+          )}
+          {/*<Button variant="filled" sx={{ margin: 1, bgcolor: "#fff694" }} onClick={especial}>
+            {" "}<StarIcon />{" "}
+          </Button>
+          <Button variant="filled" sx={{ margin: 1, bgcolor: "#b6ff91" }} onClick={handleOpenM}>
+            MG
+          </Button>*/}
+          <Button variant="filled" sx={{ margin: 1, bgcolor: "#f145af" }} onClick={actualizarDisp}>
+            DISP
+          </Button>
+          <Button variant="filled" sx={{ margin: 1, bgcolor: "#ffa28a" }} onClick={cerrarP}>
+            {" "}<HighlightOffIcon />{" "}
+          </Button>
+        </Box>
+      </Box>
+    </Box>
+   
+    <Box sx={{ border: "1px solid #ccc", borderRadius: 1, padding: 2, margin: 3 }}>
+      <Grid container spacing={0} alignItems="center" sx={{ mb: 2 }}>
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body2">
+            Estado:
+            <strong style={{ color: "red" }}> {clienteP?.ESTADO}</strong>
+          </Typography>
+        </Grid>
 
-      <Modal
-        open={openM}
-        onClose={handleCloseM}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
-              <h2><strong>PRODUCTOS</strong></h2>
-              <Box display="flex" gap={1}>
-                <Button variant="contained" color="success" onClick={handleProducto}>Agregar</Button>
-                <Button variant="contained" color="error" onClick={handleCloseM}>Cerrar</Button>
-              </Box>
-            </Box>
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Autorización: 
+            <strong style={{ color: "green" }}> {clienteP?.AUTORIZADONOM || ""}</strong>
+          </Typography>
+        </Grid>
 
-            <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2, alignItems: "center" }}>
-              <TextField
-                id="outlined-basic"
-                placeholder="Buscar Producto"
-                value={busqueda}
-                onChange={handleChange}
-                inputRef={inputRef}
-                sx={{ width: "100%" }}
-              />
-            </Box> 
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Impreso:
+            <strong> {clienteP?.IMPRESO || ""}</strong>
+          </Typography>
+        </Grid>
 
-            <Box sx={{ width: "100%", height: 480 }}>
-              <DataGrid
-                density="compact"
-                rows={productos}
-                columns={columnsM}
-                getRowId={(row) => row.ARTICULO}
-                pageSize={10}
-                rowSelectionModel={selectedRows}
-                processRowUpdate={processRowUpdate}
-                onRowSelectionModelChange={handleSelectionChange}
-                sx={{
-                  "& .MuiDataGrid-columnHeaderTitle": {
-                    fontWeight: "bold",
-                  },
-                }}
-              />
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Nro: 
+            <strong style={{ color: "blue" }}> {clienteP?.PEDIDO || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Cliente: 
+            <strong> {clienteP?.CLIENTE || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Typography variant="body1">
+            <strong> {clienteP?.NOMBRE_RAZON || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Fecha: 
+            <strong> {fecha || ''}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Dirección de Envio:
+            <strong> {clienteP?.CIUDAD || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3}}>
+          <Typography variant="body1">
+            Ciudad:
+            <strong> {clienteP?.DEPTO || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Vend:
+            <strong> {clienteP?.VENDEDOR || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Typography variant="body1">
+            Especial:
+            <strong style={{ color: "#ff0000" }}> {clienteP?.U_COMPESPECIAL || ""}</strong>
+          </Typography>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <TextField 
+            label="Finac % /Días"
+            id="Finac % /Días"
+            variant="standard"
+            //defaultValue={clienteP?.RUBRO5 || ""}
+            sx={{ width: "95%" }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <TextField 
+            label="D ´UNA"
+            id="D ´UNA"
+            variant="standard"
+            //defaultValue={clienteP?.RUBRO2 || ""}
+            sx={{ width: "95%" }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <TextField 
+            label="Ped. Origen"
+            id="Ped. Origen"
+            variant="standard"
+            //defaultValue={clienteP?.RUBRO3 || ""}
+            sx={{ width: "95%" }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <TextField 
+            label="Pendiente"
+            id="Pendiente"
+            variant="standard"
+            //defaultValue={clienteP?.RUBRO4 || ""}
+            sx={{ width: "100%" }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <TextField 
+            label="Nota Factura (Doc2)"
+            id="Nota Factura (Doc2)"
+            variant="standard"
+            defaultValue={clienteP?.RUBRO1 || ""}
+            sx={{ width: "95%" }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 9 }}>
+          <TextField 
+            id="observaciones"
+            label="Observaciones"
+            variant="standard"
+            multiline
+            rows={1}
+            defaultValue={clienteP?.OBSERVACIONES || ""}
+            sx={{ width: "100%",  }}
+          />
+        </Grid>
+      </Grid>
+    </Box>
+ 
+    <Grid size={{ xs: 12 }}>
+      <Box sx={{ width: '100%' }}>
+        <Tabs value={value} onChange={handleChanges} centered>
+          <Tab label="Detalles Lineas" {...a11yProps(0)} />
+          <Tab label="Articulos Pendientes" {...a11yProps(1)} />
+        </Tabs>
+      </Box>
+  
+      <CustomTabPanel value={value} index={0}>
+        <Box sx={{ height: 300, width: "100%" }}>
+          <DataGrid
+            density="compact"
+            rows={productosP}
+            columns={columnsP}
+            getRowId={(row) => row.ARTICULO}
+            editMode="row"
+            pageSizeOptions={[5, 10, 15]}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+            onRowModesModelChange={handleRowModesModelChange}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, }, }}
+          />
+        </Box>
+      </CustomTabPanel>
+
+      <CustomTabPanel value={value} index={1}>
+        <Box sx={{ height: 300, width: "100%" }}>
+          <DataGrid
+            density="compact"
+            rows={productosConDISP0}
+            columns={columnsP}
+            pageSizeOptions={[5, 10, 15]}
+            getRowId={(row) => row.ARTICULO}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slotProps={{ toolbar: { setProductosP, setRowModesModel } }}
+            onRowSelectionModelChange={handleRowModesModelChange}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 }, }, }}
+          />
+        </Box>
+      </CustomTabPanel>
+    </Grid>
+        
+    <Paper elevation={3} sx={{ padding: 3, margin: 3, marginTop: 3}}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <ButtonGroup variant="text" aria-label="text button group" sx={{ height: 60 }}>
+          <Button sx={{ flexDirection: "column" }}>
+            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotal}{" "}</Typography>
+            <strong>{" "}SUB-TOTAL{" "}</strong>
+          </Button>
+          <Button sx={{ flexDirection: "column" }}>
+            <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>{" "}${sumaSaldoTotalDESC}{" "}</Typography>
+            <strong>{" "}TOTAL{" "}</strong>
+          </Button>
+        </ButtonGroup>
+      </Box>
+    </Paper>
+
+    <Box sx={{ flexDirection: "row", display: "flex", justifyContent: "flex-end" }}>
+      <strong>{" "}Editado por: {" "} </strong>
+      <Typography sx={{ display: "flex", fontSize: 14, paddingRight: 5 }} gutterBottom>
+        {" "}{clienteP?.U_EDITADOPOR || ""}{" "}
+      </Typography>
+    </Box>
+
+
+    <Modal
+      open={openM}
+      onClose={handleCloseM}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
+            <h2><strong>PRODUCTOS</strong></h2>
+            <Box display="flex" gap={1}>
+              <Button variant="contained" color="success" onClick={handleProducto}>Agregar</Button>
+              <Button variant="contained" color="error" onClick={handleCloseM}>Cerrar</Button>
             </Box>
           </Box>
+
+          <Box sx={{ display: "flex", flexDirection: isSmallScreen ? "column" : "row", gap: 2, alignItems: "center" }}>
+            <TextField
+              id="outlined-basic"
+              placeholder="Buscar Producto"
+              value={busqueda}
+              onChange={handleChange}
+              inputRef={inputRef}
+              sx={{ width: "100%" }}
+            />
+          </Box> 
+
+          <Box sx={{ width: "100%", height: 480 }}>
+            <DataGrid
+              density="compact"
+              rows={productos}
+              columns={columnsM}
+              getRowId={(row) => row.ARTICULO}
+              pageSize={10}
+              rowSelectionModel={selectedRows}
+              processRowUpdate={processRowUpdate}
+              onRowSelectionModelChange={handleSelectionChange}
+              sx={{
+                "& .MuiDataGrid-columnHeaderTitle": {
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </Box>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
+  </>
   );
 };
 
