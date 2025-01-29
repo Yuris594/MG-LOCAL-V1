@@ -280,6 +280,10 @@ const CrearPedido = () => {
     }
   };
 
+  const handleRowModesModelChange = (newRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
   const processRowUpdate = (newRow) => {
     const index = articulosSeleccionados.findIndex((row) => row.ARTICULO === newRow.ARTICULO);
       if (index === -1) {
@@ -399,6 +403,7 @@ const CrearPedido = () => {
     setTablaProducto(updatedRows);
     return newRow;
   };
+  
 
   const handleCantidad = (ARTICULO, value) => {
     setCantidades({
@@ -645,13 +650,13 @@ const CrearPedido = () => {
                 <Typography variant="body1" sx={{ marginLeft: 1 }}>{clienteP?.NOMBREALIAS}</Typography>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Box display="flex" alignItems="center">
                 <strong>NIT: </strong>
                 <Typography variant="body1" sx={{ marginLeft: 1 }}>{clienteP?.CLIENTE}</Typography>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <Box display="flex" alignItems="center">
                 <PhoneIcon color="primary" sx={{ marginRight: 1 }} />
                 <Typography variant="body1">{clienteP?.TELEFONO1}</Typography>
@@ -671,11 +676,17 @@ const CrearPedido = () => {
             </Grid>
             <Grid size={{ xs: 12, sm: 4 }}>
               <Box display="flex" alignItems="center">
+                <MapIcon color="primary" sx={{ marginRight: 1 }} />
+                <Typography variant="body1">{clienteP?.DEPARTAMENTO}</Typography>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <Box display="flex" alignItems="center">
                 <EmojiPeopleIcon color="primary" sx={{ marginRight: 1 }} />
                 <Typography variant="body1">{clienteP?.VENDEDOR}</Typography>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 8 }}>
               <Box display="flex" alignItems="center">
                 <EmailIcon color="primary" sx={{ marginRight: 1 }} />
                 <Typography variant="body1">{clienteP?.E_MAIL}</Typography>
@@ -705,9 +716,11 @@ const CrearPedido = () => {
               paginationModel: { pageSize: 10 }
             }
           }}
+          rowModesModel={rowModesModel}
           pageSizeOptions={[5, 10, 15]}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onRowModesModelChange={handleRowModesModelChange}
           slotProps={{ toolbar: { setArticulosSeleccionados, setRowModesModel } }}
         />
       </Box>
