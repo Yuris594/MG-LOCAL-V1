@@ -4,6 +4,7 @@ import Link from "next/link";
 import Swal from "sweetalert2";
 import Grid from "@mui/material/Grid2";
 import { useRouter } from "next/navigation";
+import MapIcon from '@mui/icons-material/Map';
 import { Conexion, Global } from "@/conexion";
 import { useAuth } from "@/context/authContext";
 import EditIcon from "@mui/icons-material/Edit";
