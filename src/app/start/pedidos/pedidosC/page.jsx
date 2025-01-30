@@ -494,7 +494,8 @@ export const PedidosC = () => {
         </Grid>
 
         <Grid size={{ xs: 12, sm: 3 }}>
-          <TextField 
+          <TextField
+            disabled 
             label="Ped. Origen"
             id="Ped. Origen"
             variant="standard"
@@ -505,6 +506,7 @@ export const PedidosC = () => {
 
         <Grid size={{ xs: 12, sm: 3 }}>
           <TextField 
+            disabled
             label="Pendiente"
             id="Pendiente"
             variant="standard"

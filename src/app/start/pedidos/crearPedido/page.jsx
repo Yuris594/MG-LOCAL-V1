@@ -21,8 +21,8 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import ClientesGlobal from "../../clients/clientesGlobal/page";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridRowModes, GridActionsCellItem } from "@mui/x-data-grid";
-import { Box, Button, ButtonGroup, Checkbox, List, ListItem, ListItemText, Modal, Paper, 
-TextField, Typography, useMediaQuery } from "@mui/material";
+import { Autocomplete, Box, Button, ButtonGroup, Modal, Paper, TextField, 
+Typography, useMediaQuery } from "@mui/material";
 
 
 const style = {
@@ -48,10 +48,11 @@ const CrearPedido = () => {
   const [notas, setNotas] = useState("");
   const [total, setTotal] = useState("0");
   const [open, setOpen] = useState(false);
+  const [boton, setBoton] = useState(true);
   const [openM, setOpenM] = useState(false);
-  const [openE, setOpenE] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [subTotal, setSubTotal] = useState("0");
+  const [seleccion, setSeleccion] = useState('');
   const [productos, setProductos] = useState([]);
   const [codVenData, setCodVenData] = useState([]);
   const [cantidades, setCantidades] = useState("");
@@ -59,7 +60,6 @@ const CrearPedido = () => {
   const [tablaProducto, setTablaProducto] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
   const [selectedData, setSelectedData] = useState(null);
-  const [seleccion, setSeleccion] = useState('CREADO POR');
   const [clienteP, setClienteP] = useState(cliente?.[0] || {});
   const [articulosSeleccionados, setArticulosSeleccionados] = useState([]);
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
@@ -68,8 +68,7 @@ const CrearPedido = () => {
   const handleCloseM = () => setOpenM(false);
   const handleOpenC = () => setOpen(true);
   const handleCloseC = () => setOpen(false);
-  const handleOpenE = () => setOpenE(true);
-  const handleCloseE = () => setOpenE(false);
+
 
   useEffect(() => {
     if (cliente?.[0]) {
@@ -141,22 +140,27 @@ const CrearPedido = () => {
   }, []);
   
 
-  const handleSelect = (name) => {
-    const codVen = names[name];
-    if (codVen) {
+  const handleSelect = (event, value) => {
+    if (value && names[value]) {
+      const codVen = names[value];
       const relatedData = codVenData.find((item) => item.Codven === codVen);
-      if (relatedData) {
-        setSeleccion(name);
-        setSelectedData({
-          CodVen: relatedData.Codven,
-          Prefijo: relatedData.Prefijo,
-          Consecutivo: relatedData.Consecutivo,
-        });
-      } else {
-        console.warn(`No se encontraron datos para CodVen: ${codVen}`);
-      }
+
+      setSeleccion(value);
+      setSelectedData(
+        relatedData
+          ? { 
+            CodVen: relatedData.Codven, 
+            Prefijo: relatedData.Prefijo, 
+            Consecutivo: relatedData.Consecutivo 
+          }
+          : null
+      );
+      setBoton(false);
+    } else {
+      setSeleccion("");
+      setSelectedData(null);
+      setBoton(true);
     }
-    handleCloseE();
   };
 
   const columns = [
@@ -629,11 +633,8 @@ const CrearPedido = () => {
           <Button onClick={handleOpenM} variant="filled" sx={{ bgcolor: "#6cd3ec", "&:hover": { bgcolor: "#36c7e7" }, m: 2 }}>
             Productos-MG
           </Button>
-          <Button onClick={handleOpenE} variant="contained" sx={{ bgcolor: "#a449ee", "&:hover": { bgcolor: "#992be2" }, mr: 2 }}>
-            {seleccion}
-          </Button>
           <UseImportoExcel onImportData={handleImportData} />
-          <Button onClick={enviarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }}>
+          <Button onClick={enviarPedido} variant="filled" sx={{ bgcolor: "#5de46f", "&:hover": { bgcolor: "#3ae92a" }, m: 2 }} disabled={boton}>
             Enviar Pedido
           </Button>
           <Button variant="filled" sx={{ bgcolor: "#f13c3c", "&:hover": { bgcolor: "#ec1c27" }, }} LinkComponent={Link} href="../../clients/">
@@ -693,12 +694,26 @@ const CrearPedido = () => {
                 <Typography variant="body1">{clienteP?.E_MAIL}</Typography>
               </Box>
             </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <Autocomplete
+                options={Object.keys(names)}
+                value={Object.keys(names).includes(seleccion) ? seleccion : ""}
+                onChange={handleSelect}
+                disablePortal
+                size="small"
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} label="Tipo de Pedido" />}
+              />
+            </Grid>
           </Grid>
 
           <TextField
             id="outlined-basic"
+            label="Observaciones"
+            size="small"
             multiline
-            rows={3}
+            rows={2}
             value={notas}
             onChange={(e) => setNotas(e.target.value)}
             variant="outlined"
@@ -741,27 +756,6 @@ const CrearPedido = () => {
           </ButtonGroup>
         </Box>
       </Paper>
-
-      <Modal
-        open={openE}
-        onClose={handleCloseE}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Box sx={{ margin: 2 }}>
-            <h3>SELECCIONAR VENDEDOR</h3> 
-            <List>
-              {Object.keys(names).map((name) => (
-                <ListItem key={name} button="true" onClick={() => handleSelect(name)}>
-                  <Checkbox checked={seleccion === name} sx={{ color: "green", "&.Mui-checked": { color: "pink" } }} />
-                  <ListItemText primary={name} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Box>
-      </Modal>
 
       <Modal
         open={openM}
