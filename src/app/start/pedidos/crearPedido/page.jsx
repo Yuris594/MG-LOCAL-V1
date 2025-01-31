@@ -45,6 +45,7 @@ const CrearPedido = () => {
   const inputRef = useRef();
   const router = useRouter();
   const { cliente } = useAuth();
+  const [names, setNames] = useState({});
   const [notas, setNotas] = useState("");
   const [total, setTotal] = useState("0");
   const [open, setOpen] = useState(false);
@@ -65,7 +66,10 @@ const CrearPedido = () => {
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
   const handleOpenM = () => setOpenM(true);
-  const handleCloseM = () => setOpenM(false);
+  const handleCloseM = () => {
+    setOpenM(false);
+    setCantidades("");
+  } 
   const handleOpenC = () => setOpen(true);
   const handleCloseC = () => setOpen(false);
 
@@ -114,23 +118,24 @@ const CrearPedido = () => {
   };
 
 
-  const names = {
-    "PEDIDO LOCAL": "61",
-    "TELEMERCADEO 1": "301",
-    "TELEMERCADEO 2": "300",
-    "PUNTO NARANJA I.": "AA",
-    "PUNTO NARANJA E.": "EE",
-  };
-
   useEffect(() => {
     const fetchCodVenData = async () => {
       try {
         const response = await fetch(Global.url + '/consecutivo/list', {
           method: "GET",
-          headers: { "Content-Type" : "application/json" }
+          headers: { "Content-Type": "application/json" }
         });
         const data = await response.json();
         setCodVenData(data);
+
+        const namesMap = data.reduce((acc, item) => {
+          if (item.tipo_pedido && item.Codven) {
+            acc[item.tipo_pedido] = item.Codven; 
+          }
+          return acc;
+        }, {});
+
+        setNames(namesMap);
       } catch (error) {
         console.error("Error al obtener los datos de CodVen:", error);
       }
@@ -143,8 +148,11 @@ const CrearPedido = () => {
   const handleSelect = (event, value) => {
     if (value && names[value]) {
       const codVen = names[value];
+      console.log("CodVen obtenido:", codVen);
+  
       const relatedData = codVenData.find((item) => item.Codven === codVen);
-
+      console.log("Datos relacionados encontrados:", relatedData);
+  
       setSeleccion(value);
       setSelectedData(
         relatedData
@@ -318,6 +326,8 @@ const CrearPedido = () => {
     const articulosActualizados = [...articulosSeleccionados, ...articulosConTotal];
     setArticulosSeleccionados(articulosActualizados);
     CalcularTotales(articulosActualizados);
+
+    setCantidades("");
   };
 
 
@@ -442,29 +452,21 @@ const CrearPedido = () => {
       renderCell: (params) => {
         return (
           <TextField 
-            value={cantidades[params.id] || ""}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d*$/.test(value)) {
-                handleCantidad(params.id, value);
-              }
-            }}
-            sx={{ width: "70px" }}
-            variant="outlined"
-            size="small"
-            type="text"
-            inputProps={{ inputMode: "numeric" }}
+          value={cantidades[params.id] || ""}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+              handleCantidad(params.id, value);
+            }
+          }}
+          sx={{ width: "70px" }}
+          variant="outlined"
+          size="small"
+          type="text"
+          inputProps={{ inputMode: "numeric" }}
           />
         )
       }
-    },
-    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
-    { field: "PORC_DCTO", headerName: "D1", width: 40 },
-    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
-      valueFormatter: (value) => {
-        const precio = Number(value).toFixed(0);
-        return `${parseFloat(precio).toLocaleString()}`;
-      }, 
     },
     { field: "TOTAL_DISP", headerName: "DISP", width: 70, 
       valueFormatter: (value) => {
@@ -478,6 +480,14 @@ const CrearPedido = () => {
         return `${parseFloat(existe).toLocaleString()}`;
         
       },
+    },
+    { field: "PORC_IMPUESTO", headerName: "IVA", width: 40 },
+    { field: "PORC_DCTO", headerName: "D1", width: 40 },
+    { field: "PRECIOMASIVA", headerName: "MASIVA", width: 100,
+      valueFormatter: (value) => {
+        const precio = Number(value).toFixed(0);
+        return `${parseFloat(precio).toLocaleString()}`;
+      }, 
     },
   ];
 
