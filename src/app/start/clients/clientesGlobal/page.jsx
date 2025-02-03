@@ -95,7 +95,7 @@ const ClientesGlobal = ({ setOpen, seleccionarCliente }) => {
         setOpen(false);
         seleccionarCliente(resultadosFiltrados[0]);
     }
-  }, [tablaClientes]);
+  }, [tablaClientes,  seleccionarCliente, setCliente, setOpen]);
 
   return (
     <>

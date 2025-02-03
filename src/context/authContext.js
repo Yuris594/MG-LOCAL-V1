@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth');
 
     setAuth(null)
-  }, []);
+  }, [router]);
 
 
   //Guardar los datos del usuario para cuando recargue la pagina
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
-  }), [auth, cliente, pedido, caja, login, logout]);
+  }), [auth, cliente, pedido, caja, login, logout, loading]);
 
 
   return (

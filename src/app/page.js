@@ -29,7 +29,8 @@ export function Copyright(props) {
 }
 
 const Iniciar = async (usuario, clave) => {
-  const response = await fetch(Conexion.url + `/usuarios/listar/${usuario}/${clave}`, {
+  //const response = await fetch(Conexion.url + `/usuarios/listar/${usuario}/${clave}`, {
+  const response = await fetch(`/api/usuarios/listar/${usuario}/${clave}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

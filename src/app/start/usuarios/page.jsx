@@ -121,7 +121,7 @@ function Usuarios() {
         setUsuario(resultadosFiltrados);
         setOpenA(true);
       }
-    }, [usuarios]);
+    }, [tablaUsuario]);
 
 
   useEffect(() => {

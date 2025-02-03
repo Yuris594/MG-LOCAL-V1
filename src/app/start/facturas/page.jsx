@@ -109,7 +109,11 @@ const Factura = () => {
       setFac();
       setProductos([]);
     }
-  }, [fac, productos]);
+  }, [fac, productos, generarPDF]);
+
+  useEffect(() => {
+    generarPDF()
+  }, [generarPDF]);
 
   const generarPDF = () => {
     const pdf = new jsPDF("portrait", "pt", "letter");

@@ -159,7 +159,7 @@ const PedidosCaja = () => {
         guardar();
       }
     }
-  }, [selectedRows]);
+  }, [selectedRows, productos]);
 
   const filtrar = (terminoBusqueda) => {
     const resultadosBusqueda = tablaProducto.filter((elemento) => {
@@ -208,21 +208,24 @@ const PedidosCaja = () => {
   };
 
 
-  const guardar = () => {
-    const pedido = JSON.parse(localStorage.getItem("pedidoTempG"));
-    if (pedido && pedido[0] && pedido[0].ARTICULO) {
-      const valores = Object.values(pedido);
-      const productoExistente = productosP.some(
-        (producto) => producto.ARTICULO === valores[0].ARTICULO
-      );
-      const productosActuales = [...productosP];
-      if (productoExistente) {
-      } else {
-        const nuevosProductos = [...productosActuales, ...valores];
-        setProductosP(nuevosProductos);
+  useEffect(() => {
+    const guardar = () => {
+      const pedido = JSON.parse(localStorage.getItem("pedidoTempG"));
+      if (pedido && pedido[0] && pedido[0].ARTICULO) {
+        const valores = Object.values(pedido);
+        const productoExistente = productosP.some(
+          (producto) => producto.ARTICULO === valores[0].ARTICULO
+        );
+        const productosActuales = [...productosP];
+        if (productoExistente) {
+        } else {
+          const nuevosProductos = [...productosActuales, ...valores];
+          setProductosP(nuevosProductos);
+        }
       }
-    }
-  };
+    };
+    guardar();
+  }, [productosP]);
 
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -275,6 +278,7 @@ const PedidosCaja = () => {
         if (isInEditMode) {
           return [
             <GridActionsCellItem
+              key={`save-${id}`}
               icon={<SaveIcon />}
               label="Save"
               sx={{ color: "primary.main" }}
@@ -282,6 +286,7 @@ const PedidosCaja = () => {
             />,
 
             <GridActionsCellItem
+              key={`cancel-${id}`}
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -293,6 +298,7 @@ const PedidosCaja = () => {
 
         return [
           <GridActionsCellItem
+            key={`edit-${id}`}
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
@@ -301,6 +307,7 @@ const PedidosCaja = () => {
           />,
 
           <GridActionsCellItem
+            key={`delete-${id}`}
             icon={<DeleteIcon />}
             label="Delete"
             className="textPrimary"

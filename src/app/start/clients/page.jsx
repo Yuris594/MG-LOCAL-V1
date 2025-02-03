@@ -10,7 +10,7 @@ import Banner from "@/app/components/banner/banner";
 import BotonExcel from "@/app/hooks/useExportoExcel";
 import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Alert, LinearProgress, Modal, Snackbar, TextField, useMediaQuery } from "@mui/material";
+import { Alert, LinearProgress, Modal, Snackbar, tableBodyClasses, TextField, useMediaQuery } from "@mui/material";
 
 
 const style = {
@@ -60,7 +60,8 @@ const Clientes = () => {
   useEffect(() => {
     const obtenerClientes = async () => {
       try {
-        const response = await fetch(Conexion.url + "/clientes/listar", {
+        const response = await fetch("/api/clientes/listar", {
+        //const response = await fetch(Conexion.url + "/clientes/listar", {
           method: "GET",
           headers: { "Content-Type" : "application/json" }
         });
@@ -114,10 +115,11 @@ const Clientes = () => {
         });
         localStorage.setItem("clientTemp", JSON.stringify(resultadosFiltrados));
         setCliente(resultadosFiltrados);
-        router.push("/start/clients/clientesTemp/");
+        console.log("Resultados Filtrados", resultadosFiltrados)
+        router.replace("/start/clients/clientesTemp/");
       }
     },
-    [clientesFiltrados]
+    [router, setCliente, tablaClientes]
   );
 
   return (

@@ -222,6 +222,7 @@ const CrearPedido = () => {
         if (isInEditMode) {
           return [
             <GridActionsCellItem
+              key={`save-${id}`}
               icon={<SaveIcon />}
               label="Save"
               sx={{ color: "primary.main" }}
@@ -229,6 +230,7 @@ const CrearPedido = () => {
             />,
 
             <GridActionsCellItem
+              key={`cancel-${id}`}
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -240,6 +242,7 @@ const CrearPedido = () => {
 
         return [
           <GridActionsCellItem
+            key={`edit-${id}`}
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
@@ -248,6 +251,7 @@ const CrearPedido = () => {
           />,
 
           <GridActionsCellItem
+            key={`delete-${id}`}
             icon={<DeleteIcon />}
             label="Delete"
             className="textPrimary"
@@ -408,7 +412,7 @@ const CrearPedido = () => {
       });
       setTablaProducto(resultadosFiltrados[0]);
     }
-  }, [productos]);
+  }, [tablaProducto]);
 
   const handleProcessRowUpdate = (newRow) => {
     const updatedRows = productos.map((prod) => 

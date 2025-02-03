@@ -39,7 +39,7 @@ const UsuarioActualizar = ({ usuario, onClose }) => {
         CONSECUTIVOPED: usuario[0].CONSECUTIVOPED || "",
       });
     }
-  }, [usuario]);
+  }, [usuario, setForm]);
 
   const Actualizar = async (e) => {
     e.preventDefault();

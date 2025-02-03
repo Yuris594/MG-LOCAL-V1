@@ -66,7 +66,7 @@ const useTecladoCaja = (productosP, setProductosP, selectedRowsP, opcion) => {
       document.removeEventListener("keypress", handleKeyPress);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [productosP, selectedRowsP, opcion]);
+  }, [productosP, selectedRowsP, opcion, setProductosP]);
 };
 
 export default useTecladoCaja;

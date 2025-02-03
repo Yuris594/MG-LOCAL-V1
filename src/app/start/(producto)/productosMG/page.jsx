@@ -115,7 +115,7 @@ const productosMG = () => {
         setArticulo(resultadosFiltrados[0]);
       }
     },
-    [productos]
+    [tablaProducto]
   );
 
   return (

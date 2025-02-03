@@ -121,7 +121,7 @@ const Pedidos = () => {
         router.push("/start/pedidos/pedidosC");
       }
     },
-    [pedidosFiltrados]
+    [router, setPedido, tablaPedido]
   );
 
   return (

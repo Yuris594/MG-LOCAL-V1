@@ -130,35 +130,42 @@ export const PedidosC = () => {
     }
   };
 
-  const conseguirProductosP = async () => {
-    try {
-      const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
-        method: "GET",
-        headers: { "Content-Type" : "application" },
-      });
-      const datos = await response.json();
-      if (datos) {
-        setProductosP(datos);
+  useEffect(() => {
+    const conseguirProductosP = async () => {
+      try {
+        const response = await fetch(Conexion.url + `/pedidos/detalle_lineas/${clienteP.PEDIDO}`, {
+          method: "GET",
+          headers: { "Content-Type" : "application" },
+        });
+        const datos = await response.json();
+        if (datos) {
+          setProductosP(datos);
+        }
+      } catch (error) {
+        console.log("error")
       }
-    } catch (error) {
-      console.log("error")
-    }
-  };
+    };
+    conseguirProductosP();
+  }, [clienteP.PEDIDO]);
 
-  const conseguirProductosPendientes = async () => {
-    try {
-      const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
-        method: "GET",
-        headers: { "Content-Type" : "application/json" }
-      });
-      const datos = await response.json();
-      if (datos) {
-        setProductosConDIPS0(datos);
+
+  useEffect(() => {
+    const conseguirProductosPendientes = async () => {
+      try {
+        const response = await fetch(Conexion.url + `/pedidos/articulos_pendientes/${clienteP.PEDIDO}`, {
+          method: "GET",
+          headers: { "Content-Type" : "application/json" }
+        });
+        const datos = await response.json();
+        if (datos) {
+          setProductosConDIPS0(datos);
+        }
+      } catch (error) {
+        console.log("error")
       }
-    } catch (error) {
-      console.log("error")
-    }
-  };
+    };
+    conseguirProductosPendientes();
+  }, [clienteP.PEDIDO]);
 
   const handleChange = (e) => {
     e.preventDefault();

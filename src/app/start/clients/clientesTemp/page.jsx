@@ -222,6 +222,9 @@ const ClientesTemp = () => {
     setValue(newValue);
   };
 
+  console.log("Datos del cliente", cliente)
+  console.log("Datos filtradosa Cliente T", clienteT)
+
   useEffect(() => {
     setCargando(true);
     if (clienteT) {
@@ -229,7 +232,7 @@ const ClientesTemp = () => {
       obtenerFacturas(clienteT.CLIENTE);
       obtenerCarteras(clienteT.CLIENTE);
     }
-  }, [value]);
+  }, [value, clienteT]);
 
 
   useEffect(() => {
@@ -245,41 +248,50 @@ const ClientesTemp = () => {
   }, [cartera]);
 
 
-  const obtenerPedidos = async () => {
-    const datos = await ConseguirPedidos(clienteT);
-    if (datos) {
-      setPedidos(datos);
-      setCargando(false);
-    } else {
-      console.log("Error al obtener los datos");
-      setPedidos([]);
-      setCargando(false);
-    }
-  };
+  useEffect(() => {
+    const obtenerPedidos = async () => {
+      const datos = await ConseguirPedidos(clienteT);
+      if (datos) {
+        setPedidos(datos);
+        setCargando(false);
+      } else {
+        console.log("Error al obtener los datos");
+        setPedidos([]);
+        setCargando(false);
+      }
+    };
+    obtenerPedidos();
+  }, [clienteT]);
 
-  const obtenerFacturas = async () => {
-    const datos = await ConseguirFacturas(clienteT);
-    if (datos) {
-      setFacturas(datos);
-      setCargando(false);
-    } else {
-      console.log("Error al obtener los datos");
-      setFacturas([]);
-      setCargando(false);
-    }
-  };
+  useEffect(() => {
+    const obtenerFacturas = async () => {
+      const datos = await ConseguirFacturas(clienteT);
+      if (datos) {
+        setFacturas(datos);
+        setCargando(false);
+      } else {
+        console.log("Error al obtener los datos");
+        setFacturas([]);
+        setCargando(false);
+      }
+    };
+    obtenerFacturas();
+  }, [clienteT]);
 
-  const obtenerCarteras = async () => {
-    const datos = await ConseguirCarteras(clienteT);
-    if (datos) {
-      setCartera(datos);
-      setCargando(false);
-    } else {
-      console.log("Error al obtener los datos");
-      setCartera([]);
-      setCargando(false);
-    }
-  };
+  useEffect(() => {
+    const obtenerCarteras = async () => {
+      const datos = await ConseguirCarteras(clienteT);
+      if (datos) {
+        setCartera(datos);
+        setCargando(false);
+      } else {
+        console.log("Error al obtener los datos");
+        setCartera([]);
+        setCargando(false);
+      }
+    };
+    obtenerCarteras();
+  }, [clienteT]);
 
   return (
     <>

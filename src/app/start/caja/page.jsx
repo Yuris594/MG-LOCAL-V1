@@ -76,7 +76,7 @@ const pago = () => {
       document.removeEventListener("keypress", handleKeyPress);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [efectivo, selectedIndex]);
+  }, [efectivo, selectedIndex, caja.total, handleDelete]);
 
   useEffect(() => {
     const nuevoEstado = [...pagoF, { dinero: efectivo }, { dinero: banco }];
@@ -115,7 +115,7 @@ const pago = () => {
         setCambio(0);
       }
     }
-  }, [efectivo, banco, cuentaCliente, selectedIndex]);
+  }, [efectivo, banco, cuentaCliente, selectedIndex, caja.total, pagoF]);
 
   const handleListItemClick = (e, index) => {
     if (index === 2) {
